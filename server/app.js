@@ -23,10 +23,7 @@ app.get('/swagger.json', (req, res) => {
    res.json(swagger);
 });
 
-// Landing page
-app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '../public/index.html'));
-});
+
 
 // Router
 app.use('/api', routes);
@@ -37,6 +34,11 @@ app.use(joiErrorHandler);
 // Error Handler
 app.use(errorHandler.notFoundErrorHandler);
 app.use(errorHandler.errorHandler);
+
+// Landing page
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '../public/index.html'));
+});
 
 app.listen(app.get('port'), app.get('host'), () => {
     console.log(`Server running at http://${app.get('host')}:${app.get('port')}`);
