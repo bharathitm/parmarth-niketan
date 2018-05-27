@@ -1,5 +1,5 @@
 import express from 'express';
-import * as econtactsCtrl from '../controllers/econtacts.controller';
+import * as econtactsCtrl from '../controllers/econtact.controller';
 import isAuthenticated from '../middlewares/authenticate';
 import validate from '../config/joi.validate';
 import schema from '../utils/validator';

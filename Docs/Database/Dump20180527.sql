@@ -25,12 +25,12 @@ DROP TABLE IF EXISTS `blocks`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
  SET character_set_client = utf8mb4 ;
 CREATE TABLE `blocks` (
-  `block_id` smallint(6) NOT NULL AUTO_INCREMENT,
+  `block_id` tinyint(4) NOT NULL,
   `block_name` varchar(45) NOT NULL,
   `no_of_rooms` smallint(6) DEFAULT NULL,
   PRIMARY KEY (`block_id`),
   UNIQUE KEY `BlockID_UNIQUE` (`block_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -85,8 +85,12 @@ CREATE TABLE `donations` (
   `is_advance` tinyint(2) NOT NULL DEFAULT '1',
   `created_on` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`donation_id`),
-  UNIQUE KEY `advance_donation_id_UNIQUE` (`donation_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  UNIQUE KEY `advance_donation_id_UNIQUE` (`donation_id`),
+  KEY `fk_guests_donations` (`guest_id`),
+  KEY `fk_reservations_donations` (`reservation_id`),
+  CONSTRAINT `fk_guests_donations` FOREIGN KEY (`guest_id`) REFERENCES `guests` (`guest_id`),
+  CONSTRAINT `fk_reservations_donations` FOREIGN KEY (`reservation_id`) REFERENCES `reservations` (`reservation_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -95,7 +99,7 @@ CREATE TABLE `donations` (
 
 LOCK TABLES `donations` WRITE;
 /*!40000 ALTER TABLE `donations` DISABLE KEYS */;
-INSERT INTO `donations` VALUES (1,1,1,'2018-05-21',5000,'R123',1,'2018-05-21 17:36:35'),(2,1,1,'2018-05-20',5000,'R122',1,'2018-05-21 17:36:38');
+INSERT INTO `donations` VALUES (1,2,2,'2018-05-25',10000,'R999',1,'2018-05-21 17:36:35'),(2,1,1,'2018-05-20',5000,'R122',1,'2018-05-21 17:36:38'),(3,2,2,'2018-05-25',9999,'R888',1,'2018-05-25 21:48:50');
 /*!40000 ALTER TABLE `donations` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -107,17 +111,18 @@ DROP TABLE IF EXISTS `guest_emergency_contacts`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
  SET character_set_client = utf8mb4 ;
 CREATE TABLE `guest_emergency_contacts` (
-  `guest_emergency_contact_id` smallint(6) NOT NULL AUTO_INCREMENT,
-  `guest_id` int(11) NOT NULL,
-  `contact_first_name` varchar(45) NOT NULL,
-  `contact_last_name` varchar(45) NOT NULL,
-  `contact_phone_no` varchar(20) NOT NULL,
-  `contact_relationship` varchar(45) NOT NULL,
+  `guest_emergency_contact_id` int(6) NOT NULL AUTO_INCREMENT,
+  `guest_id` int(6) NOT NULL,
+  `first_name` varchar(45) NOT NULL,
+  `last_name` varchar(45) NOT NULL,
+  `phone_no` varchar(20) NOT NULL,
+  `relationship` varchar(45) NOT NULL,
   `created_on` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `last_updated_on` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`guest_emergency_contact_id`),
-  UNIQUE KEY `guest_emergency_contact_id_UNIQUE` (`guest_emergency_contact_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  UNIQUE KEY `guest_emergency_contact_id_UNIQUE` (`guest_emergency_contact_id`),
+  KEY `fk_guests_guest_emergency_contacts` (`guest_id`),
+  CONSTRAINT `fk_guests_guest_emergency_contacts` FOREIGN KEY (`guest_id`) REFERENCES `guests` (`guest_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -126,7 +131,7 @@ CREATE TABLE `guest_emergency_contacts` (
 
 LOCK TABLES `guest_emergency_contacts` WRITE;
 /*!40000 ALTER TABLE `guest_emergency_contacts` DISABLE KEYS */;
-INSERT INTO `guest_emergency_contacts` VALUES (1,1,'Madhava Rao','T R','23762274','Father','2018-05-20 13:33:21','2018-05-20 13:33:21');
+INSERT INTO `guest_emergency_contacts` VALUES (1,1,'Madhava Rao','T R','23762274','Father','2018-05-20 13:33:21'),(2,3,'Rakuma','Sholapur','999333','Mother','2018-05-25 12:06:38');
 /*!40000 ALTER TABLE `guest_emergency_contacts` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -139,8 +144,8 @@ DROP TABLE IF EXISTS `guests`;
  SET character_set_client = utf8mb4 ;
 CREATE TABLE `guests` (
   `guest_id` int(6) NOT NULL AUTO_INCREMENT,
-  `guest_first_name` varchar(45) NOT NULL,
-  `guest_last_name` varchar(45) NOT NULL,
+  `first_name` varchar(45) NOT NULL,
+  `last_name` varchar(45) NOT NULL,
   `email_id` varchar(45) DEFAULT NULL,
   `phone_no` varchar(20) NOT NULL,
   `address` varchar(200) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL,
@@ -150,8 +155,10 @@ CREATE TABLE `guests` (
   `country_id` smallint(6) NOT NULL,
   `created_on` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`guest_id`),
-  UNIQUE KEY `idguests_UNIQUE` (`guest_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  UNIQUE KEY `idguests_UNIQUE` (`guest_id`),
+  KEY `fk_countries_guests` (`country_id`),
+  CONSTRAINT `fk_countries_guests` FOREIGN KEY (`country_id`) REFERENCES `countries` (`country_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -160,7 +167,7 @@ CREATE TABLE `guests` (
 
 LOCK TABLES `guests` WRITE;
 /*!40000 ALTER TABLE `guests` DISABLE KEYS */;
-INSERT INTO `guests` VALUES (1,'Bharathi','TM','bharathitm@gmail.com','9884350777','Besant Nagar','Chennai','600093','T N',77,'2018-05-19 18:30:00'),(2,'Sandhya','T M','tm.sandhya@gmail.com','000','Shastri Nagar','Chennai','600090','T N',77,'2018-05-20 09:39:46');
+INSERT INTO `guests` VALUES (1,'Bharathi','T M','bharathitm@gmail.com','9884350777','Besant Nagar','Chennai','90','Tamil Nadu',77,'2018-05-19 18:30:00'),(2,'Sandhya','T M','tm.sandhya@gmail.com','000','Shastri Nagar','Chennai','600090','T N',77,'2018-05-20 09:39:46'),(3,'Radhika','Sholapur','radhika@gmail.com','9884350777','Patri House','Kakinada','90','Andhra Pradesh',77,'2018-05-25 05:18:03'),(4,'FirstName','Last Name','someone@gmail.com','888','Besant Nagar','Chennai','00','T N',77,'2018-05-26 16:05:06');
 /*!40000 ALTER TABLE `guests` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -219,7 +226,7 @@ DROP TABLE IF EXISTS `reservation_statuses`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
  SET character_set_client = utf8mb4 ;
 CREATE TABLE `reservation_statuses` (
-  `reservation_status_id` smallint(6) NOT NULL AUTO_INCREMENT,
+  `reservation_status_id` tinyint(4) NOT NULL AUTO_INCREMENT,
   `status_name` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`reservation_status_id`),
   UNIQUE KEY `reservation_status_id_UNIQUE` (`reservation_status_id`)
@@ -272,9 +279,9 @@ CREATE TABLE `reservations` (
   `reservation_id` int(6) NOT NULL AUTO_INCREMENT,
   `guest_id` int(6) NOT NULL,
   `date_of_arrival` datetime NOT NULL,
-  `date_of_departure` datetime NOT NULL,
+  `date_of_departure` date NOT NULL,
   `no_of_people` varchar(4) NOT NULL,
-  `reservation_comments` varchar(400) DEFAULT NULL,
+  `reservation_comments` varchar(500) DEFAULT NULL,
   `reservation_type_id` tinyint(4) NOT NULL,
   `reservation_status_id` tinyint(4) NOT NULL,
   `sanskara_id` tinyint(4) DEFAULT NULL,
@@ -283,8 +290,16 @@ CREATE TABLE `reservations` (
   `total_amount` decimal(10,0) DEFAULT NULL,
   `created_on` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`reservation_id`),
-  UNIQUE KEY `reservation_id_UNIQUE` (`reservation_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  UNIQUE KEY `reservation_id_UNIQUE` (`reservation_id`),
+  KEY `fk_resevation_statuses_reservations` (`reservation_status_id`),
+  KEY `fk_resevation_types_reservations` (`reservation_type_id`),
+  KEY `fk_sanskaras_reservations` (`sanskara_id`),
+  KEY `fk_guests_reservations` (`guest_id`),
+  CONSTRAINT `fk_guests_reservations` FOREIGN KEY (`guest_id`) REFERENCES `guests` (`guest_id`),
+  CONSTRAINT `fk_resevation_statuses_reservations` FOREIGN KEY (`reservation_status_id`) REFERENCES `reservation_statuses` (`reservation_status_id`),
+  CONSTRAINT `fk_resevation_types_reservations` FOREIGN KEY (`reservation_type_id`) REFERENCES `reservation_types` (`reservation_type_id`),
+  CONSTRAINT `fk_sanskaras_reservations` FOREIGN KEY (`sanskara_id`) REFERENCES `sanskaras` (`sanskara_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -293,7 +308,7 @@ CREATE TABLE `reservations` (
 
 LOCK TABLES `reservations` WRITE;
 /*!40000 ALTER TABLE `reservations` DISABLE KEYS */;
-INSERT INTO `reservations` VALUES (1,1,'2018-05-22 00:00:00','2018-05-26 00:00:00','3','Test comments',1,2,NULL,0,'2018-05-21',NULL,'2018-05-20 09:41:13'),(2,2,'2018-05-21 00:00:00','2018-05-31 00:00:00','100',NULL,6,2,NULL,0,NULL,NULL,'2018-05-20 09:42:21');
+INSERT INTO `reservations` VALUES (1,1,'2018-05-22 00:00:00','2018-10-27','99','99 ppl are coming',1,3,NULL,0,'2018-09-27',NULL,'2018-05-20 09:41:13'),(2,2,'2018-05-21 00:00:00','2018-05-31','100',NULL,6,2,NULL,0,NULL,NULL,'2018-05-20 09:42:21'),(3,1,'2018-05-25 00:00:00','2018-10-27','99','99 ppl are coming',1,1,1,0,NULL,NULL,'2018-05-24 14:27:24'),(4,1,'2018-10-08 00:00:00','2018-10-16','199','199 ppl are coming now',1,1,1,0,'2018-09-27',NULL,'2018-05-24 14:41:40');
 /*!40000 ALTER TABLE `reservations` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -316,7 +331,16 @@ CREATE TABLE `room_bookings` (
   `room_status_id` tinyint(4) NOT NULL,
   `created_on` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`room_booking_id`),
-  UNIQUE KEY `room_booking_id_UNIQUE` (`room_booking_id`)
+  UNIQUE KEY `room_booking_id_UNIQUE` (`room_booking_id`),
+  KEY `fk_room_status_id` (`room_status_id`),
+  KEY `fk_rooms_room_bookings_id` (`room_id`),
+  KEY `fk_guests_room_bookings` (`guest_id`),
+  KEY `fk_reservations_room_bookings` (`reservation_id`),
+  CONSTRAINT `fk_guests_room_bookings` FOREIGN KEY (`guest_id`) REFERENCES `guests` (`guest_id`),
+  CONSTRAINT `fk_reservations_room_bookings` FOREIGN KEY (`reservation_id`) REFERENCES `reservations` (`reservation_id`),
+  CONSTRAINT `fk_room_id` FOREIGN KEY (`room_id`) REFERENCES `rooms` (`room_id`),
+  CONSTRAINT `fk_room_status_id` FOREIGN KEY (`room_status_id`) REFERENCES `room_statuses` (`room_status_id`),
+  CONSTRAINT `fk_rooms_room_bookings_id` FOREIGN KEY (`room_id`) REFERENCES `rooms` (`room_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -326,7 +350,7 @@ CREATE TABLE `room_bookings` (
 
 LOCK TABLES `room_bookings` WRITE;
 /*!40000 ALTER TABLE `room_bookings` DISABLE KEYS */;
-INSERT INTO `room_bookings` VALUES (1,4,'616',1,1,'2018-05-20','2018-05-25',700,2,'2018-04-29 13:03:50'),(2,5,'617',1,1,'2018-05-20','2018-05-25',600,1,'2018-04-29 13:03:50'),(3,1,'613',2,2,'2018-05-21','2018-05-31',400,2,'2018-04-29 13:03:50'),(4,51,'',NULL,NULL,'0000-00-00','0000-00-00',NULL,1,'2018-04-29 13:03:50'),(5,58,'',NULL,NULL,'0000-00-00','0000-00-00',NULL,1,'2018-04-29 13:03:50'),(6,1,'613',NULL,NULL,'2018-05-19','2018-05-25',700,1,'2018-05-19 18:30:00');
+INSERT INTO `room_bookings` VALUES (1,4,'616',1,1,'2018-05-26','2018-05-26',700,3,'2018-04-29 13:03:50'),(2,5,'617',1,1,'2018-05-26','2018-05-26',600,3,'2018-04-29 13:03:50'),(3,1,'613',2,2,'2018-05-21','2018-05-25',400,2,'2018-04-29 13:03:50'),(4,51,'',NULL,NULL,'0000-00-00','0000-00-00',NULL,1,'2018-04-29 13:03:50'),(5,58,'',NULL,NULL,'0000-00-00','0000-00-00',NULL,1,'2018-04-29 13:03:50'),(6,1,'613',NULL,NULL,'2018-05-19','2018-05-25',700,1,'2018-05-19 18:30:00');
 /*!40000 ALTER TABLE `room_bookings` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -365,9 +389,9 @@ DROP TABLE IF EXISTS `rooms`;
 CREATE TABLE `rooms` (
   `room_id` smallint(6) NOT NULL AUTO_INCREMENT,
   `room_no` varchar(10) NOT NULL,
-  `floor_no` tinyint(2) DEFAULT NULL,
-  `block_id` tinyint(2) NOT NULL,
-  `total_beds` tinyint(2) NOT NULL,
+  `floor_no` tinyint(4) DEFAULT NULL,
+  `block_id` tinyint(4) NOT NULL,
+  `total_beds` tinyint(4) NOT NULL,
   `rent_amount` decimal(10,0) DEFAULT NULL,
   `has_AC` tinyint(1) NOT NULL,
   `has_cooler` tinyint(1) NOT NULL,
@@ -376,7 +400,9 @@ CREATE TABLE `rooms` (
   `has_western_toilet` tinyint(1) NOT NULL,
   `is_available` tinyint(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`room_id`),
-  UNIQUE KEY `room_id_UNIQUE` (`room_id`)
+  UNIQUE KEY `room_id_UNIQUE` (`room_id`),
+  KEY `fk_block_id_idx` (`block_id`),
+  CONSTRAINT `fk_block_id` FOREIGN KEY (`block_id`) REFERENCES `blocks` (`block_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=63 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -460,7 +486,9 @@ UNLOCK TABLES;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 CREATE DEFINER=`sa`@`%` FUNCTION `strSplit`(
-	x VARCHAR(1000), delim VARCHAR(12), pos INTEGER
+	x VARCHAR(1000), 
+    delim VARCHAR(12), 
+    pos INTEGER
 ) RETURNS varchar(1000) CHARSET utf8mb4
     READS SQL DATA
     DETERMINISTIC
@@ -502,9 +530,9 @@ BEGIN
 	SET 
 		reservation_status_id = 4 /* Cancelled */
 	WHERE
-		reservation_id = reservation_id;
+		reservations.reservation_id = reservation_id;
         
-	CALL sp_DeleteRoomBookings (reservation_id);
+	/*CALL sp_DeleteRoomBookings (reservation_id);*/
 
 END ;;
 DELIMITER ;
@@ -673,8 +701,6 @@ IF total_beds IS NULL THEN
     FROM
 		rooms
 	WHERE
-		room_status_id NOT IN (4,5)
-	AND
 		room_id NOT IN 
         (
 			SELECT 
@@ -683,6 +709,8 @@ IF total_beds IS NULL THEN
 				room_bookings
 			WHERE
 				date_of_arrival < departure_date && arrival_date < date_of_departure
+			AND
+				room_status_id NOT IN (4,5)
 		);
 ELSE 
 	SELECT 
@@ -700,9 +728,7 @@ ELSE
     FROM
 		rooms
 	WHERE
-		total_beds = total_beds
-	AND	
-		room_status_id NOT IN (4,5)
+		total_beds = total_beds		
 	AND
 		room_id NOT IN 
         (
@@ -712,6 +738,8 @@ ELSE
 				room_bookings
 			WHERE
 				date_of_arrival < departure_date && arrival_date < date_of_departure
+			AND
+				room_status_id NOT IN (4,5)
 		);
 	
 END IF;
@@ -739,8 +767,8 @@ BEGIN
 
 	SELECT
 		DATE(date_of_arrival) AS on_date,
-        guest_first_name,
-        guest_last_name,
+        first_name,
+        last_name,
         no_of_people
 	FROM
 		reservations
@@ -773,8 +801,8 @@ CREATE DEFINER=`sa`@`%` PROCEDURE `sp_GetGuestDetails`(
 BEGIN
 
 	SELECT 
-		guest_first_name,
-		guest_last_name,
+		first_name,
+		last_name,
 		email_id,
 		phone_no,
 		address,
@@ -806,18 +834,22 @@ DELIMITER ;;
 CREATE DEFINER=`sa`@`%` PROCEDURE `sp_GetGuestDetailsByEmailID`(IN email_id VARCHAR(45))
 BEGIN
 
-SELECT
-	guests.guest_id, guest_first_name, guest_last_name, email_id, phone_no, 
-	address, city, zip_code, state, country_id,
-	guest_emergency_contact_id, contact_first_name, contact_last_name, contact_phone_no, contact_relationship
-FROM
-	guests
-JOIN
-	guest_emergency_contacts
-ON
-	guests.guest_id = guest_emergency_contacts.guest_id
-WHERE
-	guests.email_id = email_id;
+	SELECT  
+		guests.guest_id, 
+		first_name, 
+		last_name, 
+		email_id, 
+		phone_no, 
+		address, 
+		city, 
+		zip_code, 
+		state, 
+		country_id
+	FROM
+		guests
+	WHERE
+		guests.email_id = email_id
+	LIMIT 1;
 
 END ;;
 DELIMITER ;
@@ -838,19 +870,23 @@ DELIMITER ;;
 CREATE DEFINER=`sa`@`%` PROCEDURE `sp_GetGuestDetailsByPhone`(IN phone_no VARCHAR(20))
 BEGIN
 
-SELECT
-	guests.guest_id, guest_first_name, guest_last_name, email_id, phone_no, 
-	address, city, zip_code, state, country_id,
-	guest_emergency_contact_id, contact_first_name, contact_last_name, contact_phone_no, contact_relationship
-FROM
-	guests
-JOIN
-	guest_emergency_contacts
-ON
-	guests.guest_id = guest_emergency_contacts.guest_id
-WHERE
-	guests.phone_no = phone_no;
-    
+	SELECT
+		guests.guest_id, 
+		first_name, 
+        last_name, 
+        email_id, 
+        phone_no, 
+		address, 
+        city, 
+        zip_code, 
+        state, 
+        country_id
+	FROM
+		guests
+	WHERE
+		guests.phone_no = phone_no
+	LIMIT 1;
+		
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -874,10 +910,10 @@ BEGIN
 
 	SELECT 
 		guest_emergency_contact_id,
-		contact_first_name,
-		contact_last_name,
-		contact_phone_no,
-		contact_relationship
+		first_name,
+		last_name,
+		phone_no,
+		relationship
 	FROM
 		guest_emergency_contacts
 	WHERE
@@ -904,11 +940,16 @@ CREATE DEFINER=`sa`@`%` PROCEDURE `sp_GetReservationDetails`(
 )
 BEGIN
 
-	SELECT
+	SELECT	
+		guest_id,
 		date_of_arrival,
 		date_of_departure,
 		no_of_people,
 		reservation_comments,
+        reservation_type_id,
+        reservation_status_id,
+        sanskara_id,
+        is_a_reference,
 		advance_reminder_on
 	FROM
 		reservations
@@ -1007,13 +1048,20 @@ CREATE DEFINER=`sa`@`%` PROCEDURE `sp_GetTodaysCheckIns`()
 BEGIN
 
 	SELECT 
-		reservations.reservation_id, reservation_type_id, guests.guest_first_name, guests.guest_last_name, room_bookings.room_booking_id, room_bookings.room_no, rooms.floor_no, rooms.block_id
+		reservations.reservation_id, 
+        reservation_type_id, 
+        guests.first_name, 
+        guests.last_name, 
+        room_bookings.room_booking_id, 
+        room_bookings.room_no, 
+        rooms.floor_no, 
+        rooms.block_id
 	FROM
 		room_bookings
 	JOIN
 		guests
 	ON
-		room_booking.guest_id = guests.guest_id   
+		room_bookings.guest_id = guests.guest_id   
 	JOIN
 		rooms
 	ON
@@ -1023,7 +1071,7 @@ BEGIN
 	ON
 		reservations.reservation_id = room_bookings.reservation_id
     WHERE
-		room_bookings.date_of_departure >= CURDATE()
+		room_bookings.date_of_arrival <= CURDATE()
 	AND
 		room_bookings.room_status_id = 1; /* Booked */
 
@@ -1049,13 +1097,20 @@ CREATE DEFINER=`sa`@`%` PROCEDURE `sp_GetTodaysCheckOuts`()
 BEGIN
 
 	SELECT 
-		reservations.reservation_id, reservation_type_id, guests.guest_first_name, guests.guest_last_name, room_bookings.room_booking_id, room_bookings.room_no, rooms.floor_no, rooms.block_id
+		reservations.reservation_id, 
+        reservation_type_id, 
+        guests.first_name, 
+        guests.last_name, 
+        room_bookings.room_booking_id, 
+        room_bookings.room_no, 
+        rooms.floor_no, 
+        rooms.block_id
 	FROM
 		room_bookings
 	JOIN
 		guests
 	ON
-		room_booking.guest_id = guests.guest_id   
+		room_bookings.guest_id = guests.guest_id   
 	JOIN
 		rooms
 	ON
@@ -1065,7 +1120,7 @@ BEGIN
 	ON
 		reservations.reservation_id = room_bookings.reservation_id
     WHERE
-		room_bookings.date_of_departure >= CURDATE()
+		room_bookings.date_of_arrival <= CURDATE()
 	AND
 		room_bookings.room_status_id = 2; /* Checked In */
         
@@ -1126,7 +1181,8 @@ DELIMITER ;;
 CREATE DEFINER=`sa`@`%` PROCEDURE `sp_GetUncleanRooms`()
 BEGIN
 	SELECT
-		room_booking_id, room_no
+		room_booking_id, 
+        room_no
 	FROM
 		room_bookings
 	WHERE
@@ -1137,7 +1193,7 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
-/*!50003 DROP PROCEDURE IF EXISTS `sp_InsertExistingGuestAllReservationDetails` */;
+/*!50003 DROP PROCEDURE IF EXISTS `sp_InsertGuestDetails` */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
@@ -1147,86 +1203,47 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`sa`@`%` PROCEDURE `sp_InsertExistingGuestAllReservationDetails`(
-		IN 	guest_id INT(6),
-		IN 	guest_first_name VARCHAR(45),
-		IN 	guest_last_name VARCHAR(45),
+CREATE DEFINER=`sa`@`%` PROCEDURE `sp_InsertGuestDetails`(
+		IN 	first_name VARCHAR(45),
+		IN 	last_name VARCHAR(45),
 		IN 	email_id VARCHAR(45),
 		IN 	phone_no VARCHAR(20),
 		IN 	address VARCHAR(200),
 		IN 	city VARCHAR(45),
 		IN 	zip_code VARCHAR(20),
 		IN 	state VARCHAR(45),
-		IN 	country_id SMALLINT(6),
-		IN 	date_of_arrival DATETIME,
-		IN 	date_of_departure DATETIME,
-		IN 	no_of_people VARCHAR(4),
-		IN 	reservation_comments VARCHAR(400),
-		IN 	reservation_type_id TINYINT(4),
-		IN 	sanskara_id TINYINT(4),
-		IN 	is_a_reference TINYINT(2),
-		IN 	advance_reminder_on DATE,
-		IN 	contact_first_name VARCHAR(45),
-		IN 	contact_last_name VARCHAR(45),
-		IN 	contact_phone_no VARCHAR(20),
-		IN 	contact_relationship VARCHAR(45)
-)
+		IN 	country_id SMALLINT(6)
+	)
 BEGIN
 
-	UPDATE
+	INSERT INTO 
 		guests
-	SET
-			guest_first_name = guest_first_name,
-			guest_last_name = guest_last_name,
-			email_id = email_id,
-			phone_no = phone_no,
-			address = address,
-			city = city,
-			zip_code = zip_code,
-			state = state,
-			country_id = country_id
-	WHERE 
-		guest_id = guest_id;
-
-    
-    INSERT INTO 
-		reservations
-		(	
-			guest_id,
-			date_of_arrival,
-			date_of_departure,
-			no_of_people,
-			reservation_comments,
-			reservation_type_id,
-			reservation_status_id,
-			sanskara_id,
-			is_a_reference,
-            advance_reminder_on
+		(
+			first_name,
+			last_name,
+			email_id,
+			phone_no,
+			address,
+			city,
+			zip_code,
+			state,
+			country_id
 		)
 	VALUES
 		(
-			guest_id,
-			date_of_arrival,
-			date_of_departure,
-			no_of_people,
-			reservation_comments,
-			reservation_type_id,
-			1, /* Created */
-			sanskara_id,
-			is_a_reference,
-            advance_reminder_on
+			first_name,
+			last_name,
+			email_id,
+			phone_no,
+			address,
+			city,
+			zip_code,
+			state,
+			country_id
 		);
-
-	UPDATE 
-		guest_emergency_contacts
-	SET
-		contact_first_name = contact_first_name,
-		contact_last_name = contact_last_name,
-		contact_phone_no = contact_phone_no,
-		contact_relationship = contact_relationship
-	WHERE
-		guest_id = guest_id;
-
+	
+    SELECT LAST_INSERT_ID() AS guest_id;
+    
 
 END ;;
 DELIMITER ;
@@ -1234,7 +1251,7 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
-/*!50003 DROP PROCEDURE IF EXISTS `sp_InsertExistingGuestJustReservationDetails` */;
+/*!50003 DROP PROCEDURE IF EXISTS `sp_InsertGuestEmergencyContactDetails` */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
@@ -1244,12 +1261,55 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`sa`@`%` PROCEDURE `sp_InsertExistingGuestJustReservationDetails`(
+CREATE DEFINER=`sa`@`%` PROCEDURE `sp_InsertGuestEmergencyContactDetails`(
+		IN 	guest_id INT(6),
+		IN 	first_name VARCHAR(45),
+		IN 	last_name VARCHAR(45),
+		IN 	phone_no VARCHAR(20),
+		IN 	relationship VARCHAR(45)
+	)
+BEGIN
+
+INSERT INTO 
+		guest_emergency_contacts
+		(
+			guest_id,
+			first_name,
+			last_name,
+			phone_no,
+			relationship
+		)	
+	VALUES
+		(
+			guest_id,
+			first_name,
+			last_name,
+			phone_no,
+			relationship
+		);
+	
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `sp_InsertReservationDetails` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`sa`@`%` PROCEDURE `sp_InsertReservationDetails`(
 		IN  guest_id INT(6),
 		IN 	date_of_arrival DATETIME,
-		IN 	date_of_departure DATETIME,
+		IN 	date_of_departure DATE,
 		IN 	no_of_people VARCHAR(4),
-		IN 	reservation_comments VARCHAR(400),
+		IN 	reservation_comments VARCHAR(1000),
 		IN 	reservation_type_id TINYINT(4),
 		IN 	sanskara_id TINYINT(4),
 		IN 	is_a_reference TINYINT(2),
@@ -1285,125 +1345,10 @@ BEGIN
             advance_reminder_on
 		);
         
-END ;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
-/*!50003 DROP PROCEDURE IF EXISTS `sp_InsertNewGuestReservationDetails` */;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8mb4 */ ;
-/*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
-DELIMITER ;;
-CREATE DEFINER=`sa`@`%` PROCEDURE `sp_InsertNewGuestReservationDetails`(
-		IN 	guest_first_name VARCHAR(45),
-		IN 	guest_last_name VARCHAR(45),
-		IN 	email_id VARCHAR(45),
-		IN 	phone_no VARCHAR(20),
-		IN 	address VARCHAR(200),
-		IN 	city VARCHAR(45),
-		IN 	zip_code VARCHAR(20),
-		IN 	state VARCHAR(45),
-		IN 	country_id SMALLINT(6),
-		IN 	date_of_arrival DATETIME,
-		IN 	date_of_departure DATETIME,
-		IN 	no_of_people VARCHAR(4),
-		IN 	reservation_comments VARCHAR(400),
-		IN 	reservation_type_id TINYINT(4),
-		IN 	sanskara_id TINYINT(4),
-		IN 	is_a_reference TINYINT(2),
-		IN 	advance_reminder_on DATE,
-		IN 	contact_first_name VARCHAR(45),
-		IN 	contact_last_name VARCHAR(45),
-		IN 	contact_phone_no VARCHAR(20),
-		IN 	contact_relationship VARCHAR(45)
-	)
-BEGIN
-
-	INSERT INTO 
-		guests
-		(
-			guest_first_name,
-			guest_last_name,
-			email_id,
-			phone_no,
-			address,
-			city,
-			zip_code,
-			state,
-			country_id
-		)
-	VALUES
-		(
-			guest_first_name,
-			guest_last_name,
-			email_id,
-			phone_no,
-			address,
-			city,
-			zip_code,
-			state,
-			country_id
-		);
-	
-    SET @guest_id = LAST_INSERT_ID();
-    
-    INSERT INTO 
-		reservations
-		(	
-			guest_id,
-			date_of_arrival,
-			date_of_departure,
-			no_of_people,
-			reservation_comments,
-			reservation_type_id,
-			reservation_status_id,
-			sanskara_id,
-			is_a_reference,
-            advance_reminder_on
-			
-		)
-	VALUES
-		(
-		@guest_id,
-		date_of_arrival,
-		date_of_departure,
-		no_of_people,
-		reservation_comments,
-		reservation_type_id,
-		1, /* Created */
-		sanskara_id,
-		is_a_reference,
-        advance_reminder_on
-		);
-
-	INSERT INTO 
-		guest_emergency_contacts
-		(
-			guest_id,
-			contact_first_name,
-			contact_last_name,
-			contact_phone_no,
-			contact_relationship
-		)	
-	VALUES
-		(
-			@guest_id,
-			contact_first_name,
-			contact_last_name,
-			contact_phone_no,
-			contact_relationship
-		);
-	
-				
-		SELECT @guest_id;
-
+		SELECT LAST_INSERT_ID() AS reservation_id;
+        
+        
+        
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -1551,7 +1496,7 @@ CREATE DEFINER=`sa`@`%` PROCEDURE `sp_UpdateDonationDetails`(
 	IN 	reservation_id INT(6),
 	IN 	guest_id INT(6),
     IN 	received_on DATE,
-    IN 	amount DECIMAL,
+    IN 	amount DECIMAL(10,0),
     IN 	receipt_no VARCHAR(20),
     IN 	is_advance TINYINT(2)
 )
@@ -1607,8 +1552,8 @@ DELIMITER ;
 DELIMITER ;;
 CREATE DEFINER=`sa`@`%` PROCEDURE `sp_UpdateGuestDetails`(
 		IN 	guest_id INT(6),
-		IN 	guest_first_name VARCHAR(45),
-		IN 	guest_last_name VARCHAR(45),
+		IN 	first_name VARCHAR(45),
+		IN 	last_name VARCHAR(45),
 		IN 	email_id VARCHAR(45),
 		IN 	phone_no VARCHAR(20),
 		IN 	address VARCHAR(200),
@@ -1622,8 +1567,8 @@ BEGIN
 	UPDATE
 		guests
 	SET
-			guest_first_name = guest_first_name,
-			guest_last_name = guest_last_name,
+			first_name = first_name,
+			last_name = last_name,
 			email_id = email_id,
 			phone_no = phone_no,
 			address = address,
@@ -1653,10 +1598,10 @@ DELIMITER ;
 DELIMITER ;;
 CREATE DEFINER=`sa`@`%` PROCEDURE `sp_UpdateGuestEmergencyContactDetails`(
 		IN 	guest_id INT(6),
-		IN 	contact_first_name VARCHAR(45),
-		IN 	contact_last_name VARCHAR(45),
-		IN 	contact_phone_no VARCHAR(20),
-		IN 	contact_relationship VARCHAR(45)
+		IN 	first_name VARCHAR(45),
+		IN 	last_name VARCHAR(45),
+		IN 	phone_no VARCHAR(20),
+		IN 	relationship VARCHAR(45)
 )
 BEGIN
 
@@ -1664,10 +1609,10 @@ BEGIN
 	UPDATE 
 		guest_emergency_contacts
 	SET
-		contact_first_name = contact_first_name,
-		contact_last_name = contact_last_name,
-		contact_phone_no = contact_phone_no,
-		contact_relationship = contact_relationship
+		first_name = first_name,
+		last_name = last_name,
+		phone_no = phone_no,
+		relationship = relationship
 	WHERE
 		guest_emergency_contacts.guest_id = guest_id;
 
@@ -1690,9 +1635,9 @@ DELIMITER ;;
 CREATE DEFINER=`sa`@`%` PROCEDURE `sp_UpdateReservationDetails`(
 		IN 	reservation_id INT(6),
         IN 	date_of_arrival DATETIME,
-		IN 	date_of_departure DATETIME,
+		IN 	date_of_departure DATE,
 		IN 	no_of_people VARCHAR(4),
-		IN 	reservation_comments VARCHAR(400),
+		IN 	reservation_comments VARCHAR(1000),
 		IN 	advance_reminder_on DATE
 )
 BEGIN
@@ -1725,13 +1670,15 @@ DELIMITER ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 CREATE DEFINER=`sa`@`%` PROCEDURE `sp_UpdateTodaysCheckIns`(
-    IN str_reservation_ids VARCHAR(200),
-    IN str_room_booking_ids VARCHAR(500)
+	IN str_room_booking_ids VARCHAR(500),
+    IN str_reservation_ids VARCHAR(200)
 )
 BEGIN
-	IF str_reservation_ids IS NOT NULL THEN /* Update full reservations */
   
   SET @counter = 1;
+  
+  /* Returns count of values in the given string */
+  SET @len = LENGTH(str_reservation_ids) - LENGTH(REPLACE(str_reservation_ids, ',', '')) + 1; 
      
 	REPEAT
 		SET @reservation_id = strSplit(str_reservation_ids, ',', @counter);
@@ -1743,53 +1690,18 @@ BEGIN
 				SET
 					reservation_status_id = 2 /* Checked In */
 				WHERE
-					reservation_id = @reservation_id;
+					reservations.reservation_id = @reservation_id;
                     
-				UPDATE
-					room_bookings
-				SET
-					room_status_id = 2 /* Checked In */
-				WHERE
-					reservation_id = @reservation_id;
 		END IF;
 						  
 		SET @counter = @counter + 1;
-		
-		UNTIL ROW_COUNT() = 0
+        SET @len = @len - 1;
+
+		UNTIL @len <> 0 
     
   END REPEAT;
-  
-END IF;
 
 
-IF str_room_booking_ids IS NOT NULL THEN /* Update rooms only */
-
-	 SET @counter = 1;
-     
-	REPEAT
-		
-        SET @room_booking_id = strSplit(str_room_booking_ids, ',', @counter);
-        
-		IF @room_booking_id IS NOT NULL THEN
-        
-				UPDATE 
-					room_bookings, reservations
-				SET 
-					room_bookings.room_status_id = 2, /* Checked In */
-                    reservations.room_status_id = 2
-				WHERE
-					reservations.reservation_id = room_bookings.reservation_id
-				AND
-					room_booking_id = @room_booking_id;
-		END IF;
-				  
-		SET @counter = @counter + 1;
-		
-		UNTIL ROW_COUNT() = 0
-		
-  END REPEAT;
-  
-END IF;
       
 END ;;
 DELIMITER ;
@@ -1888,4 +1800,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-05-23 17:16:51
+-- Dump completed on 2018-05-27 14:59:30
