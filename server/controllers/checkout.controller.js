@@ -20,7 +20,7 @@ export function find(req, res) {
 
     connection.query(call_stored_proc, true, (error, results, fields) => {
     if (error) {
-        return console.error(error.message);
+        return res.send(error.message);
     }
     console.log(results[0]);
    
@@ -46,7 +46,7 @@ export function add(req, res) {
 
     connection.query(call_stored_proc, true, (error, results, fields) => {
     if (error) {
-        return console.error(error.message);
+        return res.send(error.message);
     }
     });
       

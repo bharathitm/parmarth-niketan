@@ -20,7 +20,7 @@ export function findById(req, res) {
 
     connection.query(call_stored_proc, true, (error, results, fields) => {
     if (error) {
-        return console.error(error.message);
+        return res.send(error.message);
     }
     console.log(results[0]);
     connection.end();   
@@ -36,21 +36,55 @@ export function findById(req, res) {
  */
 export function add(req, res) {
 
-    var call_stored_proc = "CALL sp_InsertExistingGuestJustReservationDetails('" 
-    + req.params.id + "','"
+    var call_stored_proc = "CALL sp_InsertReservationDetails('" 
+    + req.body.guest_id + "','"
     + req.body.date_of_arrival + "','"
     + req.body.date_of_departure + "','"
-    + req.body.no_of_people + "','"
-    + req.body.reservation_comments + "','"
-    + req.body.reservation_type_id + "','"
-    + req.body.sanskara_id + "','"
-    + req.body.is_a_reference + "','"
-    + req.body.advance_reminder_on + 
-    "')";
+
+    //no_of_people does not have the ' after the ,  
+    + req.body.no_of_people + "',"
+
+     // Since reservation_comments is an optional field, we pass this as null
+     if (req.body.reservation_comments == undefined){
+        call_stored_proc += null  + ","        
+    }
+    else {
+        call_stored_proc +=  "'" + req.body.reservation_comments + "',"
+    }
+
+    //reservation_type_id does not have the ' after the ,  
+    call_stored_proc +=  "'" + req.body.reservation_type_id + "',"
+
+     // Since sanskara_id is an optional field, we pass this as null
+    if (req.body.sanskara_id == undefined){
+        call_stored_proc += null  + ","        
+    }
+    else {
+        call_stored_proc +=  "'" + req.body.sanskara_id + "',"
+    }
+    
+
+    // If is_a_reference is not set, we pass this as 0
+    if (req.body.is_a_reference == undefined){
+        call_stored_proc += "0,"        
+    }
+    else {
+        call_stored_proc +=  "'" + req.body.is_a_reference + "',"
+    }
+
+     // Since advance_reminder_on is an optional field, we pass this as null
+     if (req.body.advance_reminder_on == undefined){
+        call_stored_proc += null
+    }
+    else {
+        call_stored_proc +=  "'" + req.body.advance_reminder_on + "'"
+    }
+    
+    call_stored_proc += ")";
 
     connection.query(call_stored_proc, true, (error, results, fields) => {
     if (error) {
-        return console.error(error.message);
+        return res.send(error.message);
     }
     });
       
@@ -68,22 +102,38 @@ export function add(req, res) {
 export function update(req, res) {
 
     var call_stored_proc = "CALL sp_UpdateReservationDetails('" 
-    + req.body.reservation_id + "','"
+    + req.params.id + "','" // reservation_id
     + req.body.date_of_arrival + "','"
     + req.body.date_of_departure + "','"
-    + req.body.no_of_people + "','"
-    + req.body.reservation_comments + "','"
-    + req.body.advance_reminder_on + 
-    "')";
+
+    //no_of_people does not have the ' after the ,  
+    + req.body.no_of_people + "',"
+
+    // Since reservation_comments is an optional field, we pass this as null
+    if (req.body.reservation_comments == undefined){
+        call_stored_proc += null  + ","        
+    }
+    else {
+        call_stored_proc +=  "'" + req.body.reservation_comments + "',"
+    }
+
+    // Since advance_reminder_on is an optional field, we pass this as null
+    if (req.body.advance_reminder_on == undefined){
+        call_stored_proc += null
+    }
+    else {
+        call_stored_proc +=  "'" + req.body.advance_reminder_on + "'"
+    }
+
+    call_stored_proc += ")";
 
     connection.query(call_stored_proc, true, (error, results, fields) => {
     if (error) {
-        return console.error(error.message);
+        return res.send(error.message);
     }
     });
       
     connection.end();   
-
 }
 
 /**
@@ -101,7 +151,7 @@ export function cancel(req, res) {
 
     connection.query(call_stored_proc, true, (error, results, fields) => {
     if (error) {
-        return console.error(error.message);
+        return res.send(error.message);
     }
  
     connection.end();   

@@ -22,7 +22,7 @@ export function findByPhone(req, res) {
 
     connection.query(call_stored_proc, true, (error, results, fields) => {
     if (error) {
-        return console.error(error.message);
+        return res.send(error.message);
     }
     console.log(results[0]);
     });
@@ -45,7 +45,7 @@ export function findByEmailId(req, res) {
 
     connection.query(call_stored_proc, true, (error, results, fields) => {
     if (error) {
-        return console.error(error.message);
+        return res.send(error.message);
     }
     console.log(results[0]);
     });
@@ -68,8 +68,10 @@ export function findById(req, res) {
 
     connection.query(call_stored_proc, true, (error, results, fields) => {
     if (error) {
-        return console.error(error.message);
+        return res.send(error.message);        
     }
+    res.send(results[0]);
+   
     });
       
     connection.end();    
@@ -86,9 +88,18 @@ export function add(req, res) {
 
     var call_stored_proc = "CALL sp_InsertGuestDetails('" 
     + req.body.first_name + "','"
-    + req.body.last_name + "','"
-    + req.body.email_id + "','"
-    + req.body.phone_no + "','"
+
+    // Since email_id is an optional field, we pass this as null
+    if (req.body.email_id == undefined){
+        call_stored_proc +=  call_stored_proc + req.body.last_name + "',"
+        + null  + ",'"        
+    }
+    else {
+        call_stored_proc +=  req.body.last_name + "','"
+        + req.body.email_id + "','"
+    }
+    
+    call_stored_proc +=  req.body.phone_no + "','"
     + req.body.address + "','"
     + req.body.city + "','"
     + req.body.zip_code + "','"
@@ -98,7 +109,7 @@ export function add(req, res) {
 
     connection.query(call_stored_proc, true, (error, results, fields) => {
     if (error) {
-        return console.error(error.message);
+        return res.send(error.message);
     }
     });
       
@@ -130,7 +141,7 @@ export function update(req, res) {
 
     connection.query(call_stored_proc, true, (error, results, fields) => {
     if (error) {
-        return console.error(error.message);
+        return res.send(error.message);
     }
     });
       

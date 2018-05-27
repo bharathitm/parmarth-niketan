@@ -55,7 +55,7 @@ CREATE TABLE `countries` (
   `country_name` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`country_id`),
   UNIQUE KEY `country_id_UNIQUE` (`country_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=198 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=295 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -150,7 +150,7 @@ CREATE TABLE `guests` (
   `phone_no` varchar(20) NOT NULL,
   `address` varchar(200) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL,
   `city` varchar(45) NOT NULL,
-  `zip_code` varchar(10) DEFAULT NULL,
+  `zip_code` varchar(10) NOT NULL,
   `state` varchar(45) NOT NULL,
   `country_id` smallint(6) NOT NULL,
   `created_on` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -158,7 +158,7 @@ CREATE TABLE `guests` (
   UNIQUE KEY `idguests_UNIQUE` (`guest_id`),
   KEY `fk_countries_guests` (`country_id`),
   CONSTRAINT `fk_countries_guests` FOREIGN KEY (`country_id`) REFERENCES `countries` (`country_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -167,7 +167,7 @@ CREATE TABLE `guests` (
 
 LOCK TABLES `guests` WRITE;
 /*!40000 ALTER TABLE `guests` DISABLE KEYS */;
-INSERT INTO `guests` VALUES (1,'Bharathi','T M','bharathitm@gmail.com','9884350777','Besant Nagar','Chennai','90','Tamil Nadu',77,'2018-05-19 18:30:00'),(2,'Sandhya','T M','tm.sandhya@gmail.com','000','Shastri Nagar','Chennai','600090','T N',77,'2018-05-20 09:39:46'),(3,'Radhika','Sholapur','radhika@gmail.com','9884350777','Patri House','Kakinada','90','Andhra Pradesh',77,'2018-05-25 05:18:03'),(4,'FirstName','Last Name','someone@gmail.com','888','Besant Nagar','Chennai','00','T N',77,'2018-05-26 16:05:06');
+INSERT INTO `guests` VALUES (1,'Bharathi','T M','bharathitm@gmail.com','9884350777','Besant Nagar','Chennai','90','Tamil Nadu',77,'2018-05-19 18:30:00'),(2,'Sandhya','T M','tm.sandhya@gmail.com','000','Shastri Nagar','Chennai','600090','T N',77,'2018-05-20 09:39:46'),(3,'Radhika','Sholapur','radhika@gmail.com','9884350777','Patri House','Kakinada','90','Andhra Pradesh',77,'2018-05-25 05:18:03'),(4,'FirstName','Last Name','someone@gmail.com','888','Besant Nagar','Chennai','00','T N',77,'2018-05-26 16:05:06'),(5,'James','Bond',NULL,'007','Somewhere','New York','007','NY',188,'2018-05-27 13:59:45');
 /*!40000 ALTER TABLE `guests` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -239,7 +239,7 @@ CREATE TABLE `reservation_statuses` (
 
 LOCK TABLES `reservation_statuses` WRITE;
 /*!40000 ALTER TABLE `reservation_statuses` DISABLE KEYS */;
-INSERT INTO `reservation_statuses` VALUES (1,'Booked'),(2,'Checked In'),(3,'Checked Out'),(4,'Cancelled'),(5,'No Show');
+INSERT INTO `reservation_statuses` VALUES (1,'New'),(2,'Booked'),(3,'Checked In'),(4,'Checked Out'),(5,'Cancelled'),(6,'No Show');
 /*!40000 ALTER TABLE `reservation_statuses` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -285,7 +285,7 @@ CREATE TABLE `reservations` (
   `reservation_type_id` tinyint(4) NOT NULL,
   `reservation_status_id` tinyint(4) NOT NULL,
   `sanskara_id` tinyint(4) DEFAULT NULL,
-  `is_a_reference` tinyint(2) DEFAULT '0',
+  `is_a_reference` tinyint(2) NOT NULL,
   `advance_reminder_on` date DEFAULT NULL,
   `total_amount` decimal(10,0) DEFAULT NULL,
   `created_on` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -293,13 +293,13 @@ CREATE TABLE `reservations` (
   UNIQUE KEY `reservation_id_UNIQUE` (`reservation_id`),
   KEY `fk_resevation_statuses_reservations` (`reservation_status_id`),
   KEY `fk_resevation_types_reservations` (`reservation_type_id`),
-  KEY `fk_sanskaras_reservations` (`sanskara_id`),
   KEY `fk_guests_reservations` (`guest_id`),
+  KEY `fk_sanskaras_reservations` (`sanskara_id`),
   CONSTRAINT `fk_guests_reservations` FOREIGN KEY (`guest_id`) REFERENCES `guests` (`guest_id`),
   CONSTRAINT `fk_resevation_statuses_reservations` FOREIGN KEY (`reservation_status_id`) REFERENCES `reservation_statuses` (`reservation_status_id`),
   CONSTRAINT `fk_resevation_types_reservations` FOREIGN KEY (`reservation_type_id`) REFERENCES `reservation_types` (`reservation_type_id`),
   CONSTRAINT `fk_sanskaras_reservations` FOREIGN KEY (`sanskara_id`) REFERENCES `sanskaras` (`sanskara_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -308,7 +308,7 @@ CREATE TABLE `reservations` (
 
 LOCK TABLES `reservations` WRITE;
 /*!40000 ALTER TABLE `reservations` DISABLE KEYS */;
-INSERT INTO `reservations` VALUES (1,1,'2018-05-22 00:00:00','2018-10-27','99','99 ppl are coming',1,3,NULL,0,'2018-09-27',NULL,'2018-05-20 09:41:13'),(2,2,'2018-05-21 00:00:00','2018-05-31','100',NULL,6,2,NULL,0,NULL,NULL,'2018-05-20 09:42:21'),(3,1,'2018-05-25 00:00:00','2018-10-27','99','99 ppl are coming',1,1,1,0,NULL,NULL,'2018-05-24 14:27:24'),(4,1,'2018-10-08 00:00:00','2018-10-16','199','199 ppl are coming now',1,1,1,0,'2018-09-27',NULL,'2018-05-24 14:41:40');
+INSERT INTO `reservations` VALUES (1,1,'2018-05-22 00:00:00','2018-10-27','99','99 ppl are coming',1,3,NULL,0,'2018-09-27',NULL,'2018-05-20 09:41:13'),(2,2,'2018-05-21 00:00:00','2018-05-31','100',NULL,6,2,NULL,0,NULL,NULL,'2018-05-20 09:42:21'),(3,1,'2018-05-25 00:00:00','2018-10-27','99','99 ppl are coming',1,1,1,0,NULL,NULL,'2018-05-24 14:27:24'),(4,1,'2018-10-08 00:00:00','2018-10-16','199','199 ppl are coming now',1,5,1,0,'2018-09-27',NULL,'2018-05-24 14:41:40'),(5,5,'2018-06-01 00:00:00','2018-06-05','10','10 ppl are coming',1,1,1,0,NULL,NULL,'2018-05-27 15:26:00'),(6,5,'2018-06-11 00:00:00','2018-06-15','8','8 ppl are coming',1,1,1,0,NULL,NULL,'2018-05-27 16:03:29'),(7,5,'2018-06-11 00:00:00','2018-06-15','8',NULL,1,1,NULL,0,NULL,NULL,'2018-05-27 16:04:59'),(8,5,'2018-06-20 00:00:00','2018-06-25','88','test again',1,1,NULL,0,NULL,NULL,'2018-05-27 16:08:06'),(9,5,'2018-06-11 00:00:00','2018-06-15','8',NULL,1,1,1,0,NULL,NULL,'2018-05-27 16:08:58'),(10,5,'2018-06-11 00:00:00','2018-06-15','8','test',1,1,NULL,0,'2018-06-01',NULL,'2018-05-27 16:09:54');
 /*!40000 ALTER TABLE `reservations` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -350,7 +350,7 @@ CREATE TABLE `room_bookings` (
 
 LOCK TABLES `room_bookings` WRITE;
 /*!40000 ALTER TABLE `room_bookings` DISABLE KEYS */;
-INSERT INTO `room_bookings` VALUES (1,4,'616',1,1,'2018-05-26','2018-05-26',700,3,'2018-04-29 13:03:50'),(2,5,'617',1,1,'2018-05-26','2018-05-26',600,3,'2018-04-29 13:03:50'),(3,1,'613',2,2,'2018-05-21','2018-05-25',400,2,'2018-04-29 13:03:50'),(4,51,'',NULL,NULL,'0000-00-00','0000-00-00',NULL,1,'2018-04-29 13:03:50'),(5,58,'',NULL,NULL,'0000-00-00','0000-00-00',NULL,1,'2018-04-29 13:03:50'),(6,1,'613',NULL,NULL,'2018-05-19','2018-05-25',700,1,'2018-05-19 18:30:00');
+INSERT INTO `room_bookings` VALUES (1,4,'616',1,1,'2018-05-26','2018-05-26',700,3,'2018-04-29 13:03:50'),(2,5,'617',1,1,'2018-05-26','2018-05-26',600,3,'2018-04-29 13:03:50'),(3,1,'613',2,2,'2018-05-21','2018-05-25',400,2,'2018-04-29 13:03:50'),(4,51,'',4,NULL,'0000-00-00','0000-00-00',NULL,5,'2018-04-29 13:03:50'),(5,58,'',4,NULL,'0000-00-00','0000-00-00',NULL,5,'2018-04-29 13:03:50'),(6,1,'613',4,NULL,'2018-05-19','2018-05-25',700,5,'2018-05-19 18:30:00');
 /*!40000 ALTER TABLE `room_bookings` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -375,7 +375,7 @@ CREATE TABLE `room_statuses` (
 
 LOCK TABLES `room_statuses` WRITE;
 /*!40000 ALTER TABLE `room_statuses` DISABLE KEYS */;
-INSERT INTO `room_statuses` VALUES (1,'Booked'),(2,'Checked In'),(3,'Checked Out'),(4,'Housekeeping Completed');
+INSERT INTO `room_statuses` VALUES (1,'Booked'),(2,'Checked In'),(3,'Checked Out'),(4,'Housekeeping Completed'),(5,'Cancelled'),(6,'No Show');
 /*!40000 ALTER TABLE `room_statuses` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -528,12 +528,46 @@ BEGIN
 	UPDATE 
 		reservations
 	SET 
-		reservation_status_id = 4 /* Cancelled */
+		reservation_status_id = 5 /* Cancelled */
 	WHERE
 		reservations.reservation_id = reservation_id;
         
-	/*CALL sp_DeleteRoomBookings (reservation_id);*/
+	CALL sp_CancelRoomBookings (reservation_id, null);
 
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `sp_CancelRoomBookings` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`sa`@`%` PROCEDURE `sp_CancelRoomBookings`(
+	IN reservation_id INT(6),
+    IN room_booking_ids VARCHAR(400)
+)
+BEGIN
+
+IF reservation_id IS NOT NULL THEN
+	UPDATE
+		room_bookings
+	SET 
+		room_status_id = 5 /* Cancelled */
+	WHERE
+		room_bookings.reservation_id = reservation_id;
+ELSE
+	/* Loop through the room_booking_ids string and delete each record */
+	SELECT 1;
+END IF;
+		
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -561,38 +595,6 @@ SELECT EXISTS
 		WHERE 
 			user_name = email_id
 	) AS is_user;
-END ;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
-/*!50003 DROP PROCEDURE IF EXISTS `sp_DeleteRoomBookings` */;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8mb4 */ ;
-/*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
-DELIMITER ;;
-CREATE DEFINER=`sa`@`%` PROCEDURE `sp_DeleteRoomBookings`(
-	IN 	reservation_id INT(6),
-    IN room_booking_ids VARCHAR(400)
-)
-BEGIN
-
-IF room_booking_ids IS NULL THEN
-	DELETE FROM
-		room_bookings
-	WHERE
-		reservation_id = reservation_id;
-ELSE
-	/* Loop through the room_booking_ids string and delete each record */
-	SELECT 1;
-END IF;
-		
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -1339,7 +1341,7 @@ BEGIN
 			no_of_people,
 			reservation_comments,
 			reservation_type_id,
-			1, /* Created */
+			1, /* New */
 			sanskara_id,
 			is_a_reference,
             advance_reminder_on
@@ -1688,7 +1690,7 @@ BEGIN
 				UPDATE
 					reservations
 				SET
-					reservation_status_id = 2 /* Checked In */
+					reservation_status_id = 3 /* Checked In */
 				WHERE
 					reservations.reservation_id = @reservation_id;
                     
@@ -1737,7 +1739,7 @@ IF str_reservation_ids IS NOT NULL THEN /* Update full reservations */
 				UPDATE
 					reservations
 				SET
-					reservation_status_id = 3 /* Checked Out */
+					reservation_status_id = 4 /* Checked Out */
 				WHERE
 					reservation_id = @reservation_id;
                     
@@ -1800,4 +1802,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-05-27 14:59:30
+-- Dump completed on 2018-05-27 22:27:48
