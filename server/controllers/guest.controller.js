@@ -24,7 +24,7 @@ export function findByPhone(req, res) {
     if (error) {
         return res.send(error.message);
     }
-    console.log(results[0]);
+    res.send(results[0]);
     });
       
     connection.end();    
@@ -47,7 +47,7 @@ export function findByEmailId(req, res) {
     if (error) {
         return res.send(error.message);
     }
-    console.log(results[0]);
+    res.send(results[0]);
     });
       
     connection.end();    
