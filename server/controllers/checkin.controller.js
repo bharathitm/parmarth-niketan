@@ -25,7 +25,7 @@ export function find(req, res) {
     res.send(results[0]);
    
     });
-    connection.end();     
+   //connection.end();     
 }
 
 /**
@@ -50,7 +50,7 @@ export function findByDates(req, res) {
     res.send(results[0]);
     });
       
-    connection.end();   
+    //connection.end();   
 }
 
 /**
@@ -63,8 +63,8 @@ export function findByDates(req, res) {
 export function add(req, res) {
 
     var call_stored_proc = "CALL sp_UpdateTodaysCheckIns('" 
-    + req.body.str_room_booking_ids + "','"
-    + req.body.str_reservation_ids + "')";
+    + req.body.str_reservation_ids + "','"
+    + req.body.str_room_booking_ids + "')";
 
     console.log(call_stored_proc);
 
@@ -74,5 +74,5 @@ export function add(req, res) {
     }
     });
       
-    connection.end();   
+    //connection.end();   
 }

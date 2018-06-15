@@ -23,7 +23,7 @@ export function find(req, res) {
         return res.send(error.message);
     }
     res.send(results[0]);
-    connection.end();   
+    //connection.end();   
     });
 }
 
@@ -50,6 +50,6 @@ export function findByDates(req, res) {
         return res.send(error.message);
     }
     res.send(results[0]);
-    connection.end();   
+   // connection.end();   
     });
 }

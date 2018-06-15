@@ -1,49 +1,21 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {Provider} from 'react-redux';
-import { MuiThemeProvider, createMuiTheme } from 'material-ui/styles';
-import {blueGrey} from 'material-ui/colors';
-import {AppContainer} from 'react-hot-loader';
 
-// Import custom components
-import store from './store/store';
-import MainRouter from './routers/routes';
-import {verifyToken} from './actions/tokenAction';
+import { Dashboard } from './components/dashboard/Dashboard';
 
-const mountNode = document.getElementById('root');
-const theme = createMuiTheme({
-    palette: {
-        primary: blueGrey
-    }
-});
+import {Tabs, TabLink, TabContent} from 'react-tabs-redux';
+import { Reservations } from './components/reservations/Reservations';
 
-// Used to log in if token is valid
-store.dispatch(verifyToken());
-
-const renderApp = () => {
-    ReactDOM.render(
-        <MuiThemeProvider theme={theme}>
-            <Provider store={store}>
-                <MainRouter />
-            </Provider>
-        </MuiThemeProvider>,
-        mountNode
-    );
-};
-
-renderApp();
-
-// Hot Module Replacement of react components
-if (module.hot) {
-    module.hot.accept('./routers/routes', () => {
-        const HotMainRouter = require('./routers/routes').default;
-        ReactDOM.render(
-            <MuiThemeProvider theme={theme}>
-                <Provider store={store}>
-                    <HotMainRouter />
-                </Provider>
-            </MuiThemeProvider>,
-            mountNode
-        );
-    });
-}
+ReactDOM.render(
+            
+      <Tabs class="tabs">
+            <TabLink to="Dashboard">Dashboard</TabLink>
+            <TabLink to="Reservations">Reservations</TabLink>
+            <TabLink to="Reports">Reports</TabLink>
+                  <hr/>
+            <TabContent for="Dashboard"><h3>Dashboard</h3><Dashboard/></TabContent>
+            <TabContent for="Reservations"><h3>Add a Reservation</h3><Reservations/></TabContent>
+            <TabContent for="Reports"><h3>Reports</h3></TabContent>
+      </Tabs>,
+        document.getElementById('root')
+  );

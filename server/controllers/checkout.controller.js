@@ -25,7 +25,7 @@ export function find(req, res) {
     res.send(results[0]);
    
     });
-    connection.end();     
+    //connection.end();     
 }
 
 
@@ -50,5 +50,5 @@ export function add(req, res) {
     }
     });
       
-    connection.end();   
+    //connection.end();   
 }

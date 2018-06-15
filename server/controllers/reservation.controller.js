@@ -23,7 +23,7 @@ export function findById(req, res) {
         return res.send(error.message);
     }
     res.send(results[0]);
-    connection.end();   
+    //connection.end();   
     });
 }
 
@@ -88,7 +88,7 @@ export function add(req, res) {
     }
     });
       
-    connection.end();   
+    //connection.end();   
 
 }
 
@@ -133,7 +133,7 @@ export function update(req, res) {
     }
     });
       
-    connection.end();   
+    //connection.end();   
 }
 
 /**
@@ -154,6 +154,6 @@ export function cancel(req, res) {
         return res.send(error.message);
     }
  
-    connection.end();   
+    //connection.end();   
     });
 }
