@@ -14,9 +14,7 @@ var connection = mysql.createConnection(config);
  * @param {object} res
  * @returns {*}
  */
-export function findByPhone(req, res) {
-
-    
+export function findByPhone(req, res) {    
     
     var call_stored_proc = "CALL sp_GetGuestDetailsByPhone('" + req.query.ph + "')";
 
@@ -45,6 +43,7 @@ export function findByEmailId(req, res) {
 
     connection.query(call_stored_proc, true, (error, results, fields) => {
     if (error) {
+        console.log(error);
         return res.send(error.message);
     }
     res.send(results[0]);
@@ -91,7 +90,7 @@ export function add(req, res) {
 
     // Since email_id is an optional field, we pass this as null
     if (req.body.email_id == undefined){
-        call_stored_proc +=  call_stored_proc + req.body.last_name + "',"
+        call_stored_proc +=  req.body.last_name + "',"
         + null  + ",'"        
     }
     else {
@@ -107,10 +106,12 @@ export function add(req, res) {
     + req.body.country_id + 
     "')";
 
+
     connection.query(call_stored_proc, true, (error, results, fields) => {
     if (error) {
         return res.send(error.message);
     }
+    res.send(results[0]);
     });
       
    // connection.end();   

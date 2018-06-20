@@ -2,6 +2,11 @@ import bcrypt from 'bcrypt';
 import HttpStatus from 'http-status-codes';
 import User from '../models/user.model';
 
+var mysql = require('mysql');
+var config = require('../config.js');
+
+var connection = mysql.createConnection(config);
+
 /**
  * Find all the users
  *
@@ -30,7 +35,7 @@ export function findAll(req, res) {
  * @param {object} res
  * @returns {*}
  */
-export function findById(req, res) {
+/*export function findById(req, res) {
     User.forge({id: req.params.id})
         .fetch()
         .then(user => {
@@ -50,6 +55,55 @@ export function findById(req, res) {
                 error: err
             })
         );
+}*/
+ 
+
+
+/* export function findById(req, res) {
+
+   connection_get.query(sql_get, true, (error, results, fields) => {
+        if (error) {
+          return console.error(error.message);
+        }
+        console.log(results[0]);
+      });
+       
+      connection_get.end();
+
+  
+    var qry = "SELECT email, name, created_at FROM users WHERE id = "+ req.params.id;
+    mysqlconnection.query(qry, function(err, results) {
+        if (err) {
+            utilController.LogError('3', 'loginUtils', 'get_user_details', err);
+            res.status(500);
+            res.send(global.internalServerError);
+        } else {
+            res.status(200);
+            res.json({
+                error:false,
+                data:results
+            });
+            res.send(utilController.success100(results));
+}
+    });
+    
+}*/
+
+export function findById(req, res) {
+
+    var call_stored_proc = "CALL sp_CheckIfUser('" +  req.params.id + "')";
+
+    console.log(call_stored_proc);
+
+    connection.query(call_stored_proc, true, (error, results, fields) => {
+    if (error) {
+        return res.send(error.message);
+    }
+    res.send(results[0]);
+    console.log(results[0]);
+   
+    });
+   // connection.end();     
 }
 
 /**

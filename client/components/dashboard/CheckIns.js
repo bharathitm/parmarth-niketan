@@ -93,7 +93,7 @@ export class CheckIns extends React.Component {
         const payload = {
           str_reservation_ids: str_reservations,
           str_room_booking_ids: str_rooms
-    };
+        };
   
     fetch("http://localhost:3000/api/checkins/", {
         method: 'POST',

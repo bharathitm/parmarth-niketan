@@ -47,6 +47,8 @@ export function add(req, res) {
     + req.body.is_advance + 
     "')";
 
+    console.log(call_stored_proc);
+
     connection.query(call_stored_proc, true, (error, results, fields) => {
     if (error) {
         return res.send(error.message);

@@ -22,6 +22,7 @@ export function findById(req, res) {
     if (error) {
         return res.send(error.message);
     }
+    console.log(results[0]);
     res.send(results[0]);
     //connection.end();   
     });
@@ -45,18 +46,18 @@ export function add(req, res) {
     + req.body.no_of_people + "',"
 
      // Since reservation_comments is an optional field, we pass this as null
-     if (req.body.reservation_comments == undefined){
+     if (req.body.reservation_comments == ''){
         call_stored_proc += null  + ","        
     }
     else {
-        call_stored_proc +=  "'" + req.body.reservation_comments + "',"
+        call_stored_proc +=  "'" + req.body.reservation_comments.replace("'","''") + "',"
     }
 
     //reservation_type_id does not have the ' after the ,  
     call_stored_proc +=  "'" + req.body.reservation_type_id + "',"
 
      // Since sanskara_id is an optional field, we pass this as null
-    if (req.body.sanskara_id == undefined){
+    if (req.body.sanskara_id == 0) {
         call_stored_proc += null  + ","        
     }
     else {
@@ -65,7 +66,7 @@ export function add(req, res) {
     
 
     // If is_a_reference is not set, we pass this as 0
-    if (req.body.is_a_reference == undefined){
+    if (req.body.is_a_reference == undefined || req.body.is_a_reference == ''){
         call_stored_proc += "0,"        
     }
     else {
@@ -73,7 +74,7 @@ export function add(req, res) {
     }
 
      // Since advance_reminder_on is an optional field, we pass this as null
-     if (req.body.advance_reminder_on == undefined){
+     if (req.body.advance_reminder_on == ''){
         call_stored_proc += null
     }
     else {
@@ -82,8 +83,11 @@ export function add(req, res) {
     
     call_stored_proc += ")";
 
+    console.log(call_stored_proc);
+
     connection.query(call_stored_proc, true, (error, results, fields) => {
     if (error) {
+        console.log(error.message);
         return res.send(error.message);
     }
     });
@@ -101,6 +105,8 @@ export function add(req, res) {
  */
 export function update(req, res) {
 
+    console.log(req.body.advance_reminder_on);
+
     var call_stored_proc = "CALL sp_UpdateReservationDetails('" 
     + req.params.id + "','" // reservation_id
     + req.body.date_of_arrival + "','"
@@ -110,25 +116,40 @@ export function update(req, res) {
     + req.body.no_of_people + "',"
 
     // Since reservation_comments is an optional field, we pass this as null
-    if (req.body.reservation_comments == undefined){
+    if (req.body.reservation_comments == '' || req.body.reservation_comments == null){
         call_stored_proc += null  + ","        
     }
     else {
-        call_stored_proc +=  "'" + req.body.reservation_comments + "',"
+        call_stored_proc +=  "'" + req.body.reservation_comments.replace("'","''") + "',"
     }
 
     // Since advance_reminder_on is an optional field, we pass this as null
-    if (req.body.advance_reminder_on == undefined){
+    if (req.body.advance_reminder_on == ''){
         call_stored_proc += null
     }
     else {
         call_stored_proc +=  "'" + req.body.advance_reminder_on + "'"
     }
+ 
+    call_stored_proc +=  ",'" + req.body.reservation_type_id + "',"
+
+    //call_stored_proc +=  "'" + req.body.sanskara_id + "'"
+
+    // Since advance_reminder_on is an optional field, we pass this as null
+    if (req.body.sanskara_id == 0){
+        call_stored_proc += null
+    }
+    else {
+        call_stored_proc +=  "'" + req.body.sanskara_id + "'"
+    }
 
     call_stored_proc += ")";
 
+    console.log(call_stored_proc);
+
     connection.query(call_stored_proc, true, (error, results, fields) => {
     if (error) {
+        console.log(error.message);
         return res.send(error.message);
     }
     });
@@ -146,11 +167,13 @@ export function update(req, res) {
 
 export function cancel(req, res) {
 
-    console.log(req.params.id);
     var call_stored_proc = "CALL sp_CancelReservation('" + req.params.id + "')";
+
+    console.log(call_stored_proc);
 
     connection.query(call_stored_proc, true, (error, results, fields) => {
     if (error) {
+        console.log(error.message);
         return res.send(error.message);
     }
  

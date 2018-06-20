@@ -22,6 +22,7 @@ export function findById(req, res) {
     if (error) {
         return res.send(error.message);
     }
+    console.log(results[0]);
     res.send(results[0]);
    
     });
@@ -36,7 +37,7 @@ export function findById(req, res) {
  * @returns {*}
  */
 export function add(req, res) {
-
+ 
     var call_stored_proc = "CALL sp_InsertGuestEmergencyContactDetails('" 
     + req.body.guest_id + "','"
     + req.body.first_name + "','"
@@ -49,10 +50,8 @@ export function add(req, res) {
     if (error) {
         return res.send(error.message);
     }
+    res.send(results[0]);
     });
-      
-    //connection.end();   
-
 }
 
 /**

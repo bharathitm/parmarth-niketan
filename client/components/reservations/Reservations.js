@@ -1,33 +1,102 @@
 import React from 'react';
 
-import MultiStep from 'react-multistep';
+import StepZilla from 'react-stepzilla';
+
 
 import { GuestContacts } from './GuestContacts';
 import { EmergencyContacts } from './EmergencyContacts';
+import { ReservationDetails } from './ReservationDetails';
+import { AdvanceDonations } from './AdvanceDonations';
+import { Empty } from './Empty';
 
 export class Reservations extends React.Component {
 
     constructor(props) {
       super(props);
       this.state = {
-        steps: [
-            {}
-        ],
+        guestId: ''
       };
+
+      this.sampleStore = {
+        arrivalDate: '2018-06-16',
+        departureDate: '2018-06-30',
+        firstName: '',
+        lastName: '',
+        email: '',
+        phone: '',
+        address: '',
+        city: '',
+        pin: '',
+        region: '',
+        country: '',
+        eFirstName: '',
+        eLastName: '',
+        ePhone: '',
+        eRelationship:'',
+        arrivalTime: '',
+        reservationTypeId: '',
+        sanskaraId: '',
+        noOfPpl: '',
+        advanceReminderOn: '',
+        comments: '',
+        guestId: '',
+        guestEmergencyContactId:'',
+        reservationId:'',
+        aDonations: [
+          {
+            donationId: '',
+            advanceReceivedOn: '',
+            advanceAmount: '',
+            advanceReceiptNo: ''
+          }
+        ],
+        // aDonations: [
+        //   {}
+        // ],
+        date1: '',
+        savedToCloud: false
+      };
+    }
+
+    getStore() {
+      return this.sampleStore;
+    }
+  
+    updateStore(update) {
+      this.sampleStore = {
+        ...this.sampleStore,
+        ...update,
+      }
+    }
+
+    componentDidMount(){
+      //hide Empty component
+      var pageLis = document.getElementsByTagName("li");
+      pageLis[4].style.visibility = "hidden";
+
     }
 
 
     render() {
+
+        const steps =
+        [
+            {name: 'Guest', component: <GuestContacts getStore={() => (this.getStore())} updateStore={(u) => {this.updateStore(u)}}/>},
+            {name: 'Emergency Contact', component: <EmergencyContacts getStore={() => (this.getStore())} updateStore={(u) => {this.updateStore(u)}}/>},
+            {name: 'Reservation', component: <ReservationDetails getStore={() => (this.getStore())} updateStore={(u) => {this.updateStore(u)}}/>},
+            {name: 'Advance Donation', component: <AdvanceDonations getStore={() => (this.getStore())} updateStore={(u) => {this.updateStore(u)}}/>},
+            {name: 'Empty', component: <Empty/>}
+        ]
+
           return (
-            <div>
-           { this.state.steps = [
-              {name: 'StepOne', component: <GuestContacts/>},
-              {name: 'StepTwo', component: <EmergencyContacts/>},
-              {name: 'StepThree', component: <StepThree/>},
-              {name: 'StepFour', component: <StepFour/>}
-            ]}
-            
-            <Multistep showNavigation={true} steps={this.state.steps}/>
+            <div className='step-progress'>            
+            <StepZilla steps={steps} 
+              dontValidate={true} // to be removed
+              nextTextOnFinalActionStep={"Save"}
+              hocValidationAppliedTo={[3]}
+              startAtStep={window.sessionStorage.getItem('step') ? parseFloat(window.sessionStorage.getItem('step')) : 0}
+              onStepChange={(step) => window.sessionStorage.setItem('step', step)}
+            />
             </div>
           );
     }
