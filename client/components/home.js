@@ -1,6 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
+import ErrorBoundary from './ErrorBoundary';
+
 import {Login } from './login'; 
 import {Tabs, TabLink, TabContent} from 'react-tabs-redux';
 import { Dashboard } from './dashboard/Dashboard';
@@ -50,22 +52,26 @@ export class Home extends React.Component {
 
             return(
                   <div>
-                        <div style={{ visibility: this.state.validUser? 'hidden':'visible', display: this.state.validUser? 'none':'inline' }}>
-                        <Login  parentMethod={this.redirectOnSuccessfulLogin} getHomeStore={() => (this.getHomeStore())} updateHomeStore={(u) => {this.updateHomeStore(u)}} />
-                        </div>
-                        <div style={{ visibility: this.state.validUser? 'visible':'hidden', display: this.state.validUser? 'inline':'none' }} >
-                        <span id="spGreeting">Welcome, <span id="spUserName"></span>!</span>
-                        <Tabs className="tabs" getHomeStore={() => (this.getHomeStore())} updateHomeStore={(u) => {this.updateHomeStore(u)}}>            
-                              <TabLink to="Reservations">Reservations</TabLink>
-                              {/*<TabLink to="Dashboard">Dashboard</TabLink>
-                              <TabLink to="Reports">Reports</TabLink> */}
-                                    <hr/>
-                  
-                              <TabContent for="Reservations"><h3>Add a Reservation</h3><Reservations/></TabContent>
-                              {/*  <TabContent for="Dashboard"><h3>Dashboard</h3><Dashboard/></TabContent>
-                              <TabContent for="Reports"><h3>Reports</h3><Reports/></TabContent> */}
-                        </Tabs>
-                        </div>
+                        <ErrorBoundary>
+                              <div style={{ visibility: this.state.validUser? 'hidden':'visible', display: this.state.validUser? 'none':'inline' }}>
+                              <Login  parentMethod={this.redirectOnSuccessfulLogin} getHomeStore={() => (this.getHomeStore())} updateHomeStore={(u) => {this.updateHomeStore(u)}} />
+                              </div>
+                              <div style={{ visibility: this.state.validUser? 'visible':'hidden', display: this.state.validUser? 'inline':'none' }} >
+                              <span id="spGreeting">Welcome, <span id="spUserName"></span>!</span>
+                              <Tabs className="tabs"> 
+                              <TabLink to="Dashboard">Dashboard</TabLink>           
+                                    <TabLink to="Reservations">Reservations</TabLink>
+                                   
+                                    <TabLink to="Reports">Reports</TabLink> 
+                                          <hr/>
+                        
+                                          <TabContent for="Dashboard"><h3>Dashboard</h3><Dashboard/></TabContent>
+                                    <TabContent for="Reservations"><h3>Add a Reservation</h3><Reservations/></TabContent>
+                                   
+                                    <TabContent for="Reports"><h3>Check In Report</h3><Reports/></TabContent> 
+                              </Tabs>
+                              </div>
+                        </ErrorBoundary>
                   </div>
             )
       }

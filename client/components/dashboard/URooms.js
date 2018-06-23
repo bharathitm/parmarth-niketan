@@ -2,6 +2,9 @@ import React from 'react';
 
 import {Checkbox, CheckboxGroup} from 'react-checkbox-group';
 
+import {logError, checkError} from '../../utils/helpers';
+import {API_URL} from '../../config/config';
+
 export class URooms extends React.Component {
 
     constructor(props) {
@@ -20,26 +23,24 @@ export class URooms extends React.Component {
 
   componentDidMount() {
     
-    fetch("http://localhost:3000/api/urooms/")
-      .then(res => res.json())
-      .then(
-        (result) => {
-          this.setState({
-            isLoaded: true,
-            items: result,
-            selectedRooms: []
-          });
-        },
-        // Note: it's important to handle errors here
-        // instead of a catch() block so that we don't swallow
-        // exceptions from actual bugs in components.
-        (error) => {
+    fetch(API_URL + "urooms/")
+        .then((response) => {
+          return checkError(response);
+        })
+        .then((result) => {
+            this.setState({
+              isLoaded: true,
+              items: result,
+              selectedRooms: []
+            });
+          })
+        .catch((error) => {
           this.setState({
             isLoaded: false,
             error
           });
-        }
-      )
+          logError(this.constructor.name + " " + error);
+        });
     }
 
 
@@ -54,63 +55,68 @@ export class URooms extends React.Component {
      //Done button click
      handleUncleanRoom() {
   
-      //loop through selected rooms and create a | separated string to pass to POST
-      var str_rooms = "";
-      for (var i =0; i <this.state.selectedRooms.length; i++)
-      {  
-        str_rooms+= this.state.selectedRooms[i] + "|";
-      }
-      str_rooms = str_rooms.substring(0,str_rooms.length-1);
-      //alert(str_rooms + " room ids");
+          //loop through selected rooms and create a | separated string to pass to POST
+          var str_rooms = "";
+          for (var i =0; i <this.state.selectedRooms.length; i++)
+          {  
+            str_rooms+= this.state.selectedRooms[i] + "|";
+          }
+          str_rooms = str_rooms.substring(0,str_rooms.length-1);
 
-        const payload = {
-          str_room_booking_ids: str_rooms
-    };
-  
-    fetch("http://localhost:3000/api/urooms/", {
-        method: 'POST',
-        headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload)
+          const payload = {
+            str_room_booking_ids: str_rooms
+          };
+      
+        fetch(API_URL + "urooms/", {
+            method: 'POST',
+            headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(payload)
 
-      })
-        .then(function(response) {
-         
-          // alert(this.state.selectedRooms.length);
-          // this.setState({
-          //   items: this.state.items.filter(x => !this.state.selectedRooms.includes(x))
-          // });
-
-            return response.json()
-          }).then(function(body) {
-            console.log(body);
+          })
+          .then((response) => {
+            return checkError(response);
+          })
+          .catch((error) => {
+            this.setState({
+              isLoaded: false,
+              error
+            });
+            logError(error);
           });
 
-        // var newData = [];
-        // for (var i =0; i <this.state.selectedRooms.length; i++)
-        // {  
-        //   newData.push(this.state.selectedRooms[i]);
-        // }
+          //create a newData array which is a clone of state.items, remove the just selected entries from this newData 
+          //and re-assign newData to state.items. This causes the component to re-render.
+          var newData = this.state.items;
 
-        // alert(newData.length);          
-          
+          for (var i =0; i <this.state.selectedRooms.length; i++){  
+            for (var x=0; x< newData.length; x++){
+              if (newData[x].room_booking_id == this.state.selectedRooms[i]){
+                newData.splice(x,1);
+              }
+            }
+          }
+
+          this.setState({
+            items: newData
+          });
+      
       }
-  
+    
 
     render() {
       const { error, isLoaded, items } = this.state;
 
-      if (error) {
-      return (
-        <div> 
-            Error: 
-            {error.message}
-        </div>
-        );
-      } else if (!isLoaded) {
+      if ((!isLoaded) && (error)){
+        return <div><h4>Housekeeping</h4><hr /><span id="spNoDataorError">{JSON.stringify(error.message)}</span></div>;        
+       } else if (!isLoaded) {
           return <div>Loading...</div>;
+      } else if (items.length == 0){
+          return  (
+          <div><h4>Housekeeping</h4><hr /> No rooms! </div>
+          );
       } else {
           return (
             <div><h4>Housekeeping</h4>
@@ -124,7 +130,7 @@ export class URooms extends React.Component {
                               onChange={this.roomsChanged}>
 
                             {items.map(item => (
-                                <li>
+                                 <li key={Math.random()}>
                                 <Checkbox value={item.room_booking_id}/>                     
                                 {item.room_no}                         
                                 </li>

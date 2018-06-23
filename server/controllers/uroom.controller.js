@@ -1,8 +1,6 @@
-import bcrypt from 'bcrypt';
-import HttpStatus from 'http-status-codes';
-
 var mysql = require('mysql');
 var config = require('../config.js');
+var errorController = require('./error.controller');
 
 var connection = mysql.createConnection(config);
 
@@ -20,7 +18,8 @@ export function find(req, res) {
 
     connection.query(call_stored_proc, true, (error, results, fields) => {
     if (error) {
-        return res.send(error.message);
+        errorController.LogError(error);
+        return res.send(error.code);
     }
     res.send(results[0]);
    
@@ -40,9 +39,12 @@ export function add(req, res) {
     var call_stored_proc = "CALL sp_UpdateCleanedRooms('" 
     + req.body.str_room_booking_ids + "')"
 
+    console.log(call_stored_proc);
+
     connection.query(call_stored_proc, true, (error, results, fields) => {
     if (error) {
-        return res.send(error.message);
+        errorController.LogError(error);
+        return res.send(error.code);
     }
     });
       

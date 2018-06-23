@@ -2,7 +2,8 @@ import React from 'react';
 
 import { GoogleLogin } from 'react-google-login';
 
-import { Home } from './Home'
+import {logError, checkError} from '../utils/helpers';
+import {API_URL} from '../config/config';
 
 
 export class Login extends React.Component {
@@ -30,37 +31,38 @@ export class Login extends React.Component {
     checkIfUserExists(response){
         if(response.w3.U3 != '')
         {
-          fetch("http://localhost:3000/api/users/" + response.w3.U3)
-            .then(res => res.json())
-            .then(
-              (result) => {
-                  if (result[0].is_user){
+          fetch(API_URL + "users/" + response.w3.U3)
+              .then((response) => {
+                return checkError(response);
+                })
+                .then((result) => {
+                      if (result[0].is_user)  {
+                          this.props.updateHomeStore({
+                            accessToken: response.accessToken,
+                            userName: response.w3.ig,
+                            userEmailId: response.w3.U3
+                          });
 
-                    this.props.updateHomeStore({
-                      accessToken: response.accessToken,
-                      userName: response.w3.ig,
-                      userEmailId: response.w3.U3
-                    });
+                          sessionStorage.setItem("accessToken", response.accessToken);
 
-                    sessionStorage.setItem("accessToken", response.accessToken);
-
+                          this.setState({
+                                    isLoaded: true,
+                                    accessToken: response.accessToken,
+                                  }, function() {
+                                        this.loadHomeTabs();
+                                      }
+                            );
+                        }      
+                  })
+                  .catch((error) => {
                     this.setState({
-                               accessToken: response.accessToken,
-                             }, function() {
-                                  this.loadHomeTabs();
-                                }
-                    );
-                  }      
-              },
-              (error) => {
-                this.setState({
-                  isLoaded: false,
-                  error
-                });
-              }
-            )
-        }
-    }
+                      isLoaded: false,
+                      error
+                    });
+                    logError(this.constructor.name + " " + error);
+                  });
+          }
+      }
 
 
     render() {

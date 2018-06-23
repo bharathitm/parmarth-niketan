@@ -1,10 +1,9 @@
-import bcrypt from 'bcrypt';
-import HttpStatus from 'http-status-codes';
-
 var mysql = require('mysql');
 var config = require('../config.js');
+var errorController = require('./error.controller');
 
 var connection = mysql.createConnection(config);
+
 
 
 /**
@@ -20,7 +19,8 @@ export function findById(req, res) {
 
     connection.query(call_stored_proc, true, (error, results, fields) => {
     if (error) {
-        return res.send(error.message);
+        errorController.LogError(error);
+        return res.send(error.code);
     }
     res.send(results[0]);
    
@@ -51,7 +51,8 @@ export function add(req, res) {
 
     connection.query(call_stored_proc, true, (error, results, fields) => {
     if (error) {
-        return res.send(error.message);
+        errorController.LogError(error);
+        return res.send(error.code);
     }
     });
       
@@ -80,7 +81,8 @@ export function update(req, res) {
 
     connection.query(call_stored_proc, true, (error, results, fields) => {
     if (error) {
-        return res.send(error.message);
+        errorController.LogError(error);
+        return res.send(error.code);
     }
     });
       

@@ -1,5 +1,7 @@
 import React from 'react';
 
+import ErrorBoundary from '../ErrorBoundary'
+
 import TodayAvailability from './TodayAvailability';
 import CheckIns from './CheckIns';
 import CheckOuts from './CheckOuts';
@@ -15,8 +17,11 @@ export class Dashboard extends React.Component {
 
     render() {
           return (
+            <div className="divError">
+            <ErrorBoundary>
             <div>
               <table width="100%">
+              <tbody>
                 <tr>
                   <td>
                   <TodayAvailability /> 
@@ -33,7 +38,10 @@ export class Dashboard extends React.Component {
                 <URooms />  
                 </td>
                 </tr>
+                </tbody>
                 </table>
+            </div>
+            </ErrorBoundary>
             </div>
           );
     }

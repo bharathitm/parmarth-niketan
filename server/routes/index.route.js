@@ -9,6 +9,8 @@ import aroomsRoutes from './aroom.route';
 import checkinsRoutes from './checkin.route';
 import checkoutsRoutes from './checkout.route';
 import uroomsRoutes from './uroom.route';
+import errorRoutes from './error.route';
+import cronRoutes from './cron.route';
 
 const router = express.Router();
 
@@ -40,6 +42,12 @@ router.use('/checkouts', checkoutsRoutes);
 
 //Unclean Rooms for Cleaning
 router.use('/urooms', uroomsRoutes);
+
+//Error logging
+router.use('/error', errorRoutes);
+
+//Advance Reminder Service
+router.use('/cron', cronRoutes);
 
 
 export default router;

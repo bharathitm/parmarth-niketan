@@ -2,6 +2,9 @@ import React from 'react';
 
 import blocks from '../../constants/blocks';
 
+import {logError, checkError} from '../../utils/helpers';
+import {API_URL} from '../../config/config';
+
 export class TodayAvailability extends React.Component {
 
     constructor(props) {
@@ -16,38 +19,36 @@ export class TodayAvailability extends React.Component {
 
   componentDidMount() {
     
-    fetch("http://localhost:3000/api/arooms/")
-      .then(res => res.json())
-      .then(
-        (result) => {
+    fetch(API_URL + "arooms/")
+      .then((response) => {
+      return checkError(response);
+      })
+      .then((result) => {
           this.setState({
             isLoaded: true,
             items: result
           });
-        },
-        // Note: it's important to handle errors here
-        // instead of a catch() block so that we don't swallow
-        // exceptions from actual bugs in components.
-        (error) => {
-          this.setState({
-            isLoaded: false,
-            error
-          });
-        }
-      )
+        })
+      .catch((error) => {
+        this.setState({
+          isLoaded: false,
+          error
+        });
+        logError(this.constructor.name + " " + error);
+      });
     }
 
     render() {
-      const { error, isLoaded, items } = this.state;
-      if (error) {
-      return (
-        <div> 
-            Error: 
-            {error.message}
-        </div>
-        );
-      } else if (!isLoaded) {
-          return <div>Loading...</div>;
+      const { isLoaded, error, items } = this.state;
+
+      if ((!isLoaded) && (error)){
+        return <div><h4>Today's Availability</h4><hr /><span id="spNoDataorError">{JSON.stringify(error.message)}</span></div>;        
+       } else if (!isLoaded) {
+        return <div>Loading...</div>;
+      } else if (items.length == 0){
+          return  (
+          <div><h4>Today's Availability</h4><hr /> No rooms! </div>
+          );
       } else {
           return (
             <div><h4>Today's Availability</h4>
@@ -67,12 +68,5 @@ export class TodayAvailability extends React.Component {
         }
       }
     }
-/*
-    const element = <TodayAvailability />;
-    ReactDOM.render(
-      element,
-      document.getElementById('root')
-    );
-*/
 
 export default TodayAvailability;

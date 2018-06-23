@@ -2,6 +2,8 @@ import React from 'react';
 
 import StepZilla from 'react-stepzilla';
 
+import ErrorBoundary from '../ErrorBoundary'
+
 
 import { GuestContacts } from './GuestContacts';
 import { EmergencyContacts } from './EmergencyContacts';
@@ -73,6 +75,7 @@ export class Reservations extends React.Component {
       //hide Empty component
       var pageLis = document.getElementsByTagName("li");
       pageLis[4].style.visibility = "hidden";
+      //pageLis[3].style.visibility = "hidden";
 
     }
 
@@ -89,14 +92,16 @@ export class Reservations extends React.Component {
         ]
 
           return (
+            <div className="divError">
+            <ErrorBoundary>
             <div className='step-progress'>            
             <StepZilla steps={steps} 
-              dontValidate={true} // to be removed
               nextTextOnFinalActionStep={"Save"}
-              hocValidationAppliedTo={[3]}
               startAtStep={window.sessionStorage.getItem('step') ? parseFloat(window.sessionStorage.getItem('step')) : 0}
               onStepChange={(step) => window.sessionStorage.setItem('step', step)}
             />
+            </div>
+            </ErrorBoundary>
             </div>
           );
     }

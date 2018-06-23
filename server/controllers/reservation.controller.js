@@ -1,8 +1,6 @@
-import bcrypt from 'bcrypt';
-import HttpStatus from 'http-status-codes';
-
 var mysql = require('mysql');
 var config = require('../config.js');
+var errorController = require('./error.controller');
 
 var connection = mysql.createConnection(config);
 
@@ -20,7 +18,8 @@ export function findById(req, res) {
 
     connection.query(call_stored_proc, true, (error, results, fields) => {
     if (error) {
-        return res.send(error.message);
+        errorController.LogError(error);
+        return res.send(error.code);
     }
     console.log(results[0]);
     res.send(results[0]);
@@ -87,8 +86,8 @@ export function add(req, res) {
 
     connection.query(call_stored_proc, true, (error, results, fields) => {
     if (error) {
-        console.log(error.message);
-        return res.send(error.message);
+        errorController.LogError(error);
+        return res.send(error.code);
     }
     });
       
@@ -135,7 +134,7 @@ export function update(req, res) {
 
     //call_stored_proc +=  "'" + req.body.sanskara_id + "'"
 
-    // Since advance_reminder_on is an optional field, we pass this as null
+    // Since sankara is an optional field, we pass this as null
     if (req.body.sanskara_id == 0){
         call_stored_proc += null
     }
@@ -149,8 +148,8 @@ export function update(req, res) {
 
     connection.query(call_stored_proc, true, (error, results, fields) => {
     if (error) {
-        console.log(error.message);
-        return res.send(error.message);
+        errorController.LogError(error);
+        return res.send(error.code);
     }
     });
       
@@ -173,8 +172,8 @@ export function cancel(req, res) {
 
     connection.query(call_stored_proc, true, (error, results, fields) => {
     if (error) {
-        console.log(error.message);
-        return res.send(error.message);
+        errorController.LogError(error);
+        return res.send(error.code);
     }
  
     //connection.end();   

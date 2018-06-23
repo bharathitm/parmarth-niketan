@@ -1,10 +1,15 @@
 import React, { Component } from 'react';
 
+import {logError, checkError} from '../../utils/helpers';
+import {API_URL} from '../../config/config';
+
 export class EmergencyContacts extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
+      isLoaded: false,
+      error: null,
       eFirstName: props.getStore().eFirstName,
       eLastName: props.getStore().eLastName,
       ePhone: props.getStore().ePhone,     
@@ -23,27 +28,29 @@ export class EmergencyContacts extends Component {
   }
 
   fetchEmergencyContactsIfExists(){
-    if(this.props.getStore().guestId != '')
-    {
-      fetch("http://localhost:3000/api/econtacts/" + this.props.getStore().guestId)
-        .then(res => res.json())
-        .then(
-          (result) => {
-            this.setState({
-              items: result,
-            }, function() {
-              this.loadEmergencyContactDetails();
-            }
-          );        
-          },
-          (error) => {
-            this.setState({
-              isLoaded: false,
-              error
-            });
-          }
-        )
-    }
+        if(this.props.getStore().guestId != '')
+        {
+          fetch(API_URL + "econtacts/" + this.props.getStore().guestId)
+              .then((response) => {
+                return checkError(response);
+              })
+              .then((result) => {
+                  this.setState({
+                    isLoaded: true,
+                    items: result,
+                  }, function() {
+                    this.loadEmergencyContactDetails();
+                  }
+                );        
+                })
+                .catch((error) => {
+                  this.setState({
+                    isLoaded: false,
+                    error
+                  });
+                  logError(this.constructor.name + " " + error);
+                });
+          }       
   }
 
   loadEmergencyContactDetails(){
@@ -128,37 +135,41 @@ export class EmergencyContacts extends Component {
 
   insertEmergencyContactData(){
 
-    const payload = {
-      guest_id: this.props.getStore().guestId,
-      first_name: this.state.eFirstName,
-      last_name: this.state.eLastName,
-      phone_no: this.state.ePhone,
-      relationship: this.state.eRelationship
-    };
+        const payload = {
+          guest_id: this.props.getStore().guestId,
+          first_name: this.state.eFirstName,
+          last_name: this.state.eLastName,
+          phone_no: this.state.ePhone,
+          relationship: this.state.eRelationship
+        };
 
-
-    fetch("http://localhost:3000/api/econtacts/", {
-      method: 'POST',
-      headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(payload)
-
-    })
-    .then(function(response) {
-          return response.json()
-    })
-    .then(
-        (result) => {   
+        fetch(API_URL + "econtacts/", {
+          method: 'POST',
+          headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(payload)
+        })
+        .then((response) => {
+          return checkError(response);
+        })
+        .then((result) => {   
+              this.setState({
+                isLoaded: true,
+                guestEmergencyContactId: result[0].guest_emergency_contact_id
+              });
+              this.props.updateStore({
+                guestEmergencyContactId: result[0].guest_emergency_contact_id
+              });     
+        })
+        .catch((error) => {
           this.setState({
-            guestEmergencyContactId: result[0].guest_emergency_contact_id
+            isLoaded: false,
+            error
           });
-          this.props.updateStore({
-            guestEmergencyContactId: result[0].guest_emergency_contact_id
-          });     
-        }
-    );
+          logError(error);
+        });
    }
 
    updateEmergencyContactData(){
@@ -172,7 +183,7 @@ export class EmergencyContacts extends Component {
     };
 
 
-    fetch("http://localhost:3000/api/econtacts/" + this.state.guestEmergencyContactId, {
+    fetch(API_URL + "econtacts/" + this.state.guestEmergencyContactId, {
       method: 'POST',
       headers: {
       'Accept': 'application/json',
@@ -181,13 +192,16 @@ export class EmergencyContacts extends Component {
       body: JSON.stringify(payload)
 
     })
-    .then(function(response) {
-          return response.json()
+    .then((response) => {
+      return checkError(response);
     })
-    .then(
-        (result) => {   
-        }
-    );
+    .catch((error) => {
+      this.setState({
+        isLoaded: false,
+        error
+      });
+      logError(error);
+    });
    }
 
   validationCheck() {
@@ -257,6 +271,7 @@ export class EmergencyContacts extends Component {
           <form id="Form" className="form-horizontal">          
                 <h3>Guest's Emergency Contact Details</h3>        
             <table width="100%">
+            <tbody>
               <tr>
                 <td>
                    {/* First Name */}
@@ -334,6 +349,7 @@ export class EmergencyContacts extends Component {
                         </div>
                     </td>
               </tr>
+              </tbody>
               </table>
           </form>
         </div>

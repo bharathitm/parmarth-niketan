@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 
 import countries from '../../constants/countries';
 
-import {Redirect} from 'react-router-dom';
+import {logError, checkError} from '../../utils/helpers';
+import {API_URL} from '../../config/config';
 
 
 export class GuestContacts extends Component {
@@ -10,6 +11,8 @@ export class GuestContacts extends Component {
     super(props);
 
     this.state = {
+      isLoaded: false,
+      error: null,
       firstName: props.getStore().firstName,
       lastName: props.getStore().lastName,
       email: props.getStore().email,
@@ -42,7 +45,7 @@ export class GuestContacts extends Component {
     };
 
 
-    fetch("http://localhost:3000/api/guests/", {
+    fetch(API_URL + "guests/", {
       method: 'POST',
       headers: {
       'Accept': 'application/json',
@@ -51,22 +54,26 @@ export class GuestContacts extends Component {
       body: JSON.stringify(payload)
 
     })
-    .then(function(response) {
-          return response.json()
+    .then((response) => {
+      return checkError(response);
     })
     .then(
         (result) => {
-          // this.setState({...}, function() {
-          //   this.loadGroupsFromQuery();
-          // });
           this.setState({
+            isLoaded: true,
             guestId: result[0].guest_id
           });
           this.props.updateStore({
             guestId: result[0].guest_id
           });
-        }
-    );
+    })
+    .catch((error) => {
+      this.setState({
+        isLoaded: false,
+        error
+      });
+      logError(error);
+    });
   }
 
   updateGuestData(){
@@ -85,7 +92,7 @@ export class GuestContacts extends Component {
     };
 
 
-    fetch("http://localhost:3000/api/guests/" + this.state.guestId, {
+    fetch(API_URL + "guests/" + this.state.guestId, {
       method: 'POST',
       headers: {
       'Accept': 'application/json',
@@ -94,13 +101,16 @@ export class GuestContacts extends Component {
       body: JSON.stringify(payload)
 
     })
-    .then(function(response) {
-          return response.json()
+    .then((response) => {
+      return checkError(response);
     })
-    .then(
-        (result) => {
-        }
-    );
+    .catch((error) => {
+      this.setState({
+        isLoaded: false,
+        error
+      });
+      logError(error);
+    });
   }
 
   populateCountries() {
@@ -112,7 +122,9 @@ export class GuestContacts extends Component {
     return items;
   } 
 
-  componentDidMount() {}
+  componentDidMount() {
+    document.getElementById("spNoDataorError").style.visibility="hidden";
+  }
 
   componentWillUnmount() {}
 
@@ -160,6 +172,8 @@ export class GuestContacts extends Component {
   validationCheck() {
     if (!this._validateOnDemand)
       return;
+
+      document.getElementById("spNoDataorError").style.visibility="hidden";
 
     const userInput = this._grabUserInput(); // grab user entered vals
     const validateNewInput = this._validateData(userInput); // run the new input against the validator
@@ -213,34 +227,35 @@ export class GuestContacts extends Component {
 
   handleEmailSearch(){
 
-    const email = this.refs.email.value;
+        const email = this.refs.email.value;
 
-    const userInput = this._grabUserInput(); // grab user entered vals
-    const validateNewInput = this._validateData(userInput); // run the new input against the validator
+        const userInput = this._grabUserInput(); // grab user entered vals
+        const validateNewInput = this._validateData(userInput); // run the new input against the validator
 
-    if (validateNewInput.emailVal){
-
-        fetch("http://localhost:3000/api/guests/?email=" + email)
-        .then(res => res.json())
-        .then(
-          (result) => {
-            this.setState({
-              items: result,
-            }, function() {
-              this.loadGuestDetails();
-            }
-          );        
-          },
-          (error) => {
-            this.setState({
-              isLoaded: false,
-              error
-            });
-          }
-        )
-     }
-     else{
-    // This needs to fire only the Email Validation alert, not all!
+        if (validateNewInput.emailVal){
+            fetch(API_URL + "guests/?email=" + email)
+              .then((response) => {
+                return checkError(response);
+              })
+              .then((result) => {
+                  this.setState({
+                    isLoaded: true,
+                    items: result,
+                  }, function() {
+                    this.loadGuestDetails();
+                  }
+                );        
+                })
+                .catch((error) => {
+                  this.setState({
+                    isLoaded: false,
+                    error
+                  });
+                  logError(this.constructor.name + " " + error);
+                });
+        }
+        else {
+        // This needs to fire only the Email Validation alert, not all!
 
    // this.setState(Object.assign(userInput, validateNewInput, this._validationErrors(validateNewInput)));
     
@@ -259,27 +274,28 @@ export class GuestContacts extends Component {
     const validateNewInput = this._validateData(userInput); // run the new input against the validator
 
     if (validateNewInput.phoneVal){
-
-        fetch("http://localhost:3000/api/guests/?ph=" + phone)
-        .then(res => res.json())
-        .then(
-          (result) => {
-            this.setState({
-              items: result,
-            }, function() {
-              this.loadGuestDetails();
-            }
-          );        
-          },
-          (error) => {
-            this.setState({
-              isLoaded: false,
-              error
-            });
-          }
-        )
+        fetch(API_URL + "guests/?ph=" + phone)
+            .then((response) => {
+                return checkError(response);
+              })
+            .then((result) => {
+                this.setState({
+                  isLoaded:true,
+                  items: result,
+                }, function() {
+                  this.loadGuestDetails();
+                }
+              );        
+              })
+              .catch((error) => {
+                this.setState({
+                  isLoaded: false,
+                  error
+                });
+                logError(this.constructor.name + " " + error);
+              });
      }
-     else{
+     else {
     // This needs to fire only the Email Validation alert, not all!
 
    // this.setState(Object.assign(userInput, validateNewInput, this._validationErrors(validateNewInput)));
@@ -332,6 +348,9 @@ export class GuestContacts extends Component {
       this.refs.pin.value = this.state.items[0].zip_code,
       this.refs.region.value = this.state.items[0].state,
       this.refs.country.value = this.state.items[0].country_id
+    }
+    else{
+      document.getElementById("spNoDataorError").style.visibility="visible";
     }
   }
 
@@ -425,8 +444,10 @@ export class GuestContacts extends Component {
       <div className="step step3">
         <div className="row">
           <form id="Form" className="form-horizontal">          
-                <h3>Guest Contact Details</h3>        
+                <h3>Guest Contact Details</h3>  
+                <span id="spNoDataorError">No details found!</span>      
             <table width="100%">
+            <tbody>
               <tr>
                 <td>
                    {/* First Name */}
@@ -615,6 +636,7 @@ export class GuestContacts extends Component {
                             </div>
                         </td>
                     </tr>
+                    </tbody>
               </table>
           </form>
         </div>

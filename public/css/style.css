@@ -405,6 +405,28 @@ ol.progtrckr {
 #spUserName{
   font-weight: bold;
 }
+
+/* Reports CSS */
+
+#divCheckInContents{
+  text-align: center;
+}
+
+#divCheckInContents table td{
+  margin: 0;
+  padding: 0;
+  border: solid 1px silver; 
+}
+
+.trHeader td{
+  font-weight: bold;
+}
+
+/* Reports CSS */ 
+
+#spNoDataorError{
+  color: red;
+}
   
 
 

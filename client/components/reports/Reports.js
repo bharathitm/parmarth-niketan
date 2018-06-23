@@ -1,7 +1,12 @@
 import React from 'react';
 
-import DatePicker from 'react-datepicker';
+import ErrorBoundary from '../ErrorBoundary'
+
+import DatePeriodPicker from '../subcomponents/DatePeriodPicker';
 import moment from 'moment';
+
+import {logError, checkError} from '../../utils/helpers';
+import {API_URL} from '../../config/config';
 
 
 export class Reports extends React.Component {
@@ -14,68 +19,60 @@ export class Reports extends React.Component {
             isLoaded: false,
             items: [
             {}
-            ],
+            ]
+        };
+
+        this.reportStore = {
             startDate: moment(),
             endDate: moment()
         };
-
-        this.handleStartDateChange = this.handleStartDateChange.bind(this);
-        this.handleEndDateChange = this.handleEndDateChange.bind(this);
     }
+
+    updateReportStore(update) {
+        this.reportStore = {
+          ...this.reportStore,
+          ...update,
+        }
+      }
 
 
 
     handleShow(){
 
-        const startDate = (this.getFormattedDate(this.state.startDate)).toString();
-        const endDate = (this.getFormattedDate(this.state.endDate)).toString();
+        const startDate = (this.getFormattedDate(this.reportStore.startDate)).toString();
+        const endDate = (this.getFormattedDate(this.reportStore.endDate)).toString();
 
-        fetch("http://localhost:3000/api/checkins/?adate=" + startDate + "&ddate=" + endDate)
-        .then(res => res.json())
-        .then(
-          (result) => {
-            this.setState({
-              isLoaded: true,
-              items: result
-            });
-
-          },
-          // Note: it's important to handle errors here
-          // instead of a catch() block so that we don't swallow
-          // exceptions from actual bugs in components.
-          (error) => {
-            this.setState({
-              isLoaded: false,
-              error
-            });
-          }
-        )
-
+        fetch(API_URL + "checkins/?adate=" + startDate + "&ddate=" + endDate)
+            .then((response) => {
+                return checkError(response);
+            })
+            .then((result) => {
+                this.setState({
+                isLoaded: true,
+                items: result
+                });
+            })
+            .catch((error) => {
+                this.setState({
+                  isLoaded: false,
+                  error
+                });
+                logError(this.constructor.name + " " + error);
+              });
     }
 
     handlePrint(){
         var printWindow = window.open('', '', 'height=400,width=800');
         printWindow.document.write('<html><head><title>Check In Report</title>');
         printWindow.document.write('</head><body >');
-        printWindow.document.write(document.getElementById("divContents").innerHTML);
+        printWindow.document.write(document.getElementById("divCheckInContents").innerHTML);
         printWindow.document.write('</body></html>');
         printWindow.document.close();
         printWindow.print();
     }
 
-    handleStartDateChange(date) {
-        this.setState({
-            startDate: date
-        });
-      }
 
-      handleEndDateChange(date) {
-        this.setState({
-          endDate: date
-        });
-      }
-
-      getFormattedDate(dt) {
+    getFormattedDate(dt) {
         var date = new Date(dt);
         var month = date.getMonth() + 1;
         var day = date. getDate();
@@ -85,102 +82,56 @@ export class Reports extends React.Component {
 
 
     render() {
-        if (!this.state.isLoaded){
+        if (!this.state.isLoaded){ //page load view
             return (
-                <div>
-                <table>
-                    <tr>
-                    <td>
-                   
-
-                    <div className="form-group col-md-12 content form-block-holder">
-                        <label className="control-label col-md-4">
-                        Start Date:
-                        </label>
-                        {/* <div className={notValidClasses.advanceReminderOnCls}> */}
-                        <div>
-                        <DatePicker
-                        ref="startDate"
-                        dateFormat="YYYY-MM-DD"
-                        selected={this.state.startDate}
-                        onChange={this.handleStartDateChange} 
-                        className="form-control" />                       
-                        </div>
-                        </div>
-                    </td>
-                    <td>
-                    <div className="form-group col-md-12 content form-block-holder">
-                        <label className="control-label col-md-4">
-                        End Date:
-                        </label>
-                        {/* <div className={notValidClasses.advanceReminderOnCls}> */}
-                        <div>
-                        <DatePicker ref="endDate"
-                        dateFormat="YYYY-MM-DD"
-                        selected={this.state.endDate}
-                        onChange={this.handleEndDateChange} 
-                        className="form-control"/>
-                        </div>
-                        </div>
-                    </td>  
-                    <td>
-                    <button onClick={() => this.handleShow()}>Show</button>
-                        </td>                 
-                    </tr>
-                    </table>
-                    </div>
+                <div className="divError">
+                <ErrorBoundary>
+                <DatePeriodPicker 
+                    handleShow={() => (this.handleShow())} 
+                    updateReportStore={(u) => {this.updateReportStore(u)}}>
+                </DatePeriodPicker>
+                </ErrorBoundary>
+            </div>
             );
-        }
-        else {
+        } else if (this.state.items.length == 0){ // no data returned
+            return  (
+                <div className="divError">
+                <ErrorBoundary>
+                <DatePeriodPicker 
+                    handleShow={() => (this.handleShow())} 
+                    updateReportStore={(u) => {this.updateReportStore(u)}}>
+                </DatePeriodPicker>
+                </ErrorBoundary>
+            <div>No Check Ins for the given duration! </div>
+            </div>
+            );
+        } else { // when data is returned
           return (
-            <div>
-                <table>
+            <div className="divError">
+            <ErrorBoundary>
+            <table>
+                <tbody>
                     <tr>
-                    <td>
-                    <div className="form-group col-md-12 content form-block-holder">
-                        <label className="control-label col-md-4">
-                        Start Date:
-                        </label>
-                        {/* <div className={notValidClasses.advanceReminderOnCls}> */}
-                        <div>
-                        <DatePicker
-                        ref="startDate"
-                        dateFormat="YYYY-MM-DD"
-                        selected={this.state.startDate}
-                        onChange={this.handleStartDateChange} 
-                        className="form-control" />                          
-                        </div>
-                        </div>
-                    </td>
-                    <td>
-                    <div className="form-group col-md-12 content form-block-holder">
-                        <label className="control-label col-md-4">
-                        End Date:
-                        </label>
-                        {/* <div className={notValidClasses.advanceReminderOnCls}> */} 
-                        <div>
-
-                        <DatePicker ref="endDate"
-                        dateFormat="YYYY-MM-DD"
-                        selected={this.state.endDate}
-                        onChange={this.handleEndDateChange} 
-                        className="form-control"/>                    
-                        </div>
-                        </div>
-                    </td> 
-                    <td>
-                    <button onClick={() => this.handleShow()}>Show</button>
-                        </td> 
-                        <td> <button onClick={() => this.handlePrint()}>Print</button>
+                        <td>
+                            <DatePeriodPicker 
+                                handleShow={() => (this.handleShow())} 
+                                updateReportStore={(u) => {this.updateReportStore(u)}}>
+                            </DatePeriodPicker>
+                        </td>
+                        <td> 
+                            <button onClick={() => this.handlePrint()}>Print</button>
                         </td>             
                     </tr>
-                    </table>
-                    <div id="divContents">
+                </tbody>
+            </table>
+
+             <div id="divCheckInContents">
                         <h2>SWAMI SHUKDEVANAND TRUST</h2>
                         <h2> PARMARTH NIKETAN</h2>                       
-                        <h3>Check In Details from {(this.getFormattedDate(this.state.startDate)).toString()} to {(this.getFormattedDate(this.state.endDate)).toString()}</h3>
+                        <h3>Check In Details from {(this.getFormattedDate(this.reportStore.startDate)).toString()} to {(this.getFormattedDate(this.reportStore.endDate)).toString()}</h3>
                         <table width="100%">
-                            <tr>
+                        <tbody>
+                            <tr class="trHeader">
                                 <td>Arrival Date</td>
                                 <td>Guest Name</td>
                                 <td>No.of People</td>
@@ -198,9 +149,12 @@ export class Reports extends React.Component {
                                 </td>
                             </tr>
                             ))}
+                        </tbody>
                         </table>
-                        </div>
                 </div>
+                       
+            </ErrorBoundary>
+            </div>
           );
         }
     }
