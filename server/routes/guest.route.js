@@ -16,6 +16,9 @@ router.route('/')
         else if ((req.query.email) != undefined){
             guestCtrl.findByEmailId(req, res);
         }
+        else{
+            guestCtrl.search(req, res);
+        }
     })
 
     .post((req, res) => {

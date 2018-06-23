@@ -44,17 +44,17 @@ export class TodayAvailability extends React.Component {
       if ((!isLoaded) && (error)){
         return <div><h4>Today's Availability</h4><hr /><span id="spNoDataorError">{JSON.stringify(error.message)}</span></div>;        
        } else if (!isLoaded) {
-        return <div>Loading...</div>;
+        return <div><h4>Today's Availability</h4><hr />Loading...</div>;
       } else if (items.length == 0){
           return  (
           <div><h4>Today's Availability</h4><hr /> No rooms! </div>
           );
       } else {
           return (
-            <div><h4>Today's Availability</h4>
-             <ul className="todayAvailability" style={{overflow: 'auto', listStyleType: 'none'}}>
+            <div><h4>Today's Availability</h4><hr />
+             <ul>
                  {items.map(item => (
-                  <li style={{ float: 'left', margin: 0, border: '1px solid #aaa', padding: '10px'}} key={item.block_id}>
+                  <li key={item.block_id}>
                     <a href="#">
                       {item.count} <br/>
                     {blocks[item.block_id]} 

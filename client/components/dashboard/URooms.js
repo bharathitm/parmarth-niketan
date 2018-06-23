@@ -1,7 +1,5 @@
 import React from 'react';
 
-import {Checkbox, CheckboxGroup} from 'react-checkbox-group';
-
 import {logError, checkError} from '../../utils/helpers';
 import {API_URL} from '../../config/config';
 
@@ -16,8 +14,12 @@ export class URooms extends React.Component {
         items: [
           {}
         ],
-        selectedRooms: [],
       };
+
+      this.getAllSelectedRooms = this.getAllSelectedRooms.bind(this);
+      this.createRoomsString = this.createRoomsString.bind(this);
+      this.updateUncleanRoomsState = this.updateUncleanRoomsState.bind(this);
+
     }
 
 
@@ -43,26 +45,12 @@ export class URooms extends React.Component {
         });
     }
 
-
-    roomsChanged = (newRooms) => {
-      this.setState({
-        selectedRooms: newRooms
-        }
-      );      
-    }
-
-
      //Done button click
      handleUncleanRoom() {
-  
-          //loop through selected rooms and create a | separated string to pass to POST
-          var str_rooms = "";
-          for (var i =0; i <this.state.selectedRooms.length; i++)
-          {  
-            str_rooms+= this.state.selectedRooms[i] + "|";
-          }
-          str_rooms = str_rooms.substring(0,str_rooms.length-1);
 
+          var selectedRooms = this.getAllSelectedRooms();
+          var str_rooms = this.createRoomsString(selectedRooms);
+  
           const payload = {
             str_room_booking_ids: str_rooms
           };
@@ -87,23 +75,53 @@ export class URooms extends React.Component {
             logError(error);
           });
 
-          //create a newData array which is a clone of state.items, remove the just selected entries from this newData 
-          //and re-assign newData to state.items. This causes the component to re-render.
-          var newData = this.state.items;
+          this.updateUncleanRoomsState(selectedRooms);      
+      }
 
-          for (var i =0; i <this.state.selectedRooms.length; i++){  
-            for (var x=0; x< newData.length; x++){
-              if (newData[x].room_booking_id == this.state.selectedRooms[i]){
-                newData.splice(x,1);
+      getAllSelectedRooms(){
+        //rooms
+        var selectedRooms = [];
+        var checkboxes = document.getElementsByName("uncleanRooms");  
+        
+        for(var i = 0; i < checkboxes.length; i++)  
+        {  
+                if(checkboxes[i].checked) {
+                  selectedRooms.push(checkboxes[i].value);  
+                }         
+        }
+        return selectedRooms;
+      }
+
+      createRoomsString(selectedRooms){
+        //loop through selected rooms and create a | separated string to pass to POST
+        var str_rooms = "";
+        for (var i =0; i < selectedRooms.length; i++)
+        {  
+          str_rooms+= selectedRooms[i] + "|";
+        }
+        str_rooms = str_rooms.substring(0,str_rooms.length-1);
+        return str_rooms;
+      }
+
+
+      updateUncleanRoomsState(selectedRooms){
+
+            //create a newData array which is a clone of state.items, remove the just selected entries from this newData 
+            //and re-assign newData to state.items. This causes the component to re-render.
+            var newData = this.state.items;
+
+            for (var i =0; i < selectedRooms.length; i++){  
+              for (var x=0; x< newData.length; x++){
+                if (newData[x].room_booking_id == selectedRooms[i]){
+                  newData.splice(x,1);
+                }
               }
             }
-          }
 
-          this.setState({
-            items: newData
-          });
-      
-      }
+            this.setState({
+              items: newData
+            });
+        }
     
 
     render() {
@@ -119,23 +137,18 @@ export class URooms extends React.Component {
           );
       } else {
           return (
-            <div><h4>Housekeeping</h4>
+            <div className="divDashboardWidgets"><h4>Housekeeping</h4>
              <hr />
                 <button onClick={() => this.handleUncleanRoom()}>Done</button>
                     <ol>
-                        <CheckboxGroup
-                              checkboxDepth={items.length} // This is needed to optimize the checkbox group
-                              name="selectedRooms"
-                              value={this.state.selectedRooms}
-                              onChange={this.roomsChanged}>
-
                             {items.map(item => (
                                  <li key={Math.random()}>
-                                <Checkbox value={item.room_booking_id}/>                     
-                                {item.room_no}                         
+                                      <input type="checkbox" 
+                                            name="uncleanRooms"
+                                            value={item.room_booking_id}/>                     
+                                                {item.room_no}                         
                                 </li>
-                            ))} 
-                          </CheckboxGroup>     
+                            ))}    
                     </ol>
               </div>
             );

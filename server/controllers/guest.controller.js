@@ -78,6 +78,31 @@ export function findById(req, res) {
 }
 
 /**
+ * Search reservations by email or phone
+ *
+ * @param {object} req
+ * @param {object} res
+ * @returns {*}
+ */
+export function search(req, res) {
+
+    var call_stored_proc = "CALL sp_SearchGuests('" 
+    + req.query.search + "')";    
+
+    console.log(call_stored_proc);
+
+    connection.query(call_stored_proc, true, (error, results, fields) => {
+    if (error) {
+        errorController.LogError(error);
+        return res.send(error.code);
+    }
+    res.send(results[0]);
+    });
+      
+    //connection.end();   
+}
+
+/**
  * Add new guest details
  *
  * @param {object} req

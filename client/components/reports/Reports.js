@@ -22,10 +22,14 @@ export class Reports extends React.Component {
             ]
         };
 
+        this.viewPrint = '';
+
         this.reportStore = {
             startDate: moment(),
             endDate: moment()
         };
+
+        viewPrint:false;
     }
 
     updateReportStore(update) {
@@ -86,7 +90,7 @@ export class Reports extends React.Component {
             return (
                 <div className="divError">
                 <ErrorBoundary>
-                <DatePeriodPicker 
+                <DatePeriodPicker viewPrint = {false}
                     handleShow={() => (this.handleShow())} 
                     updateReportStore={(u) => {this.updateReportStore(u)}}>
                 </DatePeriodPicker>
@@ -97,7 +101,7 @@ export class Reports extends React.Component {
             return  (
                 <div className="divError">
                 <ErrorBoundary>
-                <DatePeriodPicker 
+                <DatePeriodPicker  viewPrint ={false}
                     handleShow={() => (this.handleShow())} 
                     updateReportStore={(u) => {this.updateReportStore(u)}}>
                 </DatePeriodPicker>
@@ -108,49 +112,43 @@ export class Reports extends React.Component {
         } else { // when data is returned
           return (
             <div className="divError">
-            <ErrorBoundary>
-            <table>
-                <tbody>
-                    <tr>
-                        <td>
-                            <DatePeriodPicker 
+                    <ErrorBoundary>
+
+                            <DatePeriodPicker  viewPrint = {true}
                                 handleShow={() => (this.handleShow())} 
                                 updateReportStore={(u) => {this.updateReportStore(u)}}>
-                            </DatePeriodPicker>
-                        </td>
-                        <td> 
-                            <button onClick={() => this.handlePrint()}>Print</button>
-                        </td>             
-                    </tr>
-                </tbody>
-            </table>
+                            </DatePeriodPicker>    
+                       
+                
+                            
 
-             <div id="divCheckInContents">
+             <div id="divCheckInContents" style={{fontFamily: '"Lucida Sans Unicode"'}}>
                         <h2>SWAMI SHUKDEVANAND TRUST</h2>
-                        <h2> PARMARTH NIKETAN</h2>                       
-                        <h3>Check In Details from {(this.getFormattedDate(this.reportStore.startDate)).toString()} to {(this.getFormattedDate(this.reportStore.endDate)).toString()}</h3>
-                        <table width="100%">
+                        <h3 style={{margin: 0}}> PARMARTH NIKETAN</h3>                       
+                        <h4>Check In Details from {(this.getFormattedDate(this.reportStore.startDate)).toString()} to {(this.getFormattedDate(this.reportStore.endDate)).toString()}</h4>
+
+                         <table width="100%" style={{borderSpacing: 0,borderCollapse: 'collapse'}}>
                         <tbody>
-                            <tr class="trHeader">
-                                <td>Arrival Date</td>
-                                <td>Guest Name</td>
-                                <td>No.of People</td>
+                            <tr>
+                                <td style={{margin: 0, padding: 2, border: '1px solid #ddd', fontWeight: 'bold'}}>Arrival Date</td>
+                                <td style={{margin: 0, padding: 2, border: '1px solid #ddd', fontWeight: 'bold'}}>Guest Name</td>
+                                <td style={{margin: 0, padding: 2, border: '1px solid #ddd', fontWeight: 'bold'}}>No.of People</td>
                             </tr>
                             {this.state.items.map(item => (
                             <tr>
-                                <td>
+                                <td style={{margin: 0, padding: 2, border: '1px solid #ddd'}}>
                                     {item.on_date}
                                 </td>
-                                <td>
+                                <td style={{margin: 0, padding: 2, border: '1px solid #ddd'}}>
                                     {item.first_name} {item.last_name}
                                 </td>
-                                <td>
+                                <td style={{margin: 0, padding: 2, border: '1px solid #ddd'}}>
                                     {item.no_of_people}
                                 </td>
                             </tr>
                             ))}
                         </tbody>
-                        </table>
+                        </table> 
                 </div>
                        
             </ErrorBoundary>

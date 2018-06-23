@@ -18,11 +18,11 @@ export class ReservationDetails extends Component {
       error: null,
       arrivalDate: props.getStore().arrivalDate,
       departureDate: props.getStore().departureDate,
-      arrivalTime: props.getStore().arrivalTime,
+      arrivalTime: moment(),
       reservationTypeId: props.getStore().reservationTypeId,
       sanskaraId: props.getStore().sanskaraId,
       noOfPpl: props.getStore().noOfPpl,
-      advanceReminderOn: props.getStore().advanceReminderOn,
+      advanceReminderOn: moment(),
       comments: props.getStore().comments,
       reservationId: props.getStore().reservationId      
     };
@@ -59,7 +59,7 @@ export class ReservationDetails extends Component {
 
     this.refs.arrivalDate.value = this.props.getStore().arrivalDate;
     this.refs.departureDate.value = this.props.getStore().departureDate;
-    this.refs.advanceReminderOn.selected = this.props.getStore().advanceReminderOn;
+    //this.refs.advanceReminderOn.selected = this.props.getStore().advanceReminderOn;
 
     //hide Sanskara Div by default
     this.refs.divSanskara.style.visibility = "hidden";
@@ -107,7 +107,8 @@ export class ReservationDetails extends Component {
       this.props.updateStore({
         reservationId: this.state.items[0].reservation_id,
         //arrivalDate: aDate.format("YYYY-MM-DD"),
-        arrivalDate: aDate,
+        //arrivalDate: aDate,
+        arrivalDate: moment(aDate).format("YYYY-MM-DD"),
         departureDate: this.state.items[0].date_of_departure,
         noOfPpl: this.state.items[0].no_of_people,
         comments: this.state.items[0].reservation_comments,
@@ -124,7 +125,8 @@ export class ReservationDetails extends Component {
       this.setState({
         reservationId: this.state.items[0].reservation_id,
         //arrivalDate: aDate.format("YYYY-MM-DD"),
-        arrivalDate: aDate,
+        arrivalDate: moment(aDate).format("YYYY-MM-DD"),
+        //arrivalDate: aDate,
         departureDate: this.state.items[0].date_of_departure,
         noOfPpl: this.state.items[0].no_of_people,
         comments: this.state.items[0].reservation_comments,
@@ -136,8 +138,8 @@ export class ReservationDetails extends Component {
         arrivalTime: aDate
       });
 
-      //this.refs.arrivalDate.value = aDate.format("YYYY-MM-DD");
-      this.refs.arrivalDate.value = aDate;
+      this.refs.arrivalDate.value = moment(aDate).format("YYYY-MM-DD");
+      //this.refs.arrivalDate.value = aDate;
       this.refs.departureDate.value = this.state.items[0].date_of_departure;
       this.refs.noOfPpl.value = this.state.items[0].no_of_people;
       this.refs.comments.value = this.state.items[0].reservation_comments;
@@ -147,8 +149,6 @@ export class ReservationDetails extends Component {
       this.refs.advanceReminderOn.selected = (this.state.items[0].advance_reminder_on == null)? '' : this.state.items[0].advance_reminder_on;
       this.refs.sanskaraId.value = (this.state.items[0].sanskara_id == null)? 0 : this.state.items[0].sanskara_id
       //this.refs.reservationStatusId.value = this.state.items[0].reservation_status_id  
-
-      alert(this.refs.sanskaraId.value);
       
       //show Sanskara Drop down only if load returns a SanskaraId
       if (this.refs.sanskaraId.value != 0){//Sanskara
@@ -204,7 +204,7 @@ export class ReservationDetails extends Component {
   insertReservationDetails(){
 
     var dt_arrival =  this.state.arrivalDate + " " + moment(this.state.arrivalTime).format("HH:mm").toString();
-
+    
     const payload = {
       guest_id: this.props.getStore().guestId,
       date_of_arrival: dt_arrival,

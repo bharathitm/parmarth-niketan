@@ -20,26 +20,25 @@ export class Dashboard extends React.Component {
             <div className="divError">
             <ErrorBoundary>
             <div>
-              <table width="100%">
-              <tbody>
-                <tr>
-                  <td>
-                  <TodayAvailability /> 
-                 </td>
-                 </tr>
-                 <tr>
-                 <td>
-                 <CheckIns />
-                 </td>
-                 <td>
-               <CheckOuts /> 
-                </td>
-                <td>
-                <URooms />  
-                </td>
-                </tr>
-                </tbody>
-                </table>
+            <div className = "div-table div-dashboard-table">
+                    <div className = "div-table-row">
+                          <div className ="div-table-col div-today-availability-col">
+                              <TodayAvailability /> 
+                          </div>
+                          <br/>
+                    </div>
+                    <div className = "div-table-row">
+                          <div className ="div-table-col div-dashboard-col">
+                              <CheckIns />
+                          </div>
+                          <div className ="div-table-col div-dashboard-col">
+                              <CheckOuts /> 
+                          </div>
+                          <div className ="div-table-col div-dashboard-col">
+                              <URooms />  
+                          </div>
+                    </div>
+              </div>
             </div>
             </ErrorBoundary>
             </div>

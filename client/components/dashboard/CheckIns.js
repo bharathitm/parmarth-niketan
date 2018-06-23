@@ -3,8 +3,6 @@ import React from 'react';
 import blocks from '../../constants/blocks';
 import reservationTypes from '../../constants/reservationTypes';
 
-import {Checkbox, CheckboxGroup} from 'react-checkbox-group';
-
 import {logError, checkError} from '../../utils/helpers';
 import {API_URL} from '../../config/config';
 
@@ -22,80 +20,77 @@ export class CheckIns extends React.Component {
         //loaded reservations & rooms
         checkInReservations: [],
         checkInRooms: [],
-        //selected reservations & rooms
-        selectedReservations: [],
-        selectedRooms: [],
       };
+
+      this.getAllSelectedReservations = this.getAllSelectedReservations.bind(this);
+      this.getAllSelectedRooms = this.getAllSelectedRooms.bind(this);
+      this.createReservationsString = this.createReservationsString.bind(this);
+      this.createRoomsString = this.createRoomsString.bind(this);
+      this.updateCheckInState = this.updateCheckInState.bind(this);
     }
 
-    
-
-  componentDidMount() {
-    
-    fetch(API_URL + "checkins/")
-      .then((response) => {
-        return checkError(response);
-      })
-      .then((result) => {
-          this.setState({
-            isLoaded: true,
-            items: result,
-            checkInReservations: [],
-            checkInRooms: [],
-            selectedReservations: [],
-            selectedRooms: []
-          });
+  
+    componentDidMount() {
+      
+      fetch(API_URL + "checkins/")
+        .then((response) => {
+          return checkError(response);
         })
-        .catch((error) => {
-          this.setState({
-            isLoaded: false,
-            error
+        .then((result) => {
+            this.setState({
+              isLoaded: true,
+              items: result,
+              checkInReservations: [],
+              checkInRooms: []
+            });
+          })
+          .catch((error) => {
+            this.setState({
+              isLoaded: false,
+              error
+            });
+            logError(this.constructor.name + " " + error);
           });
-          logError(this.constructor.name + " " + error);
-        });
-    }
+      }
 
-    reservationsChanged = (newReservations) => {  
-      
-      this.setState({
-        selectedReservations: newReservations
-        }
-      );
-    }
+      //reservation check box click
+      reservationsChanged() {  
 
-    roomsChanged = (newRooms) => {
-      this.setState({
-        selectedRooms: newRooms
-        }
-      );      
-    }
+        //select or de select child rooms
+        var checkboxes = document.getElementsByName("checkInReservations");  
 
-    //Check In button click
-    handleCheckIn() {
-    
-          //loop through selected reservations and create a | separated string to pass to POST
-          var str_reservations = "";
-          for (var i =0; i <this.state.selectedReservations.length; i++)
+          for(var i = 0; i < checkboxes.length; i++)  
           {  
-            str_reservations+= this.state.selectedReservations[i] + "|";
-          }
-          str_reservations = str_reservations.substring(0,str_reservations.length-1);
-          //alert(str_reservations + " reservation ids");
+                  if(checkboxes[i].checked) {
+                    var roomCheckBoxes = checkboxes[i].nextElementSibling.getElementsByTagName("input");
+                        for (var x = 0; x < roomCheckBoxes.length; x ++){
+                          roomCheckBoxes[x].checked = true;
+                        }
+                        
+                  } else {
+                      var roomCheckBoxes = checkboxes[i].nextElementSibling.getElementsByTagName("input");
+                          for (var x = 0; x < roomCheckBoxes.length; x ++){
+                            roomCheckBoxes[x].checked = false;
+                          }
+                          
+                  }   
+            }
+        } 
 
-          //loop through selected rooms and create a | separated string to pass to POST
-          var str_rooms = "";
-          for (var i =0; i <this.state.selectedRooms.length; i++)
-          {  
-            str_rooms+= this.state.selectedRooms[i] + "|";
-          }
-          str_rooms = str_rooms.substring(0,str_rooms.length-1);
-          //alert(str_rooms + " room ids");
+        //Check In button click
+      handleCheckIn() {
 
-            const payload = {
-              str_reservation_ids: str_reservations,
-              str_room_booking_ids: str_rooms
-            };
-      
+        var selectedReservations = this.getAllSelectedReservations();
+        var selectedRooms = this.getAllSelectedRooms();
+
+        var str_reservations = this.createReservationsString(selectedReservations);
+        var str_rooms = this.createRoomsString(selectedRooms);
+
+        const payload = {
+          str_reservation_ids: str_reservations,
+          str_room_booking_ids: str_rooms
+        };
+
         fetch(API_URL + "checkins/", {
             method: 'POST',
             headers: {
@@ -103,7 +98,6 @@ export class CheckIns extends React.Component {
             'Content-Type': 'application/json',
             },
             body: JSON.stringify(payload)
-
           })
           .then((response) => {
             return checkError(response);
@@ -116,32 +110,87 @@ export class CheckIns extends React.Component {
             logError(error);
           });
 
-
-          //create a newData array which is a clone of state.items, remove the just selected entries from this newData 
-          //and re-assign newData to state.items. This causes the component to re-render.
-          var newData = this.state.items;
-
-          for (var i =0; i <this.state.selectedRooms.length; i++){  
-            for (var x=0; x< newData.length; x++){
-              if (newData[x].room_booking_id == this.state.selectedRooms[i]){
-                newData.splice(x,1);
-              }
-            }
-          }
-
-          for (var i =0; i <this.state.selectedReservations.length; i++){  
-            for (var x=0; x< newData.length; x++){
-              if (newData[x].reservation_id == this.state.selectedReservations[i]){
-                newData.splice(x,1);
-              }
-            }
-          }
-
-          this.setState({
-            items: newData
-          });
+        this.updateCheckInState(selectedReservations, selectedRooms);
       }
-  
+
+      getAllSelectedReservations(){
+          //reservations
+          var selectedReservations = [];
+          var checkboxes = document.getElementsByName("checkInReservations");  
+      
+          for(var i = 0; i < checkboxes.length; i++)  
+          {  
+                  if(checkboxes[i].checked) {
+                    selectedReservations.push(checkboxes[i].value);     
+                  }         
+          }
+          return selectedReservations;
+      }
+
+      getAllSelectedRooms(){
+          //rooms
+          var selectedRooms = [];
+          var checkboxes = document.getElementsByName("checkInRooms");  
+          
+          for(var i = 0; i < checkboxes.length; i++)  
+          {  
+                  if(checkboxes[i].checked) {
+                    selectedRooms.push(checkboxes[i].value);  
+                  }         
+          }
+          return selectedRooms;
+        }
+
+      createReservationsString(selectedReservations){
+            //loop through selected reservations and create a | separated string to pass to POST
+            var str_reservations = "";
+            for (var i =0; i < selectedReservations.length; i++)
+            {  
+              str_reservations+= selectedReservations[i] + "|";
+            }
+            str_reservations = str_reservations.substring(0,str_reservations.length-1);
+            return str_reservations;
+      } 
+
+      createRoomsString(selectedRooms){
+            //loop through selected rooms and create a | separated string to pass to POST
+            var str_rooms = "";
+            for (var i =0; i < selectedRooms.length; i++)
+            {  
+              str_rooms+= selectedRooms[i] + "|";
+            }
+            str_rooms = str_rooms.substring(0,str_rooms.length-1);
+            return str_rooms;
+      }
+
+      updateCheckInState(selectedReservations, selectedRooms){
+
+            //create a newData array which is a clone of state.items, remove the just selected entries from this newData 
+            //and re-assign newData to state.items. This causes the component to re-render.
+            var newData = this.state.items;
+
+            for (var i =0; i < selectedRooms.length; i++){  
+              for (var x=0; x< newData.length; x++){
+                if (newData[x].room_booking_id == selectedRooms[i]){
+                  newData.splice(x,1);
+                }
+              }
+            }
+
+            for (var i =0; i < selectedReservations.length; i++){  
+              for (var x=0; x< newData.length; x++){
+                if (newData[x].reservation_id == selectedReservations[i]){
+                  newData.splice(x,1);
+                }
+              }
+            }
+
+            this.setState({
+              items: newData
+            });
+      }
+
+
     render() {
 
       let { isLoaded, error, items, checkInReservations, checkInRooms } = this.state;
@@ -189,47 +238,33 @@ export class CheckIns extends React.Component {
           );
       } else {
           return (
-            <div><h4>Today's Check Ins</h4>
+            <div className="divDashboardWidgets"><h4>Today's Check Ins</h4>
                 <hr />
                 <button onClick={() => this.handleCheckIn()}>Check In</button>
-                    <ul>
-                      <CheckboxGroup
-                            checkboxDepth={checkInReservations.length} // This is needed to optimize the checkbox group
-                            name="selectedReservations" 
-                            value={this.state.selectedReservations}                    
-                            onChange={this.reservationsChanged}> 
-                            
-                            {checkInReservations.map(item => (    
+                    <ol>    
+                        {checkInReservations.map(item => (    
 
-                              <li key={Math.random()}>
-                               <Checkbox 
+                          <li key={Math.random()}>
+                                <input type="checkbox" name="checkInReservations"
+                                    onClick={() => this.reservationsChanged()}
                                     value={item.reservation_id} />
-                                          {reservationTypes[item.reservation_type_id]} {item.name}    
+                                          {reservationTypes[item.reservation_type_id]} {item.name}      
 
-                                           <ol ref="olRooms">
-                                  <CheckboxGroup
-                                        checkboxDepth={checkInRooms.length} // This is needed to optimize the checkbox group
-                                        name="selectedRooms" 
-                                        value={this.state.selectedRooms}                    
-                                        onChange={this.roomsChanged}> 
-                                      
-                                      {checkInRooms.filter(bk => bk.reservation_id == item.reservation_id).map(booking => (
-                                        
-                                        <li>
-                                           <Checkbox 
-                                              key={booking.reservation_id} 
-                                              name={booking.reservation_id} 
-                                              value={booking.room_booking_id}/>
-                                                {booking.room_no + ", " + blocks[booking.block_id]}                   
-                                        </li>
-                                      ))}
-                                     </CheckboxGroup>
-                                  </ol>                                         
-                              </li>                              
-
-                          ))}
-                            </CheckboxGroup>                       
-                      </ul>                    
+                                      <ul>
+                                
+                                          {checkInRooms.filter(bk => bk.reservation_id == item.reservation_id).map(booking => (
+                                  
+                                          <li>
+                                              <input type="checkbox" name="checkInRooms"
+                                                  key={booking.reservation_id} 
+                                                  value={booking.room_booking_id} />
+                                                    {booking.room_no + ", " + blocks[booking.block_id]}                 
+                                          </li>
+                                          ))}
+                                        </ul>                                         
+                            </li>                              
+                      ))}                     
+                  </ol>                    
               </div>
             );
           }

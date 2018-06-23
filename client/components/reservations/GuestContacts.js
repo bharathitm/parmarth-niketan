@@ -24,10 +24,38 @@ export class GuestContacts extends Component {
       country: props.getStore().country      
     }; 
 
+    //this.handleReservationSearch = this.handleReservationSearch.bind(this);
+
     this._validateOnDemand = true; // this flag enables onBlur validation as user fills forms
 
     this.validationCheck = this.validationCheck.bind(this);
     this.isValidated = this.isValidated.bind(this);
+  }
+
+  handleReservationSearch(){
+
+    var search = this.refs.reservationSearch.value;
+
+    fetch(API_URL + "guests/?search=" + search)
+    .then((response) => {
+        return checkError(response);
+    })
+    .then((result) => {
+      this.setState({
+        isLoaded:true,
+        items: result,
+      }, function() {
+        this.loadGuestDetails();
+      }
+    );        
+    })
+    .catch((error) => {
+        this.setState({
+          isLoaded: false,
+          error
+        });
+        logError(this.constructor.name + " " + error);
+      });
   }
 
   insertGuestData(){
@@ -351,6 +379,18 @@ export class GuestContacts extends Component {
     }
     else{
       document.getElementById("spNoDataorError").style.visibility="visible";
+
+      var reservationSearch = String(this.refs.reservationSearch.value);
+
+      this.refs.firstName.value = '',
+      this.refs.lastName.value = '',
+      this.refs.email.value = (reservationSearch != '' && reservationSearch.indexOf('@') != -1)? this.refs.reservationSearch.value : '',
+      this.refs.phone.value = (reservationSearch != '' && this.refs.email.value == '')? this.refs.reservationSearch.value : '',
+      this.refs.address.value = '', 
+      this.refs.city.value = '',
+      this.refs.pin.value = '',
+      this.refs.region.value = '',
+      this.refs.country.value = 0
     }
   }
 
@@ -444,8 +484,20 @@ export class GuestContacts extends Component {
       <div className="step step3">
         <div className="row">
           <form id="Form" className="form-horizontal">          
-                <h3>Guest Contact Details</h3>  
-                <span id="spNoDataorError">No details found!</span>      
+                <h4>Guest Contact Details</h4>  
+                <div id="divReservationSearch">
+                    <input
+                        ref="reservationSearch"
+                        autoComplete="off"
+                        placeholder="Search by email id or phone"
+                        className="form-control email-search" />
+                        <div className="button-holder">
+                            <img src="./img/magnifying_glass.png" onClick={() => this.handleReservationSearch()}/>
+                        </div>
+              </div>
+                <span id="spNoDataorError">No details found!</span>  
+                 
+
             <table width="100%">
             <tbody>
               <tr>
@@ -500,7 +552,6 @@ export class GuestContacts extends Component {
                         ref="email"
                         autoComplete="off"
                         type="email"
-                        // placeholder="john.smith@example.com"
                         className="form-control email-search"
                         required
                         defaultValue={this.state.email} />
@@ -628,7 +679,7 @@ export class GuestContacts extends Component {
                                   required
                                   defaultValue={this.state.country}
                                   onBlur={this.validationCheck}>
-                                  <option value="">Please select</option>
+                                  <option value="0">Please select</option>
                                   {this.populateCountries()}                   
                                 </select>
                                 <div className={notValidClasses.countryValGrpCls}>{this.state.countryValMsg}</div>
@@ -637,7 +688,7 @@ export class GuestContacts extends Component {
                         </td>
                     </tr>
                     </tbody>
-              </table>
+              </table> 
           </form>
         </div>
       </div>

@@ -4,7 +4,6 @@ import StepZilla from 'react-stepzilla';
 
 import ErrorBoundary from '../ErrorBoundary'
 
-
 import { GuestContacts } from './GuestContacts';
 import { EmergencyContacts } from './EmergencyContacts';
 import { ReservationDetails } from './ReservationDetails';
