@@ -109,7 +109,7 @@ export class EmergencyContacts extends Component {
     }
     else {
         // if anything fails then update the UI validation state but NOT the UI Data State
-        this.setState(Object.assign(userInput, validateNewInput));
+        this.setState(Object.assign(userInput, validateNewInput, this._validationErrors(validateNewInput)));
     }
 
     return isDataValid;
@@ -190,6 +190,7 @@ export class EmergencyContacts extends Component {
       'Content-Type': 'application/json',
       },
       body: JSON.stringify(payload)
+
     })
     .then((response) => {
       return checkError(response);
@@ -210,9 +211,19 @@ export class EmergencyContacts extends Component {
     const userInput = this._grabUserInput(); // grab user entered vals
     const validateNewInput = this._validateData(userInput); // run the new input against the validator
 
-    this.setState(Object.assign(userInput, validateNewInput));
+    this.setState(Object.assign(userInput, validateNewInput, this._validationErrors(validateNewInput)));
   }
 
+
+  _validationErrors(val) {
+    const errMsgs = {
+      eFirstNameValMsg: val.eFirstNameVal ? '' : 'First Name is required',
+      eLastNameValMsg: val.eLastNameVal ? '' : 'Last Name is required',
+      ePhoneValMsg: val.ePhoneVal ? '' : 'Phone is required',
+      eRelationshipValMsg: val.eRelationshipVal ? '' : 'Relationship is required',
+    }
+    return errMsgs;
+  }
 
   render() {
     // explicit class assigning based on validation
@@ -220,34 +231,38 @@ export class EmergencyContacts extends Component {
 
     /* First Name */
     if (typeof this.state.eFirstNameVal == 'undefined' || this.state.eFirstNameVal) {
-      notValidClasses.eFirstNameCls = 'form-control';
+      notValidClasses.eFirstNameCls = 'no-error col-md-8';
     }
     else {
-       notValidClasses.eFirstNameCls = 'form-control has-error';
+       notValidClasses.eFirstNameCls = 'has-error col-md-8';
+       notValidClasses.eFirstNameValGrpCls = 'val-err-tooltip';
     }
 
     /* Last Name */    
     if (typeof this.state.eLastNameVal == 'undefined' || this.state.eLastNameVal) {
-      notValidClasses.eLastNameCls = 'form-control';
+      notValidClasses.eLastNameCls = 'no-error col-md-8';
     }
     else {
-       notValidClasses.eLastNameCls = 'form-control has-error';
+       notValidClasses.eLastNameCls = 'has-error col-md-8';
+       notValidClasses.eLastNameValGrpCls = 'val-err-tooltip';
     }
 
     /* Phone */    
     if (typeof this.state.ePhoneVal == 'undefined' || this.state.ePhoneVal) {
-      notValidClasses.ePhoneCls = 'form-control';
+      notValidClasses.ePhoneCls = 'no-error col-md-8';
     }
     else {
-        notValidClasses.ePhoneCls = 'form-control has-error';
+        notValidClasses.ePhoneCls = 'has-error col-md-8';
+        notValidClasses.ePhoneValGrpCls = 'val-err-tooltip';
     }
 
     /* Relationship */    
     if (typeof this.state.eRelationshipVal == 'undefined' || this.state.eRelationshipVal) {
-      notValidClasses.eRelationshipCls = 'form-control';
+      notValidClasses.eRelationshipCls = 'no-error col-md-8';
     }
     else {
-        notValidClasses.eRelationshipCls = 'form-control has-error';
+        notValidClasses.eRelationshipCls = 'has-error col-md-8';
+        notValidClasses.eRelationshipValGrpCls = 'val-err-tooltip';
     }
 
     return (
@@ -263,14 +278,15 @@ export class EmergencyContacts extends Component {
                           <label className="control-label col-md-4">
                             First Name:*
                           </label>
-                          <div className="col-md-8">
+                          <div className={notValidClasses.eFirstNameCls}>
                             <input
                               ref="eFirstName"
                               autoComplete="off"
-                              className={notValidClasses.eFirstNameCls}
+                              className="form-control"
                               required
                               defaultValue={this.state.eFirstName}
                               onBlur={this.validationCheck} />
+                            <div className={notValidClasses.eFirstNameValGrpCls}>{this.state.eFirstNameValMsg}</div>
                             </div>
                       </div>
               </div>
@@ -280,14 +296,15 @@ export class EmergencyContacts extends Component {
                       <label className="control-label col-md-4">
                         Last Name:*
                       </label>
-                      <div className="col-md-8">
+                      <div className={notValidClasses.eLastNameCls}>
                         <input
                           ref="eLastName"
                           autoComplete="off"
-                          className={notValidClasses.eLastNameCls}
+                          className="form-control"
                           required
                           defaultValue={this.state.eLastName}
                           onBlur={this.validationCheck} />                      
+                        <div className={notValidClasses.eLastNameValGrpCls}>{this.state.eLastNameValMsg}</div>
                         </div>
                       </div>
                 </div>
@@ -299,15 +316,16 @@ export class EmergencyContacts extends Component {
                       <label className="control-label col-md-4">
                         Phone: *
                       </label>
-                      <div className="col-md-8">
+                      <div className={notValidClasses.ePhoneCls}>
                         <input
                           type="number"
                           ref="ePhone"
                           autoComplete="off"
-                          className={notValidClasses.ePhoneCls}
+                          className="form-control"
                           required
                           defaultValue={this.state.ePhone}
                           onBlur={this.validationCheck} />
+                        <div className={notValidClasses.ePhoneValGrpCls}>{this.state.ePhoneValMsg}</div>
                       </div>
                     </div>
                 </div>
@@ -317,14 +335,15 @@ export class EmergencyContacts extends Component {
                           <label className="control-label col-md-4">
                             Relationship: *
                           </label>
-                          <div className="col-md-8">
+                          <div className={notValidClasses.eRelationshipCls}>
                             <input
                               ref="eRelationship"
                               autoComplete="off"
-                              className={notValidClasses.eRelationshipCls}
+                              className="form-control"
                               required
                               defaultValue={this.state.eRelationship}
                               onBlur={this.validationCheck} />
+                            <div className={notValidClasses.eRelationshipValGrpCls}>{this.state.eRelationshipValMsg}</div>
                             </div>
                         </div>
                   </div>

@@ -195,7 +195,7 @@ export class ReservationDetails extends Component {
     }
     else {
         // if anything fails then update the UI validation state but NOT the UI Data State
-        this.setState(Object.assign(userInput, validateNewInput));
+        this.setState(Object.assign(userInput, validateNewInput, this._validationErrors(validateNewInput)));
     }    
 
     return isDataValid;
@@ -212,7 +212,7 @@ export class ReservationDetails extends Component {
       no_of_people: this.state.noOfPpl,
       reservation_comments: this.state.comments,
       reservation_type_id: this.state.reservationTypeId,
-      sanskara_id: (this.state.sanskaraId == null)? 0 : this.state.sanskaraId,
+      sanskara_id: this.state.sanskaraId,
       is_a_reference: '0',
       advance_reminder_on: (this.state.advanceReminderOn == '')? '' : this.getFormattedDate(this.state.advanceReminderOn).toString()
     };
@@ -273,7 +273,7 @@ export class ReservationDetails extends Component {
       no_of_people: this.state.noOfPpl,
       reservation_comments: this.state.comments,
       reservation_type_id: this.state.reservationTypeId,
-      sanskara_id: (this.state.sanskaraId == null)? 0 : this.state.sanskaraId,
+      sanskara_id: this.state.sanskaraId,
       advance_reminder_on: (this.state.advanceReminderOn == '')? '' : this.getFormattedDate(this.state.advanceReminderOn).toString()
     };
 
@@ -315,7 +315,7 @@ export class ReservationDetails extends Component {
     const userInput = this._grabUserInput(); // grab user entered vals
     const validateNewInput = this._validateData(userInput); // run the new input against the validator
 
-    this.setState(Object.assign(userInput, validateNewInput));
+    this.setState(Object.assign(userInput, validateNewInput, this._validationErrors(validateNewInput)));
   }
 
    _validateData(data) {
@@ -325,11 +325,25 @@ export class ReservationDetails extends Component {
       reservationTypeVal: (data.reservationTypeId != 0), // required: anything besides N/A
       noOfPplVal: (data.noOfPpl != ''),
       commentsVal: (true),
-      advanceReminderOnVal: (true),  
+      advanceReminderOnVal: (true),
+      //sanskaraVal: (true)    
       sanskaraVal: (data.reservationTypeId == 3 && data.sanskaraId == 0)? false : true
 
       
     }
+  }
+
+  _validationErrors(val) {
+    const errMsgs = {
+      arrivalTimeValMsg: val.arrivalTimeVal ? '' : 'Arrival Time is required',
+      reservationTypeValMsg: val.reservationTypeVal ? '' : 'Reservation Type is required',
+      noOfPplValMsg: val.noOfPplVal ? '' : 'Total no. of people is required',
+      commentsValMsg: '',
+      advanceReminderOnValMsg: '',
+      //sanskaraValMsg: '',
+      sanskaraValMsg: val.sanskaraVal ? '' : 'Sanskara Type is required'
+    }
+    return errMsgs;
   }
 
   _grabUserInput() {
@@ -416,34 +430,38 @@ export class ReservationDetails extends Component {
 
     /* Arrival Time */
     if (typeof this.state.arrivalTimeVal == 'undefined' || this.state.arrivalTimeVal) {
-      notValidClasses.arrivalTimeCls = 'form-control';
+      notValidClasses.arrivalTimeCls = 'no-error col-md-8';
     }
     else {
-       notValidClasses.arrivalTimeCls = 'form-control has-error';
+       notValidClasses.arrivalTimeCls = 'has-error col-md-8';
+       notValidClasses.arrivalTimeValGrpCls = 'val-err-tooltip';
     }
 
     /* Reservation Type */    
     if (typeof this.state.reservationTypeVal == 'undefined' || this.state.reservationTypeVal) {
-      notValidClasses.reservationTypeCls = 'form-control';
+      notValidClasses.reservationTypeCls = 'no-error col-md-8';
     }
     else {
-       notValidClasses.reservationTypeCls = 'form-control has-error';
+       notValidClasses.reservationTypeCls = 'has-error col-md-8';
+       notValidClasses.reservationTypeValGrpCls = 'val-err-tooltip';
     }
 
     /* No. of People */
     if (typeof this.state.noOfPplVal == 'undefined' || this.state.noOfPplVal) {
-        notValidClasses.noOfPplCls = 'form-control';
+        notValidClasses.noOfPplCls = 'no-error col-md-8';
     }
     else {
-       notValidClasses.noOfPplCls = 'form-control has-error';
+       notValidClasses.noOfPplCls = 'has-error col-md-8';
+       notValidClasses.noOfPplValGrpCls = 'val-err-tooltip';
     }
 
      /* Sanskara */
      if (typeof this.state.sanskaraVal == 'undefined' || this.state.sanskaraVal) {
-      notValidClasses.sanskaraCls = 'form-control';
+      notValidClasses.sanskaraCls = 'no-error col-md-8';
   }
   else {
-     notValidClasses.sanskaraCls = 'form-control has-error';
+     notValidClasses.sanskaraCls = 'has-error col-md-8';
+     notValidClasses.sanskaraValGrpCls = 'val-err-tooltip';
   }
 
     
@@ -455,7 +473,7 @@ export class ReservationDetails extends Component {
                 <div className="divFloatRight">  
                 <button className="btnBig" onClick={() => this.handleCancel()}>Cancel</button>   
                 </div>
-                      <div className="divDates">
+                      <div class="divDates">
                       {/* Arrival Date */}
                       <label className="col-md-4">
                             Arrival Date: 
@@ -478,7 +496,7 @@ export class ReservationDetails extends Component {
                                     <label className="control-label col-md-4">
                                       Arrival Time: *
                                     </label>
-                                    <div className="col-md-8">
+                                    <div className={notValidClasses.arrivalTimeCls}>
                                           <DatePicker
                                               ref="arrivalTime"
                                               selected={moment(this.state.arrivalTime)}
@@ -489,8 +507,9 @@ export class ReservationDetails extends Component {
                                               timeIntervals={60}
                                               dateFormat="LT"
                                               timeCaption="Time"
-                                              className={notValidClasses.arrivalTimeCls}
+                                              className="form-control"
                                             />
+                                      <div className={notValidClasses.arrivalTimeValGrpCls}>{this.state.arrivalTimeValMsg}</div>
                                     </div>
                                 </div>
                             </div>
@@ -500,14 +519,15 @@ export class ReservationDetails extends Component {
                         <label className="control-label col-md-4">
                           No. of People: 
                         </label>
-                        <div className="col-md-8">
+                        <div className={notValidClasses.noOfPplCls}>
                           <input
                             ref="noOfPpl"
                             autoComplete="off"
-                            className={notValidClasses.noOfPplCls}
+                            className="form-control"
                             required
                             defaultValue={this.state.noOfPpl}
                             onBlur={this.validationCheck} />
+                          <div className={notValidClasses.noOfPplValGrpCls}>{this.state.noOfPplValMsg}</div>
                         </div>
                       </div>
                   </div>
@@ -519,12 +539,12 @@ export class ReservationDetails extends Component {
                             <label className="control-label col-md-4">
                             Reservation Type: *
                             </label>
-                            <div className="col-md-8">
+                            <div className={notValidClasses.reservationTypeCls}>
 
                                       <select id="slReservationTypes"
                                         ref="reservationTypeId"
                                         autoComplete="off"
-                                        className={notValidClasses.reservationTypeCls}
+                                        className="form-control"
                                         required
                                         defaultValue={this.state.reservationTypeId}
                                         onChange={() => this.handleReservationTypeChange()}
@@ -532,6 +552,7 @@ export class ReservationDetails extends Component {
                                         <option value="">Please select</option>
                                         {this.populateReservationTypes()}                   
                                       </select>                      
+                              <div className={notValidClasses.reservationTypeValGrpCls}>{this.state.reservationTypeValMsg}</div>
                               </div>
                             </div>
                   </div>
@@ -541,18 +562,19 @@ export class ReservationDetails extends Component {
                         <label className="control-label col-md-4">
                         Sanskara:*
                         </label>
-                        <div className="col-md-8">
+                        <div className={notValidClasses.sanskaraCls}>
 
                                   <select id="slSanskaras"
                                     ref="sanskaraId"
                                     autoComplete="off"
-                                    className={notValidClasses.sanskaraCls}
+                                    className="form-control"
                                     required
                                     defaultValue={this.state.sanskaraId}
                                     onBlur={this.validationCheck}>
                                     <option value="0">Please select</option>
                                     {this.populateSanskaras()}                   
                                   </select>                      
+                          <div className={notValidClasses.sanskaraValGrpCls}>{this.state.sanskaraValMsg}</div>
                           </div>
                           </div>
                   </div>
@@ -564,13 +586,13 @@ export class ReservationDetails extends Component {
                       <label className="control-label col-md-4">
                       Advance Reminder On:
                       </label>
-                      <div className="col-md-8">
+                      <div className={notValidClasses.advanceReminderOnCls}>
                       
                       <DatePicker ref="advanceReminderOn"
                         dateFormat="YYYY-MM-DD"
                         selected={moment(this.state.advanceReminderOn)}
                         onChange={this.handleAdvanceReminderChange} 
-                        className={notValidClasses.advanceReminderOnCls}/>
+                        className="form-control"/>
                       </div>
                     </div>
                 </div>

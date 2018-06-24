@@ -240,7 +240,7 @@ export class CheckIns extends React.Component {
           return (
             <div className="divDashboardWidgets"><h4>Today's Check Ins</h4>
                 <hr />
-                <button onClick={() => this.handleCheckIn()}>Check In</button>
+                <button className="btnBig" onClick={() => this.handleCheckIn()}>Check In</button>
                     <ol>    
                         {checkInReservations.map(item => (    
 

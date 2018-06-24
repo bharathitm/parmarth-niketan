@@ -75,10 +75,10 @@ export class DatePickerInput extends Component {
                                     </div>
                                 </div>
                             <div className ="div-table-col">  
-                                    <button onClick={() => this.props.handleShow()}>Show</button>
+                                    <button className="btnBig" onClick={() => this.props.handleShow()}>Show</button>
                             </div>
                             <div className ="div-table-col" style={{ visibility: this.props.viewPrint? 'visible':'hidden', display: this.props.viewPrint? 'inline':'none' }}>  
-                                    <button onClick={() => this.props.handlePrint()}>Print</button>
+                                    <button className="btnBig" onClick={() => this.props.handlePrint()}>Print</button>
                             </div>
                         </div>
                     </div>

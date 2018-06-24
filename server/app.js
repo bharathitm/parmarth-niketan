@@ -1,9 +1,9 @@
 import path from 'path';
 import app from './config/express';
 import routes from './routes/index.route';
-import swagger from './config/swagger';
 import * as errorHandler from './middlewares/errorHandler';
 import joiErrorHandler from './middlewares/joiErrorHandler';
+
 
 // enable webpack hot module replacement in development mode
 import webpack from 'webpack';
@@ -17,12 +17,6 @@ if (process.env.NODE_ENV === 'development') {
     app.use(webpackDevMiddleware(compiler, {noInfo: true, publicPath: webpackConfig.output.publicPath}));
     app.use(webpackHotMiddleware(compiler));
 }
-
-// Swagger API documentation
-app.get('/swagger.json', (req, res) => {
-   res.json(swagger);
-});
-
 
 
 // Router

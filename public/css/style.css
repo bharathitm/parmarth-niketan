@@ -4,6 +4,7 @@ body{
     margin: 0;
     padding:0;
     background: #FFF8E6;
+    /* width:99.8%; */
     /* padding:5px; */
 }
 
@@ -22,7 +23,7 @@ body{
 
 .div-table {
   display: table;         
-  width: 100%;                      
+  width: 100%;                     
 }
 .div-table-row {
   display: table-row;
@@ -37,8 +38,9 @@ body{
   padding:0.8em 0.8em 0.8em 0.8em;      
 }
 
+
 #divHeaderBand{
-  width:100%;
+  width:99.8%;
   height:75px;
   margin: 3em 0 0 0;
   padding:0;
@@ -126,7 +128,7 @@ body{
   margin:0;
 }
 
-button {    
+.btnBig {    
   /* background-color: #5385c1; */
   background-color: #EA9064;
   color: #ffffff !important;
@@ -142,6 +144,7 @@ button {
   border: 0;
   -webkit-appearance: none;
   box-sizing: border-box;
+  font-size: 16px;
 }
 
 .divDashboardWidgets{
@@ -202,8 +205,8 @@ button {
   border: 0;
 }
 
-.div-report-table button{
-  margin-top:3.5em;
+.div-report-table .btnBig{
+  margin-top:3em;
 
 } 
 
@@ -215,9 +218,8 @@ button {
 /* StepZilla CSS Starts Here */
 
 .step-progress{
-  margin:-3em 0 0 0;
+  margin:-5.5em 0 0 0;
 }
-
 
 ol.progtrckr {
     list-style-type: none;
@@ -235,15 +237,14 @@ ol.progtrckr {
     padding: 0 1.5rem;
   }
   
-  @media (max-width: 650px) {
+  @media (max-width: 450px) {
     .progtrckr li span {
       display: none;
     }
   }
   .progtrckr em {
     display: none;
-    font-weight: 700;
-    padding-left: 1rem;
+    font-weight: 700;    
   }
   
   @media (max-width: 650px) {
@@ -254,17 +255,17 @@ ol.progtrckr {
   
   ol.progtrckr li.progtrckr-todo {
     color: silver;
-    border-bottom: 4px solid silver;
+    border-bottom: 10px solid silver;
   }
   
   ol.progtrckr li.progtrckr-doing {
     color: black;
-    border-bottom: 4px solid #CCCCCC;
+    border-bottom: 10px solid rgb(233, 148, 79);
   }
   
   ol.progtrckr li.progtrckr-done {
     color: black;
-    border-bottom: 4px solid #5cb85c;
+    border-bottom: 10px solid #5cb85c;
   }
   
   ol.progtrckr li:after {
@@ -280,10 +281,10 @@ ol.progtrckr {
   
   ol.progtrckr li.progtrckr-todo:before {
     content: "\039F";
-    color: silver;
-    background-color: white;
-    width: 1.2em;
-    line-height: 1.4em;
+    color: white;
+    background-color: #CCCCCC;
+    width: 2em;
+    line-height: 2em;
   }
   
   ol.progtrckr li.progtrckr-todo:hover:before {
@@ -293,10 +294,9 @@ ol.progtrckr {
   ol.progtrckr li.progtrckr-doing:before {
     content: "\2022";
     color: white;
-    background-color: #CCCCCC;
-    width: 1.2em;
-    line-height: 1.2em;
-    border-radius: 1.2em;
+    background-color: rgb(233, 148, 79);
+    width: 2em;
+    line-height: 2em;
   }
   
   ol.progtrckr li.progtrckr-doing:hover:before {
@@ -307,9 +307,8 @@ ol.progtrckr {
     content: "\2713";
     color: white;
     background-color: #5cb85c;
-    width: 1.2em;
-    line-height: 1.2em;
-    border-radius: 1.2em;
+    width: 2em;
+    line-height: 2em;
   }
   
   ol.progtrckr li.progtrckr-done:hover:before {
@@ -320,30 +319,45 @@ ol.progtrckr {
 
   .progtrckr {
     text-align: center;
-    padding-bottom: 16px;
   }
 
-  .progtrckr li {
-    margin-bottom: 10px;
-  }
 
   .val-err-tooltip {
-    background-color: red;
+    /* background-color: red; */
     padding: 3px 5px 3px 10px;
     font-size: 14px;
-    color: #fff;
+    /* color: #fff; */
+    color: black;
+    /* border:solid 1px red; */
   }
 
   .step {
-    background-color: white;
-    min-height: 450px;
-    border:solid 1px silver;
-    padding:1em;
+    padding:1em;  
   }
 
-  .row .form-horizontal .form-group {
+  .row {
+    width:80%;
+    border:solid 1px silver;
+    background-color: white;
+    margin: 0 auto;
+    padding:2em;
+  }
+  
+  .form-horizontal .form-group {
     margin: 0;
     padding:0;
+  }
+
+  .form-horizontal .div-table-col{
+    width:50%;
+    height:75px;
+    margin:0 0 0 0;
+    padding:0;
+    border:0;
+  }
+
+  .form-horizontal .comments-col{
+    height:150px;
   }
 
   .form-horizontal h4{
@@ -352,7 +366,34 @@ ol.progtrckr {
   }
 
   .footer-buttons {
-    margin-top: 10px;
+    width:91%;
+  margin-left:8em;
+  width:82.5%;
+  }
+
+  .footer-buttons button{
+
+      /* background-color: #5385c1; */
+  background-color: #EA9064;
+  color: #ffffff !important;
+  cursor: pointer;
+  display: inline-block;
+  font-weight: 600;
+  height: 2.85em;
+  line-height: 2.95em;
+  padding: 0 1.5em;
+  text-align: center;
+  text-decoration: none;
+  white-space: nowrap;
+  border: 0;
+  -webkit-appearance: none;
+  box-sizing: border-box;
+  font-size: 16px;
+  }
+
+
+  .pull-right{
+    float:right;
   }
 
   html .step3 label, html .step4 label {
@@ -363,6 +404,14 @@ ol.progtrckr {
 
   html .form-horizontal .control-label {
     text-align: left;
+  }
+
+  .form-horizontal .divDates label{
+    width:50%;
+  }
+
+  .spnDates{
+    font-weight: bold;
   }
 
   .review .txt {
@@ -423,24 +472,15 @@ ol.progtrckr {
     margin-top: 20px !important;
   }
 
-  /* overwrite the stepzilla styles */
-  html ol.progtrckr li.progtrckr-todo:before {
-    background-color: #f2f9ff;
-  }
-  
-  /* overwrite the stepzilla styles */
-  html ol.progtrckr li.progtrckr-todo:before {
-    background-color: #f2f9ff;
-  }
+
 
   /* From bootstrap */
   .form-control {
     display: block;
     width: 100%;
-    height: 20px;
-    padding: 6px 12px;
+    height: 30px;;
+    padding-left:5px;
     font-size: 14px;
-    line-height: 1.42857143;
     color: #555;
     background-color: #fff;
     border: 1px solid #ccc;
@@ -452,8 +492,37 @@ ol.progtrckr {
     transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
 }
 
+ .has-error {
+  border:solid 2px red;  
+}
+
+
+/* .has-error1{
+  -webkit-animation: borderBlink 1s step-end infinite;    
+    animation: borderBlink 1s step-end infinite;    
+}
+
+@-webkit-keyframes borderBlink {    
+  from, to {    
+      border-color: transparent    
+  }    
+  50% {    
+      border-color: red    
+  }    
+}    
+@keyframes borderBlink {    
+  from, to {    
+      border-color: transparent    
+  }    
+  50% {    
+      border-color: red    
+  }    
+}    */
+
+
 #slCountries {
   height: 34px;
+  width:106%;
 }
 
 #slReservationTypes{
@@ -468,19 +537,22 @@ ol.progtrckr {
   float: left;
   width: 100%;
   position: relative;
-  min-height: 1px;
-  padding-right: 15px;
-  padding-left: 15px;
   box-sizing: border-box;
 }
 
 .col-md-8 {
   position: relative;
-  min-height: 1px;
-  padding-right: 15px;
-  width: 50%; 
+  width: 60%; 
   float:left;
   box-sizing: border-box;
+}
+
+.long-col .col-md-8{
+  width:160%;
+} 
+
+.col-md-8 textarea{
+  height:100px;
 }
 
 .col-md-4 {
@@ -490,42 +562,17 @@ ol.progtrckr {
   float:left;
 }
 
-.btn {
-  background-image: linear-gradient(to bottom,#337ab7 0,#265a88 100%);
-  background-repeat: repeat-x;
-  text-shadow: 0 -1px 0 rgba(0,0,0,.2);
-  box-shadow: inset 0 1px 0 rgba(255,255,255,.15), 0 1px 1px rgba(0,0,0,.075);
-  padding: 10px 16px;
-  font-size: 18px;
-  line-height: 1.3333333;
-  border-radius: 6px;
-  display: inline-block;
-  text-align: center;
-  white-space: nowrap;
-  vertical-align: middle;
-  touch-action: manipulation;
-  cursor: pointer;
-  -webkit-appearance: button;
-  letter-spacing: normal;
-  word-spacing: normal;
-  border: 1px solid transparent;
-  color: #fff;
-    
-}
-
-
 /* StepZilla CSS Ends Here */
 
 /* Search Icon for Email & Phone */
 
-.email-search{
+/* .email-search{
   border-top:thin solid  #e5e5e5;
   border-right:thin solid #e5e5e5;
   border-bottom:0;
   border-left:thin solid  #e5e5e5;
   box-shadow:0px 1px 1px 1px #e5e5e5;
   float:left;
-  width:250px; 
 }
 
 .phone-search{
@@ -535,8 +582,7 @@ ol.progtrckr {
   border-left:thin solid  #e5e5e5;
   box-shadow:0px 1px 1px 1px #e5e5e5;
   float:left;
-  width:240px; 
-}
+} */
 
 
 .button-holder{
@@ -544,9 +590,10 @@ ol.progtrckr {
   border-top:thin solid #e5e5e5;
   box-shadow:1px 1px 1px 1px #e5e5e5;
   cursor:pointer;
-  float:left;
+  float:right;
   height:32px;
-  margin:0 0 0 -2px;
+  margin:-2.2em -0.3em 0 0;
+  padding:0;
   text-align:center;
   width:50px;
 }
@@ -564,10 +611,35 @@ ol.progtrckr {
   color: red;
 }
 
-#divReservationSearch{
+.divFloatRight{
   float:right;
-  margin:-1.5em 0 0 0;
+  margin:-1.5em 2em 0 0;
+  width:25%;
 }
-  
+
+.divFloatRight button{
+  float:right;
+  margin:-1em -2.5em 0 0;
+  background-color: grey;
+}
+
+
+.advance-table .div-table-col{
+  width:20%;
+  height:auto;
+  padding:0 0 0 1em;
+}
+
+.advance-table .div-table-col-header{
+  font-weight: bolder;
+  background: #EA9064;
+  color: white;
+ }
+ 
+.advance-table .col-bordered{
+  border:solid 1px silver;
+}
+
+
 
 

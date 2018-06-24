@@ -24,6 +24,8 @@ export class GuestContacts extends Component {
       country: props.getStore().country      
     }; 
 
+    //this.handleReservationSearch = this.handleReservationSearch.bind(this);
+
     this._validateOnDemand = true; // this flag enables onBlur validation as user fills forms
 
     this.validationCheck = this.validationCheck.bind(this);
@@ -189,7 +191,7 @@ export class GuestContacts extends Component {
     }
     else {
         // if anything fails then update the UI validation state but NOT the UI Data State
-        this.setState(Object.assign(userInput, validateNewInput));
+        this.setState(Object.assign(userInput, validateNewInput, this._validationErrors(validateNewInput)));
     }
 
     return isDataValid;
@@ -199,12 +201,12 @@ export class GuestContacts extends Component {
     if (!this._validateOnDemand)
       return;
 
-    document.getElementById("spNoDataorError").style.visibility="hidden";
+      document.getElementById("spNoDataorError").style.visibility="hidden";
 
     const userInput = this._grabUserInput(); // grab user entered vals
     const validateNewInput = this._validateData(userInput); // run the new input against the validator
 
-    this.setState(Object.assign(userInput, validateNewInput));
+    this.setState(Object.assign(userInput, validateNewInput, this._validationErrors(validateNewInput)));
   }
 
    _validateData(data) {
@@ -219,6 +221,21 @@ export class GuestContacts extends Component {
       regionVal: (data.region != ''),
       countryVal: (data.country != 0) // required: anything besides N/A
     }
+  }
+
+  _validationErrors(val) {
+    const errMsgs = {
+      firstNameValMsg: val.firstNameVal ? '' : 'First Name is required',
+      lastNameValMsg: val.lastNameVal ? '' : 'Last Name is required',
+      emailValMsg: val.emailVal ? '' : 'A valid email id is required',
+      phoneValMsg: val.phoneVal ? '' : 'Phone is required',
+      addressValMsg: val.addressVal ? '' : 'Address is required',
+      cityValMsg: val.cityVal ? '' : 'City is required',
+      pinValMsg: val.pinVal ? '' : 'PIN is required',
+      regionValMsg: val.regionVal ? '' : 'State is required',
+      countryValMsg: val.countryVal ? '' : 'Country is required',
+    }
+    return errMsgs;
   }
 
   _grabUserInput() {
@@ -384,74 +401,83 @@ export class GuestContacts extends Component {
 
     /* First Name */
     if (typeof this.state.firstNameVal == 'undefined' || this.state.firstNameVal) {
-      notValidClasses.firstNameCls = 'form-control';
+      notValidClasses.firstNameCls = 'no-error col-md-8';
     }
     else {
-       notValidClasses.firstNameCls = 'form-control has-error';
+       notValidClasses.firstNameCls = 'has-error col-md-8';
+       notValidClasses.firstNameValGrpCls = 'val-err-tooltip';
     }
 
     /* Last Name */    
     if (typeof this.state.lastNameVal == 'undefined' || this.state.lastNameVal) {
-      notValidClasses.lastNameCls = 'form-control';
+      notValidClasses.lastNameCls = 'no-error col-md-8';
     }
     else {
-       notValidClasses.lastNameCls = 'form-control has-error';
+       notValidClasses.lastNameCls = 'has-error col-md-8';
+       notValidClasses.lastNameValGrpCls = 'val-err-tooltip';
     }
 
     /* Email ID */
     if (typeof this.state.emailVal == 'undefined' || this.state.emailVal) {
-        notValidClasses.emailCls = 'form-control';
+        notValidClasses.emailCls = 'no-error col-md-8';
     }
     else {
-       notValidClasses.emailCls = 'form-control has-error';
+       notValidClasses.emailCls = 'has-error col-md-8';
+       notValidClasses.emailValGrpCls = 'val-err-tooltip';
     }
 
     /* Phone */    
     if (typeof this.state.phoneVal == 'undefined' || this.state.phoneVal) {
-      notValidClasses.phoneCls = 'form-control';
+      notValidClasses.phoneCls = 'no-error col-md-8';
     }
     else {
-        notValidClasses.phoneCls = 'form-control has-error';
+        notValidClasses.phoneCls = 'has-error col-md-8';
+        notValidClasses.phoneValGrpCls = 'val-err-tooltip';
     }
 
     /* Address */    
     if (typeof this.state.addressVal == 'undefined' || this.state.addressVal) {
-      notValidClasses.addressCls = 'form-control';
+      notValidClasses.addressCls = 'no-error col-md-8';
     }
     else {
-        notValidClasses.addressCls = 'form-control has-error';
+        notValidClasses.addressCls = 'has-error col-md-8';
+        notValidClasses.addressValGrpCls = 'val-err-tooltip';
     }
 
     /* City */    
     if (typeof this.state.cityVal == 'undefined' || this.state.cityVal) {
-      notValidClasses.cityCls = 'form-control';
+      notValidClasses.cityCls = 'no-error col-md-8';
     }
     else {
-        notValidClasses.cityCls = 'form-control has-error';
+        notValidClasses.cityCls = 'has-error col-md-8';
+        notValidClasses.cityValGrpCls = 'val-err-tooltip';
     }
 
     /* PIN */    
     if (typeof this.state.pinVal == 'undefined' || this.state.pinVal) {
-      notValidClasses.pinCls = 'form-control';
+      notValidClasses.pinCls = 'no-error col-md-8';
     }
     else {
-        notValidClasses.pinCls = 'form-control has-error';
+        notValidClasses.pinCls = 'has-error col-md-8';
+        notValidClasses.pinValGrpCls = 'val-err-tooltip';
     }
 
     /* Region */    
     if (typeof this.state.regionVal == 'undefined' || this.state.regionVal) {
-      notValidClasses.regionCls = 'form-control';
+      notValidClasses.regionCls = 'no-error col-md-8';
     }
     else {
-        notValidClasses.regionCls = 'form-control has-error';
+        notValidClasses.regionCls = 'has-error col-md-8';
+        notValidClasses.regionValGrpCls = 'val-err-tooltip';
     }
 
     /* Country */    
     if (typeof this.state.countryVal == 'undefined' || this.state.countryVal) {
-      notValidClasses.countryCls= 'form-control';
+      notValidClasses.countryCls = 'no-error col-md-8';
     }
     else {
-        notValidClasses.countryCls = 'form-control has-error';
+        notValidClasses.countryCls = 'has-error col-md-8';
+        notValidClasses.countryValGrpCls = 'val-err-tooltip';
     }
 
     return (
@@ -459,7 +485,7 @@ export class GuestContacts extends Component {
         <div className="row">
           <form id="Form" className="form-horizontal">          
                 <h4>Guest Contact Details</h4>  
-                <div id="divReservationSearch" className="divFloatRight">
+                <div id="divReservationSearch">
                     <input
                         ref="reservationSearch"
                         autoComplete="off"
@@ -472,187 +498,197 @@ export class GuestContacts extends Component {
                 <span id="spNoDataorError">No details found!</span>  
                  
 
-                       <div className = "div-table">
-                    <div className = "div-table-row">
-                          <div className ="div-table-col">
+            <table width="100%">
+            <tbody>
+              <tr>
+                <td>
                    {/* First Name */}
                     <div className="form-group col-md-12 content form-block-holder">
                           <label className="control-label col-md-4">
                             First Name: *
                           </label>
-                          <div className="col-md-8">
+                          <div className={notValidClasses.firstNameCls}>
                             <input
                               ref="firstName"
                               autoComplete="off"
-                              className={notValidClasses.firstNameCls}
+                              className="form-control"
                               required
                               defaultValue={this.state.firstName}
                               onBlur={this.validationCheck} />
+                            <div className={notValidClasses.firstNameValGrpCls}>{this.state.firstNameValMsg}</div>
                             </div>
                       </div>
-                </div>
-                <div className ="div-table-col alt">
+                </td>
+                <td>
                    {/* Last Name */}
                     <div className="form-group col-md-12 content form-block-holder">
                       <label className="control-label col-md-4">
                         Last Name: *
                       </label>
-                      <div className="col-md-8">
+                      <div className={notValidClasses.lastNameCls}>
                         <input
                           ref="lastName"
                           autoComplete="off"
-                          className={notValidClasses.lastNameCls}
+                          className="form-control"
                           required
                           defaultValue={this.state.lastName}
-                          onBlur={this.validationCheck} />     
-                          </div>                 
+                          onBlur={this.validationCheck} />                      
+                        <div className={notValidClasses.lastNameValGrpCls}>{this.state.lastNameValMsg}</div>
                         </div>
-                      
-                  </div>
-              </div>
+                      </div>
+                  </td>
+              </tr>
 
 
-             <div className = "div-table-row">
-              <div className ="div-table-col">        
+            <tr>
+              <td>        
                   {/* Email ID */}
                   <div className="form-group col-md-12 content form-block-holder">
                     <label className="control-label col-md-4">
                       Email ID: 
                     </label>
-                    <div className="col-md-8">
+                    <div className={notValidClasses.emailCls}>
                       <input
                         ref="email"
                         autoComplete="off"
                         type="email"
-                        className={notValidClasses.emailCls}
+                        className="form-control email-search"
                         required
                         defaultValue={this.state.email} />
                         <div className="button-holder">
                             <img src="./img/magnifying_glass.png" onClick={() => this.handleEmailSearch()}/>
                         </div>
+                      <div className={notValidClasses.emailValGrpCls}>{this.state.emailValMsg}</div>
                     </div>
                   </div>
 
-                </div>
-                <div className ="div-table-col">
+                </td>
+                <td>
                     {/* Phone */}
                   <div className="form-group col-md-12 content form-block-holder">
                       <label className="control-label col-md-4">
                         Phone: *
                       </label>
-                      <div className="col-md-8">
+                      <div className={notValidClasses.phoneCls}>
                         <input
                           type="number"
                           ref="phone"
                           autoComplete="off"
-                          className={notValidClasses.phoneCls}
+                          className="form-control phone-search"
                           required
                           defaultValue={this.state.phone} />
                           <div className="button-holder">
                             <img src="./img/magnifying_glass.png" onClick={() => this.handlePhoneSearch()}/>
                         </div>
+                        <div className={notValidClasses.phoneValGrpCls}>{this.state.phoneValMsg}</div>
                       </div>
                     </div>
-                  </div>
-              </div>
-               <div className = "div-table-row">
-                  <div className ="div-table-col">
+                  </td>
+              </tr>
+              <tr>
+                  <td>
                       {/* Street Address */}
-                      <div className="form-group col-md-12 content form-block-holder long-col">
+                      <div className="form-group col-md-12 content form-block-holder">
                           <label className="control-label col-md-4">
                             Address: *
                           </label>
-                          <div className="col-md-8">
+                          <div className={notValidClasses.addressCls}>
                             <input
                               ref="address"
                               autoComplete="off"
-                              className={notValidClasses.addressCls}
+                              className="form-control"
                               required
                               defaultValue={this.state.address}
                               onBlur={this.validationCheck} />
+                            <div className={notValidClasses.addressValGrpCls}>{this.state.addressrValMsg}</div>
                           </div>
                         </div>
-                    </div>
-              </div>
-                   <div className = "div-table-row">
-                    <div className ="div-table-col">
+                    </td>
+              </tr>
+                  <tr>
+                    <td>
                         {/* City */}
                         <div className="form-group col-md-12 content form-block-holder">
                           <label className="control-label col-md-4">
                             City: *
                           </label>
-                          <div className="col-md-8">
+                          <div className={notValidClasses.cityCls}>
                             <input
                               ref="city"
                               autoComplete="off"
-                              className={notValidClasses.cityCls}
+                              className="form-control"
                               required
                               defaultValue={this.state.city}
                               onBlur={this.validationCheck} />
+                            <div className={notValidClasses.cityValGrpCls}>{this.state.cityValMsg}</div>
                           </div>
                         </div>
-                    </div>
-                    <div className ="div-table-col">
+                    </td>
+                    <td>
                           {/* ZIP / Postal Code / PIN */}
                           <div className="form-group col-md-12 content form-block-holder">
                             <label className="control-label col-md-4">
                             ZIP / Postal Code / PIN: *
                             </label>
-                            <div className="col-md-8">
+                            <div className={notValidClasses.pinCls}>
                               <input
                                 type="number"
                                 ref="pin"
                                 autoComplete="off"
-                                className={notValidClasses.pinCls}
+                                className="form-control"
                                 required
                                 defaultValue={this.state.pin}
                                 onBlur={this.validationCheck} />
+                              <div className={notValidClasses.pinValGrpCls}>{this.state.pinValMsg}</div>
                             </div>
                           </div>
 
-                        </div>
-                  </div>
-                   <div className = "div-table-row">
-                    <div className ="div-table-col">
+                        </td>
+                  </tr>
+                  <tr>
+                    <td>
                         {/* State / Province / Region */}
                         <div className="form-group col-md-12 content form-block-holder">
                             <label className="control-label col-md-4">
                             State / Province / Region: *
                             </label>
-                            <div className="col-md-8">
+                            <div className={notValidClasses.regionCls}>
                               <input
                                 ref="region"
                                 autoComplete="off"
-                                className={notValidClasses.regionCls}
+                                className="form-control"
                                 required
                                 defaultValue={this.state.region}
                                 onBlur={this.validationCheck} />
+                              <div className={notValidClasses.regionValGrpCls}>{this.state.regionValMsg}</div>
                             </div>
                           </div>
 
-                      </div>
-                      <div className ="div-table-col">
+                      </td>
+                      <td>
                           {/* Country */}
                           <div className="form-group col-md-12 content form-block-holder">
                               <label className="control-label col-md-4">
                               Country: *
                               </label>
-                              <div className="col-md-8">
+                              <div className={notValidClasses.countryCls}>
                                 <select id="slCountries"
                                   ref="country"
                                   autoComplete="off"
-                                  className={notValidClasses.countryCls}
+                                  className="form-control"
                                   required
                                   defaultValue={this.state.country}
                                   onBlur={this.validationCheck}>
                                   <option value="0">Please select</option>
                                   {this.populateCountries()}                   
                                 </select>
+                                <div className={notValidClasses.countryValGrpCls}>{this.state.countryValMsg}</div>
                               </div>
                             </div>
-                        </div>
-                    </div>
- </div>
+                        </td>
+                    </tr>
+                    </tbody>
+              </table> 
           </form>
         </div>
       </div>

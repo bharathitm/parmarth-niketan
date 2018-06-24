@@ -43,18 +43,20 @@ export class Reservations extends React.Component {
         guestId: '',
         guestEmergencyContactId:'',
         reservationId:'',
-        aDonations: [
-          {
-            donationId: '',
-            advanceReceivedOn: '',
-            advanceAmount: '',
-            advanceReceiptNo: ''
-          }
-        ],
+        advanceAmount: '',
+        advanceReceivedOn: '',
+        advanceReceiptNo: '',
+        // aDonations: [
+        //   {
+        //     donationId: '',
+        //     advanceReceivedOn: '',
+        //     advanceAmount: '',
+        //     advanceReceiptNo: ''
+        //   }
+        // ],
         // aDonations: [
         //   {}
         // ],
-        date1: '',
         savedToCloud: false
       };
     }

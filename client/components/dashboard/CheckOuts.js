@@ -239,7 +239,7 @@ export class CheckOuts extends React.Component {
           return (
             <div className="divDashboardWidgets"><h4>Today's Check Outs</h4>
                 <hr />
-                <button onClick={() => this.handleCheckOut()}>Check Out</button>
+                <button className="btnBig" onClick={() => this.handleCheckOut()}>Check Out</button>
                     <ol>
                         {checkOutReservations.map(item => (    
 
