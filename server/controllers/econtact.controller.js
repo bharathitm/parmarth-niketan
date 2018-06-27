@@ -16,6 +16,8 @@ export function findById(req, res) {
 
     var call_stored_proc = "CALL sp_GetGuestEmergencyContactDetails('" +  req.params.id + "')";
 
+    console.log(call_stored_proc);
+
     connection.query(call_stored_proc, true, (error, results, fields) => {
     if (error) {
         errorController.LogError(error);
@@ -45,6 +47,8 @@ export function add(req, res) {
     + req.body.relationship + 
     "')";
 
+    console.log(call_stored_proc);
+
     connection.query(call_stored_proc, true, (error, results, fields) => {
     if (error) {
         errorController.LogError(error);
@@ -70,6 +74,8 @@ export function update(req, res) {
     + req.body.phone_no + "','"
     + req.body.relationship +  
     "')";
+
+    console.log(call_stored_proc);
 
     connection.query(call_stored_proc, true, (error, results, fields) => {
     if (error) {

@@ -34,7 +34,12 @@ export class GuestContacts extends Component {
 
     var search = this.refs.reservationSearch.value;
 
-    fetch(API_URL + "guests/?search=" + search)
+    fetch(API_URL + "guests/?search=" + search, {
+      headers : { 
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+       }
+    })
     .then((response) => {
         return checkError(response);
     })
@@ -177,13 +182,13 @@ export class GuestContacts extends Component {
             ...userInput,
             savedToCloud: false // use this to notify step4 that some changes took place and prompt the user to save again
           });  // Update store here (this is just an example, in reality you will do it via redux or flux)
-        }
 
-        if (this.props.getStore().guestId != ''){
-          this.updateGuestData();
-        }
-        else {
-            this.insertGuestData();
+          if (this.props.getStore().guestId != ''){
+            this.updateGuestData();
+          }
+          else {
+              this.insertGuestData();
+          }
         }
         isDataValid = true;
     }
@@ -323,6 +328,9 @@ export class GuestContacts extends Component {
     // alert(this.props.getHomeStore().userName); does not work, have to find out how to use this....maybe pass from Reservations to each of the children, just the get though.
     if (this.state.items.length != 0)
     {
+
+      this.props.jumpToStep(2);
+      
       this.props.updateStore({
         guestId: this.state.items[0].guest_id,
         firstName: this.state.items[0].first_name,

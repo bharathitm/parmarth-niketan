@@ -66,7 +66,7 @@ body{
 /*div for all tab */
 .tab-links {
     width:50%;
-    margin-left:40%;
+    margin-left:35%;
     font-size: 16pt;
     font-weight: bold;
     margin-top:-2.5em;
@@ -171,7 +171,7 @@ body{
 .div-today-availability-col li {
   float: left;
   margin: 0;
-  padding: 10px;
+  padding:5px;
   border-right: 1px solid silver;
   background-color: #EA9064;
   color: #ffffff !important;
@@ -179,9 +179,11 @@ body{
   font-weight: 600;
   text-align: center;
   text-decoration: none;
-  white-space: nowrap;
   -webkit-appearance: none;
   box-sizing: border-box;
+  width:125px;
+  height:80px;
+  word-wrap: normal;
 }
 
 .div-today-availability-col li a {
@@ -623,7 +625,9 @@ ol.progtrckr {
   background-color: grey;
 }
 
-
+.advance-table{
+  border-collapse: collapse;
+}
 .advance-table .div-table-col{
   width:20%;
   height:auto;
@@ -634,6 +638,8 @@ ol.progtrckr {
   font-weight: bolder;
   background: #EA9064;
   color: white;
+  border:solid 1px silver;
+
  }
  
 .advance-table .col-bordered{

@@ -97,13 +97,13 @@ export class EmergencyContacts extends Component {
             ...userInput,
             savedToCloud: false // use this to notify step4 that some changes took place and prompt the user to save again
           });  // Update store here (this is just an example, in reality you will do it via redux or flux)
-        }
-        
-        if (this.state.guestEmergencyContactId != ''){
-          this.updateEmergencyContactData();
-        }
-        else {
-            this.insertEmergencyContactData();
+
+          if (this.state.guestEmergencyContactId != ''){
+            this.updateEmergencyContactData();
+          }
+          else {
+              this.insertEmergencyContactData();
+          }
         }
         isDataValid = true;
     }

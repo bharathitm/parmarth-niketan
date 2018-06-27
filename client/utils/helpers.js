@@ -4,8 +4,6 @@
 
 
 export function logError(error) {
-
-    alert("Error: " + error);
     const payload = {
         error_message: error.toString()
     }
@@ -21,7 +19,6 @@ export function logError(error) {
   
       })
       .then(function(response) {
-       alert("After logging");
           return response.json()
       })
 }

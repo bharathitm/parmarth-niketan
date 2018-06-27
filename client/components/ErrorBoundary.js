@@ -11,8 +11,7 @@ export class ErrorBoundary extends React.Component {
     }
 
     componentDidCatch(error, info){
-        alert(error + "got called");
-
+        
         this.setState({ hasError: true })
         //send to error reporting service
 

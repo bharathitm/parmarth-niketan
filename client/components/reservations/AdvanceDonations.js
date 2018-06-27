@@ -13,6 +13,8 @@ export class AdvanceDonations extends Component {
         isLoaded: false,
         error: null
     }; 
+
+    //this.handleDelete = this.handleDelete.bind(this);
   }
 
   componentDidMount() {
@@ -50,6 +52,10 @@ export class AdvanceDonations extends Component {
     return year + "-" + month + "-" + day ;
 }
 
+handleDelete(dID, e){
+  alert(dID);
+}
+
 
   render() {
     const { error, isLoaded, items } = this.state;
@@ -75,6 +81,9 @@ export class AdvanceDonations extends Component {
                               <div className ="div-table-col div-table-col-header">
                               Receipt No.
                               </div>
+                              <div className ="div-table-col div-table-col-header">
+                              Actions
+                              </div>
                       </div>
                     {items.map(item => (
                         <div className = "div-table-row" key={item.donationId}>
@@ -86,6 +95,9 @@ export class AdvanceDonations extends Component {
                               </div>
                               <div className ="div-table-col col-bordered">
                                 {item.receipt_no}
+                              </div>
+                              <div className ="div-table-col col-bordered">
+                            <button key={item.donationId} className="btnBig" onClick={(e) => this.handleDelete(item.donationId, e)}>Delete</button>  
                               </div>
                         </div>
                         ))} 

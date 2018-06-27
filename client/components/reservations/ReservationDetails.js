@@ -18,11 +18,12 @@ export class ReservationDetails extends Component {
       error: null,
       arrivalDate: props.getStore().arrivalDate,
       departureDate: props.getStore().departureDate,
-      arrivalTime: moment(),
+      arrivalTime: props.getStore().arrivalTime,
       reservationTypeId: props.getStore().reservationTypeId,
       sanskaraId: props.getStore().sanskaraId,
       noOfPpl: props.getStore().noOfPpl,
-      advanceReminderOn: moment(),
+      //advanceReminderOn: moment(),
+      advanceReminderOn: props.getStore().advanceReminderOn,
       comments: props.getStore().comments,
       reservationId: props.getStore().reservationId      
     };
@@ -96,8 +97,8 @@ export class ReservationDetails extends Component {
     if (this.state.items.length != 0)
     {
       //this has to be validated again and fixed. works in get now but not sure about insert/update
-      //var aDate = moment(this.state.items[0].date_of_arrival);
-      var aDate = this.state.items[0].date_of_arrival;
+      var aDate = moment(this.state.items[0].date_of_arrival);
+      //var aDate = this.state.items[0].date_of_arrival;
       //alert(aDate + " aDate");
       //var aReminder = moment(this.state.items[0].advance_reminder_on);
       var aReminder = this.state.items[0].advance_reminder_on;
@@ -108,7 +109,7 @@ export class ReservationDetails extends Component {
         reservationId: this.state.items[0].reservation_id,
         //arrivalDate: aDate.format("YYYY-MM-DD"),
         //arrivalDate: aDate,
-        arrivalDate: moment(aDate).format("YYYY-MM-DD"),
+        arrivalDate: aDate.format("YYYY-MM-DD"),
         departureDate: this.state.items[0].date_of_departure,
         noOfPpl: this.state.items[0].no_of_people,
         comments: this.state.items[0].reservation_comments,
@@ -118,14 +119,14 @@ export class ReservationDetails extends Component {
         //advanceReminderOn: (this.state.items[0].advance_reminder_on == null)? '' : moment(this.state.items[0].advance_reminder_on),
         advanceReminderOn: (this.state.items[0].advance_reminder_on == null)? '' : this.state.items[0].advance_reminder_on,
         advanceReminderOn: aReminder,
-        //arrivalTime: moment(this.state.items[0].date_of_arrival).format("HH:mm")
-        arrivalTime: this.state.items[0].date_of_arrival
+        arrivalTime: aDate
+        //arrivalTime: this.state.items[0].date_of_arrival
       });
 
       this.setState({
         reservationId: this.state.items[0].reservation_id,
         //arrivalDate: aDate.format("YYYY-MM-DD"),
-        arrivalDate: moment(aDate).format("YYYY-MM-DD"),
+        arrivalDate: aDate.format("YYYY-MM-DD"),
         //arrivalDate: aDate,
         departureDate: this.state.items[0].date_of_departure,
         noOfPpl: this.state.items[0].no_of_people,
@@ -136,9 +137,10 @@ export class ReservationDetails extends Component {
         //advanceReminderOn: (this.state.items[0].advance_reminder_on == null)? '' : moment(this.state.items[0].advance_reminder_on),
         advanceReminderOn: (this.state.items[0].advance_reminder_on == null)? '' : this.state.items[0].advance_reminder_on,
         arrivalTime: aDate
+        //arrivalTime: aDate.format("HH:mm")
       });
 
-      this.refs.arrivalDate.innerHTML = moment(aDate).format("YYYY-MM-DD");
+      this.refs.arrivalDate.innerHTML = aDate.format("YYYY-MM-DD");
       //this.refs.arrivalDate.value = aDate;
       this.refs.departureDate.innerHTML = this.state.items[0].date_of_departure;
       this.refs.noOfPpl.value = this.state.items[0].no_of_people;
@@ -183,20 +185,20 @@ export class ReservationDetails extends Component {
             ...userInput,
             savedToCloud: false // use this to notify step4 that some changes took place and prompt the user to save again
           });  // Update store here (this is just an example, in reality you will do it via redux or flux)
-        }
 
-        if (this.state.reservationId != ''){
-          this.updateReservationDetails();
-        }
-        else {
-            this.insertReservationDetails();
+          if (this.state.reservationId != ''){
+            this.updateReservationDetails();
+          }
+          else {
+              this.insertReservationDetails();
+          }
         }
         isDataValid = true;
     }
     else {
         // if anything fails then update the UI validation state but NOT the UI Data State
         this.setState(Object.assign(userInput, validateNewInput));
-    }    
+    }  
 
     return isDataValid;
   }
@@ -337,7 +339,7 @@ export class ReservationDetails extends Component {
     return {
       arrivalTime: this.refs.arrivalTime.selected,
       reservationTypeId: this.refs.reservationTypeId.value,
-      sanskaraId: this.refs.sanskaraId.value,
+      sanskaraId: (this.refs.sanskaraId.value == 0)? null : this.refs.sanskaraId.value,
       noOfPpl: this.refs.noOfPpl.value,
       advanceReminderOn: this.refs.advanceReminderOn.selected,
       comments: this.refs.comments.value,
@@ -520,7 +522,6 @@ export class ReservationDetails extends Component {
                             Reservation Type: *
                             </label>
                             <div className="col-md-8">
-
                                       <select id="slReservationTypes"
                                         ref="reservationTypeId"
                                         autoComplete="off"

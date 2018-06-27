@@ -26,7 +26,7 @@ var htmlText =  '<br/>Test email from Node.js!<br/>Does this come in another lin
 
 
 
-export function sendReminders(req, res) {
+export function SendReminders(isReminder) {
 
       var call_stored_proc = "CALL sp_GetAdvanceDonationReminders()";
 
@@ -35,7 +35,6 @@ export function sendReminders(req, res) {
         if (error) {
             errorController.LogError(error);
             console.log(error.code);
-            return res.send(error.code);
         }
 
         console.log(results[0]);
@@ -56,7 +55,6 @@ export function sendReminders(req, res) {
                     if (error) {
                           errorController.LogError(error);
                           console.log(error);
-                          return res.send(error.code);
                     } else {
                       console.log('Email sent: ' + info.response);
                     }

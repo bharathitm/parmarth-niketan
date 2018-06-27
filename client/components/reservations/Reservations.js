@@ -9,6 +9,7 @@ import { EmergencyContacts } from './EmergencyContacts';
 import { ReservationDetails } from './ReservationDetails';
 import { AdvanceDonations } from './AdvanceDonations';
 import { Empty } from './Empty';
+import { BookRooms } from './BookRooms';
 
 export class Reservations extends React.Component {
 
@@ -46,17 +47,6 @@ export class Reservations extends React.Component {
         advanceAmount: '',
         advanceReceivedOn: '',
         advanceReceiptNo: '',
-        // aDonations: [
-        //   {
-        //     donationId: '',
-        //     advanceReceivedOn: '',
-        //     advanceAmount: '',
-        //     advanceReceiptNo: ''
-        //   }
-        // ],
-        // aDonations: [
-        //   {}
-        // ],
         savedToCloud: false
       };
     }
@@ -85,6 +75,7 @@ export class Reservations extends React.Component {
 
         const steps =
         [
+            // {name: 'Book Room', component: <BookRooms getStore={() => (this.getStore())} updateStore={(u) => {this.updateStore(u)}}/>},
             {name: 'Guest', component: <GuestContacts getStore={() => (this.getStore())} updateStore={(u) => {this.updateStore(u)}}/>},
             {name: 'Emergency Contact', component: <EmergencyContacts getStore={() => (this.getStore())} updateStore={(u) => {this.updateStore(u)}}/>},
             {name: 'Reservation', component: <ReservationDetails getStore={() => (this.getStore())} updateStore={(u) => {this.updateStore(u)}}/>},
@@ -97,6 +88,7 @@ export class Reservations extends React.Component {
             <ErrorBoundary>
             <div className='step-progress'>            
             <StepZilla steps={steps} 
+              stepsNavigation={true}
               nextTextOnFinalActionStep={"Save"}
               startAtStep={window.sessionStorage.getItem('step') ? parseFloat(window.sessionStorage.getItem('step')) : 0}
               onStepChange={(step) => window.sessionStorage.setItem('step', step)}

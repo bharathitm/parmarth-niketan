@@ -10,6 +10,7 @@ const CURRENT_WORKING_DIR = process.cwd();
 
 const config = {
     context:path.resolve(CURRENT_WORKING_DIR, 'client'),
+    // mode: "development",
     entry: {
         app: [
             'webpack-hot-middleware/client', // bundle the client for hot reloading

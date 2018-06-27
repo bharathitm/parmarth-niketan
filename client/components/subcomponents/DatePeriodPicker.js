@@ -16,6 +16,7 @@ export class DatePickerInput extends Component {
 
       this.handleStartDateChange = this.handleStartDateChange.bind(this);
       this.handleEndDateChange = this.handleEndDateChange.bind(this);
+
     }
 
     handleStartDateChange(date) {

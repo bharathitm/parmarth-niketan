@@ -22,14 +22,14 @@ export class Reports extends React.Component {
             ]
         };
 
-        this.viewPrint = '';
+        this.viewPrint = false;
+
+        this.handlePrint = this.handlePrint.bind(this);
 
         this.reportStore = {
             startDate: moment(),
             endDate: moment()
         };
-
-        viewPrint:false;
     }
 
     updateReportStore(update) {
@@ -65,7 +65,7 @@ export class Reports extends React.Component {
               });
     }
 
-    handlePrint(){
+    handlePrint = () => {
         var printWindow = window.open('', '', 'height=400,width=800');
         printWindow.document.write('<html><head><title>Check In Report</title>');
         printWindow.document.write('</head><body >');
@@ -92,6 +92,7 @@ export class Reports extends React.Component {
                 <ErrorBoundary>
                 <DatePeriodPicker viewPrint = {false}
                     handleShow={() => (this.handleShow())} 
+                    handlePrint={() => (this.handlePrint())} 
                     updateReportStore={(u) => {this.updateReportStore(u)}}>
                 </DatePeriodPicker>
                 </ErrorBoundary>
@@ -103,6 +104,7 @@ export class Reports extends React.Component {
                 <ErrorBoundary>
                 <DatePeriodPicker  viewPrint ={false}
                     handleShow={() => (this.handleShow())} 
+                    handlePrint={() => (this.handlePrint())} 
                     updateReportStore={(u) => {this.updateReportStore(u)}}>
                 </DatePeriodPicker>
                 </ErrorBoundary>
@@ -116,6 +118,7 @@ export class Reports extends React.Component {
 
                             <DatePeriodPicker  viewPrint = {true}
                                 handleShow={() => (this.handleShow())} 
+                                handlePrint={() => (this.handlePrint())} 
                                 updateReportStore={(u) => {this.updateReportStore(u)}}>
                             </DatePeriodPicker>    
                        

@@ -16,6 +16,8 @@ export function findByPhone(req, res) {
     
     var call_stored_proc = "CALL sp_GetGuestDetailsByPhone('" + req.query.ph + "')";
 
+    console.log(call_stored_proc);
+
     connection.query(call_stored_proc, true, (error, results, fields) => {
     if (error) {
         errorController.LogError(error);
@@ -39,6 +41,8 @@ export function findByPhone(req, res) {
 export function findByEmailId(req, res) {
    
     var call_stored_proc = "CALL sp_GetGuestDetailsByEmailID('" + req.query.email + "')";
+
+    console.log(call_stored_proc);
 
     connection.query(call_stored_proc, true, (error, results, fields) => {
 
@@ -64,6 +68,8 @@ export function findByEmailId(req, res) {
 export function findById(req, res) {
 
     var call_stored_proc = "CALL sp_GetGuestDetails('" + req.params.id + "')";
+
+    console.log(call_stored_proc);
 
     connection.query(call_stored_proc, true, (error, results, fields) => {
     if (error) {
@@ -96,6 +102,7 @@ export function search(req, res) {
         errorController.LogError(error);
         return res.send(error.code);
     }
+    console.log(results[0]);
     res.send(results[0]);
     });
       
@@ -133,6 +140,8 @@ export function add(req, res) {
     "')";
 
 
+    console.log(call_stored_proc);
+    
     connection.query(call_stored_proc, true, (error, results, fields) => {
     if (error) {
         errorController.LogError(error);
@@ -166,6 +175,8 @@ export function update(req, res) {
     + req.body.state + "','"
     + req.body.country_id + 
     "')";
+
+    console.log(call_stored_proc);
 
     connection.query(call_stored_proc, true, (error, results, fields) => {
     if (error) {
