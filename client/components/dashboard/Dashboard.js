@@ -12,10 +12,22 @@ export class Dashboard extends React.Component {
 
     constructor(props) {
       super(props);
+
+      this.state = {
+        hasChanged: null
+      };
     }
+
+    updateDashboardStore() {
+        //alert("has state changed");
+        this.setState({
+            hasChanged: true
+          });
+      }
 
 
     render() {
+        //alert("render");
           return (
             <div className="divError">
             <ErrorBoundary>
@@ -32,10 +44,10 @@ export class Dashboard extends React.Component {
                               <CheckIns />
                           </div>
                           <div className ="div-table-col div-dashboard-col">
-                              <CheckOuts /> 
+                              <CheckOuts updateDashboardStore={(u) => {this.updateDashboardStore(u)}}/> 
                           </div>
                           <div className ="div-table-col div-dashboard-col">
-                              <URooms />  
+                              <URooms updateDashboardStore={(u) => {this.updateDashboardStore(u)}}/>  
                           </div>
                     </div>
               </div>

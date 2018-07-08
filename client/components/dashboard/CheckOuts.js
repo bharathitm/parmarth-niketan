@@ -111,6 +111,8 @@ export class CheckOuts extends React.Component {
             });
 
           this.updateCheckOutState(selectedReservations, selectedRooms);
+
+          this.props.updateDashboardStore(); 
         }
 
         getAllSelectedReservations(){
@@ -239,7 +241,7 @@ export class CheckOuts extends React.Component {
           return (
             <div className="divDashboardWidgets"><h4>Today's Check Outs</h4>
                 <hr />
-                <button className="btnBig" onClick={() => this.handleCheckOut()}>Check Out</button>
+                <button type="button" className="btnBig" onClick={() => this.handleCheckOut()}>Check Out</button>
                     <ol>
                         {checkOutReservations.map(item => (    
 
@@ -271,5 +273,6 @@ export class CheckOuts extends React.Component {
           }
         }
       }
+
 
       export default CheckOuts;

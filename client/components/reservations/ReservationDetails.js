@@ -18,12 +18,11 @@ export class ReservationDetails extends Component {
       error: null,
       arrivalDate: props.getStore().arrivalDate,
       departureDate: props.getStore().departureDate,
-      arrivalTime: props.getStore().arrivalTime,
+      arrivalTime: moment(),
       reservationTypeId: props.getStore().reservationTypeId,
       sanskaraId: props.getStore().sanskaraId,
       noOfPpl: props.getStore().noOfPpl,
-      //advanceReminderOn: moment(),
-      advanceReminderOn: props.getStore().advanceReminderOn,
+      advanceReminderOn: '',
       comments: props.getStore().comments,
       reservationId: props.getStore().reservationId      
     };
@@ -98,12 +97,7 @@ export class ReservationDetails extends Component {
     {
       //this has to be validated again and fixed. works in get now but not sure about insert/update
       var aDate = moment(this.state.items[0].date_of_arrival);
-      //var aDate = this.state.items[0].date_of_arrival;
-      //alert(aDate + " aDate");
-      //var aReminder = moment(this.state.items[0].advance_reminder_on);
-      var aReminder = this.state.items[0].advance_reminder_on;
-
-      //alert(aReminder + " aReminder");
+      var aReminder = moment(this.state.items[0].advance_reminder_on);
 
       this.props.updateStore({
         reservationId: this.state.items[0].reservation_id,
@@ -116,9 +110,7 @@ export class ReservationDetails extends Component {
         reservationTypeId: this.state.items[0].reservation_type_id,
         reservationStatusId: this.state.items[0].reservation_status_id,
         sanskaraId: this.state.items[0].sanskara_id,
-        //advanceReminderOn: (this.state.items[0].advance_reminder_on == null)? '' : moment(this.state.items[0].advance_reminder_on),
-        advanceReminderOn: (this.state.items[0].advance_reminder_on == null)? '' : this.state.items[0].advance_reminder_on,
-        advanceReminderOn: aReminder,
+        advanceReminderOn: (this.state.items[0].advance_reminder_on == null)? '' : aReminder,
         arrivalTime: aDate
         //arrivalTime: this.state.items[0].date_of_arrival
       });
@@ -134,8 +126,7 @@ export class ReservationDetails extends Component {
         reservationTypeId: this.state.items[0].reservation_type_id,
         reservationStatusId: this.state.items[0].reservation_status_id,
         sanskaraId: this.state.items[0].sanskara_id,
-        //advanceReminderOn: (this.state.items[0].advance_reminder_on == null)? '' : moment(this.state.items[0].advance_reminder_on),
-        advanceReminderOn: (this.state.items[0].advance_reminder_on == null)? '' : this.state.items[0].advance_reminder_on,
+        advanceReminderOn: (this.state.items[0].advance_reminder_on == null)? '' : aReminder,
         arrivalTime: aDate
         //arrivalTime: aDate.format("HH:mm")
       });
@@ -147,8 +138,7 @@ export class ReservationDetails extends Component {
       this.refs.comments.value = this.state.items[0].reservation_comments;
       this.refs.reservationTypeId.value = this.state.items[0].reservation_type_id;
       this.refs.arrivalTime.selected = aDate;
-      //this.refs.advanceReminderOn.selected = (this.state.items[0].advance_reminder_on == null)? '' : moment(this.state.items[0].advance_reminder_on);
-      this.refs.advanceReminderOn.selected = (this.state.items[0].advance_reminder_on == null)? '' : this.state.items[0].advance_reminder_on;
+      this.refs.advanceReminderOn.selected = (this.state.items[0].advance_reminder_on == "null")? '' : aReminder;
       this.refs.sanskaraId.value = (this.state.items[0].sanskara_id == null)? 0 : this.state.items[0].sanskara_id
       //this.refs.reservationStatusId.value = this.state.items[0].reservation_status_id  
       
@@ -161,8 +151,6 @@ export class ReservationDetails extends Component {
       }
     }
   }
-
-  componentWillUnmount() {}
 
   isValidated() {
 
@@ -216,7 +204,8 @@ export class ReservationDetails extends Component {
       reservation_type_id: this.state.reservationTypeId,
       sanskara_id: (this.state.sanskaraId == null)? 0 : this.state.sanskaraId,
       is_a_reference: '0',
-      advance_reminder_on: (this.state.advanceReminderOn == '')? '' : this.getFormattedDate(this.state.advanceReminderOn).toString()
+      advance_reminder_on: (this.state.advanceReminderOn == '')? '' : this.getFormattedDate(this.state.advanceReminderOn).toString(),
+      room_ids_str: window.sessionStorage.getItem('strSelectedRooms').toString()
     };
 
     fetch(API_URL + "reservations/", {
@@ -455,7 +444,7 @@ export class ReservationDetails extends Component {
           <form id="Form" className="form-horizontal">          
                 <h4>Reservation Details</h4>   
                 <div className="divFloatRight">  
-                <button className="btnBig" onClick={() => this.handleCancel()}>Cancel</button>   
+                <button type="button" className="btnBig" onClick={() => this.handleCancel()}>Cancel</button>   
                 </div>
                       <div className="divDates">
                       {/* Arrival Date */}
@@ -569,7 +558,8 @@ export class ReservationDetails extends Component {
                       
                       <DatePicker ref="advanceReminderOn"
                         dateFormat="YYYY-MM-DD"
-                        selected={moment(this.state.advanceReminderOn)}
+                       // selected={moment(this.state.advanceReminderOn)}
+                        selected={this.state.advanceReminderOn}
                         onChange={this.handleAdvanceReminderChange} 
                         className={notValidClasses.advanceReminderOnCls}/>
                       </div>

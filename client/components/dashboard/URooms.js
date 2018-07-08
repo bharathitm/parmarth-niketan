@@ -3,6 +3,8 @@ import React from 'react';
 import {logError, checkError} from '../../utils/helpers';
 import {API_URL} from '../../config/config';
 
+
+
 export class URooms extends React.Component {
 
     constructor(props) {
@@ -139,7 +141,7 @@ export class URooms extends React.Component {
           return (
             <div className="divDashboardWidgets"><h4>Housekeeping</h4>
              <hr />
-                <button className="btnBig" onClick={() => this.handleUncleanRoom()}>Done</button>
+                <button type="button" className="btnBig" onClick={() => this.handleUncleanRoom()}>Done</button>
                     <ol>
                             {items.map(item => (
                                  <li key={Math.random()}>

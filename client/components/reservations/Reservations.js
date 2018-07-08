@@ -15,13 +15,14 @@ export class Reservations extends React.Component {
 
     constructor(props) {
       super(props);
+      
       this.state = {
         guestId: ''
       };
 
       this.sampleStore = {
-        arrivalDate: '2018-06-16',
-        departureDate: '2018-06-30',
+        arrivalDate: '',
+        departureDate: '',
         firstName: '',
         lastName: '',
         email: '',
@@ -65,7 +66,7 @@ export class Reservations extends React.Component {
     componentDidMount(){
       //hide Empty component
       var pageLis = document.getElementsByTagName("li");
-      pageLis[4].style.visibility = "hidden";
+      pageLis[5].style.visibility = "hidden";
       //pageLis[3].style.visibility = "hidden";
 
     }
@@ -75,7 +76,7 @@ export class Reservations extends React.Component {
 
         const steps =
         [
-            // {name: 'Book Room', component: <BookRooms getStore={() => (this.getStore())} updateStore={(u) => {this.updateStore(u)}}/>},
+            {name: 'Book Rooms', component: <BookRooms getStore={() => (this.getStore())} updateStore={(u) => {this.updateStore(u)}}/>},
             {name: 'Guest', component: <GuestContacts getStore={() => (this.getStore())} updateStore={(u) => {this.updateStore(u)}}/>},
             {name: 'Emergency Contact', component: <EmergencyContacts getStore={() => (this.getStore())} updateStore={(u) => {this.updateStore(u)}}/>},
             {name: 'Reservation', component: <ReservationDetails getStore={() => (this.getStore())} updateStore={(u) => {this.updateStore(u)}}/>},

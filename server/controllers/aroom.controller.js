@@ -39,8 +39,8 @@ export function findByDates(req, res) {
     var call_stored_proc = "CALL sp_GetAvailableRooms('"    
     + req.query.adate + "','"
     + req.query.ddate + "',"
-    + null + "," //no_of_rooms is null 
-    + null + ")"; //total_beds is null
+    + req.query.nR + "," // no_of_rooms
+    + req.query.rT + ")"; //total_beds
 
     console.log(call_stored_proc);
 

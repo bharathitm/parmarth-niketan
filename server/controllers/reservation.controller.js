@@ -81,6 +81,9 @@ export function add(req, res) {
     else {
         call_stored_proc +=  "'" + req.body.advance_reminder_on + "'"
     }
+
+    //room_ids_str does not have the ' after the ,  
+    call_stored_proc +=  ",'" + req.body.room_ids_str + "'"
     
     call_stored_proc += ")";
 

@@ -15,9 +15,13 @@ const config = {
         app: [
             'webpack-hot-middleware/client', // bundle the client for hot reloading
             'react-hot-loader/patch',   // activate HMR for React
-            './main.js'  // the entry point of app
+            '../src/index.js'  // the entry point of app
         ]
     },
+    devServer: {
+        contentBase: './dist',
+        hot: true
+      },
     output: {
         path:  path.resolve(CURRENT_WORKING_DIR, 'dist'), //  destination
         filename: 'client.bundle.js',
@@ -25,7 +29,7 @@ const config = {
     },
     plugins: [
         new webpack.HotModuleReplacementPlugin(), // enable HMR globally
-        new webpack.NoEmitOnErrorsPlugin(),  // do not emit compiled assets that include errors
+        //new webpack.NoEmitOnErrorsPlugin(),  // do not emit compiled assets that include errors
     ],
     module: {
         rules: [

@@ -76,55 +76,13 @@ export class DatePickerInput extends Component {
                                     </div>
                                 </div>
                             <div className ="div-table-col">  
-                                    <button className="btnBig" onClick={() => this.props.handleShow()}>Show</button>
+                                    <button type="button" className="btnBig" onClick={() => this.props.handleShow()}>Show</button>
                             </div>
                             <div className ="div-table-col" style={{ visibility: this.props.viewPrint? 'visible':'hidden', display: this.props.viewPrint? 'inline':'none' }}>  
-                                    <button className="btnBig" onClick={() => this.props.handlePrint()}>Print</button>
+                                    <button type="button" className="btnBig" onClick={() => this.props.handlePrint()}>Print</button>
                             </div>
                         </div>
                     </div>
-
-                    {/* <table>
-                    <tbody>
-                    <tr>
-                    <td>                  
-
-                    <div className="form-group col-md-12 content form-block-holder">
-                        <label className="control-label col-md-4">
-                        Start Date:
-                        </label>
-                      
-                        <div>
-                        <DatePicker
-                        ref="startDate"
-                        dateFormat="YYYY-MM-DD"
-                        selected={this.state.startDate}
-                        onChange={this.handleStartDateChange} 
-                        className="form-control" />                       
-                        </div>
-                        </div>
-                    </td>
-                    <td>
-                    <div className="form-group col-md-12 content form-block-holder">
-                        <label className="control-label col-md-4">
-                        End Date:
-                        </label>
-                     
-                        <div>
-                        <DatePicker ref="endDate"
-                        dateFormat="YYYY-MM-DD"
-                        selected={this.state.endDate}
-                        onChange={this.handleEndDateChange} 
-                        className="form-control"/>
-                        </div>
-                        </div>
-                    </td>  
-                    <td>
-                    <button onClick={() => this.props.handleShow()}>Show</button>
-                    </td>                 
-                    </tr>
-                    </tbody>
-                    </table> */}
                     </div>
                 );
         }

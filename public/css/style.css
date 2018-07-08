@@ -338,11 +338,13 @@ ol.progtrckr {
   }
 
   .row {
-    width:80%;
+   
     border:solid 1px silver;
     background-color: white;
     margin: 0 auto;
     padding:2em;
+    width:80%;
+    height: 100%;
   }
   
   .form-horizontal .form-group {
@@ -529,9 +531,14 @@ ol.progtrckr {
 
 #slReservationTypes{
   height: 34px;
+width:100%;
 }
 
 #slSanskaras{
+  height: 34px;
+}
+
+#slRoomTypes{
   height: 34px;
 }
 
@@ -645,6 +652,87 @@ ol.progtrckr {
 .advance-table .col-bordered{
   border:solid 1px silver;
 }
+
+/* Book Rooms specific starts here */
+
+.div-book-room-search{
+  margin-top:1em;
+  padding:1em;
+  border:solid 1px silver;
+  display: inline-block;  
+  width:15%; 
+}
+
+#divFilter{
+  margin-left:2em;
+}
+
+#divFilter li{
+  list-style-type: none;
+  margin:0.2em 0 0 -3em;
+  font-size:10pt;
+
+}
+
+#divSearchResults{
+  position:relative;
+  margin-top:1em;
+  width:75%;
+  display: inline-block;
+  float:right;
+  margin-left:1em;
+}
+
+.divBlocks{
+  border:solid 1px silver;
+  padding:1em;
+  margin-left:1em;
+  margin-bottom:1em;
+  width:100%;
+}
+
+.divBlocks h4{
+  width:80%;
+}
+
+.divBlocks ul{
+  margin-top:0.5em;
+}
+
+.divBlocks li{
+  border-bottom:solid 1px skyblue;
+  margin:1em;
+}
+
+.sp-block-imgs{
+  margin:0 0 0 2em;
+}
+
+.sp-block-imgs img{
+  margin:-0.5em 0 -0.4em 0;
+}
+
+.div-block-totals{
+  float:right;
+  margin-top:-1.5em;
+  font-weight:bolder;
+  font-size:16pt;
+  text-align: center;
+}
+
+.sp-block-total{
+  margin:0.8em 0 0 2em;
+  font-weight: bold;
+  color:#278EDE;
+}
+
+.grand-total{
+  margin-top:1em;
+  margin-right:-2em;
+}
+
+/* Book Rooms specific ends here */
+
 
 
 

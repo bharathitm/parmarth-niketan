@@ -157,7 +157,6 @@ export class GuestContacts extends Component {
     document.getElementById("spNoDataorError").style.visibility="hidden";
   }
 
-  componentWillUnmount() {}
 
   isValidated() {
   
@@ -178,6 +177,7 @@ export class GuestContacts extends Component {
           this.props.getStore().region != userInput.region || 
           this.props.getStore().country != userInput.country
         ) { // only update store of something changed
+
           this.props.updateStore({
             ...userInput,
             savedToCloud: false // use this to notify step4 that some changes took place and prompt the user to save again
@@ -212,20 +212,6 @@ export class GuestContacts extends Component {
     this.setState(Object.assign(userInput, validateNewInput));
   }
 
-   _validateData(data) {
-    return  {
-      firstNameVal: (data.firstName != ''),
-      lastNameVal: (data.lastName != ''),
-      emailVal: /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/.test(data.email), // required: regex w3c uses in html5
-      phoneVal: (data.phone != ''),
-      addressVal: (data.address != ''),
-      cityVal: (data.city != ''),
-      pinVal: (data.pin != ''),
-      regionVal: (data.region != ''),
-      countryVal: (data.country != 0) // required: anything besides N/A
-    }
-  }
-
   _grabUserInput() {
     return {
       firstName: this.refs.firstName.value,
@@ -240,6 +226,21 @@ export class GuestContacts extends Component {
 
     };
   }
+
+  _validateData(data) {
+    return  {
+      firstNameVal: (data.firstName != ''),
+      lastNameVal: (data.lastName != ''),
+      emailVal: /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/.test(data.email), // required: regex w3c uses in html5
+      phoneVal: (data.phone != ''),
+      addressVal: (data.address != ''),
+      cityVal: (data.city != ''),
+      pinVal: (data.pin != ''),
+      regionVal: (data.region != ''),
+      countryVal: (data.country != 0) // required: anything besides N/A
+    }
+  }
+
 
   handleEmailSearch(){
 

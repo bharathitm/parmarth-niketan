@@ -1,10 +1,13 @@
 import React, { Component } from 'react';
+import blocks from '../../constants/blocks';
+import floors from '../../constants/floors';
+
+import moment from 'moment';
 
 import {logError, checkError} from '../../utils/helpers';
 import {API_URL} from '../../config/config';
 
-import DatePicker from 'react-datepicker';
-import moment from 'moment';
+import SearchBox from '../subcomponents/SearchBox';
 
 export class BookRooms extends Component {
   constructor(props) {
@@ -12,345 +15,368 @@ export class BookRooms extends Component {
 
     this.state = {
       isLoaded: false,
+      isReRender: false,
       error: null,
-      checkInDate: props.getStore().eFirstName,
-      checkOutDate: props.getStore().eLastName,
-
-
-      ePhone: props.getStore().ePhone,     
-      eRelationship: props.getStore().eRelationship,
-      guestEmergencyContactId: props.getStore().guestEmergencyContactId
+      items:[]
     }; 
 
-    this._validateOnDemand = true; // this flag enables onBlur validation as user fills forms
+    this.searchStore = {
+      arrivalDate: moment(),
+      departureDate: moment(),
+      roomType: null,
+      noOfRooms: null,
+      searchLoaded: false,
+      uniqueBlocks: [],
+      uniqueRooms: [],
+      filteredBlocks: []
+    };
 
-    this.validationCheck = this.validationCheck.bind(this);
-    this.isValidated = this.isValidated.bind(this);
-
-    // this.populateNoOfRooms  = this.populateNoOfRooms.bind(this);
-    // this.populateRoomType = this.populateRoomType.bind(this);
+    this.createRoomsString = this.createRoomsString.bind(this);
+    this.handleBlocksChanged = this.handleBlocksChanged.bind(this);
   }
 
-  componentDidMount() {
-   this.fetchEmergencyContactsIfExists();
+  getSearchStore() {
+    return this.searchStore;
   }
 
-  fetchEmergencyContactsIfExists(){
-        if(this.props.getStore().guestId != '')
-        {
-          fetch(API_URL + "econtacts/" + this.props.getStore().guestId)
-              .then((response) => {
-                return checkError(response);
-              })
-              .then((result) => {
-                  this.setState({
-                    isLoaded: true,
-                    items: result,
-                  }, function() {
-                    this.loadEmergencyContactDetails();
-                  }
-                );        
-                })
-                .catch((error) => {
-                  this.setState({
-                    isLoaded: false,
-                    error
-                  });
-                  logError(this.constructor.name + " " + error);
-                });
-          }       
+  updateSearchStore(update) {
+    this.searchStore = {
+      ...this.searchStore,
+      ...update,
+    }
   }
 
-  loadEmergencyContactDetails(){
-    if (this.state.items.length != 0)
-    {
-      this.props.updateStore({
-        guestEmergencyContactId: this.state.items[0].guest_emergency_contact_id,
-        eFirstName: this.state.items[0].first_name,
-        eLastName: this.state.items[0].last_name,
-        ePhone: this.state.items[0].phone_no,
-        eRelationship: this.state.items[0].relationship
-      });
+  componentWillMount(){
 
+    if (window.sessionStorage.getItem('searchResults')){
       this.setState({
-        guestEmergencyContactId: this.state.items[0].guest_emergency_contact_id,
-        eFirstName: this.state.items[0].first_name,
-        eLastName: this.state.items[0].last_name,
-        ePhone: this.state.items[0].phone_no,
-        eRelationship: this.state.items[0].relationship
+        isLoaded: true,
+        items: JSON.parse(window.sessionStorage.getItem('searchResults')),
       });
-
-      this.refs.eFirstName.value = this.state.items[0].first_name,
-      this.refs.eLastName.value = this.state.items[0].last_name,
-      this.refs.ePhone.value = this.state.items[0].phone_no,
-      this.refs.eRelationship.value = this.state.items[0].relationship
+      window.sessionStorage.removeItem('searchResults');
     }
   }
 
-  handleCheckInDateChange(date) {
-    this.setState({
-        checkInDate: date
+  componentDidMount(){
+    document.getElementById("next-button").style.visibility = "hidden";
+
+    if (this.state.items.length > 0){
+      document.getElementsByClassName("div-book-room-search")[0].style.cssFloat = "left";
+      document.getElementById("divSearchResults").style.cssFloat = "none";
+
+      this.setAllSelectedRooms();
+    }
+  }
+
+
+  componentWillUnmount(){
+    if (this.state.isLoaded){
+      window.sessionStorage.removeItem('searchResults');
+      window.sessionStorage.setItem('searchResults', JSON.stringify(this.state.items));
+    }
+  }
+
+  setAllSelectedRooms(){
+
+    //rooms
+    var selectedRooms = JSON.parse(window.sessionStorage.getItem('selectedRooms'));
+
+    for (var cnt=0; cnt < selectedRooms.length; cnt++){
+      document.getElementById(selectedRooms[cnt]).checked = true; 
+      this.roomsChanged();
+    }
+    window.sessionStorage.removeItem('selectedRooms');
+  }
+
+  getFormattedDate(dt) {
+    var date = new Date(dt);
+    var month = date.getMonth() + 1;
+    var day = date. getDate();
+    var year = date.getFullYear();
+    return year + "-" + month + "-" + day ;
+  }
+
+  handleSearch(){
+
+    document.getElementsByClassName("div-book-room-search")[0].style.cssFloat = "left";
+    document.getElementById("divSearchResults").style.cssFloat = "none";
+
+    this.searchStore.uniqueBlocks = [];
+    this.searchStore.uniqueRooms = [];
+
+    this.searchStore.arrivalDate = (this.getFormattedDate(this.searchStore.arrivalDate)).toString();
+    this.searchStore.departureDate = (this.getFormattedDate(this.searchStore.departureDate)).toString();
+
+    const arrivalDate = this.searchStore.arrivalDate;
+    const departureDate = this.searchStore.departureDate;
+
+    this.props.updateStore({
+      arrivalDate: arrivalDate,
+      departureDate: departureDate
     });
-    this.refs.checkError.selected = date;
-  }
 
-  handleCheckOutChange(time){
-    this.setState({
-      checkOutDate: time
-    });
-    this.refs.checkOutDate.selected = time;
-  }
-
-
-
-  isValidated() {
-    const userInput = this._grabUserInput(); // grab user entered vals
-    const validateNewInput = this._validateData(userInput); // run the new input against the validator
-    let isDataValid = false;
-
-    // if full validation passes then save to store and pass as valid
-    if (Object.keys(validateNewInput).every((k) => { return validateNewInput[k] === true })) {
-        if (
-          this.props.getStore().eFirstName != userInput.eFirstName 
-        || this.props.getStore().eLastName != userInput.eLastName
-        || this.props.getStore().ePhone != userInput.ePhone
-        || this.props.getStore().eRelationship != userInput.eRelationship
-        ) { // only update store of something changed
-          this.props.updateStore({
-            ...userInput,
-            savedToCloud: false // use this to notify step4 that some changes took place and prompt the user to save again
-          });  // Update store here (this is just an example, in reality you will do it via redux or flux)
-
-          if (this.state.guestEmergencyContactId != ''){
-            this.updateEmergencyContactData();
-          }
-          else {
-              this.insertEmergencyContactData();
-          }
-        }
-        isDataValid = true;
-    }
-    else {
-        // if anything fails then update the UI validation state but NOT the UI Data State
-        this.setState(Object.assign(userInput, validateNewInput));
-    }
-
-    return isDataValid;
-  }
-
-  _grabUserInput() {
-    return {
-      eFirstName: this.refs.eFirstName.value,
-      eLastName: this.refs.eLastName.value,
-      ePhone: this.refs.ePhone.value,
-      eRelationship: this.refs.eRelationship.value,
-    };
-  }
-
-  _validateData(data) {
-    return  {
-      eFirstNameVal: (data.eFirstName != ''),
-      eLastNameVal: (data.eLastName != ''),
-      ePhoneVal: (data.ePhone != ''),
-      eRelationshipVal: (data.eRelationship != '')
-    }
-  }
-
-  insertEmergencyContactData(){
-
-        const payload = {
-          guest_id: this.props.getStore().guestId,
-          first_name: this.state.eFirstName,
-          last_name: this.state.eLastName,
-          phone_no: this.state.ePhone,
-          relationship: this.state.eRelationship
-        };
-
-        fetch(API_URL + "econtacts/", {
-          method: 'POST',
-          headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(payload)
-        })
-        .then((response) => {
-          return checkError(response);
-        })
-        .then((result) => {   
-              this.setState({
-                isLoaded: true,
-                guestEmergencyContactId: result[0].guest_emergency_contact_id
-              });
-              this.props.updateStore({
-                guestEmergencyContactId: result[0].guest_emergency_contact_id
-              });     
-        })
-        .catch((error) => {
-          this.setState({
-            isLoaded: false,
-            error
-          });
-          logError(error);
-        });
-   }
-
-   updateEmergencyContactData(){
-
-    const payload = {
-      guest_emergency_contact_id: this.state.guestEmergencyContactId,
-      first_name: this.state.eFirstName,
-      last_name: this.state.eLastName,
-      phone_no: this.state.ePhone,
-      relationship: this.state.eRelationship
-    };
-
-
-    fetch(API_URL + "econtacts/" + this.state.guestEmergencyContactId, {
-      method: 'POST',
-      headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(payload)
-    })
+    fetch(API_URL + "arooms/?adate=" + arrivalDate + "&ddate=" + departureDate + "&nR=" + this.searchStore.noOfRooms + "&rT=" + this.searchStore.roomType) 
     .then((response) => {
       return checkError(response);
     })
-    .catch((error) => {
-      this.setState({
-        isLoaded: false,
-        error
+    .then((result) => {
+        this.setState({
+          isLoaded: true,
+          items: result,
+        });
+      })
+      .catch((error) => {
+        this.setState({
+          isLoaded: false,
+          error
+        });
+        logError(this.constructor.name + " " + error);
       });
-      logError(error);
-    });
+  }
+
+    //rooms check box click
+    roomsChanged() {  
+      var grandTotal = 0;
+      for (var cnt=0; cnt < this.searchStore.uniqueBlocks.length; cnt++){
+
+        var checkboxes = document.getElementsByName(blocks[this.searchStore.uniqueBlocks[cnt]]);  
+
+        if (checkboxes.length > 0){
+          var blockTotal = 0;
+            for(var i = 0; i < checkboxes.length; i++)  
+            { 
+                if(checkboxes[i].checked) {
+                  blockTotal += parseFloat(checkboxes[i].value);
+                }
+            }
+
+            document.getElementById(blocks[this.searchStore.uniqueBlocks[cnt]]).innerHTML = blockTotal;
+            grandTotal += blockTotal
+        } 
+
+        document.getElementById("spGrandTotal").innerHTML = grandTotal;
+        if (grandTotal != 0){
+          document.getElementById("next-button").style.visibility = "visible";
+        } else {
+          document.getElementById("next-button").style.visibility = "hidden";
+        }
+      }
+    } 
+
+  isValidated() {
+
+    // if (
+    //   this.props.getStore().arrivalDate != this.searchStore.arrivalDate 
+    // || this.props.getStore().departureDate != this.searchStore.arrivalDate
+    // ) { // only update store of something changed
+    //   this.props.updateStore({
+    //     ...this.searchStore,
+    //     savedToCloud: false // use this to notify step4 that some changes took place and prompt the user to save again
+    //   });  // Update store here (this is just an example, in reality you will do it via redux or flux    
+    // }
+
+    this.storeRoomBookings();
+    return true;
+  }
+
+  getAllSelectedRooms(){
+
+    //rooms
+    var selectedRooms = [];
+    for (var cnt=0; cnt < this.searchStore.uniqueBlocks.length; cnt++){
+
+      var checkboxes = document.getElementsByName(blocks[this.searchStore.uniqueBlocks[cnt]]);  
+
+      if (checkboxes.length > 0){
+          for(var i = 0; i < checkboxes.length; i++)  
+          { 
+              if(checkboxes[i].checked) {
+                selectedRooms.push(checkboxes[i].id); 
+              }
+          }
+      } 
+    }
+    return selectedRooms;
+  }
+
+  createRoomsString(selectedRooms){
+    //loop through selected rooms and create a | separated string to pass to POST
+    var str_rooms = "";
+    for (var i =0; i < selectedRooms.length; i++)
+    {  
+      str_rooms+= selectedRooms[i] + "|";
+    }
+    str_rooms = str_rooms.substring(0,str_rooms.length-1);
+    return str_rooms;
+}
+
+  storeRoomBookings(){
+    var selectedRooms = this.getAllSelectedRooms();
+    var str_rooms = this.createRoomsString(selectedRooms);
+
+    window.sessionStorage.setItem('selectedRooms', JSON.stringify(selectedRooms));
+    window.sessionStorage.setItem('strSelectedRooms', str_rooms);
    }
 
-  validationCheck() {
-    if (!this._validateOnDemand)
-      return;
+   handleBlocksChanged(){
 
-    const userInput = this._grabUserInput(); // grab user entered vals
-    const validateNewInput = this._validateData(userInput); // run the new input against the validator
+    this.searchStore.filteredBlocks = [];  
 
-    this.setState(Object.assign(userInput, validateNewInput));
-  }
+    var checkboxes = document.getElementsByName("chkBlocks"); 
+    var atleastOneChecked = false;
+      
+    if (checkboxes.length > 0){
+        for(var i = 0; i < checkboxes.length; i++)  
+        { 
+            if(checkboxes[i].checked) {
+              this.searchStore.filteredBlocks.push(checkboxes[i].value); 
+              atleastOneChecked = true;
+              this.setState({
+                isReRender: true
+              });
+            }
+        }
+    }
+
+    if (!atleastOneChecked){
+        this.setState({
+          isReRender: false
+        });
+    }
+   }
 
 
   render() {
-    // explicit class assigning based on validation
-    let notValidClasses = {};
 
-    /* First Name */
-    if (typeof this.state.eFirstNameVal == 'undefined' || this.state.eFirstNameVal) {
-      notValidClasses.eFirstNameCls = 'form-control';
-    }
-    else {
-       notValidClasses.eFirstNameCls = 'form-control has-error';
-    }
+    let { isLoaded, error, items, isReRender } = this.state;
 
-    /* Last Name */    
-    if (typeof this.state.eLastNameVal == 'undefined' || this.state.eLastNameVal) {
-      notValidClasses.eLastNameCls = 'form-control';
-    }
-    else {
-       notValidClasses.eLastNameCls = 'form-control has-error';
-    }
+    //loads first time and when all filter check boxes are unchecked
+    if (!isReRender){
+        this.searchStore.uniqueBlocks = [];
+        if (items.length > 0){
+              //show filter only if search results are available
+              this.searchStore.searchLoaded = true;
 
-    /* Phone */    
-    if (typeof this.state.ePhoneVal == 'undefined' || this.state.ePhoneVal) {
-      notValidClasses.ePhoneCls = 'form-control';
-    }
-    else {
-        notValidClasses.ePhoneCls = 'form-control has-error';
-    }
+              this.searchStore.uniqueBlocks.push(items[0].block_id); 
 
-    /* Relationship */    
-    if (typeof this.state.eRelationshipVal == 'undefined' || this.state.eRelationshipVal) {
-      notValidClasses.eRelationshipCls = 'form-control';
-    }
-    else {
-        notValidClasses.eRelationshipCls = 'form-control has-error';
-    }
+              if ((this.searchStore.noOfRooms != "null") && (this.searchStore.noOfRooms != null)){
+                this.searchStore.uniqueRooms = items.slice(0, parseInt(this.searchStore.noOfRooms));
+              } else {
+                this.searchStore.uniqueRooms = items;
+              }
+                    
+              //unique block ids need to be captured in a separate array
+              for (var i = 1; i < items.length; i++)
+              {
+                if (items[i].block_id != items[i-1].block_id)
+                {
+                    this.searchStore.uniqueBlocks.push(items[i].block_id);
 
-    return (
-      <div className="step step3">
-        <div className="row">
-          <form id="Form" className="form-horizontal">          
-                <h4>Book Rooms</h4>        
-                <div className = "div-table">
-                    <div className = "div-table-row">
-                          <div className ="div-table-col">
-                   {/* Search Box */}
-                    <div className="form-group col-md-12 content form-block-holder">
-                          <label className="control-label col-md-4">
-                            Check In Date:*
-                          </label>
-                          <div className="col-md-8">
-                                <DatePicker ref="checkInDate"
-                                    dateFormat="YYYY-MM-DD"
-                                    selected={moment(this.state.checkInDate)}
-                                    onChange={this.handleCheckInDatehange} 
-                                    className={notValidClasses.checkInDateCls}/>
-                      </div>
-                      </div>
+                    if ((this.searchStore.noOfRooms != "null") && (this.searchStore.noOfRooms != null)){
+                      var newArray = items.slice(i, (i + parseInt(this.searchStore.noOfRooms)));
+                      this.searchStore.uniqueRooms.push(...newArray);
+                    } 
+                }
+              }
+              this.searchStore.filteredBlocks = this.searchStore.uniqueBlocks;
+          }
+          else{
+            this.searchStore.searchLoaded = false;
+          }
+      }
 
-                      <div className="form-group col-md-12 content form-block-holder">
-                          <label className="control-label col-md-4">
-                            Check Out Date:*
-                          </label>
-                          <div className="col-md-8">
-                          <DatePicker ref="checkOutDate"
-                        dateFormat="YYYY-MM-DD"
-                        selected={moment(this.state.checkOutDate)}
-                        onChange={this.handleCheckOutDateChange} 
-                        className={notValidClasses.checkOutDateCls}/>
-                            </div>
-                      </div>
-
-                      <div className="form-group col-md-12 content form-block-holder">
-                          <div className="col-md-8">
-                          <select id="slReservationTypes"
-                                        ref="reservationTypeId"
-                                        autoComplete="off"
-                                        className={notValidClasses.noOfRoomsCls}
-                                        required
-                                        defaultValue={this.state.noOfRooms}
-                                        onBlur={this.validationCheck}>
-                                        <option value="">Please select</option>
-                                        {/* {this.populateNoOfRooms()}                    */}
-                                      </select>         
-                            </div>
-                      </div>
-
-                      <div className="form-group col-md-12 content form-block-holder">
-                          <div className="col-md-8">
-                          <select id="slReservationTypes"
-                                        ref="reservationTypeId"
-                                        autoComplete="off"
-                                        className={notValidClasses.roomTypeCls}
-                                        required
-                                        defaultValue={this.state.roomType}
-                                        onBlur={this.validationCheck}>
-                                        <option value="">Please select</option>
-                                        {/* {this.populateRoomType()}                    */}
-                                      </select>         
-                            </div>
-                      </div>
-              </div>
-                <div className ="div-table-col">
-                   {/* Search Results */}
-                    <div className="form-group col-md-12 content form-block-holder">
-                     
-                      </div>
-                </div>
+    if ((!isLoaded) && (error)){
+      return <div><h4>Book Rooms</h4><hr /><span id="spNoDataorError">{JSON.stringify(error.message)}</span></div>;        
+     } else if (!isLoaded) { // default view
+        return (
+          <div className="step step3">
+            <div className="row">
+              <form id="Form" className="form-horizontal">          
+                    <h4>Book Rooms</h4>        
+                    <SearchBox 
+                        getSearchStore={() => (this.getSearchStore())} 
+                        handleBlocksChanged={() => (this.handleBlocksChanged())}
+                        updateSearchStore={(u) => {this.updateSearchStore(u)}} 
+                        handleSearch={() => (this.handleSearch())}>
+                </SearchBox>
+            <div id="divSearchResults">
+                Please select search criteria!
+            </div> 
+              </form>
             </div>
-        s</div>
-          </form>
+          </div>
+        );
+    } else if (items.length == 0){
+        return  (
+          <div className="step step3">
+          <div className="row">
+            <form id="Form" className="form-horizontal">          
+                  <h4>Book Rooms</h4>        
+                  <SearchBox 
+                      getSearchStore={() => (this.getSearchStore())} 
+                      handleBlocksChanged={() => (this.handleBlocksChanged())}
+                      updateSearchStore={(u) => {this.updateSearchStore(u)}} 
+                      handleSearch={() => (this.handleSearch())}>
+              </SearchBox>
+          <div id="divSearchResults">
+              No rooms available for given search criteria!
+          </div> 
+          <div style={{clear: 'both'}}></div>
+            </form>
+          </div>
         </div>
-      </div>
-    )
-  }
+        );
+    } else {
+        return (
+          <div className="step step3">
+            <div className="row">
+              <form id="Form" className="form-horizontal">          
+                  <h4>Book Rooms</h4>     
+                  <SearchBox 
+                      getSearchStore={() => (this.getSearchStore())} 
+                      handleBlocksChanged={() => (this.handleBlocksChanged())}
+                      updateSearchStore={(u) => {this.updateSearchStore(u)}} 
+                      handleSearch={() => (this.handleSearch())}>
+                  </SearchBox>  
+                      <div id="divSearchResults">
+                       {/* {this.searchStore.uniqueBlocks.map(item => (   */}
+
+                       {this.searchStore.uniqueBlocks.filter(bk => this.searchStore.filteredBlocks.find( fB => fB == bk)).map(item => (  
+
+                              <div className="divBlocks"> 
+                                  <h4>{blocks[item]}</h4> 
+                                  <span className="div-block-totals">Total <br/>Rs.<span id={blocks[item]}>0</span></span>
+                                      <ul>
+                                        {this.searchStore.uniqueRooms.filter(bk => bk.block_id == item).map(booking => (
+                                          <li>
+                                              <input type="checkbox" name={blocks[item]}
+                                                    onClick={() => this.roomsChanged()}
+                                                    id = {booking.room_id} 
+                                                    value={booking.room_rent} />
+                                                   <b>{booking.room_no}</b>{", " + 
+                                                    floors[booking.floor_no] + ", " + 
+                                                    booking.total_beds + " beds" }  
+                                                     <span className="sp-block-total">Rs. {booking.room_rent}</span> 
+                                                    <span className="sp-block-imgs">  
+ 
+  <img src="./img/ac1.png" style={{ visibility: booking.has_AC == 1? 'visible':'hidden', display: booking.has_AC == 1? 'inline':'none' }} /> 
+                                                     </span>  
+                                                             
+                                          </li>
+                                          ))} 
+                                        </ul> 
+                                </div>                                
+                            ))} 
+                             <div className="div-block-totals grand-total">Grand Total <br/>Rs.<span id="spGrandTotal">0</span></div>                     
+                      </div>
+                      <div style={{clear: 'both'}}></div>
+                     
+              </form>
+            </div>
+          </div>
+        )
+      }
+    }
 }
 
 export default BookRooms;
