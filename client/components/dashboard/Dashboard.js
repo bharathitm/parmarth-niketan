@@ -14,20 +14,30 @@ export class Dashboard extends React.Component {
       super(props);
 
       this.state = {
-        hasChanged: null
+        hasChanged: false
       };
+
+      this.dashboardStore = {
+            hasChanged: false
+        };
     }
 
-    updateDashboardStore() {
-        //alert("has state changed");
-        this.setState({
+    getDashboardStore(){
+        return this.dashboardStore;
+    }
+
+    updateDashboardStore(update) {
+            this.dashboardStore = {
+              ...this.dashboardStore,
+              ...update,
+            }
+          
+          this.setState({
             hasChanged: true
           });
-      }
-
+    }
 
     render() {
-        //alert("render");
           return (
             <div className="divError">
             <ErrorBoundary>
@@ -35,7 +45,7 @@ export class Dashboard extends React.Component {
             <div className = "div-table div-dashboard-table">
                     <div className = "div-table-row">
                           <div className ="div-table-col div-today-availability-col">
-                              <TodayAvailability /> 
+                              <TodayAvailability getDashboardStore={() => (this.getDashboardStore())}/> 
                           </div>
                           <br/>
                     </div>
@@ -44,10 +54,10 @@ export class Dashboard extends React.Component {
                               <CheckIns />
                           </div>
                           <div className ="div-table-col div-dashboard-col">
-                              <CheckOuts updateDashboardStore={(u) => {this.updateDashboardStore(u)}}/> 
+                              <CheckOuts  getDashboardStore={() => (this.getDashboardStore())} updateDashboardStore={(u) => {this.updateDashboardStore(u)}}/> 
                           </div>
                           <div className ="div-table-col div-dashboard-col">
-                              <URooms updateDashboardStore={(u) => {this.updateDashboardStore(u)}}/>  
+                              <URooms getDashboardStore={() => (this.getDashboardStore())} updateDashboardStore={(u) => {this.updateDashboardStore(u)}}/>  
                           </div>
                     </div>
               </div>

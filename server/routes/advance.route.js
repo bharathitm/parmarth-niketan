@@ -23,6 +23,11 @@ router.route('/:id')
     //Updates advance donation details
     .post((req, res) => {
         advanceCtrl.update(req, res);
+    })
+
+    //deletes advance donation details
+    .delete((req, res) => {
+        advanceCtrl.cancel(req, res);
     });
 
 

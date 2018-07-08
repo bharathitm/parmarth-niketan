@@ -136,7 +136,11 @@ export function add(req, res) {
     + req.body.city + "','"
     + req.body.zip_code + "','"
     + req.body.state + "','"
-    + req.body.country_id + 
+    + req.body.country_id + "','"
+    + req.body.e_first_name + "','"
+    + req.body.e_last_name + "','"    
+    + req.body.e_phone_no + "','"
+    + req.body.e_relationship + 
     "')";
 
 

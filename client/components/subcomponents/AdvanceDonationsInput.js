@@ -23,7 +23,6 @@ export class AdvanceDonationsInput extends Component {
       this._validateOnDemand = true; // this flag enables onBlur validation as user fills forms
 
       this.validationCheck = this.validationCheck.bind(this);
-      this.isValidated = this.isValidated.bind(this);
   
       this.handleDateChange = this.handleDateChange.bind(this);
     }
@@ -44,14 +43,6 @@ export class AdvanceDonationsInput extends Component {
     
         this.setState(Object.assign(userInput, validateNewInput));
     }
-    
-    _validateData(data) {
-        return  {
-          advanceReceivedOnVal: (data.advanceReceivedOn != ''),
-          advanceAmountVal: (data.advanceAmount != ''),
-          advanceReceiptNoVal: (data.advanceReceiptNo != '') 
-        }
-    }
 
     _grabUserInput() {
         return {
@@ -61,33 +52,27 @@ export class AdvanceDonationsInput extends Component {
         };
     }
     
-    isValidated() {
-    const userInput = this._grabUserInput(); // grab user entered vals
-    const validateNewInput = this._validateData(userInput); // run the new input against the validator
-    let isDataValid = false;
+    _validateData(data) {
+        return  {
+          advanceReceivedOnVal:  (data.advanceReceivedOn == null || data.advanceReceivedOn == undefined)? false: true,
+          advanceAmountVal: (data.advanceAmount != ''),
+          advanceReceiptNoVal: (data.advanceReceiptNo != '') 
+        };
+    }
 
-    // if full validation passes then save to store and pass as valid
-    if (Object.keys(validateNewInput).every((k) => { return validateNewInput[k] === true })) {
-        if (
-            this.props.getStore().advanceReceivedOn != userInput.advanceReceivedOn 
-        || this.props.getStore().advanceAmount != userInput.advanceAmount
-        || this.props.getStore().advanceReceiptNo != userInput.advanceReceiptNo
-        ) { // only update store of something changed
-            this.props.updateStore({
-            ...userInput,
-            savedToCloud: false // use this to notify step4 that some changes took place and prompt the user to save again
-            });  // Update store here (this is just an example, in reality you will do it via redux or flux)
+
+    
+    handleAdd() {
+        const userInput = this._grabUserInput(); // grab user entered vals
+        const validateNewInput = this._validateData(userInput); // run the new input against the validator
+
+        // if full validation passes then save to store and pass as valid
+        if (Object.keys(validateNewInput).every((k) => { return validateNewInput[k] === true })) {
+            this.insertAdvanceDonationDetails();
         }
-        
-        this.insertAdvanceDonationDetails();
-        isDataValid = true;
-    }
-    else {
-        // if anything fails then update the UI validation state but NOT the UI Data State
-        this.setState(Object.assign(userInput, validateNewInput));
-    }
-
-    return isDataValid;
+        else {
+            this.setState(Object.assign(userInput, validateNewInput));
+        }
     }
     
     insertAdvanceDonationDetails(){
@@ -100,6 +85,8 @@ export class AdvanceDonationsInput extends Component {
             receipt_no: this.state.advanceReceiptNo,
             is_advance: 1
         };
+
+        alert(JSON.stringify(payload));
 
         fetch(API_URL + "advance/", {
             method: 'POST',
@@ -204,10 +191,17 @@ export class AdvanceDonationsInput extends Component {
                   className={notValidClasses.advanceReceiptNoCls}
                   required
                   onBlur={this.validationCheck} />
-              
               </div>
             </div>
           </div>
+          <div className ="div-table-col">
+            {/* Receipt No*/}
+          <div className="form-group col-md-12 content form-block-holder">
+              <div className="col-md-8">
+           <img src="./img/tick.png" onClick={() => this.handleAdd()}/>
+           </div>
+           </div>
+            </div>
       </div>
         )
     }

@@ -21,13 +21,111 @@ export class GuestContacts extends Component {
       city: props.getStore().city,
       pin: props.getStore().pin,
       region: props.getStore().region,      
-      country: props.getStore().country      
+      country: props.getStore().country,
+      guestEmergencyContactId: props.getStore().guestEmergencyContactId, 
+      eFirstName: props.getStore().eFirstName,
+      eLastName: props.getStore().eLastName,
+      ePhone: props.getStore().ePhone,     
+      eRelationship: props.getStore().eRelationship   
     }; 
 
     this._validateOnDemand = true; // this flag enables onBlur validation as user fills forms
 
     this.validationCheck = this.validationCheck.bind(this);
     this.isValidated = this.isValidated.bind(this);
+  }
+
+  componentDidMount() {
+    document.getElementById("spNoDataorError").style.visibility="hidden";
+  }
+
+  populateCountries() {
+    let items = [];   
+
+    for (let i = 1; i <= 197; i++) {             
+         items.push(<option key={i} value={i}>{countries[i]}</option>);   
+    }
+    return items;
+  }
+
+  loadGuestDetails(){
+    // alert(this.props.getHomeStore().userName); does not work, have to find out how to use this....maybe pass from Reservations to each of the children, just the get though.
+    if (this.state.items.length != 0)
+    {
+
+      this.props.jumpToStep(2);
+      
+      this.props.updateStore({
+        guestId: this.state.items[0].guest_id,
+        firstName: this.state.items[0].first_name,
+        lastName: this.state.items[0].last_name,
+        email: this.state.items[0].email_id,
+        phone: this.state.items[0].phone_no,
+        address: this.state.items[0].address,
+        city: this.state.items[0].city,
+        pin: this.state.items[0].zip_code,
+        region: this.state.items[0].state,
+        country: this.state.items[0].country_id,
+        guestEmergencyContactId: this.state.items[0].guest_emergency_contact_id,
+        eFirstName: this.state.items[0].e_first_name,
+        eLastName: this.state.items[0].e_last_name,
+        ePhone: this.state.items[0].e_phone_no,
+        eRelationship: this.state.items[0].e_relationship
+      });
+
+      this.setState({
+        guestId: this.state.items[0].guest_id,
+        firstName: this.state.items[0].first_name,
+        lastName: this.state.items[0].last_name,
+        email: this.state.items[0].email_id,
+        phone: this.state.items[0].phone_no,
+        address: this.state.items[0].address,
+        city: this.state.items[0].city,
+        pin: this.state.items[0].zip_code,
+        region: this.state.items[0].state,
+        country: this.state.items[0].country_id,
+        guestEmergencyContactId: this.state.items[0].guest_emergency_contact_id,
+        eFirstName: this.state.items[0].e_first_name,
+        eLastName: this.state.items[0].e_last_name,
+        ePhone: this.state.items[0].e_phone_no,
+        eRelationship: this.state.items[0].e_relationship
+      });
+    
+
+      this.refs.firstName.value = this.state.items[0].first_name,
+      this.refs.lastName.value = this.state.items[0].last_name,
+      this.refs.email.value = this.state.items[0].email_id,
+      this.refs.phone.value = this.state.items[0].phone_no,
+      this.refs.address.value = this.state.items[0].address, 
+      this.refs.city.value = this.state.items[0].city,
+      this.refs.pin.value = this.state.items[0].zip_code,
+      this.refs.region.value = this.state.items[0].state,
+      this.refs.country.value = this.state.items[0].country_id,
+      this.refs.eFirstName.value = this.state.items[0].e_first_name,
+      this.refs.eLastName.value = this.state.items[0].e_last_name,
+      this.refs.ePhone.value = this.state.items[0].e_phone_no,
+      this.refs.eRelationship.value = this.state.items[0].e_relationship
+    }
+    else{
+
+      document.getElementById("spNoDataorError").style.visibility="visible";
+
+      var reservationSearch = String(this.refs.reservationSearch.value);
+
+      this.refs.firstName.value = '',
+      this.refs.lastName.value = '',
+      this.refs.email.value = (reservationSearch != '' && reservationSearch.indexOf('@') != -1)? this.refs.reservationSearch.value : '',
+      this.refs.phone.value = (reservationSearch != '' && this.refs.email.value == '')? this.refs.reservationSearch.value : '',
+      this.refs.address.value = '', 
+      this.refs.city.value = '',
+      this.refs.pin.value = '',
+      this.refs.region.value = '',
+      this.refs.country.value = 0,
+      this.refs.eFirstName.value = '',
+      this.refs.eLastName.value = '',
+      this.refs.ePhone.value = '',
+      this.refs.eRelationship.value = ''
+    }
   }
 
   handleReservationSearch(){
@@ -61,6 +159,185 @@ export class GuestContacts extends Component {
       });
   }
 
+  handleEmailSearch(){
+
+    const email = this.refs.email.value;
+
+    const userInput = this._grabUserInput(); // grab user entered vals
+    const validateNewInput = this._validateData(userInput); // run the new input against the validator
+
+    if (validateNewInput.emailVal){
+        fetch(API_URL + "guests/?email=" + email)
+          .then((response) => {
+            return checkError(response);
+          })
+          .then((result) => {
+              this.setState({
+                isLoaded: true,
+                items: result,
+              }, function() {
+                this.loadGuestDetails();
+              }
+            );        
+            })
+            .catch((error) => {
+              this.setState({
+                isLoaded: false,
+                error
+              });
+              logError(this.constructor.name + " " + error);
+            });
+    }
+    else {
+    // This needs to fire only the Email Validation alert, not all!
+
+// this.setState(Object.assign(userInput, validateNewInput, this._validationErrors(validateNewInput)));
+
+//this.setState(Object.assign(userInput.email, validateNewInput.emailVal, this._validationErrors(validateNewInput.emailVal)));
+  //this._validationErrors(validateNewInput.emailVal);
+
+  //this.validationCheck(this.refs.email);
+ }
+}
+
+handlePhoneSearch(){
+
+const phone = this.refs.phone.value;
+
+const userInput = this._grabUserInput(); // grab user entered vals
+const validateNewInput = this._validateData(userInput); // run the new input against the validator
+
+if (validateNewInput.phoneVal){
+    fetch(API_URL + "guests/?ph=" + phone)
+        .then((response) => {
+            return checkError(response);
+          })
+        .then((result) => {
+            this.setState({
+              isLoaded:true,
+              items: result,
+            }, function() {
+              this.loadGuestDetails();
+            }
+          );        
+          })
+          .catch((error) => {
+            this.setState({
+              isLoaded: false,
+              error
+            });
+            logError(this.constructor.name + " " + error);
+          });
+ }
+ else {
+// This needs to fire only the Email Validation alert, not all!
+
+// this.setState(Object.assign(userInput, validateNewInput, this._validationErrors(validateNewInput)));
+
+//this.setState(Object.assign(userInput.email, validateNewInput.emailVal, this._validationErrors(validateNewInput.emailVal)));
+  //this._validationErrors(validateNewInput.emailVal);
+
+  //this.validationCheck(this.refs.email);
+ }
+
+}
+
+  isValidated() {
+  
+    const userInput = this._grabUserInput(); // grab user entered vals
+    const validateNewInput = this._validateData(userInput); // run the new input against the validator
+    let isDataValid = false;
+
+    // if full validation passes then save to store and pass as valid
+    if (Object.keys(validateNewInput).every((k) => { return validateNewInput[k] === true })) {
+        if (
+          this.props.getStore().firstName != userInput.firstName || 
+          this.props.getStore().lastName != userInput.lastName || 
+          this.props.getStore().email != userInput.email || 
+          this.props.getStore().phone != userInput.phone || 
+          this.props.getStore().address != userInput.address || 
+          this.props.getStore().city != userInput.city || 
+          this.props.getStore().pin != userInput.pin || 
+          this.props.getStore().region != userInput.region || 
+          this.props.getStore().country != userInput.country ||
+          this.props.getStore().eFirstName != userInput.eFirstName ||
+          this.props.getStore().eLastName != userInput.eLastName ||
+          this.props.getStore().ePhone != userInput.ePhone ||
+          this.props.getStore().eRelationship != userInput.eRelationship
+        ) { // only update store of something changed
+
+          this.props.updateStore({
+            ...userInput,
+            savedToCloud: false // use this to notify step4 that some changes took place and prompt the user to save again
+          });  // Update store here (this is just an example, in reality you will do it via redux or flux)
+
+          if (this.state.guestEmergencyContactId != ''){
+            this.updateEmergencyContactData();
+          } else if (this.props.getStore().guestId != ''){
+            this.updateGuestData();
+          }
+          else {
+              this.insertGuestData();
+          }
+        }
+        isDataValid = true;
+    }
+    else {
+        // if anything fails then update the UI validation state but NOT the UI Data State
+        this.setState(Object.assign(userInput, validateNewInput));
+    }
+
+    return isDataValid;
+  }
+
+  validationCheck() {
+    if (!this._validateOnDemand)
+      return;
+
+    document.getElementById("spNoDataorError").style.visibility="hidden";
+
+    const userInput = this._grabUserInput(); // grab user entered vals
+    const validateNewInput = this._validateData(userInput); // run the new input against the validator
+
+    this.setState(Object.assign(userInput, validateNewInput));
+  }
+
+  _grabUserInput() {
+    return {
+      firstName: this.refs.firstName.value,
+      lastName: this.refs.lastName.value,
+      email: this.refs.email.value,
+      phone: this.refs.phone.value,
+      address: this.refs.address.value,
+      city: this.refs.city.value,
+      pin: this.refs.pin.value,
+      region: this.refs.region.value,
+      country: this.refs.country.value,
+      eFirstName: this.refs.eFirstName.value,
+      eLastName: this.refs.eLastName.value,
+      ePhone: this.refs.ePhone.value,
+      eRelationship: this.refs.eRelationship.value
+    };
+  }
+
+  _validateData(data) {
+    return  {
+      firstNameVal: (data.firstName != ''),
+      lastNameVal: (data.lastName != ''),
+      emailVal: /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/.test(data.email), // required: regex w3c uses in html5
+      phoneVal: (data.phone != ''),
+      addressVal: (data.address != ''),
+      cityVal: (data.city != ''),
+      pinVal: (data.pin != ''),
+      regionVal: (data.region != ''),
+      countryVal: (data.country != 0), 
+      eFirstNameVal: (data.eFirstName != ''),
+      eLastNameVal: (data.eLastName != ''),
+      ePhoneVal: (data.ePhone != ''),
+      eRelationshipVal: (data.eRelationship != '')
+    }
+  }
+
   insertGuestData(){
 
     const payload = {
@@ -72,7 +349,11 @@ export class GuestContacts extends Component {
       city: this.state.city,
       zip_code: this.state.pin,
       state: this.state.region,
-      country_id: this.state.country
+      country_id: this.state.country,
+      e_first_name: this.state.eFirstName,
+      e_last_name: this.state.eLastName,
+      e_phone_no: this.state.ePhone,
+      e_relationship: this.state.eRelationship
     };
 
 
@@ -119,7 +400,12 @@ export class GuestContacts extends Component {
       city: this.state.city,
       zip_code: this.state.pin,
       state: this.state.region,
-      country_id: this.state.country
+      country_id: this.state.country,
+      guest_emergency_contact_id: this.state.guestEmergencyContactId,
+      e_first_name: this.state.eFirstName,
+      e_last_name: this.state.eLastName,
+      e_phone_no: this.state.ePhone,
+      e_relationship: this.state.eRelationship
     };
 
 
@@ -144,247 +430,36 @@ export class GuestContacts extends Component {
     });
   }
 
-  populateCountries() {
-    let items = [];   
+  updateEmergencyContactData(){
 
-    for (let i = 1; i <= 197; i++) {             
-         items.push(<option key={i} value={i}>{countries[i]}</option>);   
-    }
-    return items;
-  } 
-
-  componentDidMount() {
-    document.getElementById("spNoDataorError").style.visibility="hidden";
-  }
-
-
-  isValidated() {
-  
-    const userInput = this._grabUserInput(); // grab user entered vals
-    const validateNewInput = this._validateData(userInput); // run the new input against the validator
-    let isDataValid = false;
-
-    // if full validation passes then save to store and pass as valid
-    if (Object.keys(validateNewInput).every((k) => { return validateNewInput[k] === true })) {
-        if (
-          this.props.getStore().firstName != userInput.firstName || 
-          this.props.getStore().lastName != userInput.lastName || 
-          this.props.getStore().email != userInput.email || 
-          this.props.getStore().phone != userInput.phone || 
-          this.props.getStore().address != userInput.address || 
-          this.props.getStore().city != userInput.city || 
-          this.props.getStore().pin != userInput.pin || 
-          this.props.getStore().region != userInput.region || 
-          this.props.getStore().country != userInput.country
-        ) { // only update store of something changed
-
-          this.props.updateStore({
-            ...userInput,
-            savedToCloud: false // use this to notify step4 that some changes took place and prompt the user to save again
-          });  // Update store here (this is just an example, in reality you will do it via redux or flux)
-
-          if (this.props.getStore().guestId != ''){
-            this.updateGuestData();
-          }
-          else {
-              this.insertGuestData();
-          }
-        }
-        isDataValid = true;
-    }
-    else {
-        // if anything fails then update the UI validation state but NOT the UI Data State
-        this.setState(Object.assign(userInput, validateNewInput));
-    }
-
-    return isDataValid;
-  }
-
-  validationCheck() {
-    if (!this._validateOnDemand)
-      return;
-
-    document.getElementById("spNoDataorError").style.visibility="hidden";
-
-    const userInput = this._grabUserInput(); // grab user entered vals
-    const validateNewInput = this._validateData(userInput); // run the new input against the validator
-
-    this.setState(Object.assign(userInput, validateNewInput));
-  }
-
-  _grabUserInput() {
-    return {
-      firstName: this.refs.firstName.value,
-      lastName: this.refs.lastName.value,
-      email: this.refs.email.value,
-      phone: this.refs.phone.value,
-      address: this.refs.address.value,
-      city: this.refs.city.value,
-      pin: this.refs.pin.value,
-      region: this.refs.region.value,
-      country: this.refs.country.value,
-
+    const payload = {
+      guest_emergency_contact_id: this.state.guestEmergencyContactId,
+      e_first_name: this.state.eFirstName,
+      e_last_name: this.state.eLastName,
+      e_phone_no: this.state.ePhone,
+      e_relationship: this.state.eRelationship
     };
-  }
-
-  _validateData(data) {
-    return  {
-      firstNameVal: (data.firstName != ''),
-      lastNameVal: (data.lastName != ''),
-      emailVal: /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/.test(data.email), // required: regex w3c uses in html5
-      phoneVal: (data.phone != ''),
-      addressVal: (data.address != ''),
-      cityVal: (data.city != ''),
-      pinVal: (data.pin != ''),
-      regionVal: (data.region != ''),
-      countryVal: (data.country != 0) // required: anything besides N/A
-    }
-  }
 
 
-  handleEmailSearch(){
-
-        const email = this.refs.email.value;
-
-        const userInput = this._grabUserInput(); // grab user entered vals
-        const validateNewInput = this._validateData(userInput); // run the new input against the validator
-
-        if (validateNewInput.emailVal){
-            fetch(API_URL + "guests/?email=" + email)
-              .then((response) => {
-                return checkError(response);
-              })
-              .then((result) => {
-                  this.setState({
-                    isLoaded: true,
-                    items: result,
-                  }, function() {
-                    this.loadGuestDetails();
-                  }
-                );        
-                })
-                .catch((error) => {
-                  this.setState({
-                    isLoaded: false,
-                    error
-                  });
-                  logError(this.constructor.name + " " + error);
-                });
-        }
-        else {
-        // This needs to fire only the Email Validation alert, not all!
-
-   // this.setState(Object.assign(userInput, validateNewInput, this._validationErrors(validateNewInput)));
-    
-    //this.setState(Object.assign(userInput.email, validateNewInput.emailVal, this._validationErrors(validateNewInput.emailVal)));
-      //this._validationErrors(validateNewInput.emailVal);
-
-      //this.validationCheck(this.refs.email);
-     }
-  }
-
-  handlePhoneSearch(){
-
-    const phone = this.refs.phone.value;
-
-    const userInput = this._grabUserInput(); // grab user entered vals
-    const validateNewInput = this._validateData(userInput); // run the new input against the validator
-
-    if (validateNewInput.phoneVal){
-        fetch(API_URL + "guests/?ph=" + phone)
-            .then((response) => {
-                return checkError(response);
-              })
-            .then((result) => {
-                this.setState({
-                  isLoaded:true,
-                  items: result,
-                }, function() {
-                  this.loadGuestDetails();
-                }
-              );        
-              })
-              .catch((error) => {
-                this.setState({
-                  isLoaded: false,
-                  error
-                });
-                logError(this.constructor.name + " " + error);
-              });
-     }
-     else {
-    // This needs to fire only the Email Validation alert, not all!
-
-   // this.setState(Object.assign(userInput, validateNewInput, this._validationErrors(validateNewInput)));
-    
-    //this.setState(Object.assign(userInput.email, validateNewInput.emailVal, this._validationErrors(validateNewInput.emailVal)));
-      //this._validationErrors(validateNewInput.emailVal);
-
-      //this.validationCheck(this.refs.email);
-     }
-
-  }
-
-  loadGuestDetails(){
-    // alert(this.props.getHomeStore().userName); does not work, have to find out how to use this....maybe pass from Reservations to each of the children, just the get though.
-    if (this.state.items.length != 0)
-    {
-
-      this.props.jumpToStep(2);
-      
-      this.props.updateStore({
-        guestId: this.state.items[0].guest_id,
-        firstName: this.state.items[0].first_name,
-        lastName: this.state.items[0].last_name,
-        email: this.state.items[0].email_id,
-        phone: this.state.items[0].phone_no,
-        address: this.state.items[0].address,
-        city: this.state.items[0].city,
-        pin: this.state.items[0].zip_code,
-        region: this.state.items[0].state,
-        country: this.state.items[0].country_id
-      });
-
+    fetch(API_URL + "econtacts/" + this.state.guestEmergencyContactId, {
+      method: 'POST',
+      headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload)
+    })
+    .then((response) => {
+      return checkError(response);
+    })
+    .catch((error) => {
       this.setState({
-        guestId: this.state.items[0].guest_id,
-        firstName: this.state.items[0].first_name,
-        lastName: this.state.items[0].last_name,
-        email: this.state.items[0].email_id,
-        phone: this.state.items[0].phone_no,
-        address: this.state.items[0].address,
-        city: this.state.items[0].city,
-        pin: this.state.items[0].zip_code,
-        region: this.state.items[0].state,
-        country: this.state.items[0].country_id
+        isLoaded: false,
+        error
       });
-    
-
-      this.refs.firstName.value = this.state.items[0].first_name,
-      this.refs.lastName.value = this.state.items[0].last_name,
-      this.refs.email.value = this.state.items[0].email_id,
-      this.refs.phone.value = this.state.items[0].phone_no,
-      this.refs.address.value = this.state.items[0].address, 
-      this.refs.city.value = this.state.items[0].city,
-      this.refs.pin.value = this.state.items[0].zip_code,
-      this.refs.region.value = this.state.items[0].state,
-      this.refs.country.value = this.state.items[0].country_id
-    }
-    else{
-      document.getElementById("spNoDataorError").style.visibility="visible";
-
-      var reservationSearch = String(this.refs.reservationSearch.value);
-
-      this.refs.firstName.value = '',
-      this.refs.lastName.value = '',
-      this.refs.email.value = (reservationSearch != '' && reservationSearch.indexOf('@') != -1)? this.refs.reservationSearch.value : '',
-      this.refs.phone.value = (reservationSearch != '' && this.refs.email.value == '')? this.refs.reservationSearch.value : '',
-      this.refs.address.value = '', 
-      this.refs.city.value = '',
-      this.refs.pin.value = '',
-      this.refs.region.value = '',
-      this.refs.country.value = 0
-    }
-  }
+      logError(error);
+    });
+   }
 
 
   render() {
@@ -463,6 +538,38 @@ export class GuestContacts extends Component {
         notValidClasses.countryCls = 'form-control has-error';
     }
 
+    /* Emergency Contact First Name */
+    if (typeof this.state.eFirstNameVal == 'undefined' || this.state.eFirstNameVal) {
+      notValidClasses.eFirstNameCls = 'form-control';
+    }
+    else {
+       notValidClasses.eFirstNameCls = 'form-control has-error';
+    }
+
+    /* Emergency Contact Last Name */    
+    if (typeof this.state.eLastNameVal == 'undefined' || this.state.eLastNameVal) {
+      notValidClasses.eLastNameCls = 'form-control';
+    }
+    else {
+       notValidClasses.eLastNameCls = 'form-control has-error';
+    }
+
+    /* Emergency Contact Phone */    
+    if (typeof this.state.ePhoneVal == 'undefined' || this.state.ePhoneVal) {
+      notValidClasses.ePhoneCls = 'form-control';
+    }
+    else {
+        notValidClasses.ePhoneCls = 'form-control has-error';
+    }
+
+    /* Emergency Contact Relationship */    
+    if (typeof this.state.eRelationshipVal == 'undefined' || this.state.eRelationshipVal) {
+      notValidClasses.eRelationshipCls = 'form-control';
+    }
+    else {
+        notValidClasses.eRelationshipCls = 'form-control has-error';
+    }
+
     return (
       <div className="step step3">
         <div className="row">
@@ -479,8 +586,6 @@ export class GuestContacts extends Component {
                         </div>
               </div>
                 <span id="spNoDataorError">No details found!</span>  
-                 
-
                        <div className = "div-table">
                     <div className = "div-table-row">
                           <div className ="div-table-col">
@@ -516,7 +621,6 @@ export class GuestContacts extends Component {
                           onBlur={this.validationCheck} />     
                           </div>                 
                         </div>
-                      
                   </div>
               </div>
 
@@ -661,7 +765,85 @@ export class GuestContacts extends Component {
                             </div>
                         </div>
                     </div>
- </div>
+                    <div className = "div-table-row">
+                          <div className ="div-table-col">
+                              <h4 id="h4EContacts">Emergency Contact Details</h4>      
+                            </div>
+                      </div>  
+                    <div className = "div-table-row">
+                          <div className ="div-table-col">
+                   {/* First Name */}
+                    <div className="form-group col-md-12 content form-block-holder">
+                          <label className="control-label col-md-4">
+                            First Name:*
+                          </label>
+                          <div className="col-md-8">
+                            <input
+                              ref="eFirstName"
+                              autoComplete="off"
+                              className={notValidClasses.eFirstNameCls}
+                              required
+                              defaultValue={this.state.eFirstName}
+                              onBlur={this.validationCheck} />
+                            </div>
+                      </div>
+              </div>
+                <div className ="div-table-col">
+                   {/* Last Name */}
+                    <div className="form-group col-md-12 content form-block-holder">
+                      <label className="control-label col-md-4">
+                        Last Name:*
+                      </label>
+                      <div className="col-md-8">
+                        <input
+                          ref="eLastName"
+                          autoComplete="off"
+                          className={notValidClasses.eLastNameCls}
+                          required
+                          defaultValue={this.state.eLastName}
+                          onBlur={this.validationCheck} />                      
+                        </div>
+                      </div>
+                </div>
+            </div>
+             <div className = "div-table-row">
+                <div className ="div-table-col">
+                    {/* Phone */}
+                  <div className="form-group col-md-12 content form-block-holder">
+                      <label className="control-label col-md-4">
+                        Phone: *
+                      </label>
+                      <div className="col-md-8">
+                        <input
+                          type="number"
+                          ref="ePhone"
+                          autoComplete="off"
+                          className={notValidClasses.ePhoneCls}
+                          required
+                          defaultValue={this.state.ePhone}
+                          onBlur={this.validationCheck} />
+                      </div>
+                    </div>
+                </div>
+                  <div className ="div-table-col">
+                      {/* Relationship */}
+                      <div className="form-group col-md-12 content form-block-holder">
+                          <label className="control-label col-md-4">
+                            Relationship: *
+                          </label>
+                          <div className="col-md-8">
+                            <input
+                              ref="eRelationship"
+                              autoComplete="off"
+                              className={notValidClasses.eRelationshipCls}
+                              required
+                              defaultValue={this.state.eRelationship}
+                              onBlur={this.validationCheck} />
+                            </div>
+                        </div>
+                  </div>
+            </div>
+                          </div>
           </form>
         </div>
       </div>

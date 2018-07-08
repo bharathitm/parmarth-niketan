@@ -17,6 +17,8 @@ export function findById(req, res) {
 
     var call_stored_proc = "CALL sp_GetAdvanceDonationDetails('" +  req.params.id + "')";
 
+    console.log(call_stored_proc);
+
     connection.query(call_stored_proc, true, (error, results, fields) => {
     if (error) {
         errorController.LogError(error);
@@ -79,6 +81,8 @@ export function update(req, res) {
     + req.body.is_advance + 
     "')";
 
+    console.log(call_stored_proc);
+
     connection.query(call_stored_proc, true, (error, results, fields) => {
     if (error) {
         errorController.LogError(error);
@@ -87,4 +91,28 @@ export function update(req, res) {
     });
       
    // connection.end();   
+}
+
+/**
+ *  Cancel room booking by reservation id
+ *
+ * @param {object} req
+ * @param {object} res
+ * @returns {*}
+ */
+
+export function cancel(req, res) {
+
+    var call_stored_proc = "CALL sp_DeleteAdvanceDonation('" + req.params.id + "')";
+
+    console.log(call_stored_proc);
+
+    connection.query(call_stored_proc, true, (error, results, fields) => {
+    if (error) {
+        errorController.LogError(error);
+        return res.send(error.code);
+    }
+ 
+    //connection.end();   
+    });
 }

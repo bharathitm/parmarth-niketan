@@ -1,6 +1,7 @@
 import express from 'express';
 import userRoutes from './user.route';
 import reservationRoutes from './reservation.route';
+import roomBookingsRoutes from './roombooking.route';
 import guestRoutes from './guest.route';
 import econtactsRoutes from './econtact.route';
 import advanceRoutes from './advance.route';
@@ -20,6 +21,9 @@ router.use('/users', userRoutes);
 
 //Reservation details
 router.use('/reservations', reservationRoutes);
+
+//Room Booking details
+router.use('/roombookings', roomBookingsRoutes);
 
 //Guest details 
 router.use('/guests', guestRoutes);

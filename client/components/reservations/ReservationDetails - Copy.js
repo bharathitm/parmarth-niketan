@@ -2,14 +2,14 @@ import React, { Component } from 'react';
 
 import reservationTypes from '../../constants/reservationTypes';
 import sanskaras from '../../constants/sanskaras';
-
+import blocks from '../../constants/blocks';
+import floors from '../../constants/floors';
 
 import DatePicker from 'react-datepicker';
 import moment from 'moment';
 
 import {logError, checkError} from '../../utils/helpers';
 import {API_URL} from '../../config/config';
-import { RoomBookings } from '../subcomponents/RoomBookings';
 
 export class ReservationDetails extends Component {
   constructor(props) {
@@ -18,6 +18,10 @@ export class ReservationDetails extends Component {
     this.state = {
       isLoaded: false,
       error: null,
+      roomItems:[
+        {}
+      ],
+      hasRoomBookings: false,
       arrivalDate: props.getStore().arrivalDate,
       departureDate: props.getStore().departureDate,
       arrivalTime: moment(),
@@ -28,13 +32,7 @@ export class ReservationDetails extends Component {
       comments: props.getStore().comments,
       reservationId: props.getStore().reservationId      
     };
-
-    this.reservationStore = {
-      guestId: props.getStore().guestId
-    };
     
-
-   
     this.handleAdvanceReminderChange = this.handleAdvanceReminderChange.bind(this);
     this.handleArrivalTimeChange = this.handleArrivalTimeChange.bind(this);
 
@@ -86,6 +84,7 @@ export class ReservationDetails extends Component {
                   items: result,
                 }, function() {
                   this.loadReservationDetails();
+                  this.fetchRoomBookingsIfExists();
                 }
               );        
               })
@@ -160,7 +159,38 @@ export class ReservationDetails extends Component {
     }
   }
 
-  
+  fetchRoomBookingsIfExists(){
+    if(this.props.getStore().reservationId != '')
+    {
+      fetch(API_URL + "roombookings/" + this.props.getStore().reservationId)
+          .then((response) => {
+            return checkError(response);
+          })
+          .then((result) => {
+              this.setState({
+                isLoaded: true,
+                hasRoomBookings: true,
+                roomItems: result,
+              }, function() {
+                this.loadRoomBookings();
+              }
+            );        
+            })
+            .catch((error) => {
+              this.setState({
+                isLoaded: false,
+                error
+              });
+              logError(this.constructor.name + " " + error);
+            });
+      }
+}
+
+  loadRoomBookings(){
+    // if (this.state.roomItems.length != 0){
+    //     alert("load room bookings");
+    // }
+  }
 
   isValidated() {
 
@@ -411,14 +441,40 @@ export class ReservationDetails extends Component {
     this.refs.advanceReminderOn.selected = ''
   }
 
-  getReservationStore() {
-    return this.reservationStore;
+  handleUpdateRoomBooking(room_booking_id){
+
   }
 
-  
+  handleDeleteRoomBooking(room_booking_id){
+
+    fetch(API_URL + "roombookings/" + room_booking_id, {
+      method: 'DELETE',
+      headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+        }
+     })
+
+      .then((response) => {
+        return checkError(response);
+      })
+      .catch((error) => {
+        this.setState({
+          isLoaded: false,
+          error
+        });
+        logError(error);
+      });
+      this.setState({
+        hasRoomBookings: true
+      }); 
+      //this.clearReservationDetails();
+    }
+
 
   render() {
 
+    const { roomItems} = this.state;
     // explicit class assigning based on validation
     let notValidClasses = {};
 
@@ -601,8 +657,58 @@ export class ReservationDetails extends Component {
                     </div>
               </div>
              </div>
-             <RoomBookings getReservationStore={() => (this.getReservationStore())}>
-               </RoomBookings>
+             <div id="divRoomBookings" style={{ visibility: this.state.hasRoomBookings? 'visible':'hidden', display: this.state.hasRoomBookings? 'inline':'none' }}>
+             <h4>Room Bookings</h4>  
+             <div className = "div-table advance-table">
+                    <div className = "div-table-row">
+                              <div className ="room-no div-table-col div-table-col-header">
+                              Room No.
+                              </div>
+                              <div className ="details div-table-col div-table-col-header">
+                              Details
+                              </div>
+                              <div className ="dates div-table-col div-table-col-header">
+                                 From
+                              </div>
+                              <div className ="dates div-table-col div-table-col-header">
+                                 To
+                              </div>
+                              <div className ="actions div-table-col div-table-col-header">
+                              Actions
+                              </div>
+                      </div>
+                    {roomItems.map(item => (
+                        <div className = "div-table-row" key={item.room_booking_id}>
+                              <div className ="room-no div-table-col col-bordered">
+                               {item.room_no}
+                              </div>
+                              <div className ="details div-table-col col-bordered">
+                                {floors[item.floor_no]},  
+                                {blocks[item.block_id]}, 
+                                {item.total_beds} beds
+                              </div>
+                              <div className ="dates div-table-col col-bordered">
+                              <DatePicker 
+                                  dateFormat="YYYY-MM-DD"
+                                  selected={moment(item.date_of_arrival)}                             
+                                  onChange={this.handleDateChange} 
+                                  className="form-control"/>
+                              </div>
+                              <div className ="dates div-table-col col-bordered">
+                              <DatePicker 
+                                  dateFormat="YYYY-MM-DD"
+                                  selected={moment(item.date_of_departure)}                             
+                                  onChange={this.handleDateChange} 
+                                  className="form-control"/>
+                              </div>
+                              <div className ="actions div-table-col col-bordered">
+                              <img key={item.room_booking_id} src="./img/tick.png" onClick={() => this.handleUpdateRoomBooking()}/>
+                              <img key={item.room_booking_id} src="./img/delete.png" onClick={() => this.handleDeleteRoomBooking(item.room_booking_id)}/>
+                              </div>
+                        </div>
+                        ))}  
+                    </div>
+             </div>
           </form>
         </div>
       </div>

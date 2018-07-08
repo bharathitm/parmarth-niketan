@@ -5,7 +5,6 @@ import StepZilla from 'react-stepzilla';
 import ErrorBoundary from '../ErrorBoundary'
 
 import { GuestContacts } from './GuestContacts';
-import { EmergencyContacts } from './EmergencyContacts';
 import { ReservationDetails } from './ReservationDetails';
 import { AdvanceDonations } from './AdvanceDonations';
 import { Empty } from './Empty';
@@ -66,7 +65,7 @@ export class Reservations extends React.Component {
     componentDidMount(){
       //hide Empty component
       var pageLis = document.getElementsByTagName("li");
-      pageLis[5].style.visibility = "hidden";
+      pageLis[4].style.visibility = "hidden";
       //pageLis[3].style.visibility = "hidden";
 
     }
@@ -78,7 +77,6 @@ export class Reservations extends React.Component {
         [
             {name: 'Book Rooms', component: <BookRooms getStore={() => (this.getStore())} updateStore={(u) => {this.updateStore(u)}}/>},
             {name: 'Guest', component: <GuestContacts getStore={() => (this.getStore())} updateStore={(u) => {this.updateStore(u)}}/>},
-            {name: 'Emergency Contact', component: <EmergencyContacts getStore={() => (this.getStore())} updateStore={(u) => {this.updateStore(u)}}/>},
             {name: 'Reservation', component: <ReservationDetails getStore={() => (this.getStore())} updateStore={(u) => {this.updateStore(u)}}/>},
             {name: 'Advance Donation', component: <AdvanceDonations getStore={() => (this.getStore())} updateStore={(u) => {this.updateStore(u)}}/>},
             {name: 'Empty', component: <Empty/>}

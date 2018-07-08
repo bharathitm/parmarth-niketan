@@ -636,8 +636,8 @@ width:100%;
   border-collapse: collapse;
 }
 .advance-table .div-table-col{
-  width:20%;
-  height:auto;
+  width:15%;
+  height:34px;
   padding:0 0 0 1em;
 }
 
@@ -646,7 +646,6 @@ width:100%;
   background: #EA9064;
   color: white;
   border:solid 1px silver;
-
  }
  
 .advance-table .col-bordered{
@@ -733,7 +732,41 @@ width:100%;
 
 /* Book Rooms specific ends here */
 
+#h4EContacts{
+  margin-top:2em;
+}
 
+#divRoomBookings h4{
+  margin:2em 0 1em 0;
+}
+
+#divRoomBookings .room-no{
+  width:8%;
+  height:34px;
+}
+#divRoomBookings .details{
+  width:25%;
+  height:34px;
+}
+
+#divRoomBookings .dates{
+  width:15%;
+  height:34px;
+}
+#divRoomBookings .actions{
+  width:10%;
+  height:34px;
+}
+
+#divRoomBookings .form-control{
+  width:50%;
+  height:28px;
+}
+
+.col-bordered img{
+  cursor: pointer;
+  vertical-align: middle;
+}
 
 
 

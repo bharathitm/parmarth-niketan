@@ -126,8 +126,14 @@ export class URooms extends React.Component {
         }
     
 
-    render() {
+    render() {      
       const { error, isLoaded, items } = this.state;
+
+      // if (this.props.getDashboardStore().hasChanged){
+      //   this.setState({
+      //     items: items
+      //   });
+      // }
 
       if ((!isLoaded) && (error)){
         return <div><h4>Housekeeping</h4><hr /><span id="spNoDataorError">{JSON.stringify(error.message)}</span></div>;        

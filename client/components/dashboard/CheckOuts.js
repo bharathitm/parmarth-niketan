@@ -112,7 +112,9 @@ export class CheckOuts extends React.Component {
 
           this.updateCheckOutState(selectedReservations, selectedRooms);
 
-          this.props.updateDashboardStore(); 
+          // this.props.updateDashboardStore({
+          //   hasChanged: true
+          // });
         }
 
         getAllSelectedReservations(){
