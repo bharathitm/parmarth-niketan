@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 
-import {logError, checkError} from '../../utils/helpers';
+import {logError, checkError, getFormattedDate} from '../../utils/helpers';
 import {API_URL} from '../../config/config';
+
+import { confirmAlert } from 'react-confirm-alert';
 
 import {AdvanceDonationsInput} from '../subcomponents/AdvanceDonationsInput';
 
@@ -44,15 +46,26 @@ export class AdvanceDonations extends Component {
     }
   }
 
-  getFormattedDate(dt) {
-    var date = new Date(dt);
-    var month = date.getMonth() + 1;
-    var day = date. getDate();
-    var year = date.getFullYear();
-    return year + "-" + month + "-" + day ;
-}
 
 handleDelete(donationId){
+  confirmAlert({
+    title: 'Confirm to delete',
+    message: 'Are you sure you want to delete this donation detail?',
+    buttons: [
+      {
+        label: 'Yes',
+        onClick: () => this.deleteAdvanceDonation(donationId),
+      },
+      {
+        label: 'No',
+        onClick: () => false
+      }
+    ]
+  })
+  
+}
+
+deleteAdvanceDonation(donationId){
   fetch(API_URL + "advance/" + donationId, {
     method: 'DELETE',
     headers: {
@@ -119,7 +132,7 @@ handleDelete(donationId){
                     {items.map(item => (
                         <div className = "div-table-row" key={item.donation_id}>
                               <div className ="div-table-col col-bordered">
-                                {this.getFormattedDate(item.received_on).toString()}
+                                {getFormattedDate(item.received_on).toString()}
                               </div>
                               <div className ="div-table-col col-bordered">
                                 {item.amount}

@@ -30,3 +30,11 @@ export function checkError(response) {
         throw new Error(response.statusText);
       }
 }
+
+export function getFormattedDate(dt) {
+    var date = new Date(dt);
+    var month = date.getMonth() + 1;
+    var day = date. getDate();
+    var year = date.getFullYear();
+    return year + "-" + month + "-" + day ;
+}

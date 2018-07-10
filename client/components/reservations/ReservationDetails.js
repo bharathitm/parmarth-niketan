@@ -3,11 +3,12 @@ import React, { Component } from 'react';
 import reservationTypes from '../../constants/reservationTypes';
 import sanskaras from '../../constants/sanskaras';
 
+import { confirmAlert } from 'react-confirm-alert'; 
 
 import DatePicker from 'react-datepicker';
 import moment from 'moment';
 
-import {logError, checkError} from '../../utils/helpers';
+import {logError, checkError, getFormattedDate} from '../../utils/helpers';
 import {API_URL} from '../../config/config';
 import { RoomBookings } from '../subcomponents/RoomBookings';
 
@@ -214,7 +215,7 @@ export class ReservationDetails extends Component {
       reservation_type_id: this.state.reservationTypeId,
       sanskara_id: (this.state.sanskaraId == null)? 0 : this.state.sanskaraId,
       is_a_reference: '0',
-      advance_reminder_on: (this.state.advanceReminderOn == '')? '' : this.getFormattedDate(this.state.advanceReminderOn).toString(),
+      advance_reminder_on: (this.state.advanceReminderOn == '')? '' : getFormattedDate(this.state.advanceReminderOn).toString(),
       room_ids_str: window.sessionStorage.getItem('strSelectedRooms').toString()
     };
 
@@ -275,7 +276,7 @@ export class ReservationDetails extends Component {
       reservation_comments: this.state.comments,
       reservation_type_id: this.state.reservationTypeId,
       sanskara_id: (this.state.sanskaraId == null)? 0 : this.state.sanskaraId,
-      advance_reminder_on: (this.state.advanceReminderOn == '')? '' : this.getFormattedDate(this.state.advanceReminderOn).toString()
+      advance_reminder_on: (this.state.advanceReminderOn == '')? '' : getFormattedDate(this.state.advanceReminderOn).toString()
     };
 
     fetch(API_URL + "reservations/" + this.state.reservationId, {
@@ -297,16 +298,6 @@ export class ReservationDetails extends Component {
       logError(error);
     });
   }
-
-
-  getFormattedDate(dt) {
-    var date = new Date(dt);
-    var month = date.getMonth() + 1;
-    var day = date. getDate();
-    var year = date.getFullYear();
-    return year + "-" + month + "-" + day ;
-}
-
 
   validationCheck() {
 
@@ -348,6 +339,24 @@ export class ReservationDetails extends Component {
   handleCancel(){
 
     this._validateOnDemand = false;
+
+    confirmAlert({
+      title: 'Confirm to cancel',
+      message: 'Are you sure you want to cancel this reservation?',
+      buttons: [
+        {
+          label: 'Yes',
+          onClick: () => this.cancelReservation(),
+        },
+        {
+          label: 'No',
+          onClick: () => false
+        }
+      ]
+    })
+  }
+
+  cancelReservation(){
 
     if(this.state.reservationId != '')
     {      

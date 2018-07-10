@@ -5,7 +5,7 @@ import ErrorBoundary from '../ErrorBoundary'
 import DatePeriodPicker from '../subcomponents/DatePeriodPicker';
 import moment from 'moment';
 
-import {logError, checkError} from '../../utils/helpers';
+import {logError, checkError, getFormattedDate} from '../../utils/helpers';
 import {API_URL} from '../../config/config';
 
 
@@ -43,8 +43,8 @@ export class Reports extends React.Component {
 
     handleShow(){
 
-        const startDate = (this.getFormattedDate(this.reportStore.startDate)).toString();
-        const endDate = (this.getFormattedDate(this.reportStore.endDate)).toString();
+        const startDate = (getFormattedDate(this.reportStore.startDate)).toString();
+        const endDate = (getFormattedDate(this.reportStore.endDate)).toString();
 
         fetch(API_URL + "checkins/?adate=" + startDate + "&ddate=" + endDate)
             .then((response) => {
@@ -74,16 +74,6 @@ export class Reports extends React.Component {
         printWindow.document.close();
         printWindow.print();
     }
-
-
-    getFormattedDate(dt) {
-        var date = new Date(dt);
-        var month = date.getMonth() + 1;
-        var day = date. getDate();
-        var year = date.getFullYear();
-        return year + "-" + month + "-" + day ;
-    }
-
 
     render() {
         if (!this.state.isLoaded){ //page load view
@@ -128,7 +118,7 @@ export class Reports extends React.Component {
              <div id="divCheckInContents" style={{fontFamily: '"Lucida Sans Unicode"'}}>
                         <h2>SWAMI SHUKDEVANAND TRUST</h2>
                         <h3 style={{margin: 0}}> PARMARTH NIKETAN</h3>                       
-                        <h4>Check In Details from {(this.getFormattedDate(this.reportStore.startDate)).toString()} to {(this.getFormattedDate(this.reportStore.endDate)).toString()}</h4>
+                        <h4>Check In Details from {(getFormattedDate(this.reportStore.startDate)).toString()} to {(getFormattedDate(this.reportStore.endDate)).toString()}</h4>
 
                          <table width="100%" style={{borderSpacing: 0,borderCollapse: 'collapse'}}>
                         <tbody>

@@ -5,7 +5,7 @@ import moment from 'moment';
 import blocks from '../../constants/blocks';
 import floors from '../../constants/floors';
 
-import {logError, checkError} from '../../utils/helpers';
+import {logError, checkError, getFormattedDate} from '../../utils/helpers';
 import {API_URL} from '../../config/config';
 
 export class RoomBookings extends Component {
@@ -110,7 +110,7 @@ export class RoomBookings extends Component {
         const payload = {
             reservation_id: this.props.getStore().reservationId,
             guest_id: this.props.getStore().guestId,
-            received_on: this.getFormattedDate(this.state.advanceReceivedOn).toString(),
+            received_on: getFormattedDate(this.state.advanceReceivedOn).toString(),
             amount: this.state.advanceAmount,
             receipt_no: this.state.advanceReceiptNo,
             is_advance: 1
@@ -143,14 +143,7 @@ export class RoomBookings extends Component {
             logError(error);
         });
     }
-    
-    getFormattedDate(dt) {
-    var date = new Date(dt);
-    var month = date.getMonth() + 1;
-    var day = date. getDate();
-    var year = date.getFullYear();
-    return year + "-" + month + "-" + day ;
-    } 
+     
 
     handleUpdateRoomBooking(room_booking_id){
 

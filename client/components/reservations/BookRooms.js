@@ -4,7 +4,7 @@ import floors from '../../constants/floors';
 
 import moment from 'moment';
 
-import {logError, checkError} from '../../utils/helpers';
+import {logError, checkError, getFormattedDate} from '../../utils/helpers';
 import {API_URL} from '../../config/config';
 
 import SearchBox from '../subcomponents/SearchBox';
@@ -88,14 +88,6 @@ export class BookRooms extends Component {
     window.sessionStorage.removeItem('selectedRooms');
   }
 
-  getFormattedDate(dt) {
-    var date = new Date(dt);
-    var month = date.getMonth() + 1;
-    var day = date. getDate();
-    var year = date.getFullYear();
-    return year + "-" + month + "-" + day ;
-  }
-
   handleSearch(){
 
     document.getElementsByClassName("div-book-room-search")[0].style.cssFloat = "left";
@@ -104,8 +96,8 @@ export class BookRooms extends Component {
     this.searchStore.uniqueBlocks = [];
     this.searchStore.uniqueRooms = [];
 
-    this.searchStore.arrivalDate = (this.getFormattedDate(this.searchStore.arrivalDate)).toString();
-    this.searchStore.departureDate = (this.getFormattedDate(this.searchStore.departureDate)).toString();
+    this.searchStore.arrivalDate = (getFormattedDate(this.searchStore.arrivalDate)).toString();
+    this.searchStore.departureDate = (getFormattedDate(this.searchStore.departureDate)).toString();
 
     const arrivalDate = this.searchStore.arrivalDate;
     const departureDate = this.searchStore.departureDate;
