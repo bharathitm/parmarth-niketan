@@ -96,14 +96,14 @@ export class SearchBox extends Component {
   populateNoOfRooms() {
     let items = [];
     
-    items.push(<option key={Math.random} value="null"> No. Of Rooms</option>); 
+    items.push(<option value="null"> No. Of Rooms</option>); 
     items.push(<option key={1} value={1}>{1} room</option>);   
 
     for (let i = 2; i <= 10; i++) {             
          items.push(<option key={i} value={i}>{i} rooms</option>);   
     }
 
-    items.push(<option key={Math.random} value="null">Multiple rooms</option>);  
+    items.push(<option value="null">Multiple rooms</option>);  
     return items;
   } 
 
@@ -111,7 +111,7 @@ export class SearchBox extends Component {
   populateRoomTypes() {
     let items = [];   
 
-    items.push(<option key={Math.random} value="null">Room Type</option>); 
+    items.push(<option value="null">Room Type</option>); 
 
     for (let i = 1; i <= 10; i++) {             
          items.push(<option key={i} value={i}>{roomTypes[i]}</option>);   

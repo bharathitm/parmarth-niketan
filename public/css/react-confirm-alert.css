@@ -25,19 +25,28 @@
   -moz-animation: react-confirm-alert-fadeIn 0.5s 0.2s forwards;
   -o-animation: react-confirm-alert-fadeIn 0.5s 0.2s forwards;
   animation: react-confirm-alert-fadeIn 0.5s 0.2s forwards;
+  background: #FFF8E6;
 }
 
-.react-confirm-alert {}
+.react-confirm-alert {
+  margin:0 auto;
+  border:solid 1px silver;
+  width:28%;
+  padding: 1em 1em 1em 1.15em;
+  background: #FFF8E6;
+  background:white;
+}
 
 .react-confirm-alert-body {
   font-family: Arial, Helvetica, sans-serif;
-  width: 400px;
+  /* width: 400px; */
   padding: 30px;
   text-align: left;
   background: #fff;
   border-radius: 10px;
   box-shadow: 0 20px 75px rgba(0, 0, 0, 0.13);
   color: #666;
+
 }
 
 .react-confirm-alert-svg{

@@ -39,9 +39,24 @@ export function find(req, res) {
  */
 export function add(req, res) {
 
-    var call_stored_proc = "CALL sp_UpdateTodaysCheckOuts('" 
-    + req.body.str_reservation_ids + "','"
-    + req.body.str_room_booking_ids + "')";
+    var call_stored_proc = "CALL sp_UpdateTodaysCheckOuts(" 
+
+    if (req.body.int_reservation_id == ''){
+        call_stored_proc += null  + ",'"        
+    }
+    else {
+        call_stored_proc +=  "'" + req.body.int_reservation_id + "','"
+    }
+    call_stored_proc += req.body.str_room_booking_ids + "',"
+
+    if ((req.body.amount == '') || (req.body.amount == 0)){
+        call_stored_proc += null  + ",'"        
+    }
+    else {
+        call_stored_proc +=  "'" + req.body.amount + "','"
+    }
+
+    call_stored_proc += req.body.receipt_no + "')";
 
     console.log(call_stored_proc);
 
@@ -50,9 +65,42 @@ export function add(req, res) {
         errorController.LogError(error);
         return res.send(error.code);
     }
+    res.send(results[0]);
     });
       
     //connection.end();   
+}
 
-    
+
+/**
+ * Update check outs
+ *
+ * @param {object} req
+ * @param {object} res
+ * @returns {*}
+ */
+export function update(req, res) {
+
+    var call_stored_proc = "CALL sp_GetBookingsCheckOutTotal(" 
+
+    if (req.body.str_reservation_ids == ''){
+        call_stored_proc += null  + ",'"        
+    }
+    else {
+        call_stored_proc +=  "'" + req.body.str_reservation_ids + "','"
+    }
+
+    call_stored_proc += req.body.str_room_booking_ids + "')";
+
+    console.log(call_stored_proc);
+
+    connection.query(call_stored_proc, true, (error, results, fields) => {
+    if (error) {
+        errorController.LogError(error);
+        return res.send(error.code);
+    }
+    res.send(results[0]);
+    });
+      
+    //connection.end();   
 }

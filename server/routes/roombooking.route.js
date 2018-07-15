@@ -8,19 +8,21 @@ const router = express.Router();
 
 router.route('/:id')
 
-    //Fetches reservation details
+    //Fetches room booking details
     .get( (req, res) => {
         roomBookingCtrl.findById(req, res);
     })
 
-    //Updates reservation details
-    .post((req, res) => {
-        roomBookingCtrl.update(req, res);
-    })
-
-     //Cancels reservation
+     //Cancels room booking
      .delete((req, res) => {
         roomBookingCtrl.cancel(req, res);
+    });
+
+    router.route('/')
+
+    //Updates room booking details - departure date only
+    .post((req, res) => {
+        roomBookingCtrl.update(req, res);
     });
 
 

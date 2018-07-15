@@ -1,9 +1,8 @@
 import React from 'react';
 
-import blocks from '../../constants/blocks';
-import reservationTypes from '../../constants/reservationTypes';
+import {blocks, floors, reservationTypes} from '../../constants/roomAttributes';
 
-import {logError, checkError} from '../../utils/helpers';
+import {logError, checkError, createReservationsString, createRoomsString} from '../../utils/helpers';
 import {API_URL} from '../../config/config';
 
 export class CheckIns extends React.Component {
@@ -24,8 +23,6 @@ export class CheckIns extends React.Component {
 
       this.getAllSelectedReservations = this.getAllSelectedReservations.bind(this);
       this.getAllSelectedRooms = this.getAllSelectedRooms.bind(this);
-      this.createReservationsString = this.createReservationsString.bind(this);
-      this.createRoomsString = this.createRoomsString.bind(this);
       this.updateCheckInState = this.updateCheckInState.bind(this);
     }
 
@@ -83,8 +80,8 @@ export class CheckIns extends React.Component {
         var selectedReservations = this.getAllSelectedReservations();
         var selectedRooms = this.getAllSelectedRooms();
 
-        var str_reservations = this.createReservationsString(selectedReservations);
-        var str_rooms = this.createRoomsString(selectedRooms);
+        var str_reservations = createReservationsString(selectedReservations);
+        var str_rooms = createRoomsString(selectedRooms);
 
         const payload = {
           str_reservation_ids: str_reservations,
@@ -140,28 +137,6 @@ export class CheckIns extends React.Component {
           }
           return selectedRooms;
         }
-
-      createReservationsString(selectedReservations){
-            //loop through selected reservations and create a | separated string to pass to POST
-            var str_reservations = "";
-            for (var i =0; i < selectedReservations.length; i++)
-            {  
-              str_reservations+= selectedReservations[i] + "|";
-            }
-            str_reservations = str_reservations.substring(0,str_reservations.length-1);
-            return str_reservations;
-      } 
-
-      createRoomsString(selectedRooms){
-            //loop through selected rooms and create a | separated string to pass to POST
-            var str_rooms = "";
-            for (var i =0; i < selectedRooms.length; i++)
-            {  
-              str_rooms+= selectedRooms[i] + "|";
-            }
-            str_rooms = str_rooms.substring(0,str_rooms.length-1);
-            return str_rooms;
-      }
 
       updateCheckInState(selectedReservations, selectedRooms){
 
@@ -230,11 +205,10 @@ export class CheckIns extends React.Component {
       if ((!isLoaded) && (error)){
         return <div><h4>Today's Check Ins</h4><hr /><span id="spNoDataorError">{JSON.stringify(error.message)}</span></div>;        
        } else if (!isLoaded) {
-          return <div>Loading...</div>;
+          return <div><h4>Today's Check Ins</h4><hr />Loading...</div>;
       } else if (checkInRooms.length == 0){
           return  (
-          <div><h4>Today's Check Ins</h4>
-          <hr /> No Check Ins! </div>
+          <div><h4>Today's Check Ins</h4><hr /> No Check Ins! </div>
           );
       } else {
           return (
@@ -258,7 +232,7 @@ export class CheckIns extends React.Component {
                                               <input type="checkbox" name="checkInRooms"
                                                   key={booking.reservation_id} 
                                                   value={booking.room_booking_id} />
-                                                    {booking.room_no + ", " + blocks[booking.block_id]}                 
+                                                    {booking.room_no + ", " + floors[booking.floor_no] + ", " + blocks[booking.block_id]}                 
                                           </li>
                                           ))}
                                         </ul>                                         

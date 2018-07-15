@@ -6,15 +6,42 @@ var connection = mysql.createConnection(config);
 
 
 /**
- *  Find room booking by reservation id
+ *  Find today's check out details
  *
  * @param {object} req
  * @param {object} res
  * @returns {*}
  */
-export function findById(req, res) {
+export function find(req, res) {
 
-    var call_stored_proc = "CALL sp_GetRoomBookings('" + req.params.id + "')";
+    var call_stored_proc = "CALL sp_GetTodaysCheckOuts()";
+
+    connection.query(call_stored_proc, true, (error, results, fields) => {
+    if (error) {
+        errorController.LogError(error);
+        return res.send(error.code);
+    }
+    res.send(results[0]);
+
+    console.log(results[0]);
+   
+    });
+    //connection.end();     
+}
+
+
+/**
+ * Update check outs
+ *
+ * @param {object} req
+ * @param {object} res
+ * @returns {*}
+ */
+export function add(req, res) {
+
+    var call_stored_proc = "CALL sp_UpdateTodaysCheckOuts('" 
+    + req.body.str_reservation_ids + "','"
+    + req.body.str_room_booking_ids + "')";
 
     console.log(call_stored_proc);
 
@@ -23,14 +50,15 @@ export function findById(req, res) {
         errorController.LogError(error);
         return res.send(error.code);
     }
-    console.log(results[0]);
     res.send(results[0]);
-    //connection.end();   
     });
+      
+    //connection.end();   
 }
 
+
 /**
- * Update room bookings details
+ * Update check outs
  *
  * @param {object} req
  * @param {object} res
@@ -38,13 +66,9 @@ export function findById(req, res) {
  */
 export function update(req, res) {
 
-    console.log(req.body.advance_reminder_on);
-
-    var call_stored_proc = "CALL sp_UpdateRoomBookings('" 
-    + req.body.room_booking_id + "','"
-    + req.body.date_of_departure + "'"
-  
-    call_stored_proc += ")";
+    var call_stored_proc = "CALL sp_GetBookingsCheckOutTotal('" 
+    + req.body.str_reservation_ids + "','"
+    + req.body.str_room_booking_ids + "')";
 
     console.log(call_stored_proc);
 
@@ -53,31 +77,8 @@ export function update(req, res) {
         errorController.LogError(error);
         return res.send(error.code);
     }
+    res.send(results[0]);
     });
       
     //connection.end();   
-}
-
-/**
- *  Cancel room booking by reservation id
- *
- * @param {object} req
- * @param {object} res
- * @returns {*}
- */
-
-export function cancel(req, res) {
-
-    var call_stored_proc = "CALL sp_CancelRoomBookings("+ null + ",'" + req.params.id + "')";
-
-    console.log(call_stored_proc);
-
-    connection.query(call_stored_proc, true, (error, results, fields) => {
-    if (error) {
-        errorController.LogError(error);
-        return res.send(error.code);
-    }
- 
-    //connection.end();   
-    });
 }

@@ -1,6 +1,8 @@
 import React from 'react';
 
-import {logError, checkError} from '../../utils/helpers';
+import {blocks, floors} from '../../constants/roomAttributes';
+
+import {logError, checkError, createRoomsString} from '../../utils/helpers';
 import {API_URL} from '../../config/config';
 
 
@@ -19,15 +21,16 @@ export class URooms extends React.Component {
       };
 
       this.getAllSelectedRooms = this.getAllSelectedRooms.bind(this);
-      this.createRoomsString = this.createRoomsString.bind(this);
       this.updateUncleanRoomsState = this.updateUncleanRoomsState.bind(this);
-
     }
 
 
   componentDidMount() {
-    
-    fetch(API_URL + "urooms/")
+    this.fetchUncleanRooms();
+    }
+
+    fetchUncleanRooms(){
+      fetch(API_URL + "urooms/")
         .then((response) => {
           return checkError(response);
         })
@@ -49,10 +52,10 @@ export class URooms extends React.Component {
 
      //Done button click
      handleUncleanRoom() {
-
           var selectedRooms = this.getAllSelectedRooms();
-          var str_rooms = this.createRoomsString(selectedRooms);
-  
+          var str_rooms = createRoomsString(selectedRooms); 
+
+          if (str_rooms != ''){
           const payload = {
             str_room_booking_ids: str_rooms
           };
@@ -69,6 +72,11 @@ export class URooms extends React.Component {
           .then((response) => {
             return checkError(response);
           })
+          .then((result) => {
+            this.props.updateDashboardStore({
+              hasURoomsChanged: true
+            });
+          })
           .catch((error) => {
             this.setState({
               isLoaded: false,
@@ -77,7 +85,8 @@ export class URooms extends React.Component {
             logError(error);
           });
 
-          this.updateUncleanRoomsState(selectedRooms);      
+          this.updateUncleanRoomsState(selectedRooms);  
+        }    
       }
 
       getAllSelectedRooms(){
@@ -94,20 +103,8 @@ export class URooms extends React.Component {
         return selectedRooms;
       }
 
-      createRoomsString(selectedRooms){
-        //loop through selected rooms and create a | separated string to pass to POST
-        var str_rooms = "";
-        for (var i =0; i < selectedRooms.length; i++)
-        {  
-          str_rooms+= selectedRooms[i] + "|";
-        }
-        str_rooms = str_rooms.substring(0,str_rooms.length-1);
-        return str_rooms;
-      }
-
 
       updateUncleanRoomsState(selectedRooms){
-
             //create a newData array which is a clone of state.items, remove the just selected entries from this newData 
             //and re-assign newData to state.items. This causes the component to re-render.
             var newData = this.state.items;
@@ -129,16 +126,17 @@ export class URooms extends React.Component {
     render() {      
       const { error, isLoaded, items } = this.state;
 
-      // if (this.props.getDashboardStore().hasChanged){
-      //   this.setState({
-      //     items: items
-      //   });
-      // }
+      if (this.props.getDashboardStore().hasCheckOutsChanged){
+        this.props.updateDashboardStore({
+          hasCheckOutsChanged: false
+        });
+        this.fetchUncleanRooms();
+      }
 
       if ((!isLoaded) && (error)){
         return <div><h4>Housekeeping</h4><hr /><span id="spNoDataorError">{JSON.stringify(error.message)}</span></div>;        
        } else if (!isLoaded) {
-          return <div>Loading...</div>;
+          return <div><h4>Housekeeping</h4><hr />Loading...</div>;
       } else if (items.length == 0){
           return  (
           <div><h4>Housekeeping</h4><hr /> No rooms! </div>
@@ -150,11 +148,11 @@ export class URooms extends React.Component {
                 <button type="button" className="btnBig" onClick={() => this.handleUncleanRoom()}>Done</button>
                     <ol>
                             {items.map(item => (
-                                 <li key={Math.random()}>
+                                 <li>
                                       <input type="checkbox" 
                                             name="uncleanRooms"
                                             value={item.room_booking_id}/>                     
-                                                {item.room_no}                         
+                                                {item.room_no + ", " + floors[item.floor_no] + ", " + blocks[item.block_id]}                        
                                 </li>
                             ))}    
                     </ol>

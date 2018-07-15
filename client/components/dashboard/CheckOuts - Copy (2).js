@@ -2,7 +2,7 @@ import React from 'react';
 
 import {blocks, floors, reservationTypes} from '../../constants/roomAttributes';
 
-import {logError, checkError, createRoomsString} from '../../utils/helpers';
+import {logError, checkError, createReservationsString, createRoomsString} from '../../utils/helpers';
 import { confirmAlert } from 'react-confirm-alert'; 
 import {API_URL} from '../../config/config';
 
@@ -23,7 +23,7 @@ export class CheckOuts extends React.Component {
         checkOutRooms: [],
       };
 
-      this.createReservationsString = this.createReservationsString.bind(this);
+      this.getAllSelectedReservations = this.getAllSelectedReservations.bind(this);
       this.getAllSelectedRooms = this.getAllSelectedRooms.bind(this);
       this.updateCheckOutState = this.updateCheckOutState.bind(this);
 
@@ -53,76 +53,38 @@ export class CheckOuts extends React.Component {
       }
 
       //reservation check box click
-      reservationsChanged(rID) {  
+      reservationsChanged() {  
+
         //select or de select child rooms
         var checkboxes = document.getElementsByName("checkOutReservations");  
      
           for(var i = 0; i < checkboxes.length; i++)  
           {  
-              if (checkboxes[i].value != rID){
-                checkboxes[i].checked = false;
-              }   
-              
-              if(checkboxes[i].checked) {
-                var roomCheckBoxes = checkboxes[i].nextElementSibling.getElementsByTagName("input");
-                    for (var x = 0; x < roomCheckBoxes.length; x ++){
-                      roomCheckBoxes[x].checked = true;
-                    }
-                    
-                } else {
-                  var roomCheckBoxes = checkboxes[i].nextElementSibling.getElementsByTagName("input");
-                      for (var x = 0; x < roomCheckBoxes.length; x ++){
-                        roomCheckBoxes[x].checked = false;
-                      } 
-                }
+                  if(checkboxes[i].checked) {
+                    var roomCheckBoxes = checkboxes[i].nextElementSibling.getElementsByTagName("input");
+                        for (var x = 0; x < roomCheckBoxes.length; x ++){
+                          roomCheckBoxes[x].checked = true;
+                        }
+                        
+                  } else {
+                      var roomCheckBoxes = checkboxes[i].nextElementSibling.getElementsByTagName("input");
+                          for (var x = 0; x < roomCheckBoxes.length; x ++){
+                            roomCheckBoxes[x].checked = false;
+                          }
+                          
+                  }   
             }
         } 
-
-         //rooms check box click
-      roomsChanged(rID) { 
-        //de select child rooms if not same reservation id
-        var checkboxes = document.getElementsByName("checkOutRooms");  
-     
-          for(var i = 0; i < checkboxes.length; i++)  
-          {  
-              if ((checkboxes[i].className != rID) && (checkboxes[i].checked)){
-                checkboxes[i].checked = false;
-              } 
-          }
-
-          var checkboxes = document.getElementsByName("checkOutReservations");  
-     
-          for(var i = 0; i < checkboxes.length; i++)  
-          {  
-              if (checkboxes[i].value != rID){
-                checkboxes[i].checked = false;
-              }  
-          } 
-        } 
-
-      createReservationsString(){
-          //loop through selected reservations and create a string to pass to POST
-          var str_reservations = "";
-          var checkboxes = document.getElementsByName("checkOutReservations");
-          for (var i =0; i < checkboxes.length; i++)
-          {  
-            if(checkboxes[i].checked) {
-              str_reservations = checkboxes[i].value;
-            }
-          }
-          return str_reservations;
-      } 
         
       //Check Out button click
       handleCheckOut() {
+          var selectedReservations = this.getAllSelectedReservations();
           var selectedRooms = this.getAllSelectedRooms();
 
-          var str_reservations = this.createReservationsString();
+          var str_reservations = createReservationsString(selectedReservations);
           var str_rooms = createRoomsString(selectedRooms);
 
-          if ((str_reservations != '') || (str_rooms != '')){
-            this.fetchCheckOutTotal(str_reservations, str_rooms);
-          } 
+          this.fetchCheckOutTotal(str_reservations, str_rooms);
         }
 
         fetchCheckOutTotal(str_reservations, str_rooms){
@@ -155,7 +117,6 @@ export class CheckOuts extends React.Component {
             });
 
         }
-
 
         loadCheckOutTotalDetails(results){
 
@@ -195,39 +156,24 @@ export class CheckOuts extends React.Component {
                                 {item.no_of_days}
                               </div>
                               <div className ="div-table-col col-bordered">
-                                {"Rs." + item.room_rent}
+                                {item.room_rent}
                               </div>
                               <div className ="div-table-col col-bordered">
-                                {"Rs." + item.total}
+                                {item.total}
                               </div>
                         </div>
                         ))} 
                       </div>
-                         <div className="form-group col-md-12 content form-block-holder">
-                          <label className="control-label col-md-4">
-                            Donation Received: 
-                          {"Rs." + (results[0].donationAmount != null)? results[0].donationAmount: "-"}
-                            </label>
-                        </div>
-
-                         <div className="form-group col-md-12 content form-block-holder">
-                          <label className="control-label col-md-4">
-                            Total Sum:
-                          </label>
-                          <div className="col-md-8">
-                            <input id="txtTotalSum" className="form-control" defaultValue={sum} />
-                            </div>
-                      </div>
-
-                       <div className="form-group col-md-12 content form-block-holder">
-                          <label className="control-label col-md-4">
-                            Receipt No: 
-                          </label>
-                          <div className="col-md-8">
-                            <input id="txtReceiptNo" className="form-control" />
-                            </div>
-                      </div>
-                  <button type="button" className="btnCheckOut btnBig" onClick={() => { this.checkOutRooms(document.getElementById("txtTotalSum").value, document.getElementById("txtReceiptNo").value); onClose() }}>Check Out</button>
+                      <br/>
+                         <div> 
+                          <b>Donation received so far:{results[0].donationAmount != null?results[0].donationAmount:"-"}</b>
+                            <br/>
+                          <b>Total Sum:</b> <input ref="txtTotalSum" type="text" defaultValue={sum} />
+                            <br/>
+                          <b>Receipt No:</b> <input ref="txtReceiptNo" type="text" />
+                         </div>
+                      <br/>
+                  <button type="button" className="btnCheckOut btnBig" onClick={() => this.handleCheckOut()}>Check Out</button>
                   
                 </div>
               )
@@ -236,18 +182,17 @@ export class CheckOuts extends React.Component {
 
         }
 
-        checkOutRooms(amount, receipt_no){
+        checkOutRooms(){
 
+          var selectedReservations = this.getAllSelectedReservations();
           var selectedRooms = this.getAllSelectedRooms();
 
-          var str_reservations = this.createReservationsString();
+          var str_reservations = createReservationsString(selectedReservations);
           var str_rooms = createRoomsString(selectedRooms);
 
           const payload = {
-            int_reservation_id: str_reservations,
-            str_room_booking_ids: str_rooms,
-            amount: amount,
-            receipt_no: receipt_no
+            str_reservation_ids: str_reservations,
+            str_room_booking_ids: str_rooms
           };
 
           fetch(API_URL + "checkouts/", {
@@ -274,9 +219,22 @@ export class CheckOuts extends React.Component {
               logError(error);
             });
 
-          this.updateCheckOutState(str_reservations, selectedRooms);
+          this.updateCheckOutState(selectedReservations, selectedRooms);
         }
 
+        getAllSelectedReservations(){
+            //reservations
+            var selectedReservations = [];
+            var checkboxes = document.getElementsByName("checkOutReservations");  
+        
+            for(var i = 0; i < checkboxes.length; i++)  
+            {  
+                    if(checkboxes[i].checked) {
+                      selectedReservations.push(checkboxes[i].value);     
+                    }         
+            }
+            return selectedReservations;
+        }
 
         getAllSelectedRooms(){
             //rooms
@@ -292,7 +250,7 @@ export class CheckOuts extends React.Component {
             return selectedRooms;
           }
 
-        updateCheckOutState(str_reservations, selectedRooms){
+        updateCheckOutState(selectedReservations, selectedRooms){
 
               //create a newData array which is a clone of state.items, remove the just selected entries from this newData 
               //and re-assign newData to state.items. This causes the component to re-render.
@@ -306,31 +264,17 @@ export class CheckOuts extends React.Component {
                 }
               }
 
+              for (var i =0; i < selectedReservations.length; i++){  
                 for (var x=0; x< newData.length; x++){
-                  if (newData[x].reservation_id == str_reservations){
+                  if (newData[x].reservation_id == selectedReservations[i]){
                     newData.splice(x,1);
                   }
                 }
-
-                this.setState({
-                  items: newData
-                });
-
-              var checkboxes = document.getElementsByName("checkOutReservations");  
-          
-              for(var i = 0; i < checkboxes.length; i++)  
-              {  
-                checkboxes[i].checked = false;      
               }
 
-              var checkboxes = document.getElementsByName("checkOutRooms");  
-            
-              for(var i = 0; i < checkboxes.length; i++)  
-              {  
-                checkboxes[i].checked = false;      
-              }
-
-
+              this.setState({
+                items: newData
+              });
         }
     
   
@@ -386,9 +330,9 @@ export class CheckOuts extends React.Component {
                     <ol>
                         {checkOutReservations.map(item => (    
 
-                          <li>
+                          <li key={Math.random()}>
                             <input type="checkbox" name="checkOutReservations"
-                                onClick={() => this.reservationsChanged(item.reservation_id)}
+                                onClick={() => this.reservationsChanged()}
                                 value={item.reservation_id} />
                                       {reservationTypes[item.reservation_type_id]} {item.name}    
 
@@ -396,9 +340,9 @@ export class CheckOuts extends React.Component {
                                   
                                   {checkOutRooms.filter(bk => bk.reservation_id == item.reservation_id).map(booking => (
                                     
-                                    <li>
+                                    <li key={Math.random()}>
                                         <input type="checkbox" name="checkOutRooms"
-                                            className={booking.reservation_id} onClick={() => this.roomsChanged(booking.reservation_id)}
+                                            key={booking.reservation_id} 
                                             value={booking.room_booking_id} />
                                               {booking.room_no + ", " + floors[booking.floor_no] + ", " + blocks[booking.block_id]}                   
                                     </li>

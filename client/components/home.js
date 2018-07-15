@@ -14,30 +14,41 @@ export class Home extends React.Component {
 
       constructor(props) {
         super(props);
+
         this.state = {
             validUser: false,
-            accessToken:''
+            accessToken:'',
+            selectedTab: "Dashboard"
         };
 
         this.homeStore = {
               validUser: false,
               accessToken: '',
               userName: '',
-              userEmailId: ''
+              userEmailId: '',
+              selectedTab: 'Dashboard',
+              searchText:''
         };
   
       this.redirectOnSuccessfulLogin = this.redirectOnSuccessfulLogin.bind(this);
       }
+
+      selectTab = tabName => {
+            this.setState({ selectedTab: tabName });
+          };
 
       getHomeStore() {
             return this.homeStore;
       }
         
       updateHomeStore(update) {
-      this.homeStore = {
-            ...this.homeStore,
-            ...update,
-            }
+
+            this.homeStore = {
+                  ...this.homeStore,
+                  ...update,
+                  }     
+
+            this.selectTab(this.homeStore.selectedTab);
       }
       
 
@@ -64,19 +75,17 @@ export class Home extends React.Component {
                                     <img src="./img/logo.png" />
                               </div>
                               </div>
-                              <Tabs className="tabs"> 
-                              <div className="tab-links">
-                              {/*             */}
-                              <TabLink to="Reservations">Reservations</TabLink>   
-                              <TabLink to="Dashboard">Dashboard</TabLink>                                
-                              <TabLink to="Reports">Reports</TabLink>
-                              </div>                             
-                              
-                              <TabContent for="Reservations"><h3>Reservations</h3><Reservations/></TabContent>
-                              <TabContent for="Dashboard"><h3>Dashboard</h3><Dashboard/></TabContent>
-                              <TabContent for="Reports"><h3>Check In Report</h3><Reports/></TabContent> 
-                             
-                              </Tabs>
+
+                        <Tabs className="tabs" handleSelect={this.selectTab} selectedTab={this.state.selectedTab}>
+                              <div className="tab-links">            
+                                    <TabLink to="Dashboard">Dashboard</TabLink>     
+                                    <TabLink to="Reservations">Reservations</TabLink>  
+                                    <TabLink to="Reports">Reports</TabLink>
+                              </div>  
+                                    <TabContent for="Dashboard"><h3>Dashboard</h3><Dashboard updateHomeStore={(u) => {this.updateHomeStore(u)}}/></TabContent>
+                                    <TabContent for="Reservations"><h3>Reservations</h3><Reservations getHomeStore={() => (this.getHomeStore())} updateHomeStore={(u) => {this.updateHomeStore(u)}}/></TabContent>
+                                    <TabContent for="Reports"><h3>Check In Report</h3><Reports/></TabContent> 
+                        </Tabs>
                              
                               {/* </div> */}
                         </ErrorBoundary>
@@ -86,19 +95,3 @@ export class Home extends React.Component {
 }
 
 export default Home;
-
-// ReactDOM.render(
-            
-//        <Tabs class="tabs">
-       
-//               <TabLink to="Reservations">Reservations</TabLink>
-//              {/*<TabLink to="Dashboard">Dashboard</TabLink>
-//              <TabLink to="Reports">Reports</TabLink> */}
-//                    <hr/>
-            
-//               <TabContent for="Reservations"><h3>Add a Reservation</h3><Reservations/></TabContent>
-//            {/*  <TabContent for="Dashboard"><h3>Dashboard</h3><Dashboard/></TabContent>
-//              <TabContent for="Reports"><h3>Reports</h3><Reports/></TabContent> */}
-//        </Tabs>,
-//         document.getElementById('root')
-//   );

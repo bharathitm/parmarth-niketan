@@ -53,7 +53,7 @@ export class GuestContacts extends Component {
     if (this.state.items.length != 0)
     {
 
-      this.props.jumpToStep(2);
+      //this.props.jumpToStep(2);
       
       this.props.updateStore({
         guestId: this.state.items[0].guest_id,
@@ -129,10 +129,12 @@ export class GuestContacts extends Component {
   }
 
   handleReservationSearch(){
+    var searchText = this.refs.reservationSearch.value;
+    searchReservation(searchText);
+  }
 
-    var search = this.refs.reservationSearch.value;
-
-    fetch(API_URL + "guests/?search=" + search, {
+  searchReservation(searchText){
+    fetch(API_URL + "guests/?search=" + searchText, {
       headers : { 
         'Content-Type': 'application/json',
         'Accept': 'application/json'
@@ -463,6 +465,15 @@ if (validateNewInput.phoneVal){
 
 
   render() {
+    if(this.props.getStore().searchText != ''){
+      this.searchReservation(this.props.getStore().searchText);
+      var pageLis = document.getElementsByTagName("li");
+      pageLis[0].style.visibility = "hidden";
+      this.props.updateStore({
+        searchText: ''
+      });
+    }
+
     // explicit class assigning based on validation
     let notValidClasses = {};
 

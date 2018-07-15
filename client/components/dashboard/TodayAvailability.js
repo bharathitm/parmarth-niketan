@@ -18,8 +18,11 @@ export class TodayAvailability extends React.Component {
 
 
   componentDidMount() {
-    
-    fetch(API_URL + "arooms/")
+    this.fetchAvailableRooms();
+    }
+
+    fetchAvailableRooms(){
+      fetch(API_URL + "arooms/")
       .then((response) => {
       return checkError(response);
       })
@@ -39,6 +42,14 @@ export class TodayAvailability extends React.Component {
     }
 
     render() {
+
+      if (this.props.getDashboardStore().hasURoomsChanged){
+           this.props.updateDashboardStore({
+          hasURoomsChanged: false
+        });
+        this.fetchAvailableRooms();
+      }
+
       const { isLoaded, error, items } = this.state;
 
       if ((!isLoaded) && (error)){
@@ -55,11 +66,8 @@ export class TodayAvailability extends React.Component {
              <ul>
                  {items.map(item => (
                   <li key={item.block_id}>
-                    <a href="#">
-                      {item.count} <br/>
-                    {blocks[item.block_id]} 
-                    
-                    </a>
+                    <span className="spBlockCount">   {item.count} </span><br/>
+                   <span className="spBlockName"> {blocks[item.block_id]} </span>
                   </li>
                 ))}
              </ul>

@@ -14,7 +14,7 @@ router.route('/')
     })
 
 
-      // Adds advance donation details
+      // Updates today's check out details
       .post((req, res) => {
         checkoutsCtrl.add(req, res);
     });
@@ -22,12 +22,7 @@ router.route('/')
 
 router.route('/:id')
 
-    //Fetches advance donation details
-    .get( (req, res) => {
-        checkoutsCtrl.findById(req, res);
-    })
-
-    //Updates advance donation details
+    //Fetches today's check out total details
     .post((req, res) => {
         checkoutsCtrl.update(req, res);
     });

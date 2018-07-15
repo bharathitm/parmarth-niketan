@@ -47,7 +47,8 @@ export class Reservations extends React.Component {
         advanceAmount: '',
         advanceReceivedOn: '',
         advanceReceiptNo: '',
-        savedToCloud: false
+        savedToCloud: false,
+        searchText: ''
       };
     }
 
@@ -66,12 +67,13 @@ export class Reservations extends React.Component {
       //hide Empty component
       var pageLis = document.getElementsByTagName("li");
       pageLis[4].style.visibility = "hidden";
-      //pageLis[3].style.visibility = "hidden";
-
     }
 
 
     render() {
+      if(this.props.getHomeStore().searchText != ''){
+        this.sampleStore.searchText = this.props.getHomeStore().searchText;
+      }
 
         const steps =
         [
@@ -86,11 +88,11 @@ export class Reservations extends React.Component {
             <div className="divError">
             <ErrorBoundary>
             <div className='step-progress'>            
-            <StepZilla steps={steps} 
-              stepsNavigation={true}
-              nextTextOnFinalActionStep={"Save"}
-              startAtStep={window.sessionStorage.getItem('step') ? parseFloat(window.sessionStorage.getItem('step')) : 0}
-              onStepChange={(step) => window.sessionStorage.setItem('step', step)}
+            <StepZilla steps={steps}
+                stepsNavigation={true}
+                nextTextOnFinalActionStep={"Save"}
+                startAtStep={window.sessionStorage.getItem('step') ? parseFloat(window.sessionStorage.getItem('step')) : 0}
+                onStepChange={(step) => window.sessionStorage.setItem('step', step)}
             />
             </div>
             </ErrorBoundary>

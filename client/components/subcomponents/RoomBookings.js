@@ -57,11 +57,17 @@ export class RoomBookings extends Component {
     }
     
 
-    handleDateChange(date) {
+    handleDateChange(room_booking_id, date_of_departure, next_arrival_date) {
+
+        // if (moment(date_of_departure) > moment(next_arrival_date)){
+        //     alert("cannot be extended");
+        // }
+
         // this.setState({
         //   advanceReceivedOn: date
         // });
-        // this.refs.date.selected = date;
+        this.refs[room_booking_id].selected = moment(date_of_departure);
+         //document.getElementById(room_booking_id).selected = moment(date_of_departure);
       }
 
     validationCheck() {
@@ -105,20 +111,14 @@ export class RoomBookings extends Component {
         }
     }
     
-    insertAdvanceDonationDetails(){
+    handleUpdateRoomBooking(room_booking_id){
 
         const payload = {
-            reservation_id: this.props.getStore().reservationId,
-            guest_id: this.props.getStore().guestId,
-            received_on: getFormattedDate(this.state.advanceReceivedOn).toString(),
-            amount: this.state.advanceAmount,
-            receipt_no: this.state.advanceReceiptNo,
-            is_advance: 1
+            room_booking_id: room_booking_id,
+            date_of_departure: document.getElementById(room_booking_id).value
         };
 
-        alert(JSON.stringify(payload));
-
-        fetch(API_URL + "advance/", {
+        fetch(API_URL + "roombookings/", {
             method: 'POST',
             headers: {
             'Accept': 'application/json',
@@ -144,11 +144,6 @@ export class RoomBookings extends Component {
         });
     }
      
-
-    handleUpdateRoomBooking(room_booking_id){
-
-    }
-  
     
     handleDeleteRoomBooking(room_booking_id){
 
@@ -237,6 +232,9 @@ export class RoomBookings extends Component {
                               <div className ="dates div-table-col div-table-col-header">
                                  To
                               </div>
+                              <div className ="dates div-table-col div-table-col-header">
+                                 Available Till
+                              </div>
                               <div className ="actions div-table-col div-table-col-header">
                               Actions
                               </div>
@@ -252,21 +250,20 @@ export class RoomBookings extends Component {
                                 {item.total_beds} beds
                               </div>
                               <div className ="dates div-table-col col-bordered">
-                              <DatePicker 
+                                  {getFormattedDate(item.date_of_arrival)}                             
+                              </div>
+                              <div className ="dates div-table-col col-bordered">
+                              <DatePicker id={item.room_booking_id} refs={item.room_booking_id}
                                   dateFormat="YYYY-MM-DD"
-                                  selected={moment(item.date_of_arrival)}                             
-                                  onChange={this.handleDateChange} 
+                                  selected={moment(item.date_of_departure)} 
+                                  onChange={() => this.handleDateChange(item.room_booking_id, item.date_of_departure, item.next_arrival_date)}                            
                                   className="form-control"/>
                               </div>
                               <div className ="dates div-table-col col-bordered">
-                              <DatePicker 
-                                  dateFormat="YYYY-MM-DD"
-                                  selected={moment(item.date_of_departure)}                             
-                                  onChange={this.handleDateChange} 
-                                  className="form-control"/>
+                               {item.next_arrival_date == null? "Available" : getFormattedDate(item.next_arrival_date)} 
                               </div>
                               <div className ="actions div-table-col col-bordered">
-                              <img src="./img/tick.png" onClick={() => this.handleUpdateRoomBooking()}/>
+                              <img src="./img/tick.png" onClick={() => this.handleUpdateRoomBooking(item.room_booking_id)}/>
                               <img src="./img/delete.png" onClick={() => this.handleDeleteRoomBooking(item.room_booking_id)}/>
                               </div>
                         </div>
