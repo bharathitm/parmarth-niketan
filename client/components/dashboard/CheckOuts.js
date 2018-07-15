@@ -170,7 +170,9 @@ export class CheckOuts extends React.Component {
               return (
                 <div>
                   <h4>Check Out Rooms</h4>  
-                  <button type="button" className="btnCancel btnBig" onClick={onClose}>Cancel</button>      
+                  {/* <button type="button" className="btnCancel btnBig" onClick={onClose}>Cancel</button>   */}
+                  <img src="./img/close.png" className="imgClose" onClick={onClose}/>
+                      
                     <div className = "div-table advance-table checkout-table">
                     <div className = "div-table-row">
                               <div className ="div-table-col div-table-col-header">

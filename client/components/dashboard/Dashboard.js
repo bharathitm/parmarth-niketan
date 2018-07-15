@@ -46,6 +46,7 @@ export class Dashboard extends React.Component {
             selectedTab: 'Reservations',
             searchText: this.refs.reservationSearch.value
           });
+          this.refs.reservationSearch.value = '';
       }
 
     

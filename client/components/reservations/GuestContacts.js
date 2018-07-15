@@ -52,9 +52,7 @@ export class GuestContacts extends Component {
     // alert(this.props.getHomeStore().userName); does not work, have to find out how to use this....maybe pass from Reservations to each of the children, just the get though.
     if (this.state.items.length != 0)
     {
-
       //this.props.jumpToStep(2);
-      
       this.props.updateStore({
         guestId: this.state.items[0].guest_id,
         firstName: this.state.items[0].first_name,
@@ -105,32 +103,44 @@ export class GuestContacts extends Component {
       this.refs.eLastName.value = this.state.items[0].e_last_name,
       this.refs.ePhone.value = this.state.items[0].e_phone_no,
       this.refs.eRelationship.value = this.state.items[0].e_relationship
+
+      this.refs.reservationSearch.value = '';
+      var name = this.refs.firstName.value + " " + this.refs.lastName.value;
+      this.props.loadName(name);
     }
     else{
 
       document.getElementById("spNoDataorError").style.visibility="visible";
 
       var reservationSearch = String(this.refs.reservationSearch.value);
-
-      this.refs.firstName.value = '',
-      this.refs.lastName.value = '',
-      this.refs.email.value = (reservationSearch != '' && reservationSearch.indexOf('@') != -1)? this.refs.reservationSearch.value : '',
-      this.refs.phone.value = (reservationSearch != '' && this.refs.email.value == '')? this.refs.reservationSearch.value : '',
-      this.refs.address.value = '', 
-      this.refs.city.value = '',
-      this.refs.pin.value = '',
-      this.refs.region.value = '',
-      this.refs.country.value = 0,
-      this.refs.eFirstName.value = '',
-      this.refs.eLastName.value = '',
-      this.refs.ePhone.value = '',
-      this.refs.eRelationship.value = ''
+      this.preLoadIfNeeded(reservationSearch);
     }
+  }
+
+  preLoadIfNeeded(searchText){
+
+    if (this.refs.firstName != undefined){
+      
+    this.refs.firstName.value = '',
+    this.refs.lastName.value = '',
+    this.refs.email.value = (searchText != '' && searchText.indexOf('@') != -1)? this.refs.reservationSearch.value : '',
+    this.refs.phone.value = (searchText != '' && this.refs.email.value == '')? this.refs.reservationSearch.value : '',
+    this.refs.address.value = '', 
+    this.refs.city.value = '',
+    this.refs.pin.value = '',
+    this.refs.region.value = '',
+    this.refs.country.value = 0,
+    this.refs.eFirstName.value = '',
+    this.refs.eLastName.value = '',
+    this.refs.ePhone.value = '',
+    this.refs.eRelationship.value = ''
+    }
+
   }
 
   handleReservationSearch(){
     var searchText = this.refs.reservationSearch.value;
-    searchReservation(searchText);
+    this.searchReservation(searchText);
   }
 
   searchReservation(searchText){
@@ -261,31 +271,44 @@ if (validateNewInput.phoneVal){
           this.props.getStore().city != userInput.city || 
           this.props.getStore().pin != userInput.pin || 
           this.props.getStore().region != userInput.region || 
-          this.props.getStore().country != userInput.country ||
-          this.props.getStore().eFirstName != userInput.eFirstName ||
-          this.props.getStore().eLastName != userInput.eLastName ||
-          this.props.getStore().ePhone != userInput.ePhone ||
-          this.props.getStore().eRelationship != userInput.eRelationship
-        ) { // only update store of something changed
+          this.props.getStore().country != userInput.country
+        ) { 
 
           this.props.updateStore({
             ...userInput,
-            savedToCloud: false // use this to notify step4 that some changes took place and prompt the user to save again
-          });  // Update store here (this is just an example, in reality you will do it via redux or flux)
+            savedToCloud: false 
+          });  
 
-          if (this.state.guestEmergencyContactId != ''){
-            this.updateEmergencyContactData();
-          } else if (this.props.getStore().guestId != ''){
+          if (this.props.getStore().guestId != ''){
             this.updateGuestData();
           }
           else {
               this.insertGuestData();
           }
+
+          var name = this.refs.firstName.value + " " + this.refs.lastName.value;
+          this.props.loadName(name);
         }
+        if (
+          this.props.getStore().eFirstName != userInput.eFirstName ||
+          this.props.getStore().eLastName != userInput.eLastName ||
+          this.props.getStore().ePhone != userInput.ePhone ||
+          this.props.getStore().eRelationship != userInput.eRelationship
+        ){
+
+          this.props.updateStore({
+            ...userInput,
+            savedToCloud: false 
+          });  
+
+          if (this.state.guestEmergencyContactId != ''){
+            this.updateEmergencyContactData();
+          } 
+        }
+
         isDataValid = true;
     }
     else {
-        // if anything fails then update the UI validation state but NOT the UI Data State
         this.setState(Object.assign(userInput, validateNewInput));
     }
 
@@ -467,11 +490,19 @@ if (validateNewInput.phoneVal){
   render() {
     if(this.props.getStore().searchText != ''){
       this.searchReservation(this.props.getStore().searchText);
-      var pageLis = document.getElementsByTagName("li");
-      pageLis[0].style.visibility = "hidden";
+
       this.props.updateStore({
         searchText: ''
       });
+    }
+
+    if (this.props.getStore().firstName == ''){
+      this.preLoadIfNeeded('');
+    }
+    else{
+      var wizardOl = document.getElementsByClassName("progtrckr");
+      wizardOl[0].style.pointerEvents = "auto";
+      document.getElementById("next-button").style.visibility = "visible";
     }
 
     // explicit class assigning based on validation

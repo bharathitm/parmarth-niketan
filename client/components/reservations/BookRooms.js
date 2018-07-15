@@ -4,7 +4,7 @@ import floors from '../../constants/floors';
 
 import moment from 'moment';
 
-import {logError, checkError, getFormattedDate} from '../../utils/helpers';
+import {logError, checkError, getFormattedDate, createRoomsString} from '../../utils/helpers';
 import {API_URL} from '../../config/config';
 
 import SearchBox from '../subcomponents/SearchBox';
@@ -31,7 +31,6 @@ export class BookRooms extends Component {
       filteredBlocks: []
     };
 
-    this.createRoomsString = this.createRoomsString.bind(this);
     this.handleBlocksChanged = this.handleBlocksChanged.bind(this);
   }
 
@@ -58,8 +57,6 @@ export class BookRooms extends Component {
   }
 
   componentDidMount(){
-    document.getElementById("next-button").style.visibility = "hidden";
-
     if (this.state.items.length > 0){
       document.getElementsByClassName("div-book-room-search")[0].style.cssFloat = "left";
       document.getElementById("divSearchResults").style.cssFloat = "none";
@@ -157,16 +154,6 @@ export class BookRooms extends Component {
 
   isValidated() {
 
-    // if (
-    //   this.props.getStore().arrivalDate != this.searchStore.arrivalDate 
-    // || this.props.getStore().departureDate != this.searchStore.arrivalDate
-    // ) { // only update store of something changed
-    //   this.props.updateStore({
-    //     ...this.searchStore,
-    //     savedToCloud: false // use this to notify step4 that some changes took place and prompt the user to save again
-    //   });  // Update store here (this is just an example, in reality you will do it via redux or flux    
-    // }
-
     this.storeRoomBookings();
     return true;
   }
@@ -191,20 +178,11 @@ export class BookRooms extends Component {
     return selectedRooms;
   }
 
-  createRoomsString(selectedRooms){
-    //loop through selected rooms and create a | separated string to pass to POST
-    var str_rooms = "";
-    for (var i =0; i < selectedRooms.length; i++)
-    {  
-      str_rooms+= selectedRooms[i] + "|";
-    }
-    str_rooms = str_rooms.substring(0,str_rooms.length-1);
-    return str_rooms;
-}
-
   storeRoomBookings(){
     var selectedRooms = this.getAllSelectedRooms();
-    var str_rooms = this.createRoomsString(selectedRooms);
+    var str_rooms = createRoomsString(selectedRooms);
+
+    alert(this.props.getStore().reservationId);
 
     window.sessionStorage.setItem('selectedRooms', JSON.stringify(selectedRooms));
     window.sessionStorage.setItem('strSelectedRooms', str_rooms);
@@ -239,6 +217,25 @@ export class BookRooms extends Component {
 
 
   render() {
+
+    //coming from reservations search in Dashboard, directly load Guest Details page
+    if(this.props.getStore().searchText != ''){
+      this.props.jumpToStep(1);
+    }
+
+    //if no guest details in session, dont allow any other step other than Book Rooms
+    if(this.props.getStore().firstName == ''){
+      var wizardOl = document.getElementsByClassName("progtrckr");
+      if (typeof wizardOl[0] != 'undefined'){
+        wizardOl[0].style.pointerEvents = "none";
+        document.getElementById("next-button").style.visibility = "hidden";
+      }
+    } // reverse whatever is done above
+    else if (this.props.getStore().firstName != ''){
+        var wizardOl = document.getElementsByClassName("progtrckr");
+        wizardOl[0].style.pointerEvents = "auto";
+        document.getElementById("next-button").style.visibility = "visible";
+    }
 
     let { isLoaded, error, items, isReRender } = this.state;
 

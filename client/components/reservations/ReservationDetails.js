@@ -148,8 +148,8 @@ export class ReservationDetails extends Component {
       this.refs.reservationTypeId.value = this.state.items[0].reservation_type_id;
       this.refs.arrivalTime.selected = aDate;
       this.refs.advanceReminderOn.selected = (this.state.items[0].advance_reminder_on == "null")? '' : aReminder;
-      this.refs.sanskaraId.value = (this.state.items[0].sanskara_id == null)? 0 : this.state.items[0].sanskara_id
-      //this.refs.reservationStatusId.value = this.state.items[0].reservation_status_id  
+      this.refs.sanskaraId.value = (this.state.items[0].sanskara_id == null)? 0 : this.state.items[0].sanskara_id;
+      //this.refs.reservationStatus.innerHTML = this.state.items[0].reservation_status_id;  
       
       //show Sanskara Drop down only if load returns a SanskaraId
       if (this.refs.sanskaraId.value != 0){//Sanskara
@@ -158,6 +158,9 @@ export class ReservationDetails extends Component {
       else{
         this.refs.divSanskara.style.visibility = "hidden";
       }
+    }
+    else {
+      this.props.jumpToStep(0);
     }
   }
 
