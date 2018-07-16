@@ -92,8 +92,7 @@ export function findById(req, res) {
  */
 export function search(req, res) {
 
-    var call_stored_proc = "CALL sp_SearchGuests('" 
-    + req.query.search + "')";    
+    var call_stored_proc = "CALL sp_SearchGuests('" + req.query.search + "')";    
 
     console.log(call_stored_proc);
 
