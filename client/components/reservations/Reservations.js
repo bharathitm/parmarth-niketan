@@ -43,7 +43,7 @@ export class Reservations extends React.Component {
         comments: '',
         guestId: '',
         guestEmergencyContactId:'',
-        reservationId:'',
+        reservationId: null,
         advanceAmount: '',
         advanceReceivedOn: '',
         advanceReceiptNo: '',
@@ -63,6 +63,10 @@ export class Reservations extends React.Component {
       }
     }
 
+    getName(){
+      return this.state.name;
+    }
+
     loadName(name){
       this.setState({
         name: name
@@ -75,6 +79,13 @@ export class Reservations extends React.Component {
       pageLis[4].style.visibility = "hidden";
     }
 
+    redirectToDashboard() {
+      this.clearGuestSession();
+      this.props.updateHomeStore({
+          selectedTab: 'Dashboard'
+        });
+    }
+
     clearGuestSession(){
 
       var wizardOl = document.getElementsByClassName("progtrckr");
@@ -85,11 +96,10 @@ export class Reservations extends React.Component {
         wizardOl[0].children[i].className = "progtrckr-todo";
       }
 
-      
-      this.setState({
-        name: null
-      });
-
+      window.sessionStorage.removeItem('searchResults');
+      window.sessionStorage.removeItem('selectedRooms');
+      window.sessionStorage.removeItem('strSelectedRooms');
+    
       this.sampleStore = {
         arrivalDate: '',
         departureDate: '',
@@ -115,15 +125,25 @@ export class Reservations extends React.Component {
         comments: '',
         guestId: '',
         guestEmergencyContactId:'',
-        reservationId:'',
+        reservationId:null,
         advanceAmount: '',
         advanceReceivedOn: '',
         advanceReceiptNo: '',
         savedToCloud: false,
-        searchText: ''
-      };
-    }
+        searchText: '',
+        roomType: null,
+        noOfRooms: null,
+        searchLoaded: false,
+        uniqueBlocks: [],
+        uniqueRooms: [],
+        filteredBlocks: []
 
+      };
+
+      this.setState({
+        name: null
+      });
+    }
 
     render() {
       if(this.props.getHomeStore().searchText != ''){
@@ -136,10 +156,10 @@ export class Reservations extends React.Component {
 
         const steps =
         [
-            {name: 'Book Rooms', component: <BookRooms getStore={() => (this.getStore())} updateStore={(u) => {this.updateStore(u)}}/>},
+            {name: 'Book Rooms', component: <BookRooms getStore={() => (this.getStore())} getName={() => (this.getName())} updateStore={(u) => {this.updateStore(u)}}/>},
             {name: 'Guest', component: <GuestContacts getStore={() => (this.getStore())} loadName={(u) => {this.loadName(u)}} updateStore={(u) => {this.updateStore(u)}}/>},
             {name: 'Reservation', component: <ReservationDetails getStore={() => (this.getStore())} updateStore={(u) => {this.updateStore(u)}}/>},
-            {name: 'Advance Donation', component: <AdvanceDonations getStore={() => (this.getStore())} updateStore={(u) => {this.updateStore(u)}}/>},
+            {name: 'Advance Donation', component: <AdvanceDonations getStore={() => (this.getStore())} redirectToDashboard={() => (this.redirectToDashboard())} updateStore={(u) => {this.updateStore(u)}}/>},
             {name: 'Empty', component: <Empty/>}
         ]
 

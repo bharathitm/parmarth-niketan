@@ -58,6 +58,34 @@ export function update(req, res) {
     //connection.end();   
 }
 
+
+/**
+ * Add room bookings to existing reservation
+ *
+ * @param {object} req
+ * @param {object} res
+ * @returns {*}
+ */
+export function add(req, res) {
+
+    console.log(req.body.advance_reminder_on);
+
+    var call_stored_proc = "CALL sp_InsertReservationRoomBookings('" 
+    + req.params.id + "','"
+    + req.body.room_ids_str + "')";
+
+    console.log(call_stored_proc);
+
+    connection.query(call_stored_proc, true, (error, results, fields) => {
+    if (error) {
+        errorController.LogError(error);
+        return res.send(error.code);
+    }
+    });
+      
+    //connection.end();   
+}
+
 /**
  *  Cancel room booking by reservation id
  *

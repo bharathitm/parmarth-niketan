@@ -86,8 +86,6 @@ export class AdvanceDonationsInput extends Component {
             is_advance: 1
         };
 
-        alert(JSON.stringify(payload));
-
         fetch(API_URL + "advance/", {
             method: 'POST',
             headers: {

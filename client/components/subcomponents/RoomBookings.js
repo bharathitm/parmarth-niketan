@@ -27,7 +27,7 @@ export class RoomBookings extends Component {
       this.handleDateChange = this.handleDateChange.bind(this);
     }
 
-    componentWillMount() {
+    componentDidMount() {
         this.fetchRoomBookingsIfExists();
     }
 
@@ -57,7 +57,9 @@ export class RoomBookings extends Component {
     }
     
 
-    handleDateChange(room_booking_id, date_of_departure, next_arrival_date) {
+    handleDateChange(e, room_booking_id, date_of_departure, next_arrival_date) {
+
+        //alert(e.selected);
 
         // if (moment(date_of_departure) > moment(next_arrival_date)){
         //     alert("cannot be extended");
@@ -66,8 +68,10 @@ export class RoomBookings extends Component {
         // this.setState({
         //   advanceReceivedOn: date
         // });
-        this.refs[room_booking_id].selected = moment(date_of_departure);
-         //document.getElementById(room_booking_id).selected = moment(date_of_departure);
+        //this.refs[room_booking_id].selected = moment(date_of_departure);
+         document.getElementById(room_booking_id).value = moment(date_of_departure);
+
+         
       }
 
     validationCheck() {
@@ -210,14 +214,12 @@ export class RoomBookings extends Component {
     if (this.state.items.length == 0){
         return  (
             <div id="divRoomBookings">
-            <h4>Room Bookings</h4>  
             No rooms booked yet!
             </div>
         );
     } else {
         return (  
             <div id="divRoomBookings" style={{ visibility: this.state.hasRoomBookings? 'visible':'hidden', display: this.state.hasRoomBookings? 'inline':'none' }}>
-                <h4>Room Bookings</h4>  
              <div className = "div-table advance-table">
                     <div className = "div-table-row">
                               <div className ="room-no div-table-col div-table-col-header">
@@ -253,10 +255,10 @@ export class RoomBookings extends Component {
                                   {getFormattedDate(item.date_of_arrival)}                             
                               </div>
                               <div className ="dates div-table-col col-bordered">
-                              <DatePicker id={item.room_booking_id} refs={item.room_booking_id}
+                              <DatePicker id={item.room_booking_id.toString()} refs={item.room_booking_id}
                                   dateFormat="YYYY-MM-DD"
                                   selected={moment(item.date_of_departure)} 
-                                  onChange={() => this.handleDateChange(item.room_booking_id, item.date_of_departure, item.next_arrival_date)}                            
+                                  onChange={() => this.handleDateChange(this, item.room_booking_id, item.date_of_departure, item.next_arrival_date)}                            
                                   className="form-control"/>
                               </div>
                               <div className ="dates div-table-col col-bordered">

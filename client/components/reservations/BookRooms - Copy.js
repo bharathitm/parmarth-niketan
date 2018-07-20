@@ -21,10 +21,47 @@ export class BookRooms extends Component {
       items:[]
     }; 
 
+    this.searchStore = {
+      reservationId: '',
+      arrivalDate: moment(),
+      departureDate: moment(),
+      roomType: null,
+      noOfRooms: null,
+      searchLoaded: false,
+      uniqueBlocks: [],
+      uniqueRooms: [],
+      filteredBlocks: []
+    };
+
     this.handleBlocksChanged = this.handleBlocksChanged.bind(this);
   }
 
-  componentDidMount(){
+  getSearchStore() {
+    return this.searchStore;
+  }
+
+  updateSearchStore(update) {
+    this.searchStore = {
+      ...this.searchStore,
+      ...update,
+    }
+  }
+
+  // getSearchStore() {
+  //   return this.props.getStore();
+  // }
+
+  // updateSearchStore(update) {
+
+  //   this.props.updateStore({
+  //     arrivalDate: arrivalDate,
+  //     departureDate: departureDate,
+  //     noOfRooms: noOfRooms,
+  //     roomType: roomType
+  //   });
+  // }
+
+  componentWillMount(){
 
     if (window.sessionStorage.getItem('searchResults')){
       this.setState({
@@ -34,6 +71,16 @@ export class BookRooms extends Component {
       window.sessionStorage.removeItem('searchResults');
     }
 
+    if(this.props.getStore().reservationId != ''){
+      this.searchStore = {
+        reservationId: this.props.getStore().reservationId,
+        arrivalDate: this.props.getStore().arrivalDate,
+        departureDate: this.props.getStore().departureDate
+      };
+    }
+  }
+
+  componentDidMount(){
     if (this.state.items.length > 0){
       document.getElementsByClassName("div-book-room-search")[0].style.cssFloat = "left";
       document.getElementById("divSearchResults").style.cssFloat = "none";
@@ -69,38 +116,29 @@ export class BookRooms extends Component {
     document.getElementsByClassName("div-book-room-search")[0].style.cssFloat = "left";
     document.getElementById("divSearchResults").style.cssFloat = "none";
 
-    if (this.props.getStore().arrivalDate == ''){
-      this.props.updateStore({
-        arrivalDate: moment()
-      });
-    }
+    this.searchStore.uniqueBlocks = [];
+    this.searchStore.uniqueRooms = [];
 
-    if (this.props.getStore().departureDate == ''){
-      this.props.updateStore({
-        departureDate: moment()
-      });
-    }
+    this.searchStore.arrivalDate = (getFormattedDate(this.searchStore.arrivalDate)).toString();
+    this.searchStore.departureDate = (getFormattedDate(this.searchStore.departureDate)).toString();
+
+    const arrivalDate = this.searchStore.arrivalDate;
+    const departureDate = this.searchStore.departureDate;
 
     this.props.updateStore({
-      uniqueBlocks: [],
-      uniqueRooms: [],
-      arrivalDate: (getFormattedDate(this.props.getStore().arrivalDate)).toString(),
-      departureDate: (getFormattedDate(this.props.getStore().departureDate)).toString()
+      arrivalDate: arrivalDate,
+      departureDate: departureDate
     });
 
-    if (typeof this.props.getStore().noOfRooms == 'undefined'){
-      this.props.updateStore({
-        noOfRooms: null
-      });
+    if (typeof this.searchStore.noOfRooms == 'undefined'){
+      this.searchStore.noOfRooms = null;
     }
 
-    if (typeof this.props.getStore().roomType == 'undefined'){
-      this.props.updateStore({
-        roomType: null
-      });
+    if (typeof this.searchStore.roomType == 'undefined'){
+      this.searchStore.roomType = null;
     }
 
-    fetch(API_URL + "arooms/?adate=" + this.props.getStore().arrivalDate + "&ddate=" + this.props.getStore().departureDate + "&nR=" + this.props.getStore().noOfRooms + "&rT=" + this.props.getStore().roomType) 
+    fetch(API_URL + "arooms/?adate=" + arrivalDate + "&ddate=" + departureDate + "&nR=" + this.searchStore.noOfRooms + "&rT=" + this.searchStore.roomType) 
     .then((response) => {
       return checkError(response);
     })
@@ -130,9 +168,9 @@ export class BookRooms extends Component {
     //rooms check box click
     roomsChanged() {  
       var grandTotal = 0;
-      for (var cnt=0; cnt < this.props.getStore().uniqueBlocks.length; cnt++){
+      for (var cnt=0; cnt < this.searchStore.uniqueBlocks.length; cnt++){
 
-        var checkboxes = document.getElementsByName(blocks[this.props.getStore().uniqueBlocks[cnt]]);  
+        var checkboxes = document.getElementsByName(blocks[this.searchStore.uniqueBlocks[cnt]]);  
 
         if (checkboxes.length > 0){
           var blockTotal = 0;
@@ -143,17 +181,14 @@ export class BookRooms extends Component {
                 }
             }
 
-            document.getElementById(blocks[this.props.getStore().uniqueBlocks[cnt]]).innerHTML = blockTotal;
+            document.getElementById(blocks[this.searchStore.uniqueBlocks[cnt]]).innerHTML = blockTotal;
             grandTotal += blockTotal
         } 
 
         document.getElementById("spGrandTotal").innerHTML = grandTotal;
-        var wizardOl = document.getElementsByClassName("progtrckr");
         if (grandTotal != 0){
-          wizardOl[0].style.pointerEvents = "auto";
           document.getElementById("next-button").style.visibility = "visible";
         } else {
-          wizardOl[0].style.pointerEvents = "none";
           document.getElementById("next-button").style.visibility = "hidden";
         }
       }
@@ -169,9 +204,9 @@ export class BookRooms extends Component {
 
     //rooms
     var selectedRooms = [];
-    for (var cnt=0; cnt < this.props.getStore().uniqueBlocks.length; cnt++){
+    for (var cnt=0; cnt < this.searchStore.uniqueBlocks.length; cnt++){
 
-      var checkboxes = document.getElementsByName(blocks[this.props.getStore().uniqueBlocks[cnt]]);  
+      var checkboxes = document.getElementsByName(blocks[this.searchStore.uniqueBlocks[cnt]]);  
 
       if (checkboxes.length > 0){
           for(var i = 0; i < checkboxes.length; i++)  
@@ -189,7 +224,7 @@ export class BookRooms extends Component {
     var selectedRooms = this.getAllSelectedRooms();
     var str_rooms = createRoomsString(selectedRooms);
 
-    if((this.props.getStore().reservationId != null) && (selectedRooms.length > 0)){
+    if((this.props.getStore().reservationId != '') && (selectedRooms.length > 0)){
 
       confirmAlert({
         title: 'Add Room Bookings',
@@ -244,9 +279,7 @@ export class BookRooms extends Component {
 
    handleBlocksChanged(){
 
-    this.props.updateStore({
-      filteredBlocks: []
-    });
+    this.searchStore.filteredBlocks = [];  
 
     var checkboxes = document.getElementsByName("chkBlocks"); 
     var atleastOneChecked = false;
@@ -255,11 +288,7 @@ export class BookRooms extends Component {
         for(var i = 0; i < checkboxes.length; i++)  
         { 
             if(checkboxes[i].checked) {
-              var arr = this.props.getStore().filteredBlocks;
-              arr.push(checkboxes[i].value); 
-              this.props.updateStore({
-                filteredBlocks: arr
-              });
+              this.searchStore.filteredBlocks.push(checkboxes[i].value); 
               atleastOneChecked = true;
               this.setState({
                 isReRender: true
@@ -301,29 +330,17 @@ export class BookRooms extends Component {
 
     //loads first time and when all filter check boxes are unchecked
     if (!isReRender){
-        this.props.updateStore({
-          uniqueBlocks: []
-        });
+        this.searchStore.uniqueBlocks = [];
         if (items.length > 0){
               //show filter only if search results are available
-              this.props.updateStore({
-                searchLoaded: true
-              });
+              this.searchStore.searchLoaded = true;
 
-              var arr = this.props.getStore().uniqueBlocks;
-              arr.push(items[0].block_id);
-              this.props.updateStore({
-                uniqueBlocks: arr
-              });
+              this.searchStore.uniqueBlocks.push(items[0].block_id); 
 
-              if ((this.props.getStore().noOfRooms != "null") && (this.props.getStore().noOfRooms != null)){
-                this.props.updateStore({
-                  uniqueRooms: items.slice(0, parseInt(this.props.getStore().noOfRooms))
-                });
+              if ((this.searchStore.noOfRooms != "null") && (this.searchStore.noOfRooms != null)){
+                this.searchStore.uniqueRooms = items.slice(0, parseInt(this.searchStore.noOfRooms));
               } else {
-                this.props.updateStore({
-                  uniqueRooms: items
-                });
+                this.searchStore.uniqueRooms = items;
               }
                     
               //unique block ids need to be captured in a separate array
@@ -331,30 +348,18 @@ export class BookRooms extends Component {
               {
                 if (items[i].block_id != items[i-1].block_id)
                 {
-                    var arr = this.props.getStore().uniqueBlocks;
-                    arr.push(items[i].block_id);
-                    this.props.updateStore({
-                      uniqueBlocks: arr
-                    });
+                    this.searchStore.uniqueBlocks.push(items[i].block_id);
 
-                    if ((this.props.getStore().noOfRooms != "null") && (this.props.getStore().noOfRooms != null)){
-                      var newArray = items.slice(i, (i + parseInt(this.props.getStore().noOfRooms)));
-                      var arr = this.props.getStore().uniqueRooms;
-                      arr.push(...newArray);
-                      this.props.updateStore({
-                        uniqueRooms: arr
-                      });
+                    if ((this.searchStore.noOfRooms != "null") && (this.searchStore.noOfRooms != null)){
+                      var newArray = items.slice(i, (i + parseInt(this.searchStore.noOfRooms)));
+                      this.searchStore.uniqueRooms.push(...newArray);
                     } 
                 }
               }
-              this.props.updateStore({
-                filteredBlocks:  this.props.getStore().uniqueBlocks
-              });
+              this.searchStore.filteredBlocks = this.searchStore.uniqueBlocks;
           }
           else{
-            this.props.updateStore({
-              searchLoaded:  false
-            });
+            this.searchStore.searchLoaded = false;
           }
       }
 
@@ -369,6 +374,9 @@ export class BookRooms extends Component {
                     <SearchBox 
                           getSearchStore={() => (this.props.getStore())} 
                           updateSearchStore={(u) => {this.props.updateStore(u)}}
+
+                        // getSearchStore={() => (this.getSearchStore())}                        
+                        // updateSearchStore={(u) => {this.updateSearchStore(u)}} 
 
                         handleBlocksChanged={() => (this.handleBlocksChanged())}
                         handleSearch={() => (this.handleSearch())}>
@@ -390,6 +398,9 @@ export class BookRooms extends Component {
 
                       getSearchStore={() => (this.props.getStore())} 
                       updateSearchStore={(u) => {this.props.updateStore(u)}}
+
+                      // getSearchStore={() => (this.getSearchStore())} 
+                      // updateSearchStore={(u) => {this.updateSearchStore(u)}} 
 
                       handleBlocksChanged={() => (this.handleBlocksChanged())}                      
                       handleSearch={() => (this.handleSearch())}>
@@ -413,18 +424,22 @@ export class BookRooms extends Component {
                         getSearchStore={() => (this.props.getStore())} 
                         updateSearchStore={(u) => {this.props.updateStore(u)}}
 
+                      // getSearchStore={() => (this.getSearchStore())} 
+                      // updateSearchStore={(u) => {this.updateSearchStore(u)}} 
+
                       handleBlocksChanged={() => (this.handleBlocksChanged())}                      
                       handleSearch={() => (this.handleSearch())}>
                   </SearchBox>  
                       <div id="divSearchResults">
-  
-                       {this.props.getStore().uniqueBlocks.filter(bk => this.props.getStore().filteredBlocks.find( fB => fB == bk)).map(item => (  
+                       {/* {this.searchStore.uniqueBlocks.map(item => (   */}
+
+                       {this.searchStore.uniqueBlocks.filter(bk => this.searchStore.filteredBlocks.find( fB => fB == bk)).map(item => (  
 
                               <div className="divBlocks"> 
                                   <h4>{blocks[item]}</h4> 
                                   <span className="div-block-totals">Total <br/>Rs.<span id={blocks[item]}>0</span></span>
                                       <ul>
-                                        {this.props.getStore().uniqueRooms.filter(bk => bk.block_id == item).map(booking => (
+                                        {this.searchStore.uniqueRooms.filter(bk => bk.block_id == item).map(booking => (
                                           <li>
                                               <input type="checkbox" name={blocks[item]} className="chkAllRooms"
                                                     onClick={() => this.roomsChanged()}

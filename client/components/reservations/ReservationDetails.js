@@ -12,6 +12,8 @@ import {logError, checkError, getFormattedDate} from '../../utils/helpers';
 import {API_URL} from '../../config/config';
 import { RoomBookings } from '../subcomponents/RoomBookings';
 
+import Collapsible from 'react-collapsible';
+
 export class ReservationDetails extends Component {
   constructor(props) {
     super(props);
@@ -75,9 +77,9 @@ export class ReservationDetails extends Component {
   }
 
   fetchReservationDetailsIfExists(){
-      if(this.props.getStore().guestId != '')
+      if(this.props.getStore().reservationId != null)
       {
-        fetch(API_URL + "reservations/" + this.props.getStore().guestId)
+        fetch(API_URL + "reservations/" + this.props.getStore().reservationId)
             .then((response) => {
               return checkError(response);
             })
@@ -115,7 +117,7 @@ export class ReservationDetails extends Component {
         arrivalDate: aDate.format("YYYY-MM-DD"),
         departureDate: this.state.items[0].date_of_departure,
         noOfPpl: this.state.items[0].no_of_people,
-        comments: this.state.items[0].reservation_comments,
+        comments: (this.state.items[0].reservation_comments == null)? '': this.state.items[0].reservation_comments,
         reservationTypeId: this.state.items[0].reservation_type_id,
         reservationStatusId: this.state.items[0].reservation_status_id,
         sanskaraId: this.state.items[0].sanskara_id,
@@ -131,7 +133,7 @@ export class ReservationDetails extends Component {
         //arrivalDate: aDate,
         departureDate: this.state.items[0].date_of_departure,
         noOfPpl: this.state.items[0].no_of_people,
-        comments: this.state.items[0].reservation_comments,
+        comments: (this.state.items[0].reservation_comments == null)? '': this.state.items[0].reservation_comments,
         reservationTypeId: this.state.items[0].reservation_type_id,
         reservationStatusId: this.state.items[0].reservation_status_id,
         sanskaraId: this.state.items[0].sanskara_id,
@@ -140,14 +142,15 @@ export class ReservationDetails extends Component {
         //arrivalTime: aDate.format("HH:mm")
       });
 
+    
       this.refs.arrivalDate.innerHTML = aDate.format("YYYY-MM-DD");
       //this.refs.arrivalDate.value = aDate;
       this.refs.departureDate.innerHTML = this.state.items[0].date_of_departure;
       this.refs.noOfPpl.value = this.state.items[0].no_of_people;
-      this.refs.comments.value = this.state.items[0].reservation_comments;
+      this.refs.comments.value = (this.state.items[0].reservation_comments == null)? '': this.state.items[0].reservation_comments;
       this.refs.reservationTypeId.value = this.state.items[0].reservation_type_id;
       this.refs.arrivalTime.selected = aDate;
-      this.refs.advanceReminderOn.selected = (this.state.items[0].advance_reminder_on == "null")? '' : aReminder;
+      this.refs.advanceReminderOn.selected = (this.state.items[0].advance_reminder_on == null)? '' : aReminder;
       this.refs.sanskaraId.value = (this.state.items[0].sanskara_id == null)? 0 : this.state.items[0].sanskara_id;
       //this.refs.reservationStatus.innerHTML = this.state.items[0].reservation_status_id;  
       
@@ -180,7 +183,7 @@ export class ReservationDetails extends Component {
           this.props.getStore().noOfPpl != userInput.noOfPpl ||
           this.props.getStore().sanskaraId != userInput.sanskaraId ||
           this.props.getStore().advanceReminderOn != userInput.advanceReminderOn ||
-          this.props.getStore().comments != userInput.comments
+          this.props.getStore().comments.toString() != userInput.comments.toString()
         ) { 
             // only update store of something changed
           this.props.updateStore({
@@ -188,7 +191,7 @@ export class ReservationDetails extends Component {
             savedToCloud: false // use this to notify step4 that some changes took place and prompt the user to save again
           });  // Update store here (this is just an example, in reality you will do it via redux or flux)
 
-          if (this.state.reservationId != ''){
+          if (this.state.reservationId != null){
             this.updateReservationDetails();
           }
           else {
@@ -361,7 +364,7 @@ export class ReservationDetails extends Component {
 
   cancelReservation(){
 
-    if(this.state.reservationId != '')
+    if(this.state.reservationId != null)
     {      
       fetch(API_URL + "reservations/" + this.state.reservationId, {
         method: 'DELETE',
@@ -396,7 +399,7 @@ export class ReservationDetails extends Component {
 
   clearReservationDetails(){
     this.setState({
-      reservationId: '',
+      reservationId: null,
       arrivalTime:'',
       reservation_type_id:'',
       sanskaraId:'',
@@ -406,7 +409,7 @@ export class ReservationDetails extends Component {
     });   
     
     this.props.updateStore({
-      reservationId: '',
+      reservationId: null,
       arrivalTime:'',
       reservation_type_id:'',
       sanskaraId:'',
@@ -430,6 +433,17 @@ export class ReservationDetails extends Component {
   
 
   render() {
+    // redirect to Guest page - 
+   // 1) if search from Dashboard 2) if existing guest but has no active reservation
+    if((this.props.getStore().searchText != '') || 
+      (
+        (this.props.getStore().reservationId == null) && 
+        ((window.sessionStorage.getItem('strSelectedRooms') == null) 
+        || (window.sessionStorage.getItem('strSelectedRooms').toString().trim() == ''))
+      )
+    ){
+      this.props.jumpToStep(1);
+    }
 
     // explicit class assigning based on validation
     let notValidClasses = {};
@@ -613,8 +627,15 @@ export class ReservationDetails extends Component {
                     </div>
               </div>
              </div>
-             <RoomBookings getReservationStore={() => (this.getReservationStore())}>
+<br/>
+               <Collapsible trigger="Room Bookings">
+               <RoomBookings getReservationStore={() => (this.getReservationStore())}>
                </RoomBookings>
+               </Collapsible>
+               <Collapsible trigger="Advance Donations">
+               <RoomBookings getReservationStore={() => (this.getReservationStore())}>
+               </RoomBookings>
+               </Collapsible>
           </form>
         </div>
       </div>

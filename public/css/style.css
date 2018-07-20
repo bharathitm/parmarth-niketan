@@ -660,7 +660,6 @@ width:100%;
 
 .divFloatRight button{
   float:right;
-  margin:-1em -2.5em 0 0;
   background-color: grey;
 }
 
@@ -816,5 +815,42 @@ width:100%;
   vertical-align: middle;
 }
 
+.disabledDiv{
+  pointer-events: none;
+  opacity: 0.4;
+}
+
+/* Accordion CSS starts here */
+
+.Collapsible__contentInner {
+  padding: 10px;
+  border: 1px solid silver;
+  border-top: 0;
+}
 
 
+.Collapsible__trigger {
+  display: block;
+  font-weight: 400;
+  text-decoration: none;
+  color: grey;
+  position: relative;
+  border: 1px solid white;
+  padding: 10px;
+  background: #EA9064;
+  color: white;
+}
+.Collapsible__trigger:after {
+  content: "\2193";
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  display: block;
+  transition: transform 300ms;
+}
+
+.Collapsible__trigger.is-open:after {
+  transform: rotateZ(180deg);
+}
+
+/* Accordion CSS ends here */

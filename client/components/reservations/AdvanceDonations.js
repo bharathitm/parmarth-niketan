@@ -23,8 +23,12 @@ export class AdvanceDonations extends Component {
    this.fetchAdvanceDonationsIfExists();
   }
 
+  isValidated(){
+    this.props.redirectToDashboard();
+  }
+
   fetchAdvanceDonationsIfExists(){
-    if(this.props.getStore().reservationId != '')
+    if(this.props.getStore().reservationId != null)
     {
       fetch(API_URL + "advance/" + this.props.getStore().reservationId)
       .then((response) => {
@@ -101,6 +105,10 @@ deleteAdvanceDonation(donationId){
 
 
   render() {
+
+    if (this.props.getStore().reservationId == null){
+      this.props.jumpToStep(1);
+    }
 
     const { error, isLoaded, items } = this.state;
 

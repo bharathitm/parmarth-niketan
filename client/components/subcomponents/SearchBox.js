@@ -28,7 +28,20 @@ export class SearchBox extends Component {
 
     this._validateOnDemand = true; // this flag enables onBlur validation as user fills forms
 
-    this.validationCheck = this.validationCheck.bind(this);
+    //this.validationCheck = this.validationCheck.bind(this);
+    this.isValidated = this.isValidated.bind(this);
+
+    this.handleSearchBox = this.handleSearchBox.bind(this);
+  }
+
+  componentDidMount(){
+
+    if(this.props.getSearchStore().reservationId != null){
+      this.setState({
+        arrivalDate: moment(this.props.getSearchStore().arrivalDate),
+        departureDate: moment(this.props.getSearchStore().departureDate)
+      });
+    }    
   }
 
   handleArrivalDateChange(date) {
@@ -68,20 +81,22 @@ export class SearchBox extends Component {
   }
 
   
-  validationCheck() {
-    if (!this._validateOnDemand)
-      return;
+  // validationCheck() {
+  //   if (!this._validateOnDemand)
+  //     return;
 
-    const userInput = this._grabUserInput(); // grab user entered vals
-    const validateNewInput = this._validateData(userInput); // run the new input against the validator
+  //   const userInput = this._grabUserInput(); // grab user entered vals
+  //   const validateNewInput = this._validateData(userInput); // run the new input against the validator
 
-    this.setState(Object.assign(userInput, validateNewInput));
-  }
+  //   this.setState(Object.assign(userInput, validateNewInput));
+  // }
 
   _grabUserInput() {
     return {
-      arrivalDate: this.refs.arrivalDate.selected,
-      departureDate: this.refs.departureDate.selected
+      // arrivalDate: this.refs.arrivalDate.selected,
+      // departureDate: this.refs.departureDate.selected
+      arrivalDate: moment(document.getElementById("arrivalDate").value),
+      departureDate: moment(document.getElementById("departureDate").value)
     };
   }
 
@@ -129,10 +144,44 @@ export class SearchBox extends Component {
     return items;
   }
 
+
+  handleSearchBox(){
+    if (this.isValidated()){
+      this.props.handleSearch();
+    }
+  }
+
+  isValidated() {
+  
+    const userInput = this._grabUserInput(); // grab user entered vals
+    const validateNewInput = this._validateData(userInput); // run the new input against the validator
+    let isDataValid = false;
+
+    // if full validation passes then save to store and pass as valid
+    if (Object.keys(validateNewInput).every((k) => { return validateNewInput[k] === true })) {
+      isDataValid = true;
+    }
+    else {
+        this.setState(Object.assign(userInput, validateNewInput));
+    }
+
+    return isDataValid;
+  }
+
+
 render() {
 
-    // explicit class assigning based on validation
-    let notValidClasses = {};
+      // explicit class assigning based on validation
+      let notValidClasses = {};
+
+  if((this.props.getSearchStore().reservationId != null) && (document.getElementById("divArrivalDate") != null)){
+        document.getElementById("divArrivalDate").className = "disabledDiv";
+        document.getElementById("divDepartureDate").className = "disabledDiv";
+      }
+  else if((this.props.getSearchStore().reservationId == null) && (document.getElementById("divArrivalDate") != null)){
+    document.getElementById("divArrivalDate").className = notValidClasses.arrivalDateCls;
+    document.getElementById("divDepartureDate").className = notValidClasses.departureDateCls;
+  } 
 
     /* First Name */
     if (typeof this.state.arrivalDateVal == 'undefined' || this.state.arrivalDateVal) {
@@ -159,12 +208,12 @@ render() {
             <label className="control-label col-md-4">
                 Check In Date:*
             </label>
-                    <div className="col-md-8">
-                            <DatePicker ref="arrivalDate"
+                    <div id="divArrivalDate" className="col-md-8">
+                            <DatePicker ref="arrivalDate" id="arrivalDate"
                                 dateFormat="YYYY-MM-DD"
                                 selected={this.state.arrivalDate}
-                                onBlur={this.validationCheck}
                                 onChange={this.handleArrivalDateChange} 
+                                 //onBlur={this.validationCheck}                         
                                 className={notValidClasses.arrivalDateCls}/>
                     </div>
         </div>
@@ -174,12 +223,12 @@ render() {
             <label className="control-label col-md-4">
               Check Out Date:*
             </label>
-            <div className="col-md-8">
-                  <DatePicker ref="departureDate"
+            <div id="divDepartureDate" className="col-md-8">
+                  <DatePicker ref="departureDate" id="departureDate"
                 dateFormat="YYYY-MM-DD"
                 selected={this.state.departureDate}
-                onBlur={this.validationCheck}
                 onChange={this.handleDepartureDateChange} 
+                 //onBlur={this.validationCheck} 
                 className={notValidClasses.departureDateCls}/>
               </div>
       </div>
@@ -202,13 +251,13 @@ render() {
                                 autoComplete="off"
                                 className="form-control"
                                 onChange={() => this.handleRoomTypeChange()}>
-                               /* required  removing required from here results in clearing arrival / departure dates */
+                                required /* removing required from here results in clearing arrival / departure dates */
                                 {this.populateRoomTypes()}                   
                               </select>         
               </div>
           </div>
           <div className="form-group col-md-12 content form-block-holder">
-          <button type="button" className="btnBig"  onClick={() => this.props.handleSearch()}>Search</button>
+          <button type="button" className="btnBig"  onClick={() => this.handleSearchBox()}>Search</button>
           </div>
 <br/>
            <div id="divFilter"  style={{ visibility:this.props.getSearchStore().searchLoaded? 'visible':'hidden', display: this.props.getSearchStore().searchLoaded? 'inline':'none' }}>

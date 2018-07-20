@@ -68,7 +68,10 @@ export class GuestContacts extends Component {
         eFirstName: this.state.items[0].e_first_name,
         eLastName: this.state.items[0].e_last_name,
         ePhone: this.state.items[0].e_phone_no,
-        eRelationship: this.state.items[0].e_relationship
+        eRelationship: this.state.items[0].e_relationship,
+        reservationId: this.state.items[0].reservation_id,
+        arrivalDate: this.state.items[0].date_of_arrival,
+        departureDate: this.state.items[0].date_of_departure
       });
 
       this.setState({
@@ -488,6 +491,7 @@ if (validateNewInput.phoneVal){
 
 
   render() {
+    //if searched from Dashboard
     if(this.props.getStore().searchText != ''){
       this.searchReservation(this.props.getStore().searchText);
 
@@ -499,10 +503,22 @@ if (validateNewInput.phoneVal){
     if (this.props.getStore().firstName == ''){
       this.preLoadIfNeeded('');
     }
-    else{
-      var wizardOl = document.getElementsByClassName("progtrckr");
-      wizardOl[0].style.pointerEvents = "auto";
-      document.getElementById("next-button").style.visibility = "visible";
+    else 
+    if (this.props.getStore().firstName != ''){
+        var wizardOl = document.getElementsByClassName("progtrckr");
+
+        // //if no reservation details in session, dont show next button
+        // if(this.props.getStore().reservationId == null){
+        //   if (typeof wizardOl[0] != 'undefined'){
+        //     //wizardOl[0].style.pointerEvents = "auto";
+        //     document.getElementById("next-button").style.visibility = "hidden";
+        //   }
+        // } // reverse whatever is done above
+        // else 
+        if (this.props.getStore().reservationId != null){
+            wizardOl[0].style.pointerEvents = "auto";
+            document.getElementById("next-button").style.visibility = "visible";
+        }
     }
 
     // explicit class assigning based on validation
