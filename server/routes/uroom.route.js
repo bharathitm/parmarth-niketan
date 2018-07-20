@@ -1,8 +1,7 @@
 import express from 'express';
 import * as uroomsCtrl from '../controllers/uroom.controller';
 import isAuthenticated from '../middlewares/authenticate';
-import validate from '../config/joi.validate';
-import schema from '../utils/validator';
+
 
 const router = express.Router();
 

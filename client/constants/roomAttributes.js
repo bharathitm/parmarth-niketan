@@ -28,3 +28,11 @@ export const blocks = {
     5: 'Yoga Course',
     6: 'Katha'
   };
+
+  export const sanskaras = {
+    1: 'Mundan',
+    2: 'Yagno Pavit',
+    3: 'Marriage',
+    4: 'Ash Immersion',
+    5: 'Special Pooja'
+  };

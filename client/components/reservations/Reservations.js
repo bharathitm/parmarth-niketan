@@ -76,7 +76,7 @@ export class Reservations extends React.Component {
     componentDidMount(){
       //hide Empty component
       var pageLis = document.getElementsByTagName("li");
-      pageLis[4].style.visibility = "hidden";
+      pageLis[3].style.visibility = "hidden";
     }
 
     redirectToDashboard() {
@@ -158,8 +158,8 @@ export class Reservations extends React.Component {
         [
             {name: 'Book Rooms', component: <BookRooms getStore={() => (this.getStore())} getName={() => (this.getName())} updateStore={(u) => {this.updateStore(u)}}/>},
             {name: 'Guest', component: <GuestContacts getStore={() => (this.getStore())} loadName={(u) => {this.loadName(u)}} updateStore={(u) => {this.updateStore(u)}}/>},
-            {name: 'Reservation', component: <ReservationDetails getStore={() => (this.getStore())} updateStore={(u) => {this.updateStore(u)}}/>},
-            {name: 'Advance Donation', component: <AdvanceDonations getStore={() => (this.getStore())} redirectToDashboard={() => (this.redirectToDashboard())} updateStore={(u) => {this.updateStore(u)}}/>},
+            {name: 'Reservation', component: <ReservationDetails getStore={() => (this.getStore())} redirectToDashboard={() => (this.redirectToDashboard())} updateStore={(u) => {this.updateStore(u)}}/>},
+            // {name: 'Advance Donation', component: <AdvanceDonations getStore={() => (this.getStore())} redirectToDashboard={() => (this.redirectToDashboard())} updateStore={(u) => {this.updateStore(u)}}/>},
             {name: 'Empty', component: <Empty/>}
         ]
 

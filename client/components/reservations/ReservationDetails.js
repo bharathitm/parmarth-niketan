@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 
-import reservationTypes from '../../constants/reservationTypes';
-import sanskaras from '../../constants/sanskaras';
+import {reservationTypes, sanskaras} from '../../constants/roomAttributes';
 
 import { confirmAlert } from 'react-confirm-alert'; 
 
@@ -13,6 +12,7 @@ import {API_URL} from '../../config/config';
 import { RoomBookings } from '../subcomponents/RoomBookings';
 
 import Collapsible from 'react-collapsible';
+import { AdvanceDonations } from './AdvanceDonations';
 
 export class ReservationDetails extends Component {
   constructor(props) {
@@ -33,7 +33,8 @@ export class ReservationDetails extends Component {
     };
 
     this.reservationStore = {
-      guestId: props.getStore().guestId
+      guestId: props.getStore().guestId,
+      reservationId: props.getStore().reservationId
     };
     
 
@@ -204,6 +205,10 @@ export class ReservationDetails extends Component {
         // if anything fails then update the UI validation state but NOT the UI Data State
         this.setState(Object.assign(userInput, validateNewInput));
     }  
+
+    if (isDataValid){
+      this.props.redirectToDashboard();
+    }
 
     return isDataValid;
   }
@@ -430,7 +435,10 @@ export class ReservationDetails extends Component {
     return this.reservationStore;
   }
 
-  
+  redirectToDashboardPage() {
+    this.props.redirectToDashboard();
+  }
+
 
   render() {
     // redirect to Guest page - 
@@ -633,9 +641,10 @@ export class ReservationDetails extends Component {
                </RoomBookings>
                </Collapsible>
                <Collapsible trigger="Advance Donations">
-               <RoomBookings getReservationStore={() => (this.getReservationStore())}>
-               </RoomBookings>
+               <AdvanceDonations getReservationStore={() => (this.getReservationStore())}>
+               </AdvanceDonations>
                </Collapsible>
+               <br/>
           </form>
         </div>
       </div>

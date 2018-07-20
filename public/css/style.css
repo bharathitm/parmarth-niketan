@@ -683,6 +683,11 @@ width:100%;
   padding:0 0 0 1em;
 }
 
+
+.advance-table .div-table-col .form-block-holder {
+  margin-top: 5px !important;
+}
+
 .checkout-table .div-table-col{
   white-space:nowrap;
   width:21%;
@@ -839,6 +844,7 @@ width:100%;
   padding: 10px;
   background: #EA9064;
   color: white;
+  z-index:10;
 }
 .Collapsible__trigger:after {
   content: "\2193";
@@ -846,11 +852,13 @@ width:100%;
   right: 10px;
   top: 10px;
   display: block;
+  z-index:10;
   transition: transform 300ms;
 }
 
 .Collapsible__trigger.is-open:after {
   transform: rotateZ(180deg);
+  z-index:10;
 }
 
 /* Accordion CSS ends here */

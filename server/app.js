@@ -1,9 +1,6 @@
 import path from 'path';
 import app from './config/express';
 import routes from './routes/index.route';
-import * as errorHandler from './middlewares/errorHandler';
-import joiErrorHandler from './middlewares/joiErrorHandler';
-
 
 // enable webpack hot module replacement in development mode
 import webpack from 'webpack';
@@ -44,6 +41,7 @@ app.use(cookieSession({
     maxAge: 24 * 60 * 60 * 1000
 }));
 app.use(cookieParser());
+
 
 // Router
 app.use('/api', routes);
@@ -90,17 +88,6 @@ app.get('/logout', (req, res) => {
     req.session = null;
     res.redirect('/');
 });
-
-
-
-// // Joi Error Handler
-// app.use(joiErrorHandler);
-
-// // Error Handler
-// app.use(errorHandler.notFoundErrorHandler);
-// app.use(errorHandler.errorHandler);
-
-
 
 app.listen(app.get('port'), app.get('host'), () => {
     console.log(`Server running at http://${app.get('host')}:${app.get('port')}`);
