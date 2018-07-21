@@ -6,7 +6,7 @@ import {logError, checkError} from '../../utils/helpers';
 import {API_URL} from '../../config/config';
 
 
-export class GuestContacts extends Component {
+export class Guests extends Component {
   constructor(props) {
     super(props);
 
@@ -500,10 +500,6 @@ if (validateNewInput.phoneVal){
       });
     }
 
-    if (this.props.getStore().firstName == ''){
-      this.preLoadIfNeeded('');
-    }
-    else 
     if (this.props.getStore().firstName != ''){
         var wizardOl = document.getElementsByClassName("progtrckr");
 
@@ -909,4 +905,4 @@ if (validateNewInput.phoneVal){
   }
 }
 
-export default GuestContacts;
+export default Guests;

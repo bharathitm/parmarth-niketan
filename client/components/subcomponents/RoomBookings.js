@@ -2,8 +2,7 @@ import React, { Component } from 'react';
 
 import DatePicker from 'react-datepicker';
 import moment from 'moment';
-import blocks from '../../constants/blocks';
-import floors from '../../constants/floors';
+import {blocks, floors} from '../../constants/roomAttributes';
 
 import {logError, checkError, getFormattedDate} from '../../utils/helpers';
 import {API_URL} from '../../config/config';
@@ -255,7 +254,7 @@ export class RoomBookings extends Component {
                                   {getFormattedDate(item.date_of_arrival)}                             
                               </div>
                               <div className ="dates div-table-col col-bordered">
-                              <DatePicker id={item.room_booking_id.toString()} refs={item.room_booking_id}
+                              <DatePicker id={item.room_booking_id.toString()} ref={item.room_booking_id}
                                   dateFormat="YYYY-MM-DD"
                                   selected={moment(item.date_of_departure)} 
                                   onChange={() => this.handleDateChange(this, item.room_booking_id, item.date_of_departure, item.next_arrival_date)}                            

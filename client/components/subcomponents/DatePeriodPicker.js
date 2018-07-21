@@ -13,7 +13,6 @@ export class DatePickerInput extends Component {
         endDate: moment()
       }; 
       
-
       this.handleStartDateChange = this.handleStartDateChange.bind(this);
       this.handleEndDateChange = this.handleEndDateChange.bind(this);
 

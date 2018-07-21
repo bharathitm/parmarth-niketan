@@ -1,6 +1,6 @@
 import React from 'react';
 
-import blocks from '../../constants/blocks';
+import {blocks} from '../../constants/roomAttributes';
 
 import {logError, checkError} from '../../utils/helpers';
 import {API_URL} from '../../config/config';

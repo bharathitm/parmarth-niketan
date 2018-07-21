@@ -23,8 +23,7 @@ export class AdvanceDonations extends Component {
 
     //this.handleDelete = this.handleDelete.bind(this);
 
-    this._validateOnDemand = true; // this flag enables onBlur validation as user fills forms
-
+    this._validateOnDemand = true; 
     this.validationCheck = this.validationCheck.bind(this);
 
     this.handleDateChange = this.handleDateChange.bind(this);
@@ -188,14 +187,15 @@ insertAdvanceDonationDetails(){
       return checkError(response);
   })
   .then((result) => {   
-          this.setState({
-          isLoaded: true
-          });
+      this.setState({
+        isLoaded: true
+      });
+      this.fetchAdvanceDonationsIfExists();
   })
   .catch((error) => {
       this.setState({
-      isLoaded: false,
-      error
+        isLoaded: false,
+        error
       });
       logError(error);
   });
@@ -280,11 +280,11 @@ insertAdvanceDonationDetails(){
                                           <div className="form-group col-md-12 content form-block-holder">
                                                 <div className="col-md-8">
                                                 <DatePicker ref="date"
-                                                    dateFormat="YYYY-MM-DD"
+                                                    dateFormat="YYYY-MM-DD"                                                    
                                                     selected={this.state.advanceReceivedOn}                             
                                                     onChange={this.handleDateChange} 
                                                     onBlur={this.validationCheck}
-                                                    className={notValidClasses.advanceReceivedOnCls}/>
+                                                    className={notValidClasses.advanceReceivedOnCls} />
                                                 
                                                   </div>
                                             </div>

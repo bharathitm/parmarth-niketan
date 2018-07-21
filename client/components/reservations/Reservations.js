@@ -4,11 +4,10 @@ import StepZilla from 'react-stepzilla';
 
 import ErrorBoundary from '../ErrorBoundary'
 
-import { GuestContacts } from './GuestContacts';
-import { ReservationDetails } from './ReservationDetails';
-import { AdvanceDonations } from './AdvanceDonations';
-import { Empty } from './Empty';
 import { BookRooms } from './BookRooms';
+import { Guests } from './Guests';
+import { ReservationDetails } from './ReservationDetails';
+import { Empty } from './Empty';
 
 export class Reservations extends React.Component {
 
@@ -88,6 +87,8 @@ export class Reservations extends React.Component {
 
     clearGuestSession(){
 
+      alert("in guest session");
+
       var wizardOl = document.getElementsByClassName("progtrckr");
       wizardOl[0].firstChild.className = "progtrckr-doing";
       wizardOl[0].firstChild.click();
@@ -157,9 +158,8 @@ export class Reservations extends React.Component {
         const steps =
         [
             {name: 'Book Rooms', component: <BookRooms getStore={() => (this.getStore())} getName={() => (this.getName())} updateStore={(u) => {this.updateStore(u)}}/>},
-            {name: 'Guest', component: <GuestContacts getStore={() => (this.getStore())} loadName={(u) => {this.loadName(u)}} updateStore={(u) => {this.updateStore(u)}}/>},
+            {name: 'Guest', component: <Guests getStore={() => (this.getStore())} loadName={(u) => {this.loadName(u)}} updateStore={(u) => {this.updateStore(u)}}/>},
             {name: 'Reservation', component: <ReservationDetails getStore={() => (this.getStore())} redirectToDashboard={() => (this.redirectToDashboard())} updateStore={(u) => {this.updateStore(u)}}/>},
-            // {name: 'Advance Donation', component: <AdvanceDonations getStore={() => (this.getStore())} redirectToDashboard={() => (this.redirectToDashboard())} updateStore={(u) => {this.updateStore(u)}}/>},
             {name: 'Empty', component: <Empty/>}
         ]
 

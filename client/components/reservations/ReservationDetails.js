@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, {Component } from 'react';
 
 import {reservationTypes, sanskaras} from '../../constants/roomAttributes';
 
@@ -23,7 +23,7 @@ export class ReservationDetails extends Component {
       error: null,
       arrivalDate: props.getStore().arrivalDate,
       departureDate: props.getStore().departureDate,
-      arrivalTime: moment(),
+      arrivalTime: '',
       reservationTypeId: props.getStore().reservationTypeId,
       sanskaraId: props.getStore().sanskaraId,
       noOfPpl: props.getStore().noOfPpl,
@@ -46,6 +46,8 @@ export class ReservationDetails extends Component {
 
     this.validationCheck = this.validationCheck.bind(this);
     this.isValidated = this.isValidated.bind(this);
+
+    this.changeCollapsibleOverflow = this.changeCollapsibleOverflow.bind(this);
   }
 
   populateReservationTypes() {
@@ -105,40 +107,43 @@ export class ReservationDetails extends Component {
 
 
   loadReservationDetails(){
-    if (this.state.items.length != 0)
+
+    let items = this.state.items;
+
+    if (items.length != 0)
     {
       //this has to be validated again and fixed. works in get now but not sure about insert/update
-      var aDate = moment(this.state.items[0].date_of_arrival);
-      var aReminder = moment(this.state.items[0].advance_reminder_on);
+      var aDate = moment(items[0].date_of_arrival);
+      var aReminder = moment(items[0].advance_reminder_on);
 
       this.props.updateStore({
-        reservationId: this.state.items[0].reservation_id,
+        reservationId: items[0].reservation_id,
         //arrivalDate: aDate.format("YYYY-MM-DD"),
         //arrivalDate: aDate,
         arrivalDate: aDate.format("YYYY-MM-DD"),
-        departureDate: this.state.items[0].date_of_departure,
-        noOfPpl: this.state.items[0].no_of_people,
-        comments: (this.state.items[0].reservation_comments == null)? '': this.state.items[0].reservation_comments,
-        reservationTypeId: this.state.items[0].reservation_type_id,
-        reservationStatusId: this.state.items[0].reservation_status_id,
-        sanskaraId: this.state.items[0].sanskara_id,
-        advanceReminderOn: (this.state.items[0].advance_reminder_on == null)? '' : aReminder,
+        departureDate: items[0].date_of_departure,
+        noOfPpl: items[0].no_of_people,
+        comments: (items[0].reservation_comments == null)? '': items[0].reservation_comments,
+        reservationTypeId: items[0].reservation_type_id,
+        reservationStatusId: items[0].reservation_status_id,
+        sanskaraId: items[0].sanskara_id,
+        advanceReminderOn: (items[0].advance_reminder_on == null)? '' : aReminder,
         arrivalTime: aDate
-        //arrivalTime: this.state.items[0].date_of_arrival
+        //arrivalTime: items[0].date_of_arrival
       });
 
       this.setState({
-        reservationId: this.state.items[0].reservation_id,
+        reservationId: items[0].reservation_id,
         //arrivalDate: aDate.format("YYYY-MM-DD"),
         arrivalDate: aDate.format("YYYY-MM-DD"),
         //arrivalDate: aDate,
-        departureDate: this.state.items[0].date_of_departure,
-        noOfPpl: this.state.items[0].no_of_people,
-        comments: (this.state.items[0].reservation_comments == null)? '': this.state.items[0].reservation_comments,
-        reservationTypeId: this.state.items[0].reservation_type_id,
-        reservationStatusId: this.state.items[0].reservation_status_id,
-        sanskaraId: this.state.items[0].sanskara_id,
-        advanceReminderOn: (this.state.items[0].advance_reminder_on == null)? '' : aReminder,
+        departureDate: items[0].date_of_departure,
+        noOfPpl: items[0].no_of_people,
+        comments: (items[0].reservation_comments == null)? '': items[0].reservation_comments,
+        reservationTypeId: items[0].reservation_type_id,
+        reservationStatusId: items[0].reservation_status_id,
+        sanskaraId: items[0].sanskara_id,
+        advanceReminderOn: (items[0].advance_reminder_on == null)? '' : aReminder,
         arrivalTime: aDate
         //arrivalTime: aDate.format("HH:mm")
       });
@@ -146,14 +151,14 @@ export class ReservationDetails extends Component {
     
       this.refs.arrivalDate.innerHTML = aDate.format("YYYY-MM-DD");
       //this.refs.arrivalDate.value = aDate;
-      this.refs.departureDate.innerHTML = this.state.items[0].date_of_departure;
-      this.refs.noOfPpl.value = this.state.items[0].no_of_people;
-      this.refs.comments.value = (this.state.items[0].reservation_comments == null)? '': this.state.items[0].reservation_comments;
-      this.refs.reservationTypeId.value = this.state.items[0].reservation_type_id;
+      this.refs.departureDate.innerHTML = items[0].date_of_departure;
+      this.refs.noOfPpl.value = items[0].no_of_people;
+      this.refs.comments.value = (items[0].reservation_comments == null)? '': items[0].reservation_comments;
+      this.refs.reservationTypeId.value = items[0].reservation_type_id;
       this.refs.arrivalTime.selected = aDate;
-      this.refs.advanceReminderOn.selected = (this.state.items[0].advance_reminder_on == null)? '' : aReminder;
-      this.refs.sanskaraId.value = (this.state.items[0].sanskara_id == null)? 0 : this.state.items[0].sanskara_id;
-      //this.refs.reservationStatus.innerHTML = this.state.items[0].reservation_status_id;  
+      this.refs.advanceReminderOn.selected = (items[0].advance_reminder_on == null)? '' : aReminder;
+      this.refs.sanskaraId.value = (items[0].sanskara_id == null)? 0 : items[0].sanskara_id;
+      //this.refs.reservationStatus.innerHTML = items[0].reservation_status_id;  
       
       //show Sanskara Drop down only if load returns a SanskaraId
       if (this.refs.sanskaraId.value != 0){//Sanskara
@@ -226,7 +231,7 @@ export class ReservationDetails extends Component {
       reservation_type_id: this.state.reservationTypeId,
       sanskara_id: (this.state.sanskaraId == null)? 0 : this.state.sanskaraId,
       is_a_reference: '0',
-      advance_reminder_on: (this.state.advanceReminderOn == '')? '' : getFormattedDate(this.state.advanceReminderOn).toString(),
+      advance_reminder_on: ((this.state.advanceReminderOn == '') || (this.state.advanceReminderOn == null))? '' : getFormattedDate(this.state.advanceReminderOn).toString(),
       room_ids_str: window.sessionStorage.getItem('strSelectedRooms').toString()
     };
 
@@ -324,7 +329,7 @@ export class ReservationDetails extends Component {
    _validateData(data) {
     return  {
       //arrivalTimeVal: (data.arrivalTime != ''),
-      arrivalTimeVal: (data.arrivalTime == null || data.arrivalTime == undefined)? false: true,
+      arrivalTimeVal: (data.arrivalTime == null || data.arrivalTime == '')? false: true,
       reservationTypeVal: (data.reservationTypeId != 0), // required: anything besides N/A
       noOfPplVal: (data.noOfPpl != ''),
       commentsVal: (true),
@@ -439,6 +444,14 @@ export class ReservationDetails extends Component {
     this.props.redirectToDashboard();
   }
 
+  changeCollapsibleOverflow(trigger){
+    var content = document.getElementsByClassName("Collapsible__contentOuter");
+    if (trigger){
+      content[1].style.overflow = "visible";
+    } else {
+      content[1].style.overflow = "hidden";
+    }
+  }
 
   render() {
     // redirect to Guest page - 
@@ -522,14 +535,14 @@ export class ReservationDetails extends Component {
                                     <div className="col-md-8">
                                           <DatePicker
                                               ref="arrivalTime"
-                                              selected={moment(this.state.arrivalTime)}
+                                              selected={this.state.arrivalTime}
                                               onChange={this.handleArrivalTimeChange}
                                               onBlur={this.validationCheck}
-                                              showTimeSelect
-                                              showTimeSelectOnly
-                                              timeIntervals={60}
-                                              dateFormat="LT"
-                                              timeCaption="Time"
+                                               showTimeSelect
+                                               showTimeSelectOnly
+                                               timeIntervals={60}
+                                               dateFormat="LT"
+                                               timeCaption="Time"
                                               className={notValidClasses.arrivalTimeCls}
                                             />
                                     </div>
@@ -640,7 +653,7 @@ export class ReservationDetails extends Component {
                <RoomBookings getReservationStore={() => (this.getReservationStore())}>
                </RoomBookings>
                </Collapsible>
-               <Collapsible trigger="Advance Donations">
+               <Collapsible trigger="Advance Donations" onOpen={() => this.changeCollapsibleOverflow(true)} onClose={() => this.changeCollapsibleOverflow(false)}>
                <AdvanceDonations getReservationStore={() => (this.getReservationStore())}>
                </AdvanceDonations>
                </Collapsible>

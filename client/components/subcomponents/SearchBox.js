@@ -3,8 +3,7 @@ import React, { Component } from 'react';
 import DatePicker from 'react-datepicker';
 import moment from 'moment';
 
-import roomTypes from '../../constants/roomTypes';
-import blocks from '../../constants/blocks';
+import { blocks, roomTypes} from '../../constants/roomAttributes';
 
 export class SearchBox extends Component {
   constructor(props) {

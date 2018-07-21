@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
-import blocks from '../../constants/blocks';
-import floors from '../../constants/floors';
+import React, {Component } from 'react';
+import {blocks, floors } from '../../constants/roomAttributes';
+
 import { confirmAlert } from 'react-confirm-alert'; 
 
 import moment from 'moment';
@@ -69,13 +69,13 @@ export class BookRooms extends Component {
     document.getElementsByClassName("div-book-room-search")[0].style.cssFloat = "left";
     document.getElementById("divSearchResults").style.cssFloat = "none";
 
-    if (this.props.getStore().arrivalDate == ''){
+    if ((this.props.getStore().arrivalDate == '') || (this.props.getStore().arrivalDate == null)){
       this.props.updateStore({
         arrivalDate: moment()
       });
     }
 
-    if (this.props.getStore().departureDate == ''){
+    if ((this.props.getStore().departureDate == '') || (this.props.getStore().departureDate == null)){
       this.props.updateStore({
         departureDate: moment()
       });
