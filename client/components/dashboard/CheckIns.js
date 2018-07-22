@@ -5,6 +5,8 @@ import {blocks, floors, reservationTypes} from '../../constants/roomAttributes';
 import {logError, checkError, createReservationsString, createRoomsString} from '../../utils/helpers';
 import {API_URL} from '../../config/config';
 
+import {notify} from 'react-notify-toast';
+
 export class CheckIns extends React.Component {
 
     constructor(props) {
@@ -104,8 +106,13 @@ export class CheckIns extends React.Component {
               isLoaded: false,
               error
             });
+            notify.show('Oops! Something went wrong! Please try again!', 'error');
             logError(error);
           });
+
+          if (!this.state.error){
+            notify.show('Room(s) checked in successfully!', 'success');
+          }
 
         this.updateCheckInState(selectedReservations, selectedRooms);
       }

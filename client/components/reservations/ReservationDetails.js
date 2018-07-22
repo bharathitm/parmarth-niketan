@@ -13,6 +13,7 @@ import { RoomBookings } from '../subcomponents/RoomBookings';
 
 import Collapsible from 'react-collapsible';
 import { AdvanceDonations } from './AdvanceDonations';
+import {notify} from 'react-notify-toast';
 
 export class ReservationDetails extends Component {
   constructor(props) {
@@ -100,6 +101,7 @@ export class ReservationDetails extends Component {
                   isLoaded: false,
                   error
                 });
+                notify.show('Oops! Something went wrong! Please try again!', 'error');
                 logError(this.constructor.name + " " + error);
               });
         }
@@ -261,8 +263,13 @@ export class ReservationDetails extends Component {
         isLoaded: false,
         error
       });
+      notify.show('Oops! Something went wrong! Please try again!', 'error');
       logError(error);
     });
+
+    if (this.state.isLoaded){
+      notify.show('New reservation added successfully!', 'success');
+    }
 
   }
 
@@ -311,8 +318,13 @@ export class ReservationDetails extends Component {
         isLoaded: false,
         error
       });
+      notify.show('Oops! Something went wrong! Please try again!', 'error');
       logError(error);
     });
+
+    if (this.state.isLoaded){
+      notify.show('Reservation details updated successfully!', 'success');
+    }
   }
 
   validationCheck() {
@@ -335,8 +347,6 @@ export class ReservationDetails extends Component {
       commentsVal: (true),
       advanceReminderOnVal: (true),  
       sanskaraVal: (data.reservationTypeId == 3 && data.sanskaraId == 0)? false : true
-
-      
     }
   }
 
@@ -392,9 +402,13 @@ export class ReservationDetails extends Component {
             isLoaded: false,
             error
           });
+          notify.show('Oops! Something went wrong! Please try again!', 'error');
           logError(error);
         });
         this.clearReservationDetails();
+        if (this.state.isLoaded){
+          notify.show('Reservation cancelled successfully!', 'success');
+        }
       }
   }
 
@@ -417,23 +431,9 @@ export class ReservationDetails extends Component {
       advanceReminderOn:'',
       comments:''
     });   
-    
-    this.props.updateStore({
-      reservationId: null,
-      arrivalTime:'',
-      reservation_type_id:'',
-      sanskaraId:'',
-      noOfPpl:'',
-      advanceReminderOn:'',
-      comments:''
-    }); 
 
-    this.refs.arrivalTime.selected = '',
-    this.refs.noOfPpl.value = '',
-    this.refs.comments.value = '',
-    this.refs.reservationTypeId.value = '',
-    this.refs.sanskaraId.value = '',
-    this.refs.advanceReminderOn.selected = ''
+    this.props.redirectToDashboard();
+
   }
 
   getReservationStore() {
@@ -648,11 +648,12 @@ export class ReservationDetails extends Component {
                     </div>
               </div>
              </div>
-<br/>
+              <br/>
                <Collapsible trigger="Room Bookings">
                <RoomBookings getReservationStore={() => (this.getReservationStore())}>
                </RoomBookings>
                </Collapsible>
+               <br/>
                <Collapsible trigger="Advance Donations" onOpen={() => this.changeCollapsibleOverflow(true)} onClose={() => this.changeCollapsibleOverflow(false)}>
                <AdvanceDonations getReservationStore={() => (this.getReservationStore())}>
                </AdvanceDonations>

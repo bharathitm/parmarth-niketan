@@ -1,23 +1,23 @@
 export const blocks = {
-    1: 'Ganga',
-    2: 'Ganga Basement',
-    3: 'Ganga Base Common',
+    1: 'Alaknanda',
+    2: 'Alaknanda Extn',
+    3: 'Ganga Base',
     4: 'Ganga Dharshan',
-    5: 'Yamuna Block',
-    6: 'Yamuna Block Ext',
-    7: 'Alaknanda Block',
-    8: 'Alaknanda Block Ext',
-    9: 'Gomti Block',
-    10: 'Yoga Flats',
-    11: 'Yoga Village',
-    12: 'Saraswati',
-    13: 'Behind Opposite / Yamuna'
+    5: 'Ganga HD',
+    6: 'Gomti',
+    7: 'Saraswati',
+    8: 'Yamuna',
+    9: 'Yamuna Ext',
+    10: 'Behind Opposite / Yamuna',
+    11: 'Yoga Flats',
+    12: 'Yoga Village'
   };
 
   export const floors = {
     0: 'GF',
     1: 'FF',
-    2: 'SF'
+    2: 'SF',
+    3: 'TF'
   };
 
   export const reservationTypes = {

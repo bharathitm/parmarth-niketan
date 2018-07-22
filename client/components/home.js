@@ -9,6 +9,8 @@ import { Dashboard } from './dashboard/Dashboard';
 import { Reservations } from './reservations/Reservations';
 import Reports from './reports/Reports';
 
+import Notifications from 'react-notify-toast';
+
 
 export class Home extends React.Component {
 
@@ -64,6 +66,7 @@ export class Home extends React.Component {
             return(
                   <div>
                         <ErrorBoundary>
+                              <Notifications />
                              
                               {/* <div style={{ visibility: this.state.validUser? 'hidden':'visible', display: this.state.validUser? 'none':'inline' }}>
                               <Login  parentMethod={this.redirectOnSuccessfulLogin} getHomeStore={() => (this.getHomeStore())} updateHomeStore={(u) => {this.updateHomeStore(u)}} />

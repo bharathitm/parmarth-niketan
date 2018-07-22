@@ -4,6 +4,7 @@ import countries from '../../constants/countries';
 
 import {logError, checkError} from '../../utils/helpers';
 import {API_URL} from '../../config/config';
+import {notify} from 'react-notify-toast';
 
 
 export class Guests extends Component {
@@ -36,7 +37,7 @@ export class Guests extends Component {
   }
 
   componentDidMount() {
-    document.getElementById("spNoDataorError").style.visibility="hidden";
+    //document.getElementById("spNoDataorError").style.visibility="hidden";
   }
 
   populateCountries() {
@@ -113,7 +114,9 @@ export class Guests extends Component {
     }
     else{
 
-      document.getElementById("spNoDataorError").style.visibility="visible";
+      notify.show('No Guest Details found!', 'error');
+
+      //document.getElementById("spNoDataorError").style.visibility="visible";
 
       var reservationSearch = String(this.refs.reservationSearch.value);
       this.preLoadIfNeeded(reservationSearch);
@@ -170,6 +173,7 @@ export class Guests extends Component {
           isLoaded: false,
           error
         });
+        notify.show('Oops! Something went wrong! Please try again!', 'error');
         logError(this.constructor.name + " " + error);
       });
   }
@@ -200,6 +204,7 @@ export class Guests extends Component {
                 isLoaded: false,
                 error
               });
+              notify.show('Oops! Something went wrong! Please try again!', 'error');
               logError(this.constructor.name + " " + error);
             });
     }
@@ -241,6 +246,7 @@ if (validateNewInput.phoneVal){
               isLoaded: false,
               error
             });
+            notify.show('Oops! Something went wrong! Please try again!', 'error');
             logError(this.constructor.name + " " + error);
           });
  }
@@ -322,7 +328,7 @@ if (validateNewInput.phoneVal){
     if (!this._validateOnDemand)
       return;
 
-    document.getElementById("spNoDataorError").style.visibility="hidden";
+    //document.getElementById("spNoDataorError").style.visibility="hidden";
 
     const userInput = this._grabUserInput(); // grab user entered vals
     const validateNewInput = this._validateData(userInput); // run the new input against the validator
@@ -412,8 +418,13 @@ if (validateNewInput.phoneVal){
         isLoaded: false,
         error
       });
+      notify.show('Oops! Something went wrong! Please try again!', 'error');
       logError(error);
     });
+
+    if (this.state.isLoaded){
+      notify.show('Guest details added successfully!', 'success');
+    }
   }
 
   updateGuestData(){
@@ -454,8 +465,13 @@ if (validateNewInput.phoneVal){
         isLoaded: false,
         error
       });
+      notify.show('Oops! Something went wrong! Please try again!', 'error');
       logError(error);
     });
+
+    if (this.state.isLoaded){
+      notify.show('Guest details updated successfully!', 'success');
+    }
   }
 
   updateEmergencyContactData(){
@@ -485,8 +501,13 @@ if (validateNewInput.phoneVal){
         isLoaded: false,
         error
       });
+      notify.show('Oops! Something went wrong! Please try again!', 'error');
       logError(error);
     });
+
+    if (this.state.isLoaded){
+      notify.show('Guest emergency contact details updated successfully!', 'success');
+    }
    }
 
 
@@ -639,7 +660,7 @@ if (validateNewInput.phoneVal){
                             <img src="./img/magnifying_glass.png" onClick={() => this.handleReservationSearch()}/>
                         </div>
               </div>
-                <span id="spNoDataorError">No details found!</span>  
+                {/* <span id="spNoDataorError">No details found!</span>   */}
                        <div className = "div-table">
                     <div className = "div-table-row">
                           <div className ="div-table-col">

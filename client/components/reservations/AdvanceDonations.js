@@ -7,6 +7,7 @@ import { confirmAlert } from 'react-confirm-alert';
 
 import DatePicker from 'react-datepicker';
 import moment from 'moment';
+import {notify} from 'react-notify-toast';
 
 export class AdvanceDonations extends Component {
   constructor(props) {
@@ -52,6 +53,7 @@ export class AdvanceDonations extends Component {
           isLoaded: false,
           error
         });
+        notify.show('Oops! Something went wrong! Please try again!', 'error');
         logError(this.constructor.name + " " + error);
       });
     } 
@@ -97,8 +99,13 @@ deleteAdvanceDonation(donationId){
         isLoaded: false,
         error
       });
+      notify.show('Oops! Something went wrong! Please try again!', 'error');
       logError(error);
     });
+
+    if (!this.state.isLoaded){
+      notify.show('Advance Donation details deleted successfully!', 'success');
+    }
 
     //create a newData array which is a clone of state.items, remove the just selected entries from this newData 
       //and re-assign newData to state.items. This causes the component to re-render.
@@ -197,8 +204,13 @@ insertAdvanceDonationDetails(){
         isLoaded: false,
         error
       });
+      notify.show('Oops! Something went wrong! Please try again!', 'error');
       logError(error);
   });
+
+  if (this.state.isLoaded){
+    notify.show('Advance Donation details saved successfully!', 'success');
+  }
 }  
 
 

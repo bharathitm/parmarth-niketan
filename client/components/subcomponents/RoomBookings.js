@@ -6,6 +6,8 @@ import {blocks, floors} from '../../constants/roomAttributes';
 
 import {logError, checkError, getFormattedDate} from '../../utils/helpers';
 import {API_URL} from '../../config/config';
+import { confirmAlert } from 'react-confirm-alert'; 
+import {notify} from 'react-notify-toast';
 
 export class RoomBookings extends Component {
 
@@ -16,11 +18,13 @@ export class RoomBookings extends Component {
         items: [],
         isLoaded: false,
         error: null,
-        hasRoomBookings: false
+        hasRoomBookings: false,
+        dDAtes: [
+            {}
+          ]
       }; 
 
-      this._validateOnDemand = true; // this flag enables onBlur validation as user fills forms
-
+      this._validateOnDemand = true;
       this.validationCheck = this.validationCheck.bind(this);
   
       this.handleDateChange = this.handleDateChange.bind(this);
@@ -43,6 +47,16 @@ export class RoomBookings extends Component {
                     hasRoomBookings: true,
                     items: result
                     });
+
+                    var depDates = [];
+                    for (var i = 0; i < this.state.items.length; i++)
+                    {
+                        depDates.push(this.state.items[i].date_of_departure);
+                    }
+                
+                    this.setState({
+                          dDAtes: depDates
+                    });
                   })
                 .catch((error) => {
                   this.setState({
@@ -50,28 +64,22 @@ export class RoomBookings extends Component {
                     hasRoomBookings:false,
                     error
                   });
+                  notify.show('Oops! Something went wrong! Please try again!', 'error');
                   logError(this.constructor.name + " " + error);
                 });
           }
     }
     
 
-    handleDateChange(e, room_booking_id, date_of_departure, next_arrival_date) {
-
-        //alert(e.selected);
-
-        // if (moment(date_of_departure) > moment(next_arrival_date)){
-        //     alert("cannot be extended");
-        // }
-
-        // this.setState({
-        //   advanceReceivedOn: date
-        // });
-        //this.refs[room_booking_id].selected = moment(date_of_departure);
-         document.getElementById(room_booking_id).value = moment(date_of_departure);
-
-         
+    handleDateChange(date, index) {
+        var newArray = this.state.dDAtes;
+        newArray[index] = date;
+        this.setState({
+          dDates: newArray
+        });
+        this.refs[index].selected = moment(date);        
       }
+
 
     validationCheck() {
         if (!this._validateOnDemand)
@@ -143,55 +151,82 @@ export class RoomBookings extends Component {
             isLoaded: false,
             error
             });
+            notify.show('Oops! Something went wrong! Please try again!', 'error');
             logError(error);
         });
+
+        if (this.state.isLoaded){
+            notify.show('Room updated successfully!', 'success');
+          }
     }
      
     
     handleDeleteRoomBooking(room_booking_id){
 
-        fetch(API_URL + "roombookings/" + room_booking_id, {
-          method: 'DELETE',
-          headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-            }
-         })
-          .then((response) => {
-            return checkError(response);
+        confirmAlert({
+            title: 'Confirm to delete',
+            message: 'Are you sure you want to delete this room from the reservation?',
+            buttons: [
+              {
+                label: 'Yes',
+                onClick: () => this.deleteRoomBooking(room_booking_id),
+              },
+              {
+                label: 'No',
+                onClick: () => false
+              }
+            ]
           })
-          .catch((error) => {
-            this.setState({
-              isLoaded: false,
-              error
-            });
-            logError(error);
-          });
+        }
 
-          //create a newData array which is a clone of state.items, remove the just selected entries from this newData 
-            //and re-assign newData to state.items. This causes the component to re-render.
-            var newData = this.state.items;
-
-            for (var x=0; x< newData.length; x++){
-                if (newData[x].room_booking_id == room_booking_id){
-                newData.splice(x,1);
-                }
-            }
-
-            if (newData.length == 0){
-                this.setState({
-                    hasRoomBookings: false
+        deleteRoomBooking(room_booking_id){
+            fetch(API_URL + "roombookings/" + room_booking_id, {
+                method: 'DELETE',
+                headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                  }
+               })
+                .then((response) => {
+                  return checkError(response);
+                })
+                .catch((error) => {
+                  this.setState({
+                    isLoaded: false,
+                    error
                   });
-            }
+                  notify.show('Oops! Something went wrong! Please try again!', 'error');
+                  logError(error);
+                });
 
-            this.setState({
-              items: newData
-            });
+                if (this.state.isLoaded){
+                    notify.show('Room removed from the reservation successfully!', 'success');
+                  }
+      
+                //create a newData array which is a clone of state.items, remove the just selected entries from this newData 
+                  //and re-assign newData to state.items. This causes the component to re-render.
+                  var newData = this.state.items;
+      
+                  for (var x=0; x< newData.length; x++){
+                      if (newData[x].room_booking_id == room_booking_id){
+                      newData.splice(x,1);
+                      }
+                  }
+      
+                  if (newData.length == 0){
+                      this.setState({
+                          hasRoomBookings: false
+                        });
+                  }
+      
+                  this.setState({
+                    items: newData
+                  });
         }
     
 
     render() {
-           // explicit class assigning based on validation
+
     let notValidClasses = {};
 
     /* advanceReceivedOn */
@@ -254,11 +289,13 @@ export class RoomBookings extends Component {
                                   {getFormattedDate(item.date_of_arrival)}                             
                               </div>
                               <div className ="dates div-table-col col-bordered">
-                              <DatePicker id={item.room_booking_id.toString()} ref={item.room_booking_id}
-                                  dateFormat="YYYY-MM-DD"
-                                  selected={moment(item.date_of_departure)} 
-                                  onChange={() => this.handleDateChange(this, item.room_booking_id, item.date_of_departure, item.next_arrival_date)}                            
-                                  className="form-control"/>
+                              <DatePicker id={item.room_booking_id.toString()} ref={this.state.items.indexOf(item)}
+                                    dateFormat="YYYY-MM-DD"
+                                    minDate={moment(item.date_of_arrival)}
+                                    maxDate={(item.next_arrival_date == null)? null: item.next_arrival_date}
+                                    selected={moment(this.state.dDAtes[this.state.items.indexOf(item)])}  
+                                    onChange={(value) => this.handleDateChange(value, this.state.items.indexOf(item))} 
+                                    className="form-control"/>
                               </div>
                               <div className ="dates div-table-col col-bordered">
                                {item.next_arrival_date == null? "Available" : getFormattedDate(item.next_arrival_date)} 

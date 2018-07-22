@@ -87,8 +87,6 @@ export class Reservations extends React.Component {
 
     clearGuestSession(){
 
-      alert("in guest session");
-
       var wizardOl = document.getElementsByClassName("progtrckr");
       wizardOl[0].firstChild.className = "progtrckr-doing";
       wizardOl[0].firstChild.click();

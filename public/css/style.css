@@ -644,9 +644,9 @@ width:100%;
   font-weight: bold;
 }
 
-#spNoDataorError{
+/* #spNoDataorError{
   color: red;
-}
+} */
 
 .divFloatRight{
   float:right;

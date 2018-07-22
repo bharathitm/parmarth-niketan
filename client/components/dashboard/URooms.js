@@ -5,7 +5,7 @@ import {blocks, floors} from '../../constants/roomAttributes';
 import {logError, checkError, createRoomsString} from '../../utils/helpers';
 import {API_URL} from '../../config/config';
 
-
+import {notify} from 'react-notify-toast';
 
 export class URooms extends React.Component {
 
@@ -82,9 +82,13 @@ export class URooms extends React.Component {
               isLoaded: false,
               error
             });
+            notify.show('Oops! Something went wrong! Please try again!', 'error');
             logError(error);
           });
 
+          if (!this.state.error){
+            notify.show('Room(s) marked as cleaned successfully!', 'success');
+          }
           this.updateUncleanRoomsState(selectedRooms);  
         }    
       }

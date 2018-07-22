@@ -6,6 +6,8 @@ import {logError, checkError, createRoomsString} from '../../utils/helpers';
 import { confirmAlert } from 'react-confirm-alert'; 
 import {API_URL} from '../../config/config';
 
+import {notify} from 'react-notify-toast';
+
 
 export class CheckOuts extends React.Component {
 
@@ -266,17 +268,22 @@ export class CheckOuts extends React.Component {
             .then((result) => {
               this.props.updateDashboardStore({
                 hasCheckOutsChanged: true
-              });
+              });           
             })
             .catch((error) => {
               this.setState({
                 isLoaded: false,
                 error
               });
+              notify.show('Oops! Something went wrong! Please try again!', 'error');
               logError(error);
             });
 
+            if (!this.state.error){
+              notify.show('Room(s) checked out successfully!', 'success');
+            }
           this.updateCheckOutState(str_reservations, selectedRooms);
+          
         }
 
 
