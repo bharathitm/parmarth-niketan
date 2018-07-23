@@ -17,6 +17,7 @@ export class Dashboard extends React.Component {
         };
 
         this.dashboardStore = {
+            hasCheckInsChanged: false,
             hasCheckOutsChanged: false,
             hasURoomsChanged: false
         };
@@ -34,7 +35,7 @@ export class Dashboard extends React.Component {
               ...update,
             }
 
-            if ((this.dashboardStore.hasCheckOutsChanged == true) || (this.dashboardStore.hasURoomsChanged == true)){
+            if ((this.dashboardStore.hasCheckInsChanged == true) || (this.dashboardStore.hasCheckOutsChanged == true) || (this.dashboardStore.hasURoomsChanged == true)){
                 this.setState({
                     hasChanged: true
                 });
@@ -49,6 +50,13 @@ export class Dashboard extends React.Component {
           this.refs.reservationSearch.value = '';
       }
 
+      handleKeyUp(event){
+        event.preventDefault();
+        if (event.keyCode === 13) {
+            document.getElementById("imgSearch").click();
+        }
+      }
+
     
     render() {
           return (
@@ -60,9 +68,10 @@ export class Dashboard extends React.Component {
                         ref="reservationSearch"
                         autoComplete="off"
                         placeholder="Search by email id or phone"
+                        onKeyUp={(event) => this.handleKeyUp(event)}                         
                         className="form-control email-search" />
                         <div className="button-holder">
-                            <img src="./img/magnifying_glass.png" onClick={() => this.handleReservationSearch()}/>
+                            <img id="imgSearch" src="./img/magnifying_glass.png" onClick={() => this.handleReservationSearch()}/>
                         </div>
               </div>
             <div className = "div-table div-dashboard-table">
@@ -74,7 +83,7 @@ export class Dashboard extends React.Component {
                     </div>
                     <div className = "div-table-row">
                           <div className ="div-table-col div-dashboard-col">
-                              <CheckIns />
+                              <CheckIns getDashboardStore={() => (this.getDashboardStore())} updateDashboardStore={(u) => {this.updateDashboardStore(u)}}/>
                           </div>
                           <div className ="div-table-col div-dashboard-col">
                               <CheckOuts  getDashboardStore={() => (this.getDashboardStore())} updateDashboardStore={(u) => {this.updateDashboardStore(u)}}/> 

@@ -4,60 +4,6 @@ var errorController = require('./error.controller');
 
 var connection = mysql.createConnection(config);
 
-
-/**
- *  Find guest details by phone number
- *
- * @param {object} req
- * @param {object} res
- * @returns {*}
- */
-export function findByPhone(req, res) {    
-    
-    var call_stored_proc = "CALL sp_GetGuestDetailsByPhone('" + req.query.ph + "')";
-
-    console.log(call_stored_proc);
-
-    connection.query(call_stored_proc, true, (error, results, fields) => {
-    if (error) {
-        errorController.LogError(error);
-        return res.send(error.code);
-    }
-    res.send(results[0]);
-    });
-      
-   // connection.end();    
-}
-
-
-
-/**
- *  Find guest details by id
- *
- * @param {object} req
- * @param {object} res
- * @returns {*}
- */
-export function findByEmailId(req, res) {
-   
-    var call_stored_proc = "CALL sp_GetGuestDetailsByEmailID('" + req.query.email + "')";
-
-    console.log(call_stored_proc);
-
-    connection.query(call_stored_proc, true, (error, results, fields) => {
-
-    if (error) {
-        errorController.LogError(error);
-        return res.send(error.code);
-    }
-    res.send(results[0]);
-    });
-      
-   // connection.end();    
-}
-
-
-
 /**
  *  Find guest details by id
  *

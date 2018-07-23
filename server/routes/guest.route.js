@@ -9,15 +9,7 @@ router.route('/')
 
     //Search guest details
     .get( (req, res) => {
-        if ((req.query.ph) != undefined){
-            guestCtrl.findByPhone(req, res);
-        }
-        else if ((req.query.email) != undefined){
-            guestCtrl.findByEmailId(req, res);
-        }
-        else{
-            guestCtrl.search(req, res);
-        }
+        guestCtrl.search(req, res);
     })
 
     .post((req, res) => {

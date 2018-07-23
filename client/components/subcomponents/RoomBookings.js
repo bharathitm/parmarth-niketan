@@ -35,7 +35,7 @@ export class RoomBookings extends Component {
     }
 
     fetchRoomBookingsIfExists(){
-        if(this.props.getReservationStore().guestId != '')
+        if(this.props.getReservationStore().guestId != null)
         {
           fetch(API_URL + "roombookings/" + this.props.getReservationStore().guestId)
               .then((response) => {
@@ -281,9 +281,7 @@ export class RoomBookings extends Component {
                                {item.room_no}
                               </div>
                               <div className ="details div-table-col col-bordered">
-                                {floors[item.floor_no]},  
-                                {blocks[item.block_id]}, 
-                                {item.total_beds} beds
+                                {floors[item.floor_no] +", " + blocks[item.block_id] + ", " + item.total_beds + " beds"}
                               </div>
                               <div className ="dates div-table-col col-bordered">
                                   {getFormattedDate(item.date_of_arrival)}                             

@@ -37,6 +37,7 @@ export class TodayAvailability extends React.Component {
           isLoaded: false,
           error
         });
+        notify.show('Oops! Something went wrong! Please try again!', 'error');
         logError(this.constructor.name + " " + error);
       });
     }
@@ -44,17 +45,22 @@ export class TodayAvailability extends React.Component {
     render() {
 
       if (this.props.getDashboardStore().hasURoomsChanged){
-           this.props.updateDashboardStore({
-          hasURoomsChanged: false
-        });
+          this.props.updateDashboardStore({
+              hasURoomsChanged: false
+          });
         this.fetchAvailableRooms();
       }
 
+      if (this.props.getDashboardStore().hasCheckInsChanged){
+        this.props.updateDashboardStore({
+              hasCheckInsChanged: false
+        });
+         this.fetchAvailableRooms();
+      }
+   
       const { isLoaded, error, items } = this.state;
 
-      if ((!isLoaded) && (error)){
-        return <div><h4>Today's Availability</h4><hr /><span id="spNoDataorError">{JSON.stringify(error.message)}</span></div>;        
-       } else if (!isLoaded) {
+       if (!isLoaded) {
         return <div><h4>Today's Availability</h4><hr />Loading...</div>;
       } else if (items.length == 0){
           return  (

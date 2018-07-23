@@ -27,8 +27,7 @@ export class Guests extends Component {
       eFirstName: props.getStore().eFirstName,
       eLastName: props.getStore().eLastName,
       ePhone: props.getStore().ePhone,     
-      eRelationship: props.getStore().eRelationship,
-      searchText: null   
+      eRelationship: props.getStore().eRelationship   
     }; 
 
     this._validateOnDemand = true; // this flag enables onBlur validation as user fills forms
@@ -37,6 +36,9 @@ export class Guests extends Component {
     this.isValidated = this.isValidated.bind(this);
   }
 
+  componentDidMount() {
+    //document.getElementById("spNoDataorError").style.visibility="hidden";
+  }
 
   populateCountries() {
     let items = [];   
@@ -48,8 +50,10 @@ export class Guests extends Component {
   }
 
   loadGuestDetails(){
+    // alert(this.props.getHomeStore().userName); does not work, have to find out how to use this....maybe pass from Reservations to each of the children, just the get though.
     if (this.state.items.length != 0)
     {
+      //this.props.jumpToStep(2);
       this.props.updateStore({
         guestId: this.state.items[0].guest_id,
         firstName: this.state.items[0].first_name,
@@ -86,7 +90,7 @@ export class Guests extends Component {
         eFirstName: this.state.items[0].e_first_name,
         eLastName: this.state.items[0].e_last_name,
         ePhone: this.state.items[0].e_phone_no,
-        eRelationship: this.state.items[0].e_relationship 
+        eRelationship: this.state.items[0].e_relationship
       });
     
 
@@ -104,17 +108,45 @@ export class Guests extends Component {
       this.refs.ePhone.value = this.state.items[0].e_phone_no,
       this.refs.eRelationship.value = this.state.items[0].e_relationship
 
+      this.refs.reservationSearch.value = '';
       var name = this.refs.firstName.value + " " + this.refs.lastName.value;
       this.props.loadName(name);
     }
     else{
+
       notify.show('No Guest Details found!', 'error');
-      this.props.jumpToStep(0);
+
+      //document.getElementById("spNoDataorError").style.visibility="visible";
+
+      var reservationSearch = String(this.refs.reservationSearch.value);
+      this.preLoadIfNeeded(reservationSearch);
+    }
+  }
+
+  preLoadIfNeeded(searchText){
+
+    if (this.refs.firstName != undefined){
+      
+    this.refs.firstName.value = '',
+    this.refs.lastName.value = '',
+    this.refs.email.value = (searchText != '' && searchText.indexOf('@') != -1)? this.refs.reservationSearch.value : '',
+    this.refs.phone.value = (searchText != '' && this.refs.email.value == '')? this.refs.reservationSearch.value : '',
+    this.refs.address.value = '', 
+    this.refs.city.value = '',
+    this.refs.pin.value = '',
+    this.refs.region.value = '',
+    this.refs.country.value = 0,
+    this.refs.eFirstName.value = '',
+    this.refs.eLastName.value = '',
+    this.refs.ePhone.value = '',
+    this.refs.eRelationship.value = ''
     }
 
-    this.props.updateStore({
-      searchText: ''
-    });
+  }
+
+  handleReservationSearch(){
+    var searchText = this.refs.reservationSearch.value;
+    this.searchReservation(searchText);
   }
 
   searchReservation(searchText){
@@ -146,6 +178,91 @@ export class Guests extends Component {
       });
   }
 
+  handleEmailSearch(){
+
+    const email = this.refs.email.value;
+
+    const userInput = this._grabUserInput(); // grab user entered vals
+    const validateNewInput = this._validateData(userInput); // run the new input against the validator
+
+    if (validateNewInput.emailVal){
+        fetch(API_URL + "guests/?email=" + email)
+          .then((response) => {
+            return checkError(response);
+          })
+          .then((result) => {
+              this.setState({
+                isLoaded: true,
+                items: result,
+              }, function() {
+                this.loadGuestDetails();
+              }
+            );        
+            })
+            .catch((error) => {
+              this.setState({
+                isLoaded: false,
+                error
+              });
+              notify.show('Oops! Something went wrong! Please try again!', 'error');
+              logError(this.constructor.name + " " + error);
+            });
+    }
+    else {
+    // This needs to fire only the Email Validation alert, not all!
+
+// this.setState(Object.assign(userInput, validateNewInput, this._validationErrors(validateNewInput)));
+
+//this.setState(Object.assign(userInput.email, validateNewInput.emailVal, this._validationErrors(validateNewInput.emailVal)));
+  //this._validationErrors(validateNewInput.emailVal);
+
+  //this.validationCheck(this.refs.email);
+ }
+}
+
+handlePhoneSearch(){
+
+const phone = this.refs.phone.value;
+
+const userInput = this._grabUserInput(); // grab user entered vals
+const validateNewInput = this._validateData(userInput); // run the new input against the validator
+
+if (validateNewInput.phoneVal){
+    fetch(API_URL + "guests/?ph=" + phone)
+        .then((response) => {
+            return checkError(response);
+          })
+        .then((result) => {
+            this.setState({
+              isLoaded:true,
+              items: result,
+            }, function() {
+              this.loadGuestDetails();
+            }
+          );        
+          })
+          .catch((error) => {
+            this.setState({
+              isLoaded: false,
+              error
+            });
+            notify.show('Oops! Something went wrong! Please try again!', 'error');
+            logError(this.constructor.name + " " + error);
+          });
+ }
+ else {
+// This needs to fire only the Email Validation alert, not all!
+
+// this.setState(Object.assign(userInput, validateNewInput, this._validationErrors(validateNewInput)));
+
+//this.setState(Object.assign(userInput.email, validateNewInput.emailVal, this._validationErrors(validateNewInput.emailVal)));
+  //this._validationErrors(validateNewInput.emailVal);
+
+  //this.validationCheck(this.refs.email);
+ }
+
+}
+
   isValidated() {
   
     const userInput = this._grabUserInput(); // grab user entered vals
@@ -169,10 +286,9 @@ export class Guests extends Component {
           this.props.updateStore({
             ...userInput,
             savedToCloud: false 
-          }); 
-          
+          });  
 
-          if (this.props.getStore().guestId != null){
+          if (this.props.getStore().guestId != ''){
             this.updateGuestData();
           }
           else {
@@ -212,8 +328,10 @@ export class Guests extends Component {
     if (!this._validateOnDemand)
       return;
 
-    const userInput = this._grabUserInput(); 
-    const validateNewInput = this._validateData(userInput); 
+    //document.getElementById("spNoDataorError").style.visibility="hidden";
+
+    const userInput = this._grabUserInput(); // grab user entered vals
+    const validateNewInput = this._validateData(userInput); // run the new input against the validator
 
     this.setState(Object.assign(userInput, validateNewInput));
   }
@@ -294,7 +412,6 @@ export class Guests extends Component {
           this.props.updateStore({
             guestId: result[0].guest_id
           });
-          notify.show('Guest details added successfully!', 'success');
     })
     .catch((error) => {
       this.setState({
@@ -305,18 +422,15 @@ export class Guests extends Component {
       logError(error);
     });
 
-    // if (this.state.isLoaded){
-    //   notify.show('Guest details added successfully!', 'success');
-    // }
+    if (this.state.isLoaded){
+      notify.show('Guest details added successfully!', 'success');
+    }
   }
 
   updateGuestData(){
 
-    alert(this.props.getStore().guestId);
-    alert(this.state.firstName);
-
     const payload = {
-      guest_id: this.props.getStore().guestId,
+      guest_id: this.state.guestId,
       first_name: this.state.firstName,
       last_name: this.state.lastName,
       email_id: this.state.email,
@@ -334,7 +448,7 @@ export class Guests extends Component {
     };
 
 
-    fetch(API_URL + "guests/" + this.props.getStore().guestId, {
+    fetch(API_URL + "guests/" + this.state.guestId, {
       method: 'POST',
       headers: {
       'Accept': 'application/json',
@@ -355,7 +469,7 @@ export class Guests extends Component {
       logError(error);
     });
 
-    if (this.state.isLoaded != false){
+    if (this.state.isLoaded){
       notify.show('Guest details updated successfully!', 'success');
     }
   }
@@ -391,7 +505,7 @@ export class Guests extends Component {
       logError(error);
     });
 
-    if (this.state.isLoaded != false){
+    if (this.state.isLoaded){
       notify.show('Guest emergency contact details updated successfully!', 'success');
     }
    }
@@ -401,30 +515,28 @@ export class Guests extends Component {
     //if searched from Dashboard
     if(this.props.getStore().searchText != ''){
       this.searchReservation(this.props.getStore().searchText);
+
+      this.props.updateStore({
+        searchText: ''
+      });
     }
 
-    // if (this.props.getStore().firstName != ''){
-          var wizardOl = document.getElementsByClassName("progtrckr");
-          if (typeof wizardOl[0] != 'undefined'){
+    if (this.props.getStore().firstName != ''){
+        var wizardOl = document.getElementsByClassName("progtrckr");
+
+        // //if no reservation details in session, dont show next button
+        // if(this.props.getStore().reservationId == null){
+        //   if (typeof wizardOl[0] != 'undefined'){
+        //     //wizardOl[0].style.pointerEvents = "auto";
+        //     document.getElementById("next-button").style.visibility = "hidden";
+        //   }
+        // } // reverse whatever is done above
+        // else 
+        if (this.props.getStore().reservationId != null){
             wizardOl[0].style.pointerEvents = "auto";
             document.getElementById("next-button").style.visibility = "visible";
-          }
-
-        //  //new guest, new reservation
-        //  if((this.props.getStore().guestId == null) && (this.props.getStore().reservationId == null)){
-        //    //if (typeof wizardOl[0] != 'undefined'){
-        //      wizardOl[0].style.pointerEvents = "auto";
-        //      document.getElementById("next-button").style.visibility = "visible";
-        //    //}
-        //  } // existing guest, new reservation
-        //  else if ((this.props.getStore().guestId != null) && (this.props.getStore().reservationId == null)){
-        //      wizardOl[0].style.pointerEvents = "auto";
-        //      document.getElementById("next-button").style.visibility = "visible";
-        //  } // existing guest, existing reservation
-        //  else if ((this.props.getStore().guestId != null) && (this.props.getStore().reservationId != null)){
-        //   document.getElementById("next-button").style.visibility = "visible";
-        //  }
-    // }
+        }
+    }
 
     // explicit class assigning based on validation
     let notValidClasses = {};
@@ -538,7 +650,17 @@ export class Guests extends Component {
         <div className="row">
           <form id="Form" className="form-horizontal">          
                 <h4>Guest Contact Details</h4>  
-            
+                <div id="divReservationSearch" className="divFloatRight">
+                    <input
+                        ref="reservationSearch"
+                        autoComplete="off"
+                        placeholder="Search by email id or phone"
+                        className="form-control email-search" />
+                        <div className="button-holder">
+                            <img src="./img/magnifying_glass.png" onClick={() => this.handleReservationSearch()}/>
+                        </div>
+              </div>
+                {/* <span id="spNoDataorError">No details found!</span>   */}
                        <div className = "div-table">
                     <div className = "div-table-row">
                           <div className ="div-table-col">
@@ -593,6 +715,9 @@ export class Guests extends Component {
                         className={notValidClasses.emailCls}
                         required
                         defaultValue={this.state.email} />
+                        <div className="button-holder">
+                            <img src="./img/magnifying_glass.png" onClick={() => this.handleEmailSearch()}/>
+                        </div>
                     </div>
                   </div>
 
@@ -611,6 +736,9 @@ export class Guests extends Component {
                           className={notValidClasses.phoneCls}
                           required
                           defaultValue={this.state.phone} />
+                          <div className="button-holder">
+                            <img src="./img/magnifying_glass.png" onClick={() => this.handlePhoneSearch()}/>
+                        </div>
                       </div>
                     </div>
                   </div>

@@ -50,6 +50,7 @@ export class CheckOuts extends React.Component {
               isLoaded: false,
               error
             });
+            notify.show('Oops! Something went wrong! Please try again!', 'error');
             logError(this.constructor.name + " " + error);
           });
       }
@@ -96,9 +97,7 @@ export class CheckOuts extends React.Component {
      
           for(var i = 0; i < checkboxes.length; i++)  
           {  
-              if (checkboxes[i].value != rID){
-                checkboxes[i].checked = false;
-              }  
+            checkboxes[i].checked = false; 
           } 
         } 
 
@@ -153,6 +152,7 @@ export class CheckOuts extends React.Component {
                 isLoaded: false,
                 error
               });
+              notify.show('Oops! Something went wrong! Please try again!', 'error');
               logError(error);
             });
 
@@ -210,7 +210,7 @@ export class CheckOuts extends React.Component {
                          <div className="form-group col-md-12 content form-block-holder">
                           <label className="control-label col-md-4">
                             Donation Received: 
-                          {"Rs." + (results[0].donationAmount != null)? results[0].donationAmount: "-"}
+                          {"Rs." + (results[0].donationAmount != null? results[0].donationAmount: "0")}
                             </label>
                         </div>
 
@@ -266,6 +266,7 @@ export class CheckOuts extends React.Component {
               return checkError(response);
             })
             .then((result) => {
+              notify.show('Room(s) checked out successfully!', 'success');
               this.props.updateDashboardStore({
                 hasCheckOutsChanged: true
               });           
@@ -279,9 +280,6 @@ export class CheckOuts extends React.Component {
               logError(error);
             });
 
-            if (!this.state.error){
-              notify.show('Room(s) checked out successfully!', 'success');
-            }
           this.updateCheckOutState(str_reservations, selectedRooms);
           
         }
@@ -379,9 +377,7 @@ export class CheckOuts extends React.Component {
       }
       
 
-     if ((!isLoaded) && (error)){
-          return <div><h4>Today's Check Outs</h4><hr /><span id="spNoDataorError">{JSON.stringify(error.message)}</span></div>;        
-     } else if (!isLoaded) {
+  if (!isLoaded) {
           return <div><h4>Today's Check Outs</h4><hr />Loading...</div>;
       } else if (checkOutRooms.length == 0){
           return  (

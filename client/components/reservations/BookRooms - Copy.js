@@ -89,10 +89,6 @@ export class BookRooms extends Component {
       departureDate: (getFormattedDate(this.props.getStore().departureDate)).toString()
     });
 
-    this.setState({
-      isReRender: false
-    });
-
     if (typeof this.props.getStore().noOfRooms == 'undefined'){
       this.props.updateStore({
         noOfRooms: null
@@ -155,14 +151,13 @@ export class BookRooms extends Component {
 
         document.getElementById("spGrandTotal").innerHTML = grandTotal;
         var wizardOl = document.getElementsByClassName("progtrckr");
-        //if any room selected
-         if (grandTotal != 0){
-           wizardOl[0].style.pointerEvents = "auto";
-           document.getElementById("next-button").style.visibility = "visible";
-         } else { // no room selected
-           wizardOl[0].style.pointerEvents = "none";
-           document.getElementById("next-button").style.visibility = "hidden";
-         }
+        // if (grandTotal != 0){
+        //   wizardOl[0].style.pointerEvents = "auto";
+        //   document.getElementById("next-button").style.visibility = "visible";
+        // } else {
+        //   wizardOl[0].style.pointerEvents = "none";
+        //   document.getElementById("next-button").style.visibility = "hidden";
+        // }
       }
     } 
 
@@ -252,37 +247,33 @@ export class BookRooms extends Component {
    handleBlocksChanged(){
 
     this.props.updateStore({
-      filteredBlocks: this.props.getStore().uniqueBlocks
+      filteredBlocks: []
     });
 
     var checkboxes = document.getElementsByName("chkBlocks"); 
     var atleastOneChecked = false;
       
     if (checkboxes.length > 0){
-      var arr = [];
         for(var i = 0; i < checkboxes.length; i++)  
         { 
             if(checkboxes[i].checked) {
+              var arr = this.props.getStore().filteredBlocks;
               arr.push(checkboxes[i].value); 
+              this.props.updateStore({
+                filteredBlocks: arr
+              });
               atleastOneChecked = true;
               this.setState({
                 isReRender: true
               });
             }
         }
-        this.props.updateStore({
-          filteredBlocks: arr
-        });
     }
 
     if (!atleastOneChecked){
         this.setState({
           isReRender: false
         });
-        this.props.updateStore({
-          filteredBlocks: this.props.getStore().uniqueBlocks
-        });
-        //alert(this.props.getStore.filteredBlocks.length + " atleast");
     }
    }
 
@@ -309,31 +300,13 @@ export class BookRooms extends Component {
     //     document.getElementById("next-button").style.visibility = "visible";
     // }
 
-    var wizardOl = document.getElementsByClassName("progtrckr");
-    //new guest, new reservation
-    if((this.props.getStore().guestId == null) && (this.props.getStore().reservationId == null)){
-      if (typeof wizardOl[0] != 'undefined'){
-        wizardOl[0].style.pointerEvents = "none";
-        document.getElementById("next-button").style.visibility = "hidden";
-      }
-    } // existing guest, new reservation
-    else if ((this.props.getStore().guestId != null) && (this.props.getStore().reservationId == null)){
-        wizardOl[0].style.pointerEvents = "auto";
-        document.getElementById("next-button").style.visibility = "visible";
-    } // existing guest, existing reservation
-    else if ((this.props.getStore().guestId != null) && (this.props.getStore().reservationId != null)){
-      wizardOl[0].style.pointerEvents = "auto";
-      document.getElementById("next-button").style.visibility = "visible";
-    }
-
     let { isLoaded, error, items, isReRender } = this.state;
 
     //loads first time and when all filter check boxes are unchecked
     if (!isReRender){
-         this.props.updateStore({
-           uniqueBlocks: [],
-           uniqueRooms: []
-         });
+        this.props.updateStore({
+          uniqueBlocks: []
+        });
         
         if (items.length > 0){
           
@@ -343,72 +316,56 @@ export class BookRooms extends Component {
               });
 
               //first block insert
-              var arrBlocks = [];
-              arrBlocks.push(items[0].block_id);
+              var arr = this.props.getStore().uniqueBlocks;
+              arr.push(items[0].block_id);
+              this.props.updateStore({
+                uniqueBlocks: arr
+              });
 
-              var arrRooms = [];
               if ((this.props.getStore().noOfRooms != "null") && (this.props.getStore().noOfRooms != null)){
-                arrRooms = items.filter(item => item.block_id == items[0].block_id).slice(0, parseInt(this.props.getStore().noOfRooms))
+                this.props.updateStore({
+                  uniqueRooms: items.slice(0, parseInt(this.props.getStore().noOfRooms))
+                });
               } else {
-                arrRooms = items.filter(item => item.block_id == items[0].block_id);
-              }
-
-              var newRoomsArray = [];    
-              for (var i = 1; i < items.length; i++)
-              {
-                //unique block ids need to be captured in a separate array
-                if (items[i].block_id != items[i-1].block_id)
-                {
-                    arrBlocks.push(items[i].block_id);
-
-                    if ((this.props.getStore().noOfRooms != "null") && (this.props.getStore().noOfRooms != null)){
-                      
-                      newRoomsArray = items.filter(item => item.block_id == items[i].block_id).slice(0, parseInt(this.props.getStore().noOfRooms));                   
-                    } 
-                    else{
-                      newRoomsArray = items.filter(item => item.block_id == items[i].block_id);
-                    }
-                    arrRooms.push(...newRoomsArray);
-                }
-              
-              }
-
-              this.props.updateStore({
-                uniqueBlocks: arrBlocks
-              });
-
-              this.props.updateStore({
-                uniqueRooms: arrRooms
-              });
-
-              this.props.updateStore({
-                filteredBlocks:  arrBlocks
-              });
-              
-              var checkboxes = document.getElementsByName("chkBlocks"); 
-                
-              if (checkboxes.length > 0){
-                var arr = [];
-                  for(var i = 0; i < checkboxes.length; i++)  
-                  { 
-                      if(checkboxes[i].checked) {                        
-                        arr.push(checkboxes[i].value); 
-                      }
-                  }
                   this.props.updateStore({
-                    filteredBlocks: arr
+                    uniqueRooms: items
                   });
               }
+
+              alert(this.props.getStore().uniqueRooms.length + " rooms");
+                  
+              //unique block ids need to be captured in a separate array
+              for (var i = 1; i < items.length; i++)
+              {
+                if (items[i].block_id != items[i-1].block_id)
+                {
+                    var arr = this.props.getStore().uniqueBlocks;
+                    arr.push(items[i].block_id);
+                    this.props.updateStore({
+                      uniqueBlocks: arr
+                    });
+
+                    if ((this.props.getStore().noOfRooms != "null") && (this.props.getStore().noOfRooms != null)){
+                      var newArray = items.slice(i, (i + parseInt(this.props.getStore().noOfRooms)));
+                      var arr = this.props.getStore().uniqueRooms;
+                      arr.push(...newArray);
+                      //alert(arr.length + " arr");
+                      this.props.updateStore({
+                        uniqueRooms: arr
+                      });
+                    } 
+                }
+              }
+              this.props.updateStore({
+                filteredBlocks:  this.props.getStore().uniqueBlocks
+              });
           }
           else{
             this.props.updateStore({
               searchLoaded:  false
             });
           }
-
-         // alert(this.props.getStore().filteredBlocks + " before loading");
       }
-
 
       if (!isLoaded) { // default view
         return (
@@ -432,6 +389,7 @@ export class BookRooms extends Component {
         );
     } 
     else if (items.length == 0){
+      //alert("inside length 0");
         return  (
           <div className="step step3">
           <div className="row">
@@ -453,7 +411,7 @@ export class BookRooms extends Component {
         </div>
         );
     } else {
-     // alert(this.props.getStore().filteredBlocks.length);
+      //alert("inside else");
         return (
           <div className="step step3">
             <div className="row">

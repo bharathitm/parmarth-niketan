@@ -46,6 +46,7 @@ export class URooms extends React.Component {
             isLoaded: false,
             error
           });
+          notify.show('Oops! Something went wrong! Please try again!', 'error');
           logError(this.constructor.name + " " + error);
         });
     }
@@ -73,6 +74,7 @@ export class URooms extends React.Component {
             return checkError(response);
           })
           .then((result) => {
+            notify.show('Room(s) marked as cleaned successfully!', 'success');
             this.props.updateDashboardStore({
               hasURoomsChanged: true
             });
@@ -86,9 +88,6 @@ export class URooms extends React.Component {
             logError(error);
           });
 
-          if (!this.state.error){
-            notify.show('Room(s) marked as cleaned successfully!', 'success');
-          }
           this.updateUncleanRoomsState(selectedRooms);  
         }    
       }
@@ -124,6 +123,15 @@ export class URooms extends React.Component {
             this.setState({
               items: newData
             });
+
+            //the next row is getting selected after save hence loop through and unselect all
+            var checkboxes = document.getElementsByName("uncleanRooms");
+            if (checkboxes.length > 0){
+              for(var i = 0; i < checkboxes.length; i++)  
+              {      
+                checkboxes[i].checked = false;
+              }
+            }
         }
     
 
@@ -137,9 +145,7 @@ export class URooms extends React.Component {
         this.fetchUncleanRooms();
       }
 
-      if ((!isLoaded) && (error)){
-        return <div><h4>Housekeeping</h4><hr /><span id="spNoDataorError">{JSON.stringify(error.message)}</span></div>;        
-       } else if (!isLoaded) {
+     if (!isLoaded) {
           return <div><h4>Housekeeping</h4><hr />Loading...</div>;
       } else if (items.length == 0){
           return  (

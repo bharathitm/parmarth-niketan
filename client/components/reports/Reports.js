@@ -7,6 +7,7 @@ import moment from 'moment';
 
 import {logError, checkError, getFormattedDate} from '../../utils/helpers';
 import {API_URL} from '../../config/config';
+import {notify} from 'react-notify-toast';
 
 
 export class Reports extends React.Component {
@@ -61,6 +62,7 @@ export class Reports extends React.Component {
                   isLoaded: false,
                   error
                 });
+                notify.show('Oops! Something went wrong! Please try again!', 'error');
                 logError(this.constructor.name + " " + error);
               });
     }
@@ -88,7 +90,8 @@ export class Reports extends React.Component {
                 </ErrorBoundary>
             </div>
             );
-        } else if (this.state.items.length == 0){ // no data returned
+        } else if (this.state.isLoaded && this.state.items.length == 0){ // no data returned
+            //notify.show('No Check Ins for the given duration!', 'error');
             return  (
                 <div className="divError">
                 <ErrorBoundary>

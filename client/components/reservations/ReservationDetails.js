@@ -70,7 +70,10 @@ export class ReservationDetails extends Component {
   } 
 
   componentDidMount() {
-    this.fetchReservationDetailsIfExists();
+    if (this.props.getStore().guestId != null){
+      this.fetchReservationDetailsIfExists();
+    }
+   
 
     this.refs.arrivalDate.innerHTML = this.props.getStore().arrivalDate;
     this.refs.departureDate.innerHTML = this.props.getStore().departureDate;
@@ -249,14 +252,15 @@ export class ReservationDetails extends Component {
     .then((response) => {
       return checkError(response);
     })
-    .then((result) => {   
+    .then((result) => { 
+          notify.show('New reservation added successfully!', 'success');   
           this.setState({
             isLoaded: true,
             reservationId: result[0].reservation_id
           });
           this.props.updateStore({
             reservationId: result[0].reservation_id
-          });      
+          });    
     })
     .catch((error) => {
       this.setState({
@@ -267,9 +271,9 @@ export class ReservationDetails extends Component {
       logError(error);
     });
 
-    if (this.state.isLoaded){
-      notify.show('New reservation added successfully!', 'success');
-    }
+    // if (this.state.isLoaded){
+    //   notify.show('New reservation added successfully!', 'success');
+    // }
 
   }
 
@@ -456,15 +460,27 @@ export class ReservationDetails extends Component {
   render() {
     // redirect to Guest page - 
    // 1) if search from Dashboard 2) if existing guest but has no active reservation
-    if((this.props.getStore().searchText != '') || 
-      (
-        (this.props.getStore().reservationId == null) && 
-        ((window.sessionStorage.getItem('strSelectedRooms') == null) 
-        || (window.sessionStorage.getItem('strSelectedRooms').toString().trim() == ''))
-      )
-    ){
-      this.props.jumpToStep(1);
-    }
+    // if((this.props.getStore().searchText != '') || 
+    //   (
+    //     (this.props.getStore().guestId == null) || 
+    //     (this.props.getStore().reservationId == null) && 
+    //     ((window.sessionStorage.getItem('strSelectedRooms') == null) 
+    //     || (window.sessionStorage.getItem('strSelectedRooms').toString().trim() == ''))
+    //   )
+    // ){
+    //   this.props.jumpToStep(1);
+    // }
+
+      //new guest, new reservation
+      if((this.props.getStore().reservationId == null) && (window.sessionStorage.getItem('strSelectedRooms') == null) || (this.props.getStore().guestId == null)){
+          this.props.jumpToStep(1);
+      } // existing guest, new reservation
+      // else if ((this.props.getStore().guestId != null) && (this.props.getStore().reservationId == null)){
+
+      // } // existing guest, existing reservation
+      // else if ((this.props.getStore().guestId != null) && (this.props.getStore().reservationId != null)){
+
+      // }
 
     // explicit class assigning based on validation
     let notValidClasses = {};
@@ -506,7 +522,7 @@ export class ReservationDetails extends Component {
         <div className="row">
           <form id="Form" className="form-horizontal">          
                 <h4>Reservation Details</h4>   
-                <div className="divFloatRight">  
+                <div className="divFloatRight" style={{ visibility: this.props.getStore().reservationId != null ? 'visible':'hidden', display: this.props.getStore().reservationId != null? 'inline':'none' }}>  
                 <button type="button" className="btnBig" onClick={() => this.handleCancel()}>Cancel</button>   
                 </div>
                       <div className="divDates">
@@ -649,12 +665,17 @@ export class ReservationDetails extends Component {
               </div>
              </div>
               <br/>
+               {/* <Collapsible trigger="Room Bookings" triggerStyle={{ visibility: this.props.getStore().reservationId != null ? 'visible':'hidden', display: this.props.getStore().reservationId != null? 'inline':'none' }}> */}
                <Collapsible trigger="Room Bookings">
                <RoomBookings getReservationStore={() => (this.getReservationStore())}>
                </RoomBookings>
                </Collapsible>
                <br/>
-               <Collapsible trigger="Advance Donations" onOpen={() => this.changeCollapsibleOverflow(true)} onClose={() => this.changeCollapsibleOverflow(false)}>
+               {/* <Collapsible trigger="Advance Donations" onOpen={() => this.changeCollapsibleOverflow(true)} 
+               onClose={() => this.changeCollapsibleOverflow(false)} 
+               triggerStyle={{ visibility: this.props.getStore().reservationId != null ? 'visible':'hidden', display: this.props.getStore().reservationId != null? 'inline':'none' }}> */}
+                <Collapsible trigger="Advance Donations" onOpen={() => this.changeCollapsibleOverflow(true)} 
+                    onClose={() => this.changeCollapsibleOverflow(false)}>
                <AdvanceDonations getReservationStore={() => (this.getReservationStore())}>
                </AdvanceDonations>
                </Collapsible>

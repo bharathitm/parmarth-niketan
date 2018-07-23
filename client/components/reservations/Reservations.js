@@ -40,7 +40,7 @@ export class Reservations extends React.Component {
         noOfPpl: '',
         advanceReminderOn: '',
         comments: '',
-        guestId: '',
+        guestId: null,
         guestEmergencyContactId:'',
         reservationId: null,
         advanceAmount: '',
@@ -122,7 +122,7 @@ export class Reservations extends React.Component {
         noOfPpl: '',
         advanceReminderOn: '',
         comments: '',
-        guestId: '',
+        guestId: null,
         guestEmergencyContactId:'',
         reservationId:null,
         advanceAmount: '',
@@ -171,9 +171,9 @@ export class Reservations extends React.Component {
             <StepZilla steps={steps} 
                 stepsNavigation={true}
                 nextTextOnFinalActionStep={"Save"}
-                //startAtStep={window.sessionStorage.getItem('step') ? parseFloat(window.sessionStorage.getItem('step')) : 0}
+                startAtStep={window.sessionStorage.getItem('step') ? parseFloat(window.sessionStorage.getItem('step')) : 0}
                 startAtStep={0}
-                onStepChange={(step) => window.sessionStorage.setItem('step', step)}
+                //onStepChange={(step) => window.sessionStorage.setItem('step', step)}
             />
             </div>
             </ErrorBoundary>

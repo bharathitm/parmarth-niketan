@@ -101,6 +101,12 @@ export class CheckIns extends React.Component {
           .then((response) => {
             return checkError(response);
           })
+          .then((result) => {
+            notify.show('Room(s) checked in successfully!', 'success');
+            this.props.updateDashboardStore({
+              hasCheckInsChanged: true
+            });
+          })
           .catch((error) => {
             this.setState({
               isLoaded: false,
@@ -109,10 +115,6 @@ export class CheckIns extends React.Component {
             notify.show('Oops! Something went wrong! Please try again!', 'error');
             logError(error);
           });
-
-          if (!this.state.error){
-            notify.show('Room(s) checked in successfully!', 'success');
-          }
 
         this.updateCheckInState(selectedReservations, selectedRooms);
       }

@@ -10,8 +10,8 @@ export class SearchBox extends Component {
     super(props);
 
     this.state = {
-      arrivalDate: moment(),
-      departureDate: moment()
+      arrivalDate: null,
+      departureDate: null
     }; 
 
     this.handleArrivalDateChange = this.handleArrivalDateChange.bind(this);
@@ -27,7 +27,7 @@ export class SearchBox extends Component {
 
     this._validateOnDemand = true; // this flag enables onBlur validation as user fills forms
 
-    //this.validationCheck = this.validationCheck.bind(this);
+    this.validationCheck = this.validationCheck.bind(this);
     this.isValidated = this.isValidated.bind(this);
 
     this.handleSearchBox = this.handleSearchBox.bind(this);
@@ -45,7 +45,7 @@ export class SearchBox extends Component {
 
   handleArrivalDateChange(date) {
     this.setState({
-        arrivalDate: date
+      arrivalDate: date
     });
 
     this.props.updateSearchStore({
@@ -79,23 +79,11 @@ export class SearchBox extends Component {
       });
   }
 
-  
-  // validationCheck() {
-  //   if (!this._validateOnDemand)
-  //     return;
-
-  //   const userInput = this._grabUserInput(); // grab user entered vals
-  //   const validateNewInput = this._validateData(userInput); // run the new input against the validator
-
-  //   this.setState(Object.assign(userInput, validateNewInput));
-  // }
 
   _grabUserInput() {
     return {
-      // arrivalDate: this.refs.arrivalDate.selected,
-      // departureDate: this.refs.departureDate.selected
-      arrivalDate: moment(document.getElementById("arrivalDate").value),
-      departureDate: moment(document.getElementById("departureDate").value)
+      arrivalDate: this.refs.arrivalDate.selected,
+      departureDate: this.refs.departureDate.selected
     };
   }
 
@@ -103,7 +91,7 @@ export class SearchBox extends Component {
     return  {
       arrivalDateVal: (data.arrivalDate == null || data.arrivalDate == undefined)? false: true,
       departureDateVal: (data.departureDate == null || data.departureDate == undefined)? false: true
-    }
+    };
   }
 
   
@@ -150,15 +138,23 @@ export class SearchBox extends Component {
     }
   }
 
+  validationCheck() {
+    if (!this._validateOnDemand)
+      return;
+
+    const userInput = this._grabUserInput(); 
+    const validateNewInput = this._validateData(userInput); 
+
+    this.setState(Object.assign(userInput, validateNewInput));
+  }
+
   isValidated() {
-  
-    const userInput = this._grabUserInput(); // grab user entered vals
-    const validateNewInput = this._validateData(userInput); // run the new input against the validator
+    const userInput = this._grabUserInput(); 
+    const validateNewInput = this._validateData(userInput); 
     let isDataValid = false;
 
-    // if full validation passes then save to store and pass as valid
     if (Object.keys(validateNewInput).every((k) => { return validateNewInput[k] === true })) {
-      isDataValid = true;
+        isDataValid = true;
     }
     else {
         this.setState(Object.assign(userInput, validateNewInput));
@@ -182,7 +178,7 @@ render() {
     document.getElementById("divDepartureDate").className = notValidClasses.departureDateCls;
   } 
 
-    /* First Name */
+    /* Arrival Date */
     if (typeof this.state.arrivalDateVal == 'undefined' || this.state.arrivalDateVal) {
       notValidClasses.arrivalDateCls = 'form-control';
     }
@@ -190,7 +186,7 @@ render() {
        notValidClasses.arrivalDateCls = 'form-control has-error';
     }
 
-    /* Last Name */    
+    /* Departure Date */    
     if (typeof this.state.departureDateVal == 'undefined' || this.state.departureDateVal) {
       notValidClasses.departureDateCls = 'form-control';
     }
@@ -208,11 +204,12 @@ render() {
                 Check In Date:*
             </label>
                     <div id="divArrivalDate" className="col-md-8">
-                            <DatePicker ref="arrivalDate" id="arrivalDate"
+                            <DatePicker ref="arrivalDate"
                                 dateFormat="YYYY-MM-DD"
                                 selected={this.state.arrivalDate}
                                 onChange={this.handleArrivalDateChange} 
-                                 //onBlur={this.validationCheck}                         
+                                 onBlur={this.validationCheck} 
+                                 minDate={moment()}                        
                                 className={notValidClasses.arrivalDateCls}/>
                     </div>
         </div>
@@ -223,11 +220,12 @@ render() {
               Check Out Date:*
             </label>
             <div id="divDepartureDate" className="col-md-8">
-                  <DatePicker ref="departureDate" id="departureDate"
+                  <DatePicker ref="departureDate"
                 dateFormat="YYYY-MM-DD"
                 selected={this.state.departureDate}
                 onChange={this.handleDepartureDateChange} 
-                 //onBlur={this.validationCheck} 
+                 onBlur={this.validationCheck}
+                 minDate={this.state.arrivalDate} 
                 className={notValidClasses.departureDateCls}/>
               </div>
       </div>

@@ -17,7 +17,7 @@ export class AdvanceDonations extends Component {
         isLoaded: false,
         error: null,
         advanceAmount: '',
-        advanceReceivedOn: moment(),
+        advanceReceivedOn: null,
         advanceReceiptNo:'',
         items: []
     }; 
@@ -31,7 +31,7 @@ export class AdvanceDonations extends Component {
   }
 
   componentDidMount() {
-   this.fetchAdvanceDonationsIfExists();
+      this.fetchAdvanceDonationsIfExists();
   }
 
 
@@ -210,6 +210,11 @@ insertAdvanceDonationDetails(){
 
   if (this.state.isLoaded){
     notify.show('Advance Donation details saved successfully!', 'success');
+    this.setState({
+      advanceReceivedOn: null
+    });
+    this.refs.amount.value = '';
+    this.refs.receipt.value = '';
   }
 }  
 
