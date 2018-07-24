@@ -407,6 +407,7 @@ export class Guests extends Component {
           var wizardOl = document.getElementsByClassName("progtrckr");
           if (typeof wizardOl[0] != 'undefined'){
             wizardOl[0].style.pointerEvents = "auto";
+            document.getElementById("next-button").style.marginTop = "0em";
             document.getElementById("next-button").style.visibility = "visible";
           }
 

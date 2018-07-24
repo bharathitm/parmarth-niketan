@@ -23,6 +23,10 @@ export class Reports extends React.Component {
             ]
         };
 
+        this.viewPrint = false;
+
+        this.handlePrint = this.handlePrint.bind(this);
+
         this.reportStore = {
             startDate: moment(),
             endDate: moment()
@@ -36,6 +40,8 @@ export class Reports extends React.Component {
         }
       }
 
+
+
     handleShow(){
 
         const startDate = (getFormattedDate(this.reportStore.startDate)).toString();
@@ -47,12 +53,9 @@ export class Reports extends React.Component {
             })
             .then((result) => {
                 this.setState({
-                    isLoaded:true,
-                    items: result,
-                  }, function() {
-                    this.showPrintReport();
-                  }
-                );
+                isLoaded: true,
+                items: result
+                });
             })
             .catch((error) => {
                 this.setState({
@@ -64,32 +67,60 @@ export class Reports extends React.Component {
               });
     }
 
-    showPrintReport(){
-        if (this.state.items.length > 0){
-            var printWindow = window.open('', '', 'height=400,width=800');
-            printWindow.document.write('<html><head><title>Check In Report</title>');
-            printWindow.document.write('</head><body >');
-            printWindow.document.write(document.getElementById("divCheckInContents").innerHTML);
-            printWindow.document.write('</body></html>');
-            printWindow.document.close();
-            printWindow.print();
-        } else {
-            notify.show('No Check Ins for given date period!', 'error');
-        } 
+    handlePrint = () => {
+        var printWindow = window.open('', '', 'height=400,width=800');
+        printWindow.document.write('<html><head><title>Check In Report</title>');
+        printWindow.document.write('</head><body >');
+        printWindow.document.write(document.getElementById("divCheckInContents").innerHTML);
+        printWindow.document.write('</body></html>');
+        printWindow.document.close();
+        printWindow.print();
     }
 
     render() {
+        if (!this.state.isLoaded){ //page load view
+            return (
+                <div className="divError">
+                <ErrorBoundary>
+                <DatePeriodPicker viewPrint = {false}
+                    handleShow={() => (this.handleShow())} 
+                    handlePrint={() => (this.handlePrint())} 
+                    updateReportStore={(u) => {this.updateReportStore(u)}}>
+                </DatePeriodPicker>
+                </ErrorBoundary>
+            </div>
+            );
+        } else if (this.state.isLoaded && this.state.items.length == 0){ // no data returned
+            //notify.show('No Check Ins for the given duration!', 'error');
+            return  (
+                <div className="divError">
+                <ErrorBoundary>
+                <DatePeriodPicker  viewPrint ={false}
+                    handleShow={() => (this.handleShow())} 
+                    handlePrint={() => (this.handlePrint())} 
+                    updateReportStore={(u) => {this.updateReportStore(u)}}>
+                </DatePeriodPicker>
+                </ErrorBoundary>
+            <div>No Check Ins for the given duration! </div>
+            </div>
+            );
+        } else { // when data is returned
           return (
             <div className="divError">
                     <ErrorBoundary>
-                            <DatePeriodPicker
-                                handleShow={() => (this.handleShow())}
-                                updateReportStore={(u) => {this.updateReportStore(u)}}>
-                            </DatePeriodPicker>
 
-             <div id="divCheckInContents" style={{fontFamily: '"Lucida Sans Unicode"', visibility:'hidden'}}>
+                            <DatePeriodPicker  viewPrint = {true}
+                                handleShow={() => (this.handleShow())} 
+                                handlePrint={() => (this.handlePrint())} 
+                                updateReportStore={(u) => {this.updateReportStore(u)}}>
+                            </DatePeriodPicker>    
+                       
+                
+                            
+
+             <div id="divCheckInContents" style={{fontFamily: '"Lucida Sans Unicode"'}}>
                         <h2>SWAMI SHUKDEVANAND TRUST</h2>
-                        <h3 style={{margin: 0}}> PARMARTH NIKETAN</h3>
+                        <h3 style={{margin: 0}}> PARMARTH NIKETAN</h3>                       
                         <h4>Check In Details from {(getFormattedDate(this.reportStore.startDate)).toString()} to {(getFormattedDate(this.reportStore.endDate)).toString()}</h4>
 
                          <table width="100%" style={{borderSpacing: 0,borderCollapse: 'collapse'}}>
@@ -113,12 +144,13 @@ export class Reports extends React.Component {
                             </tr>
                             ))}
                         </tbody>
-                        </table>
+                        </table> 
                 </div>
-
+                       
             </ErrorBoundary>
             </div>
           );
+        }
     }
 }
 

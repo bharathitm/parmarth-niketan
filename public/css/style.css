@@ -13,6 +13,10 @@ body{
     /*padding:2px */
 }
 
+.multi-step{
+  
+}
+
 #divLogin{
   border:solid 1px silver;
   padding: 1em;
@@ -166,6 +170,11 @@ body{
   width:98%;
 }
 
+.div-today-availability-col .div-table-today{
+  display: table; 
+  margin: 0 auto;
+}
+
 .div-today-availability-col ul {
   overflow: auto;
   list-style-type: none;
@@ -182,7 +191,7 @@ body{
   text-align: center;
   -webkit-appearance: none;
   box-sizing: border-box;
-  width:115px;
+  width:125px;
   height:55px;
   word-wrap: normal;
 }
@@ -525,6 +534,7 @@ ol.progtrckr {
 
  .has-error {
   border:solid 2px red;  
+  background-color: #F0DDDC;
 }
 
 
@@ -688,6 +698,7 @@ width:100%;
   border:solid 1px silver;
   display: inline-block;  
   width:15%; 
+  float:left;
 }
 
 #divFilter{
@@ -706,7 +717,6 @@ width:100%;
   margin-top:1em;
   width:75%;
   display: inline-block;
-  float:right;
   margin-left:1em;
 }
 

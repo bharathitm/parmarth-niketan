@@ -36,8 +36,8 @@ export class BookRooms extends Component {
     }
 
     if (this.state.items.length > 0){
-      document.getElementsByClassName("div-book-room-search")[0].style.cssFloat = "left";
-      document.getElementById("divSearchResults").style.cssFloat = "none";
+      // document.getElementsByClassName("div-book-room-search")[0].style.cssFloat = "left";
+      // document.getElementById("divSearchResults").style.cssFloat = "none";
 
       this.setAllSelectedRooms();
     }
@@ -67,8 +67,8 @@ export class BookRooms extends Component {
 
   handleSearch(){
 
-    document.getElementsByClassName("div-book-room-search")[0].style.cssFloat = "left";
-    document.getElementById("divSearchResults").style.cssFloat = "none";
+    // document.getElementsByClassName("div-book-room-search")[0].style.cssFloat = "left";
+    // document.getElementById("divSearchResults").style.cssFloat = "none";
 
     if ((this.props.getStore().arrivalDate == '') || (this.props.getStore().arrivalDate == null)){
       this.props.updateStore({
@@ -159,6 +159,7 @@ export class BookRooms extends Component {
          if (grandTotal != 0){
            wizardOl[0].style.pointerEvents = "auto";
            document.getElementById("next-button").style.visibility = "visible";
+           document.getElementById("next-button").style.marginTop = "-2.6em";
          } else { // no room selected
            wizardOl[0].style.pointerEvents = "none";
            document.getElementById("next-button").style.visibility = "hidden";
@@ -320,9 +321,11 @@ export class BookRooms extends Component {
     else if ((this.props.getStore().guestId != null) && (this.props.getStore().reservationId == null)){
         wizardOl[0].style.pointerEvents = "auto";
         document.getElementById("next-button").style.visibility = "visible";
+        document.getElementById("next-button").style.marginTop = "-2.6em";
     } // existing guest, existing reservation
     else if ((this.props.getStore().guestId != null) && (this.props.getStore().reservationId != null)){
       wizardOl[0].style.pointerEvents = "auto";
+      document.getElementById("next-button").style.marginTop = "-2.6em";
       document.getElementById("next-button").style.visibility = "visible";
     }
 
@@ -426,6 +429,7 @@ export class BookRooms extends Component {
             <div id="divSearchResults">
                 Please select search criteria!
             </div> 
+            <div style={{clear: 'both'}}></div>
               </form>
             </div>
           </div>

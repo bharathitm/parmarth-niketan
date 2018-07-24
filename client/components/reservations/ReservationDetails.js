@@ -471,6 +471,8 @@ export class ReservationDetails extends Component {
     //   this.props.jumpToStep(1);
     // }
 
+    document.getElementById("next-button").style.marginTop = "0em";
+
       //new guest, new reservation
       if((this.props.getStore().reservationId == null) && (window.sessionStorage.getItem('strSelectedRooms') == null) || (this.props.getStore().guestId == null)){
           this.props.jumpToStep(1);
