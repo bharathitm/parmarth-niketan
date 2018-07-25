@@ -9,7 +9,7 @@ const path = require('path');
 const CURRENT_WORKING_DIR = process.cwd();
 
 const config = {
-    context:path.resolve(CURRENT_WORKING_DIR, 'client'),
+    context: path.resolve(CURRENT_WORKING_DIR, 'client'),
     mode: "development",
     entry: {
         app: [
@@ -19,7 +19,7 @@ const config = {
         ]
     },
     output: {
-        path:  path.resolve(CURRENT_WORKING_DIR, 'dist'), //  destination
+        path: path.resolve(CURRENT_WORKING_DIR, 'dist'), //  destination
         filename: 'client.bundle.js',
         publicPath: '/dist/'
     },
