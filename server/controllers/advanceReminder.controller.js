@@ -1,6 +1,6 @@
 var nodemailer = require('nodemailer');
 var mysql = require('mysql');
-var config = require('../config.js');
+import {config} from '../config.js';
 var errorController = require('./error.controller');
 
 var connection = mysql.createConnection(config);
@@ -8,6 +8,8 @@ var connection = mysql.createConnection(config);
 var transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
+    // user: process.env.GMAIL_USER,
+    // pass: process.env.GMAIL_PASSWORD
     user: 'bharathitm@gmail.com',
     pass: 'P1ggych0ps1!'
   }
@@ -45,7 +47,7 @@ export function SendReminders(isReminder) {
                 try{
 
                   var mailOptions = {
-                    from: 'bharathitm@gmail.com',
+                    from: process.env.GMAIL_USER,
                     to : JSON.stringify(results[0][i].email_id),
                     subject: 'Parmarth Niketan - Advance Donation Reminder',
                     html: 'Dear ' + JSON.stringify(results[0][i].guest_name) + ',' + htmlText
@@ -60,6 +62,7 @@ export function SendReminders(isReminder) {
                     }
                   });
                 } catch (error){
+                  errorController.LogError(error);
                   console.log(error);
                 }
 

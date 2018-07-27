@@ -45,7 +45,6 @@ Navigate to http://localhost:3000/swagger for the API documentation.
 - JSON Web Tokens(jwt) - [jsonwebtoken](https://www.npmjs.com/package/jsonwebtoken)
 - Logging Library - [Winston](https://www.npmjs.com/package/winston)
 - Object schema validation  - [Joi](https://www.npmjs.com/package/joi)
-- API documentation using [swagger-jsdoc](https://www.npmjs.com/package/swagger-jsdoc) and [swagger-ui](https://www.npmjs.com/package/swagger-ui)
 - JavaScript library for building user interfaces - [React](https://facebook.github.io/react/)
 - Predictable state container - [Redux](http://redux.js.org/)
 - A React component library implementing Google's Material Design - [Material-UI](https://material-ui-1dab0.firebaseapp.com/)

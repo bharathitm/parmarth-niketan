@@ -69,7 +69,7 @@ export class TodayAvailability extends React.Component {
       } else {
           return (
             <div><h4>Today's Availability</h4><hr />
-            <div class="div-table-today">
+            <div className="div-table-today">
              <ul>
                  {items.map(item => (
                   <li key={item.block_id}>

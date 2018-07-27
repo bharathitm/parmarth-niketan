@@ -40,6 +40,8 @@ export class SearchBox extends Component {
         arrivalDate: moment(this.props.getSearchStore().arrivalDate),
         departureDate: moment(this.props.getSearchStore().departureDate)
       });
+      this.refs.arrivalDate.selected = this.props.getSearchStore().arrivalDate;
+      this.refs.departureDate.selected = this.props.getSearchStore().departureDate;
     }    
   }
 
@@ -166,7 +168,7 @@ export class SearchBox extends Component {
 
 render() {
 
-      // explicit class assigning based on validation
+  //alert(this.props.getSearchStore().searchLoaded + " searchloaded");
       let notValidClasses = {};
 
   if((this.props.getSearchStore().reservationId != null) && (document.getElementById("divArrivalDate") != null)){

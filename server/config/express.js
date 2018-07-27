@@ -11,8 +11,8 @@ const app = express();
 
 require('dotenv').config();
 
-app.set('port',  process.env.APP_PORT || 3000);
-app.set('host',  process.env.APP_HOST || 'localhost');
+app.set('port',  process.env.APP_PORT);
+app.set('host',  process.env.APP_HOST);
 
 app.use('/dist', express.static(constant.distDir));
 

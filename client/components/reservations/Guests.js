@@ -31,7 +31,7 @@ export class Guests extends Component {
       searchText: null   
     }; 
 
-    this._validateOnDemand = true; // this flag enables onBlur validation as user fills forms
+    this._validateOnDemand = true; 
 
     this.validationCheck = this.validationCheck.bind(this);
     this.isValidated = this.isValidated.bind(this);
@@ -109,6 +109,7 @@ export class Guests extends Component {
     }
     else{
       notify.show('No Guest Details found!', 'error');
+      alert();
       this.props.jumpToStep(0);
     }
 
@@ -148,11 +149,10 @@ export class Guests extends Component {
 
   isValidated() {
   
-    const userInput = this._grabUserInput(); // grab user entered vals
-    const validateNewInput = this._validateData(userInput); // run the new input against the validator
+    const userInput = this._grabUserInput(); 
+    const validateNewInput = this._validateData(userInput); 
     let isDataValid = false;
 
-    // if full validation passes then save to store and pass as valid
     if (Object.keys(validateNewInput).every((k) => { return validateNewInput[k] === true })) {
         if (
           this.props.getStore().firstName != userInput.firstName || 
@@ -287,11 +287,11 @@ export class Guests extends Component {
     })
     .then(
         (result) => {
-          this.setState({
-            isLoaded: true,
+          this.props.updateStore({
             guestId: result[0].guest_id
           });
-          this.props.updateStore({
+          this.setState({
+            isLoaded: true,
             guestId: result[0].guest_id
           });
           notify.show('Guest details added successfully!', 'success');
@@ -304,16 +304,12 @@ export class Guests extends Component {
       notify.show('Oops! Something went wrong! Please try again!', 'error');
       logError(error);
     });
-
-    // if (this.state.isLoaded){
-    //   notify.show('Guest details added successfully!', 'success');
-    // }
   }
 
   updateGuestData(){
 
-    alert(this.props.getStore().guestId);
-    alert(this.state.firstName);
+    // alert(this.props.getStore().guestId);
+    // alert(this.state.firstName);
 
     const payload = {
       guest_id: this.props.getStore().guestId,
@@ -404,30 +400,29 @@ export class Guests extends Component {
     }
 
     // if (this.props.getStore().firstName != ''){
-          var wizardOl = document.getElementsByClassName("progtrckr");
+           var wizardOl = document.getElementsByClassName("progtrckr");
           if (typeof wizardOl[0] != 'undefined'){
             wizardOl[0].style.pointerEvents = "auto";
             document.getElementById("next-button").style.marginTop = "0em";
-            document.getElementById("next-button").style.visibility = "visible";
+            //document.getElementById("next-button").style.visibility = "visible";
           }
 
-        //  //new guest, new reservation
-        //  if((this.props.getStore().guestId == null) && (this.props.getStore().reservationId == null)){
-        //    //if (typeof wizardOl[0] != 'undefined'){
-        //      wizardOl[0].style.pointerEvents = "auto";
-        //      document.getElementById("next-button").style.visibility = "visible";
-        //    //}
-        //  } // existing guest, new reservation
-        //  else if ((this.props.getStore().guestId != null) && (this.props.getStore().reservationId == null)){
-        //      wizardOl[0].style.pointerEvents = "auto";
-        //      document.getElementById("next-button").style.visibility = "visible";
-        //  } // existing guest, existing reservation
-        //  else if ((this.props.getStore().guestId != null) && (this.props.getStore().reservationId != null)){
-        //   document.getElementById("next-button").style.visibility = "visible";
-        //  }
+         //new guest, new reservation
+         if((this.props.getStore().guestId == null) && (this.props.getStore().reservationId == null)){
+           //if (typeof wizardOl[0] != 'undefined'){
+             wizardOl[0].style.pointerEvents = "auto";
+             document.getElementById("next-button").style.visibility = "visible";
+           //}
+         } // existing guest, new reservation
+         else if ((this.props.getStore().guestId != null) && (this.props.getStore().reservationId == null)){
+             wizardOl[0].style.pointerEvents = "auto";
+             document.getElementById("next-button").style.visibility = "visible";
+         } // existing guest, existing reservation
+         else if ((this.props.getStore().guestId != null) && (this.props.getStore().reservationId != null)){
+          document.getElementById("next-button").style.visibility = "visible";
+         }
     // }
 
-    // explicit class assigning based on validation
     let notValidClasses = {};
 
     /* First Name */

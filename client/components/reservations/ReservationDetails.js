@@ -37,13 +37,11 @@ export class ReservationDetails extends Component {
       guestId: props.getStore().guestId,
       reservationId: props.getStore().reservationId
     };
-    
-
-   
+      
     this.handleAdvanceReminderChange = this.handleAdvanceReminderChange.bind(this);
     this.handleArrivalTimeChange = this.handleArrivalTimeChange.bind(this);
 
-    this._validateOnDemand = true; // this flag enables onBlur validation as user fills forms
+    this._validateOnDemand = true; 
 
     this.validationCheck = this.validationCheck.bind(this);
     this.isValidated = this.isValidated.bind(this);
@@ -72,12 +70,11 @@ export class ReservationDetails extends Component {
   componentDidMount() {
     if (this.props.getStore().guestId != null){
       this.fetchReservationDetailsIfExists();
+      document.getElementById("next-button").style.marginTop = "0em";
     }
    
-
     this.refs.arrivalDate.innerHTML = this.props.getStore().arrivalDate;
     this.refs.departureDate.innerHTML = this.props.getStore().departureDate;
-    //this.refs.advanceReminderOn.selected = this.props.getStore().advanceReminderOn;
 
     //hide Sanskara Div by default
     this.refs.divSanskara.style.visibility = "hidden";
@@ -117,14 +114,11 @@ export class ReservationDetails extends Component {
 
     if (items.length != 0)
     {
-      //this has to be validated again and fixed. works in get now but not sure about insert/update
       var aDate = moment(items[0].date_of_arrival);
       var aReminder = moment(items[0].advance_reminder_on);
 
       this.props.updateStore({
         reservationId: items[0].reservation_id,
-        //arrivalDate: aDate.format("YYYY-MM-DD"),
-        //arrivalDate: aDate,
         arrivalDate: aDate.format("YYYY-MM-DD"),
         departureDate: items[0].date_of_departure,
         noOfPpl: items[0].no_of_people,
@@ -134,14 +128,11 @@ export class ReservationDetails extends Component {
         sanskaraId: items[0].sanskara_id,
         advanceReminderOn: (items[0].advance_reminder_on == null)? '' : aReminder,
         arrivalTime: aDate
-        //arrivalTime: items[0].date_of_arrival
       });
 
       this.setState({
         reservationId: items[0].reservation_id,
-        //arrivalDate: aDate.format("YYYY-MM-DD"),
         arrivalDate: aDate.format("YYYY-MM-DD"),
-        //arrivalDate: aDate,
         departureDate: items[0].date_of_departure,
         noOfPpl: items[0].no_of_people,
         comments: (items[0].reservation_comments == null)? '': items[0].reservation_comments,
@@ -150,12 +141,10 @@ export class ReservationDetails extends Component {
         sanskaraId: items[0].sanskara_id,
         advanceReminderOn: (items[0].advance_reminder_on == null)? '' : aReminder,
         arrivalTime: aDate
-        //arrivalTime: aDate.format("HH:mm")
       });
 
     
       this.refs.arrivalDate.innerHTML = aDate.format("YYYY-MM-DD");
-      //this.refs.arrivalDate.value = aDate;
       this.refs.departureDate.innerHTML = items[0].date_of_departure;
       this.refs.noOfPpl.value = items[0].no_of_people;
       this.refs.comments.value = (items[0].reservation_comments == null)? '': items[0].reservation_comments;
@@ -182,11 +171,10 @@ export class ReservationDetails extends Component {
 
   isValidated() {
 
-    const userInput = this._grabUserInput(); // grab user entered vals
-    const validateNewInput = this._validateData(userInput); // run the new input against the validator
+    const userInput = this._grabUserInput(); 
+    const validateNewInput = this._validateData(userInput); 
     let isDataValid = false;
 
-    // if full validation passes then save to store and pass as valid
     if (Object.keys(validateNewInput).every((k) => { return validateNewInput[k] === true })) {
         if (
           this.props.getStore().arrivalTime != userInput.arrivalTime || 
@@ -196,11 +184,10 @@ export class ReservationDetails extends Component {
           this.props.getStore().advanceReminderOn != userInput.advanceReminderOn ||
           this.props.getStore().comments.toString() != userInput.comments.toString()
         ) { 
-            // only update store of something changed
           this.props.updateStore({
             ...userInput,
-            savedToCloud: false // use this to notify step4 that some changes took place and prompt the user to save again
-          });  // Update store here (this is just an example, in reality you will do it via redux or flux)
+            savedToCloud: false 
+          });  
 
           if (this.state.reservationId != null){
             this.updateReservationDetails();
@@ -212,7 +199,6 @@ export class ReservationDetails extends Component {
         isDataValid = true;
     }
     else {
-        // if anything fails then update the UI validation state but NOT the UI Data State
         this.setState(Object.assign(userInput, validateNewInput));
     }  
 
@@ -252,15 +238,8 @@ export class ReservationDetails extends Component {
     .then((response) => {
       return checkError(response);
     })
-    .then((result) => { 
-          notify.show('New reservation added successfully!', 'success');   
-          this.setState({
-            isLoaded: true,
-            reservationId: result[0].reservation_id
-          });
-          this.props.updateStore({
-            reservationId: result[0].reservation_id
-          });    
+    .then((result) => {  
+          notify.show('New reservation added successfully!', 'success');     
     })
     .catch((error) => {
       this.setState({
@@ -270,11 +249,6 @@ export class ReservationDetails extends Component {
       notify.show('Oops! Something went wrong! Please try again!', 'error');
       logError(error);
     });
-
-    // if (this.state.isLoaded){
-    //   notify.show('New reservation added successfully!', 'success');
-    // }
-
   }
 
   handleAdvanceReminderChange(date) {
@@ -336,15 +310,14 @@ export class ReservationDetails extends Component {
     if (!this._validateOnDemand)
       return;
 
-    const userInput = this._grabUserInput(); // grab user entered vals
-    const validateNewInput = this._validateData(userInput); // run the new input against the validator
+    const userInput = this._grabUserInput(); 
+    const validateNewInput = this._validateData(userInput); 
 
     this.setState(Object.assign(userInput, validateNewInput));
   }
 
    _validateData(data) {
     return  {
-      //arrivalTimeVal: (data.arrivalTime != ''),
       arrivalTimeVal: (data.arrivalTime == null || data.arrivalTime == '')? false: true,
       reservationTypeVal: (data.reservationTypeId != 0), // required: anything besides N/A
       noOfPplVal: (data.noOfPpl != ''),
@@ -437,15 +410,10 @@ export class ReservationDetails extends Component {
     });   
 
     this.props.redirectToDashboard();
-
   }
 
   getReservationStore() {
     return this.reservationStore;
-  }
-
-  redirectToDashboardPage() {
-    this.props.redirectToDashboard();
   }
 
   changeCollapsibleOverflow(trigger){
@@ -470,13 +438,16 @@ export class ReservationDetails extends Component {
     // ){
     //   this.props.jumpToStep(1);
     // }
-
-    document.getElementById("next-button").style.marginTop = "0em";
+ 
 
       //new guest, new reservation
-      if((this.props.getStore().reservationId == null) && (window.sessionStorage.getItem('strSelectedRooms') == null) || (this.props.getStore().guestId == null)){
+      if((this.props.getStore().reservationId == null) && (window.sessionStorage.getItem('strSelectedRooms') == null)){
           this.props.jumpToStep(1);
-      } // existing guest, new reservation
+      } 
+      
+      
+    
+      // existing guest, new reservation
       // else if ((this.props.getStore().guestId != null) && (this.props.getStore().reservationId == null)){
 
       // } // existing guest, existing reservation
@@ -484,7 +455,6 @@ export class ReservationDetails extends Component {
 
       // }
 
-    // explicit class assigning based on validation
     let notValidClasses = {};
 
     /* Arrival Time */
@@ -570,7 +540,7 @@ export class ReservationDetails extends Component {
                       {/* No. of People */}
                       <div className="form-group col-md-12 content form-block-holder">
                         <label className="control-label col-md-4">
-                          No. of People: 
+                          No. of People: *
                         </label>
                         <div className="col-md-8">
                           <input
@@ -666,22 +636,20 @@ export class ReservationDetails extends Component {
                     </div>
               </div>
              </div>
-              <br/>
-               {/* <Collapsible trigger="Room Bookings" triggerStyle={{ visibility: this.props.getStore().reservationId != null ? 'visible':'hidden', display: this.props.getStore().reservationId != null? 'inline':'none' }}> */}
+              <div style={{ visibility: this.props.getStore().reservationId != null ? 'visible':'hidden', display: this.props.getStore().reservationId != null? 'inline':'none' }}>
+               <br/>
                <Collapsible trigger="Room Bookings">
                <RoomBookings getReservationStore={() => (this.getReservationStore())}>
                </RoomBookings>
                </Collapsible>
                <br/>
-               {/* <Collapsible trigger="Advance Donations" onOpen={() => this.changeCollapsibleOverflow(true)} 
-               onClose={() => this.changeCollapsibleOverflow(false)} 
-               triggerStyle={{ visibility: this.props.getStore().reservationId != null ? 'visible':'hidden', display: this.props.getStore().reservationId != null? 'inline':'none' }}> */}
                 <Collapsible trigger="Advance Donations" onOpen={() => this.changeCollapsibleOverflow(true)} 
                     onClose={() => this.changeCollapsibleOverflow(false)}>
                <AdvanceDonations getReservationStore={() => (this.getReservationStore())}>
                </AdvanceDonations>
                </Collapsible>
-               <br/>
+               <br/><br/>
+               </div>
           </form>
         </div>
       </div>

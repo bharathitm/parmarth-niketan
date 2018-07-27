@@ -211,9 +211,7 @@ export class CheckIns extends React.Component {
         }
       }
 
-      if ((!isLoaded) && (error)){
-        return <div><h4>Today's Check Ins</h4><hr /><span id="spNoDataorError">{JSON.stringify(error.message)}</span></div>;        
-       } else if (!isLoaded) {
+  if (!isLoaded) {
           return <div><h4>Today's Check Ins</h4><hr />Loading...</div>;
       } else if (checkInRooms.length == 0){
           return  (

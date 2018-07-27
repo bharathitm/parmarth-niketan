@@ -36,10 +36,7 @@ export class BookRooms extends Component {
     }
 
     if (this.state.items.length > 0){
-      // document.getElementsByClassName("div-book-room-search")[0].style.cssFloat = "left";
-      // document.getElementById("divSearchResults").style.cssFloat = "none";
-
-      this.setAllSelectedRooms();
+        this.setAllSelectedRooms();
     }
   }
 
@@ -66,9 +63,6 @@ export class BookRooms extends Component {
   }
 
   handleSearch(){
-
-    // document.getElementsByClassName("div-book-room-search")[0].style.cssFloat = "left";
-    // document.getElementById("divSearchResults").style.cssFloat = "none";
 
     if ((this.props.getStore().arrivalDate == '') || (this.props.getStore().arrivalDate == null)){
       this.props.updateStore({
@@ -283,7 +277,6 @@ export class BookRooms extends Component {
         this.props.updateStore({
           filteredBlocks: this.props.getStore().uniqueBlocks
         });
-        //alert(this.props.getStore.filteredBlocks.length + " atleast");
     }
    }
 
@@ -329,7 +322,7 @@ export class BookRooms extends Component {
       document.getElementById("next-button").style.visibility = "visible";
     }
 
-    let { isLoaded, error, items, isReRender } = this.state;
+    let { isLoaded, items, isReRender } = this.state;
 
     //loads first time and when all filter check boxes are unchecked
     if (!isReRender){
@@ -373,7 +366,6 @@ export class BookRooms extends Component {
                     }
                     arrRooms.push(...newRoomsArray);
                 }
-              
               }
 
               this.props.updateStore({
@@ -408,56 +400,15 @@ export class BookRooms extends Component {
               searchLoaded:  false
             });
           }
-
-         // alert(this.props.getStore().filteredBlocks + " before loading");
       }
 
-
-      if (!isLoaded) { // default view
-        return (
-          <div className="step step3">
-            <div className="row">
-              <form id="Form" className="form-horizontal">          
-                    <h4>Book Rooms</h4>        
-                    <SearchBox 
-                          getSearchStore={() => (this.props.getStore())} 
-                          updateSearchStore={(u) => {this.props.updateStore(u)}}
-
-                        handleBlocksChanged={() => (this.handleBlocksChanged())}
-                        handleSearch={() => (this.handleSearch())}>
-                </SearchBox>
-            <div id="divSearchResults">
-                Please select search criteria!
-            </div> 
-            <div style={{clear: 'both'}}></div>
-              </form>
-            </div>
-          </div>
-        );
-    } 
-    else if (items.length == 0){
-        return  (
-          <div className="step step3">
-          <div className="row">
-            <form id="Form" className="form-horizontal">          
-                  <h4>Book Rooms</h4>        
-                  <SearchBox 
-                      getSearchStore={() => (this.props.getStore())} 
-                      updateSearchStore={(u) => {this.props.updateStore(u)}}
-
-                      handleBlocksChanged={() => (this.handleBlocksChanged())}                      
-                      handleSearch={() => (this.handleSearch())}>
-              </SearchBox>
-          <div id="divSearchResults">
-              No rooms available for given search criteria!
-          </div> 
-          <div style={{clear: 'both'}}></div>
-            </form>
-          </div>
-        </div>
-        );
-    } else {
-     // alert(this.props.getStore().filteredBlocks.length);
+      // if (!isLoaded && document.getElementById("Form") != null){   
+      //   let myColor = { background: '#1888B7', text: "#FFFFFF" };
+      //   notify.show('Please select search criteria!', 'custom', 5000, myColor);
+      // }
+      if (isLoaded && items.length == 0){
+        notify.show('No rooms available for given search criteria!', 'error');
+      }
         return (
           <div className="step step3">
             <div className="row">
@@ -466,8 +417,8 @@ export class BookRooms extends Component {
                   <SearchBox 
                         getSearchStore={() => (this.props.getStore())} 
                         updateSearchStore={(u) => {this.props.updateStore(u)}}
-                      handleBlocksChanged={() => (this.handleBlocksChanged())}                      
-                      handleSearch={() => (this.handleSearch())}>
+                        handleBlocksChanged={() => (this.handleBlocksChanged())}                      
+                        handleSearch={() => (this.handleSearch())}>
                   </SearchBox>  
                       <div id="divSearchResults">
   
@@ -496,7 +447,7 @@ export class BookRooms extends Component {
                                         </ul> 
                                 </div>                                
                             ))} 
-                             <div className="div-block-totals grand-total">Grand Total <br/>Rs.<span id="spGrandTotal">0</span></div>                     
+                             <div className="div-block-totals grand-total" style={{ visibility: items.length > 0 ? 'visible':'hidden', display: items.length > 0? 'inline':'none' }}>Grand Total <br/>Rs.<span id="spGrandTotal">0</span></div>                     
                       </div>
                       <div style={{clear: 'both'}}></div>
                      
@@ -505,7 +456,6 @@ export class BookRooms extends Component {
           </div>
         )
       }
-    }
 }
 
 export default BookRooms;

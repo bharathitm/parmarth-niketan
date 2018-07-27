@@ -47,7 +47,8 @@ export class Reservations extends React.Component {
         advanceReceivedOn: '',
         advanceReceiptNo: '',
         savedToCloud: false,
-        searchText: ''
+        searchText: '',
+        searchLoaded: false
       };
     }
 
@@ -155,8 +156,8 @@ export class Reservations extends React.Component {
 
         const steps =
         [
-            {name: 'Book Rooms', component: <BookRooms getStore={() => (this.getStore())} getName={() => (this.getName())} updateStore={(u) => {this.updateStore(u)}}/>},
-            {name: 'Guest', component: <Guests getStore={() => (this.getStore())} loadName={(u) => {this.loadName(u)}} updateStore={(u) => {this.updateStore(u)}}/>},
+            {name: 'Book Rooms', component: <BookRooms getStore={() => (this.getStore())} redirectToDashboard={() => (this.redirectToDashboard())} getName={() => (this.getName())} updateStore={(u) => {this.updateStore(u)}}/>},
+            {name: 'Guest', component: <Guests getStore={() => (this.getStore())} redirectToDashboard={() => (this.redirectToDashboard())} loadName={(u) => {this.loadName(u)}} updateStore={(u) => {this.updateStore(u)}}/>},
             {name: 'Reservation', component: <ReservationDetails getStore={() => (this.getStore())} redirectToDashboard={() => (this.redirectToDashboard())} updateStore={(u) => {this.updateStore(u)}}/>},
             {name: 'Empty', component: <Empty/>}
         ]
@@ -172,8 +173,8 @@ export class Reservations extends React.Component {
                 stepsNavigation={true}
                 nextTextOnFinalActionStep={"Save"}
                 startAtStep={window.sessionStorage.getItem('step') ? parseFloat(window.sessionStorage.getItem('step')) : 0}
-                startAtStep={0}
-                //onStepChange={(step) => window.sessionStorage.setItem('step', step)}
+                //startAtStep={0}
+                onStepChange={(step) => window.sessionStorage.setItem('step', step)}
             />
             </div>
             </ErrorBoundary>

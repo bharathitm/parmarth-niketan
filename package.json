@@ -9,8 +9,6 @@
     "webpack:prod": "cross-env NODE_ENV=production webpack --mode production --config ./webpack/webpack.config.prod.js",
     "build": "rimraf dist && npm run webpack:dev && npm run start",
     "build:prod": "rimraf dist && npm run webpack:prod && npm run start",
-    "migrate": "knex migrate:latest",
-    "migrate:make": "knex migrate:make",
     "migrate:rollback": "knex migrate:rollback",
     "lint": "eslint client server; exit 0"
   },
@@ -39,6 +37,7 @@
     "mysql": "^2.15.0",
     "node": "^10.7.0",
     "node-cron": "^1.2.1",
+    "node-rest-client": "^3.1.0",
     "nodemailer": "^4.6.7",
     "npm": "^6.2.0",
     "passport": "^0.4.0",

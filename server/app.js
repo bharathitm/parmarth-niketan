@@ -10,7 +10,7 @@ import webpackConfig from '../webpack/webpack.config.dev';
 
 //uncomment this to run the advance reminder cron
 
-//import reminderCron from './cron';
+import reminderCron from './cron';
 
 const passport = require('passport'),
     auth = require('./middlewares/auth'),

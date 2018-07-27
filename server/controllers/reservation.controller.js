@@ -1,5 +1,5 @@
 var mysql = require('mysql');
-var config = require('../config.js');
+import {config} from '../config.js';
 var errorController = require('./error.controller');
 
 var connection = mysql.createConnection(config);
@@ -94,6 +94,7 @@ export function add(req, res) {
         errorController.LogError(error);
         return res.send(error.code);
     }
+    res.send(results[0]);
     });
       
     //connection.end();   
