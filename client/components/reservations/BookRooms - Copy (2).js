@@ -19,42 +19,39 @@ export class BookRooms extends Component {
       isLoaded: false,
       isReRender: false,
       error: null,
-      items:[]
+      items:[],
+      uniqueBlocks: []
     }; 
 
     this.handleBlocksChanged = this.handleBlocksChanged.bind(this);
   }
 
-  // componentDidMount(){
+  componentDidMount(){
 
-  //   if (window.sessionStorage.getItem('searchResults')){
-  //     this.setState({
-  //       isLoaded: true,
-  //       items: JSON.parse(window.sessionStorage.getItem('searchResults')),
-  //     });
-  //     window.sessionStorage.removeItem('searchResults');
-  //   }
+    if (window.sessionStorage.getItem('searchResults')){
+      this.setState({
+        isLoaded: true,
+        items: JSON.parse(window.sessionStorage.getItem('searchResults')),
+      });
+      window.sessionStorage.removeItem('searchResults');
+    }
 
-  //   if (this.state.items.length > 0){
-  //       this.setAllSelectedRooms();
-  //   }
-  // }
+    if (this.state.items.length > 0){
+        this.setAllSelectedRooms();
+    }
+  }
 
 
-  // componentWillUnmount(){
-  //   if (this.state.isLoaded){
-  //     window.sessionStorage.removeItem('searchResults');
-  //     window.sessionStorage.setItem('searchResults', JSON.stringify(this.state.items));
-  //   }
-  // }
+  componentWillUnmount(){
+    if (this.state.isLoaded){
+      window.sessionStorage.removeItem('searchResults');
+      window.sessionStorage.setItem('searchResults', JSON.stringify(this.state.items));
+    }
+  }
 
   setAllSelectedRooms(){
     //rooms
     var selectedRooms = JSON.parse(window.sessionStorage.getItem('selectedRooms'));
-
-    // if (selectedRooms){
-    //   alert(selectedRooms.length);
-    // }
 
     if ((selectedRooms) && (selectedRooms.length > 0)){
         for (var cnt=0; cnt < selectedRooms.length; cnt++){
@@ -107,11 +104,9 @@ export class BookRooms extends Component {
       return checkError(response);
     })
     .then((result) => {
-        this.props.updateStore({
-            searchResultItems: result
-        });
         this.setState({
-          isLoaded:true
+          isLoaded: true,
+          items: result
         });
       })
       .catch((error) => {
@@ -119,7 +114,7 @@ export class BookRooms extends Component {
           isLoaded: false,
           error
         });
-        notify.show(error + 'Oops! Something went wrong! Please try again!', 'error');
+        notify.show('Oops! Something went wrong! Please try again!', 'error');
         logError(this.constructor.name + " " + error);
       });
 
@@ -234,9 +229,6 @@ export class BookRooms extends Component {
     .then((response) => {
       return checkError(response);
     })
-    .then((result) => {  
-      notify.show('Rooms added to the reservation successfully!', 'success');  
-    })
     .catch((error) => {
       this.setState({
         isLoaded: false,
@@ -286,10 +278,6 @@ export class BookRooms extends Component {
 
   render() {
 
-    if (this.props.getStore().searchResultItems.length > 0){
-      this.setAllSelectedRooms();
-  }
-
     //coming from reservations search in Dashboard, directly load Guest Details page
     if(this.props.getStore().searchText != ''){
       this.props.jumpToStep(1);
@@ -329,7 +317,7 @@ export class BookRooms extends Component {
       document.getElementById("next-button").style.visibility = "visible";
     }
 
-    let { isLoaded, isReRender } = this.state;
+    let { isLoaded, items, isReRender } = this.state;
 
     //loads first time and when all filter check boxes are unchecked
     if (!isReRender){
@@ -338,37 +326,38 @@ export class BookRooms extends Component {
            uniqueRooms: []
          });
         
-        if (this.props.getStore().searchResultItems.length > 0){
-                //show filter only if search results are available
+        if (items.length > 0){
+          
+              //show filter only if search results are available
               this.props.updateStore({
                 searchLoaded: true
               });
 
               //first block insert
               var arrBlocks = [];
-              arrBlocks.push(this.props.getStore().searchResultItems[0].block_id);
+              arrBlocks.push(items[0].block_id);
 
               var arrRooms = [];
               if ((this.props.getStore().noOfRooms != "null") && (this.props.getStore().noOfRooms != null)){
-                arrRooms = this.props.getStore().searchResultItems.filter(item => item.block_id == this.props.getStore().searchResultItems[0].block_id).slice(0, parseInt(this.props.getStore().noOfRooms))
+                arrRooms = items.filter(item => item.block_id == items[0].block_id).slice(0, parseInt(this.props.getStore().noOfRooms))
               } else {
-                arrRooms = this.props.getStore().searchResultItems.filter(item => item.block_id == this.props.getStore().searchResultItems[0].block_id);
+                arrRooms = items.filter(item => item.block_id == items[0].block_id);
               }
 
               var newRoomsArray = [];    
-              for (var i = 1; i < this.props.getStore().searchResultItems.length; i++)
+              for (var i = 1; i < items.length; i++)
               {
                 //unique block ids need to be captured in a separate array
-                if (this.props.getStore().searchResultItems[i].block_id != this.props.getStore().searchResultItems[i-1].block_id)
+                if (items[i].block_id != items[i-1].block_id)
                 {
-                    arrBlocks.push(this.props.getStore().searchResultItems[i].block_id);
+                    arrBlocks.push(items[i].block_id);
 
                     if ((this.props.getStore().noOfRooms != "null") && (this.props.getStore().noOfRooms != null)){
                       
-                      newRoomsArray = this.props.getStore().searchResultItems.filter(item => item.block_id == this.props.getStore().searchResultItems[i].block_id).slice(0, parseInt(this.props.getStore().noOfRooms));                   
+                      newRoomsArray = items.filter(item => item.block_id == items[i].block_id).slice(0, parseInt(this.props.getStore().noOfRooms));                   
                     } 
                     else{
-                      newRoomsArray = this.props.getStore().searchResultItems.filter(item => item.block_id == this.props.getStore().searchResultItems[i].block_id);
+                      newRoomsArray = items.filter(item => item.block_id == items[i].block_id);
                     }
                     arrRooms.push(...newRoomsArray);
                 }
@@ -413,11 +402,7 @@ export class BookRooms extends Component {
       //   let myColor = { background: '#1888B7', text: "#FFFFFF" };
       //   notify.show('Please select search criteria!', 'custom', 5000, myColor);
       // }
-
-      //alert(this.props.getStore().searchLoaded + " search loaded");
-      //alert(isReRender + " isReRender");
-      
-      if (isLoaded && this.props.getStore().searchResultItems.length == 0){
+      if (isLoaded && items.length == 0){
         notify.show('No rooms available for given search criteria!', 'error');
       }
         return (
@@ -458,7 +443,7 @@ export class BookRooms extends Component {
                                         </ul> 
                                 </div>                                
                             ))} 
-                             <div className="div-block-totals grand-total" style={{ visibility: this.props.getStore().searchResultItems.length > 0 ? 'visible':'hidden', display: this.props.getStore().searchResultItems.length > 0? 'inline':'none' }}>Grand Total <br/>Rs.<span id="spGrandTotal">0</span></div>                     
+                             <div className="div-block-totals grand-total" style={{ visibility: items.length > 0 ? 'visible':'hidden', display: items.length > 0? 'inline':'none' }}>Grand Total <br/>Rs.<span id="spGrandTotal">0</span></div>                     
                       </div>
                       <div style={{clear: 'both'}}></div>
                      

@@ -109,7 +109,6 @@ export class Guests extends Component {
     }
     else{
       notify.show('No Guest Details found!', 'error');
-      alert();
       this.props.jumpToStep(0);
     }
 
@@ -307,10 +306,6 @@ export class Guests extends Component {
   }
 
   updateGuestData(){
-
-    // alert(this.props.getStore().guestId);
-    // alert(this.state.firstName);
-
     const payload = {
       guest_id: this.props.getStore().guestId,
       first_name: this.state.firstName,
@@ -329,7 +324,6 @@ export class Guests extends Component {
       e_relationship: this.state.eRelationship
     };
 
-
     fetch(API_URL + "guests/" + this.props.getStore().guestId, {
       method: 'POST',
       headers: {
@@ -342,6 +336,9 @@ export class Guests extends Component {
     .then((response) => {
       return checkError(response);
     })
+    .then((result) => {  
+      notify.show('Guest details updated successfully!', 'success');     
+    })
     .catch((error) => {
       this.setState({
         isLoaded: false,
@@ -350,10 +347,6 @@ export class Guests extends Component {
       notify.show('Oops! Something went wrong! Please try again!', 'error');
       logError(error);
     });
-
-    if (this.state.isLoaded != false){
-      notify.show('Guest details updated successfully!', 'success');
-    }
   }
 
   updateEmergencyContactData(){
@@ -366,7 +359,6 @@ export class Guests extends Component {
       e_relationship: this.state.eRelationship
     };
 
-
     fetch(API_URL + "econtacts/" + this.state.guestEmergencyContactId, {
       method: 'POST',
       headers: {
@@ -378,6 +370,9 @@ export class Guests extends Component {
     .then((response) => {
       return checkError(response);
     })
+    .then((result) => {  
+      notify.show('Guest emergency contact details updated successfully!', 'success');  
+    })
     .catch((error) => {
       this.setState({
         isLoaded: false,
@@ -386,10 +381,6 @@ export class Guests extends Component {
       notify.show('Oops! Something went wrong! Please try again!', 'error');
       logError(error);
     });
-
-    if (this.state.isLoaded != false){
-      notify.show('Guest emergency contact details updated successfully!', 'success');
-    }
    }
 
 
@@ -550,7 +541,7 @@ export class Guests extends Component {
                               className={notValidClasses.firstNameCls}
                               required
                               defaultValue={this.state.firstName}
-                              onBlur={this.validationCheck} />
+                              onChange={this.validationCheck} />
                             </div>
                       </div>
                 </div>
@@ -567,7 +558,7 @@ export class Guests extends Component {
                           className={notValidClasses.lastNameCls}
                           required
                           defaultValue={this.state.lastName}
-                          onBlur={this.validationCheck} />     
+                          onChange={this.validationCheck} />     
                           </div>                 
                         </div>
                   </div>
@@ -588,7 +579,8 @@ export class Guests extends Component {
                         type="email"
                         className={notValidClasses.emailCls}
                         required
-                        defaultValue={this.state.email} />
+                        defaultValue={this.state.email} 
+                        onChange={this.validationCheck} />
                     </div>
                   </div>
 
@@ -606,7 +598,8 @@ export class Guests extends Component {
                           autoComplete="off"
                           className={notValidClasses.phoneCls}
                           required
-                          defaultValue={this.state.phone} />
+                          defaultValue={this.state.phone} 
+                           onChange={this.validationCheck}/>
                       </div>
                     </div>
                   </div>
@@ -625,7 +618,7 @@ export class Guests extends Component {
                               className={notValidClasses.addressCls}
                               required
                               defaultValue={this.state.address}
-                              onBlur={this.validationCheck} />
+                              onChange={this.validationCheck} />
                           </div>
                         </div>
                     </div>
@@ -644,7 +637,7 @@ export class Guests extends Component {
                               className={notValidClasses.cityCls}
                               required
                               defaultValue={this.state.city}
-                              onBlur={this.validationCheck} />
+                              onChange={this.validationCheck} />
                           </div>
                         </div>
                     </div>
@@ -662,7 +655,7 @@ export class Guests extends Component {
                                 className={notValidClasses.pinCls}
                                 required
                                 defaultValue={this.state.pin}
-                                onBlur={this.validationCheck} />
+                                onChange={this.validationCheck} />
                             </div>
                           </div>
 
@@ -682,7 +675,7 @@ export class Guests extends Component {
                                 className={notValidClasses.regionCls}
                                 required
                                 defaultValue={this.state.region}
-                                onBlur={this.validationCheck} />
+                                onChange={this.validationCheck} />
                             </div>
                           </div>
 
@@ -700,7 +693,7 @@ export class Guests extends Component {
                                   className={notValidClasses.countryCls}
                                   required
                                   defaultValue={this.state.country}
-                                  onBlur={this.validationCheck}>
+                                  onChange={this.validationCheck}>
                                   <option value="0">Please select</option>
                                   {this.populateCountries()}                   
                                 </select>
@@ -727,7 +720,7 @@ export class Guests extends Component {
                               className={notValidClasses.eFirstNameCls}
                               required
                               defaultValue={this.state.eFirstName}
-                              onBlur={this.validationCheck} />
+                              onChange={this.validationCheck} />
                             </div>
                       </div>
               </div>
@@ -744,7 +737,7 @@ export class Guests extends Component {
                           className={notValidClasses.eLastNameCls}
                           required
                           defaultValue={this.state.eLastName}
-                          onBlur={this.validationCheck} />                      
+                          onChange={this.validationCheck} />                      
                         </div>
                       </div>
                 </div>
@@ -764,7 +757,7 @@ export class Guests extends Component {
                           className={notValidClasses.ePhoneCls}
                           required
                           defaultValue={this.state.ePhone}
-                          onBlur={this.validationCheck} />
+                          onChange={this.validationCheck} />
                       </div>
                     </div>
                 </div>
@@ -781,7 +774,7 @@ export class Guests extends Component {
                               className={notValidClasses.eRelationshipCls}
                               required
                               defaultValue={this.state.eRelationship}
-                              onBlur={this.validationCheck} />
+                              onChange={this.validationCheck} />
                             </div>
                         </div>
                   </div>

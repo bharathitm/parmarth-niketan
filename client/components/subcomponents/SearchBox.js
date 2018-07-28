@@ -25,7 +25,7 @@ export class SearchBox extends Component {
 
     this.populateBlocks = this.populateBlocks.bind(this);
 
-    this._validateOnDemand = true; // this flag enables onBlur validation as user fills forms
+    this._validateOnDemand = true; 
 
     this.validationCheck = this.validationCheck.bind(this);
     this.isValidated = this.isValidated.bind(this);
@@ -34,7 +34,6 @@ export class SearchBox extends Component {
   }
 
   componentDidMount(){
-
     if(this.props.getSearchStore().reservationId != null){
       this.setState({
         arrivalDate: moment(this.props.getSearchStore().arrivalDate),
@@ -103,7 +102,7 @@ export class SearchBox extends Component {
     items.push(<option value="null"> No. Of Rooms</option>); 
     items.push(<option key={1} value={1}>{1} room</option>);   
 
-    for (let i = 2; i <= 10; i++) {             
+    for (let i = 2; i <= 3; i++) {             
          items.push(<option key={i} value={i}>{i} rooms</option>);   
     }
 
@@ -167,8 +166,6 @@ export class SearchBox extends Component {
 
 
 render() {
-
-  //alert(this.props.getSearchStore().searchLoaded + " searchloaded");
       let notValidClasses = {};
 
   if((this.props.getSearchStore().reservationId != null) && (document.getElementById("divArrivalDate") != null)){

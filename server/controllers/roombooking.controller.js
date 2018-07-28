@@ -68,8 +68,6 @@ export function update(req, res) {
  */
 export function add(req, res) {
 
-    console.log(req.body.advance_reminder_on);
-
     var call_stored_proc = "CALL sp_InsertReservationRoomBookings('" 
     + req.params.id + "','"
     + req.body.room_ids_str + "')";
@@ -81,6 +79,7 @@ export function add(req, res) {
         errorController.LogError(error);
         return res.send(error.code);
     }
+    res.send(results[0]);
     });
       
     //connection.end();   

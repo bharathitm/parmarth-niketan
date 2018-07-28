@@ -69,12 +69,12 @@ body{
 
 /*div for all tab */
 .tab-links {
-    width:50%;
-    margin-left:35%;
+    width:100%;
     font-size: 16pt;
     font-weight: bold;
     margin-top:-2.2em;
     color: rgba(52, 43, 82, 0.295);   
+    text-align: center;
 }
 
 /* individual tab */

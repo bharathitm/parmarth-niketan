@@ -4,7 +4,7 @@ var advanceReminders = require('./controllers/advanceReminder.controller');
 var salesforce = require('./controllers/salesforce.controller');
 
 // Automatically run the cron service for advance donation reminders
-cron.schedule('* * 23 * *', function(){
+cron.schedule('* * 21 * *', function(){
        advanceReminders.SendReminders(true);
      });
 

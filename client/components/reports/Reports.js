@@ -67,12 +67,16 @@ export class Reports extends React.Component {
     showPrintReport(){
         if (this.state.items.length > 0){
             var printWindow = window.open('', '', 'height=400,width=800');
+            try {
             printWindow.document.write('<html><head><title>Check In Report</title>');
             printWindow.document.write('</head><body >');
             printWindow.document.write(document.getElementById("divCheckInContents").innerHTML);
             printWindow.document.write('</body></html>');
             printWindow.document.close();
             printWindow.print();
+            } catch (e){
+                notify.show('Popup blocked! Please enable popups to see this report.', 'error');
+            }
         } else {
             notify.show('No Check Ins for given date period!', 'error');
         } 

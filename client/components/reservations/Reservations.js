@@ -19,8 +19,8 @@ export class Reservations extends React.Component {
       };
 
       this.sampleStore = {
-        arrivalDate: '',
-        departureDate: '',
+        arrivalDate: null,
+        departureDate: null,
         firstName: '',
         lastName: '',
         email: '',
@@ -48,7 +48,8 @@ export class Reservations extends React.Component {
         advanceReceiptNo: '',
         savedToCloud: false,
         searchText: '',
-        searchLoaded: false
+        searchLoaded: false,
+        searchResultItems: []
       };
     }
 
@@ -79,6 +80,10 @@ export class Reservations extends React.Component {
       pageLis[3].style.visibility = "hidden";
     }
 
+    // componentWillUnmount(){
+    //   alert("reservations unmount");
+    // }
+
     redirectToDashboard() {
       this.clearGuestSession();
       this.props.updateHomeStore({
@@ -101,8 +106,8 @@ export class Reservations extends React.Component {
       window.sessionStorage.removeItem('strSelectedRooms');
     
       this.sampleStore = {
-        arrivalDate: '',
-        departureDate: '',
+        arrivalDate: null,
+        departureDate: null,
         firstName: '',
         lastName: '',
         email: '',
@@ -136,7 +141,8 @@ export class Reservations extends React.Component {
         searchLoaded: false,
         uniqueBlocks: [],
         uniqueRooms: [],
-        filteredBlocks: []
+        filteredBlocks: [],
+        searchResultItems: []
 
       };
 
