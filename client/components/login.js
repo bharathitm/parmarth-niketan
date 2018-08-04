@@ -3,29 +3,37 @@ import React from 'react';
 import { GoogleLogin } from 'react-google-login';
 
 import {logError, checkError} from '../utils/helpers';
-import {API_URL} from '../config/config';
+import {API_URL, GoogleClientID} from '../config/config';
+import {notify} from 'react-notify-toast';
 
 
 export class Login extends React.Component {
 
     constructor(props) {
-      super(props);
-      this.state = {
-          accessToken:''
-      };
+        super(props);
 
-    this.checkIfUserExists = this.checkIfUserExists.bind(this);
+        this.checkIfUserExists = this.checkIfUserExists.bind(this);
     }
 
     loadHomeTabs = () => {
-
-     // alert(this.props.getHomeStore().userEmailId + " from login page");
-
-      this.props.parentMethod();
+        this.props.parentMethod();
     }
 
     responseGoogle = (response) => {
-            this.checkIfUserExists(response);
+        this.checkIfUserExists(response);
+    }
+
+    failedLogin(){
+        window.sessionStorage.removeItem('accessToken');
+        window.sessionStorage.removeItem('userName');
+        
+        notify.show("User doesn't have access to portal!", "error");
+
+        setTimeout(this.redirectAgain, 3000)
+    }
+
+    redirectAgain(){    
+        document.location.href = "https://www.google.com/accounts/Logout?continue=https://appengine.google.com/_ah/logout?continue=" + API_URL.substring(0,(API_URL).length-5);
     }
 
     checkIfUserExists(response){
@@ -37,22 +45,19 @@ export class Login extends React.Component {
                 })
                 .then((result) => {
                       if (result[0].is_user)  {
-                          this.props.updateHomeStore({
-                            accessToken: response.accessToken,
-                            userName: response.w3.ig,
-                            userEmailId: response.w3.U3
-                          });
-
                           sessionStorage.setItem("accessToken", response.accessToken);
+                          sessionStorage.setItem("userName", response.w3.ig);
 
                           this.setState({
                                     isLoaded: true,
-                                    accessToken: response.accessToken,
                                   }, function() {
                                         this.loadHomeTabs();
                                       }
                             );
-                        }      
+                        } 
+                        else{
+                           this.failedLogin();
+                        }
                   })
                   .catch((error) => {
                     this.setState({
@@ -68,23 +73,17 @@ export class Login extends React.Component {
     render() {
           return (
               <div id="divLogin">
-              <h2>Parmarth Niketan Reservations Portal</h2>
-              <div className = "div-table">
-                    <div className = "div-table-row">
-                          <div className ="div-table-col">
-                              <img src="./img/pujya_swamiji.jpg" />
-                          </div>
-                          <div className ="div-table-col">
+             
+               <div className = "div-table-login">
+               <img src="../img/logo.png"/>
+               <h2>Parmarth Niketan Reservations Portal</h2>
                           <GoogleLogin
-                              clientId="965244623378-7t6cm3inoicecl57i8sqfgfis9rroqef.apps.googleusercontent.com"
+                              clientId={GoogleClientID}
                               buttonText="Login with Google"
                               onSuccess={this.responseGoogle}
                               onFailure={this.responseGoogle} />
-                          </div>
-                    </div>
-                </div>
+                </div> 
             </div>
-            
           );
     }
 }

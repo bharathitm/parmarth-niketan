@@ -279,7 +279,7 @@ insertAdvanceDonationDetails(){
                                 {getFormattedDate(item.received_on).toString()}
                               </div>
                               <div className ="div-table-col col-bordered">
-                                {item.amount}
+                              &#8377; {item.amount}
                               </div>
                               <div className ="div-table-col col-bordered">
                                 {item.receipt_no}
@@ -334,7 +334,7 @@ insertAdvanceDonationDetails(){
                                           </div>
                                         </div>
                                         <div className ="div-table-col">
-                                          {/* Receipt No*/}
+                                          {/* Actions */}
                                         <div className="form-group col-md-12 content form-block-holder">
                                             <div className="col-md-8">
                                         <img src="./img/tick.png" onClick={() => this.handleAdd()}/>

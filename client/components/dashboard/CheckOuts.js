@@ -199,10 +199,10 @@ export class CheckOuts extends React.Component {
                                 {item.no_of_days}
                               </div>
                               <div className ="div-table-col col-bordered">
-                                {"Rs." + item.room_rent}
+                              &#8377; {item.room_rent}
                               </div>
                               <div className ="div-table-col col-bordered">
-                                {"Rs." + item.total}
+                              &#8377; {item.total}
                               </div>
                         </div>
                         ))} 
@@ -210,25 +210,25 @@ export class CheckOuts extends React.Component {
                          <div className="form-group col-md-12 content form-block-holder">
                           <label className="control-label col-md-4">
                             Donation Received: 
-                          {"Rs." + (results[0].donationAmount != null? results[0].donationAmount: "0")}
+                            &#8377; {(results[0].donationAmount != null? results[0].donationAmount: "0")}
                             </label>
                         </div>
 
                          <div className="form-group col-md-12 content form-block-holder">
                           <label className="control-label col-md-4">
-                            Total Sum:
+                            Total Sum: &#8377; &nbsp;
                           </label>
                           <div className="col-md-8">
-                            <input id="txtTotalSum" className="form-control" defaultValue={sum} />
+                            <input id="txtTotalSum" className="form-control small-textbox" defaultValue={sum} />
                             </div>
                       </div>
 
                        <div className="form-group col-md-12 content form-block-holder">
                           <label className="control-label col-md-4">
-                            Receipt No: 
+                            Receipt No: &nbsp;&nbsp;
                           </label>
                           <div className="col-md-8">
-                            <input id="txtReceiptNo" className="form-control" />
+                            <input id="txtReceiptNo" className="form-control small-textbox" />
                             </div>
                       </div>
                   <button type="button" className="btnCheckOut btnBig" onClick={() => { this.checkOutRooms(document.getElementById("txtTotalSum").value, document.getElementById("txtReceiptNo").value); onClose() }}>Check Out</button>

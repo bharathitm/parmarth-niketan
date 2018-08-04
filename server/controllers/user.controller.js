@@ -1,5 +1,5 @@
 var mysql = require('mysql');
-import {config} from '../config.js';
+var config = require('../mysqlconfig.js');
 var errorController = require('./error.controller');
 
 var connection = mysql.createConnection(config);
@@ -17,7 +17,7 @@ export function findById(req, res) {
 
     var call_stored_proc = "CALL sp_CheckIfUser('" +  req.params.id + "')";
 
-    console.log(call_stored_proc);
+    //console.log(call_stored_proc);
 
     connection.query(call_stored_proc, true, (error, results, fields) => {
     if (error) {
@@ -25,7 +25,7 @@ export function findById(req, res) {
         return res.send(error.code);
     }
     res.send(results[0]);
-    console.log(results[0]);
+    //console.log(results[0]);
    
     });
    // connection.end();     

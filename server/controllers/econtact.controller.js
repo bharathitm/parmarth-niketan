@@ -1,6 +1,6 @@
 var mysql = require('mysql');
-import {config} from '../config.js';
-var errorController = require('./error.controller');
+var config = require('../mysqlconfig.js');
+var errorController = require('./error.controller.js');
 
 var connection = mysql.createConnection(config);
 

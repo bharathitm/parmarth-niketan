@@ -28,10 +28,18 @@ export class CheckIns extends React.Component {
       this.updateCheckInState = this.updateCheckInState.bind(this);
     }
 
+    
   
     componentDidMount() {
+
+      let myheader = {
+        "accessToken": sessionStorage.getItem("accessToken")
+      }
       
-      fetch(API_URL + "checkins/")
+      fetch(API_URL + "checkins/", { 
+        method: "GET",
+        headers: myheader
+      })
         .then((response) => {
           return checkError(response);
         })

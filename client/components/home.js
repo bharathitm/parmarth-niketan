@@ -1,5 +1,4 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 
 import ErrorBoundary from './ErrorBoundary';
 
@@ -19,15 +18,11 @@ export class Home extends React.Component {
 
         this.state = {
             validUser: false,
-            accessToken:'',
             selectedTab: "Dashboard"
         };
 
         this.homeStore = {
               validUser: false,
-              accessToken: '',
-              userName: '',
-              userEmailId: '',
               selectedTab: 'Dashboard',
               searchText:''
         };
@@ -57,8 +52,13 @@ export class Home extends React.Component {
       redirectOnSuccessfulLogin(){
             this.setState({
                   validUser:true
-            }); 
-            document.getElementById("spUserName").innerHTML = this.homeStore.userName;           
+            });        
+      }
+
+      logout(){
+            window.sessionStorage.removeItem('accessToken');
+            window.sessionStorage.removeItem('userName');
+            location.reload();
       }
 
       render() {
@@ -67,12 +67,13 @@ export class Home extends React.Component {
                   <div>
                         <ErrorBoundary>
                               <Notifications />
-                             
-                              {/* <div style={{ visibility: this.state.validUser? 'hidden':'visible', display: this.state.validUser? 'none':'inline' }}>
+                              <div style={{ visibility: sessionStorage.getItem('accessToken') != null? 'hidden':'visible', display: sessionStorage.getItem('accessToken') != null? 'none':'inline' }}>
                               <Login  parentMethod={this.redirectOnSuccessfulLogin} getHomeStore={() => (this.getHomeStore())} updateHomeStore={(u) => {this.updateHomeStore(u)}} />
                               </div>
-                              <div style={{ visibility: this.state.validUser? 'visible':'hidden', display: this.state.validUser? 'inline':'none' }} > */}
-                              {/* <span id="spGreeting">Welcome, <span id="spUserName"></span>!</span> */}
+                              <div style={{ visibility: sessionStorage.getItem('accessToken') != null? 'visible':'hidden', display: sessionStorage.getItem('accessToken') != null? 'inline':'none' }}> 
+                               <span id="spGreeting">Welcome, <span id="spUserName">{sessionStorage.getItem('userName') != null? sessionStorage.getItem('userName'):''}</span>!&nbsp;
+                               <a href="#" onClick={this.logout}>Logout</a>
+                               </span> 
                               <div id="divHeaderBand">
                               <div id="divLogoBand">
                                     <img src="./img/logo.png" />
@@ -90,7 +91,7 @@ export class Home extends React.Component {
                                     <TabContent for="Reports"><h3>Check In Report</h3><Reports/></TabContent> 
                         </Tabs>
                              
-                              {/* </div> */}
+                              </div>
                         </ErrorBoundary>
                   </div>
             )

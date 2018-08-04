@@ -1,13 +1,21 @@
-var Client = require('node-rest-client').Client;
+const sf_client_id = '3MVG9YDQS5WtC11rCf5twFkIT2zYM3KyNDYh1awucQ6N_c5TNLSwzejOqP5HY6S0khi8yhC1iEkxGkLuKX9Kt';
+const sf_client_secret = '4952190798648913270';
+const sf_user_name = 'devsf@anandkrish.in';
+const sf_password = 'something123dshHjdCqylJFfTSKrjl7BkXJ';
 
-import {sf_client_id, sf_client_secret, sf_user_name, sf_password, countries} from '../config.js';
+
+var Client = require('node-rest-client/lib/node-rest-client').Client;
+
+// import {sf_client_id, sf_client_secret, sf_user_name, sf_password, countries} from '../config.js';
+
+var countries = require('../countries.js');
  
 var client = new Client();
 var access_token = null;
 
 var mysql = require('mysql');
-import {config} from '../config.js';
-var errorController = require('./error.controller');
+var config = require('../mysqlconfig.js');
+var errorController = require('./error.controller.js');
 var connection = mysql.createConnection(config);
 
 export function runSalesForceService(){

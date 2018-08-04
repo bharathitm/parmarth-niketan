@@ -1,4 +1,6 @@
 
+import {API_URL} from '../config/config';
+
 export function logError(error) {
     const payload = {
         error_message: error.toString()

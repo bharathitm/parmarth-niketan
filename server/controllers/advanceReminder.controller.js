@@ -1,6 +1,6 @@
 var nodemailer = require('nodemailer');
 var mysql = require('mysql');
-import {config} from '../config.js';
+var config = require('../mysqlconfig.js');
 var errorController = require('./error.controller');
 
 var connection = mysql.createConnection(config);

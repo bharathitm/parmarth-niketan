@@ -4,10 +4,9 @@ import isAuthenticated from '../middlewares/authenticate';
 
 const router = express.Router();
 
-router.route('/')
-
+router.route('/:id')
     .get( (req, res) => {
-        userCtrl.findAll(req, res);
+        userCtrl.findById(req, res);
     });
 
 

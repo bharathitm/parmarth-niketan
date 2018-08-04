@@ -1,5 +1,5 @@
 var mysql = require('mysql');
-import {config} from '../config.js';
+var config = require('../mysqlconfig.js');
 var errorController = require('./error.controller');
 
 var connection = mysql.createConnection(config);
@@ -13,6 +13,8 @@ var connection = mysql.createConnection(config);
  * @returns {*}
  */
 export function find(req, res) {
+
+    //console.log(req.headers.accesstoken);
 
     var call_stored_proc = "CALL sp_GetTodaysCheckIns()";
 
