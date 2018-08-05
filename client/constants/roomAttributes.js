@@ -22,10 +22,10 @@ export const blocks = {
 
   export const reservationTypes = {
     1: 'Gen',
-    2: 'Group Retreat',
+    2: 'Retreat',
     3: 'Sanskara',
-    4: 'Travel Agent',
-    5: 'Yoga Course',
+    4: 'Agent',
+    5: 'Course',
     6: 'Katha'
   };
 

@@ -80,10 +80,6 @@ export class Reservations extends React.Component {
       pageLis[3].style.visibility = "hidden";
     }
 
-    // componentWillUnmount(){
-    //   alert("reservations unmount");
-    // }
-
     redirectToDashboard() {
       this.clearGuestSession();
       this.props.updateHomeStore({
@@ -165,7 +161,7 @@ export class Reservations extends React.Component {
             {name: 'Book Rooms', component: <BookRooms getStore={() => (this.getStore())} redirectToDashboard={() => (this.redirectToDashboard())} getName={() => (this.getName())} updateStore={(u) => {this.updateStore(u)}}/>},
             {name: 'Guest', component: <Guests getStore={() => (this.getStore())} redirectToDashboard={() => (this.redirectToDashboard())} loadName={(u) => {this.loadName(u)}} updateStore={(u) => {this.updateStore(u)}}/>},
             {name: 'Reservation', component: <ReservationDetails getStore={() => (this.getStore())} redirectToDashboard={() => (this.redirectToDashboard())} updateStore={(u) => {this.updateStore(u)}}/>},
-            {name: 'Empty', component: <Empty/>}
+            {name: 'E', component: <Empty/>}
         ]
 
           return (

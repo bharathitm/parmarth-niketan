@@ -33,14 +33,14 @@ export class BookRooms extends Component {
 
   setAllSelectedRooms(){
     //rooms
-    var selectedRooms = JSON.parse(window.sessionStorage.getItem('selectedRooms'));
+    var selectedRooms = JSON.parse(sessionStorage.getItem('selectedRooms'));
 
     if ((selectedRooms) && (selectedRooms.length > 0)){
         for (var cnt=0; cnt < selectedRooms.length; cnt++){
           document.getElementById(selectedRooms[cnt]).checked = true; 
           this.roomsChanged();
         }
-        //window.sessionStorage.removeItem('selectedRooms');
+        sessionStorage.removeItem('selectedRooms');
     }
   }
 
@@ -400,11 +400,13 @@ export class BookRooms extends Component {
                         handleSearch={() => (this.handleSearch())}>
                   </SearchBox>  
                       <div id="divSearchResults">
+
+                       <div className="div-block-totals grand-total" style={{ visibility: this.props.getStore().searchResultItems.length > 0 ? 'visible':'hidden', display: this.props.getStore().searchResultItems.length > 0? 'inline':'none' }}>Grand Total &#8377;<span id="spGrandTotal">0</span></div>
   
                        {this.props.getStore().uniqueBlocks.filter(bk => this.props.getStore().filteredBlocks.find( fB => fB == bk)).map(item => (  
                               <div className="divBlocks"> 
                                   <h4>{blocks[item]}</h4> 
-                                  <span className="div-block-totals">Total <br/>&#8377;<span id={blocks[item]}>0</span></span>
+                                  <span className="div-block-totals">Total &#8377;<span id={blocks[item]}>0</span></span>
                                       <ul>
                                         {this.props.getStore().uniqueRooms.filter(bk => bk.block_id == item).map(booking => (
                                           <li>
@@ -425,7 +427,7 @@ export class BookRooms extends Component {
                                         </ul> 
                                 </div>                                
                             ))} 
-                             <div className="div-block-totals grand-total" style={{ visibility: this.props.getStore().searchResultItems.length > 0 ? 'visible':'hidden', display: this.props.getStore().searchResultItems.length > 0? 'inline':'none' }}>Grand Total <br/>&#8377;<span id="spGrandTotal">0</span></div>                     
+                                 
                       </div>
                       <div style={{clear: 'both'}}></div>
                      

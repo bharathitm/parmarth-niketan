@@ -114,6 +114,7 @@ export function cancel(req, res) {
         errorController.LogError(error);
         return res.send(error.code);
     }
+    res.send(results[0]);
  
     //connection.end();   
     });

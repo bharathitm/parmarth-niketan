@@ -67,13 +67,14 @@ export class CheckOuts extends React.Component {
               }   
               
               if(checkboxes[i].checked) {
-                var roomCheckBoxes = checkboxes[i].nextElementSibling.getElementsByTagName("input");
+                var roomCheckBoxes = checkboxes[i].nextElementSibling.nextElementSibling.getElementsByTagName("input");
+                //alert(roomCheckBoxes.length);
                     for (var x = 0; x < roomCheckBoxes.length; x ++){
                       roomCheckBoxes[x].checked = true;
                     }
                     
                 } else {
-                  var roomCheckBoxes = checkboxes[i].nextElementSibling.getElementsByTagName("input");
+                  var roomCheckBoxes = checkboxes[i].nextElementSibling.nextElementSibling.getElementsByTagName("input");
                       for (var x = 0; x < roomCheckBoxes.length; x ++){
                         roomCheckBoxes[x].checked = false;
                       } 
@@ -395,12 +396,9 @@ export class CheckOuts extends React.Component {
                             <input type="checkbox" name="checkOutReservations"
                                 onClick={() => this.reservationsChanged(item.reservation_id)}
                                 value={item.reservation_id} />
-                                      {reservationTypes[item.reservation_type_id]} {item.name}    
-
+                                      {reservationTypes[item.reservation_type_id]} <b>{item.name}</b>
                                 <ul>
-                                  
-                                  {checkOutRooms.filter(bk => bk.reservation_id == item.reservation_id).map(booking => (
-                                    
+                                  {checkOutRooms.filter(bk => bk.reservation_id == item.reservation_id).map(booking => (                                    
                                     <li>
                                         <input type="checkbox" name="checkOutRooms"
                                             className={booking.reservation_id} onClick={() => this.roomsChanged(booking.reservation_id)}
@@ -408,7 +406,6 @@ export class CheckOuts extends React.Component {
                                               {booking.room_no + ", " + floors[booking.floor_no] + ", " + blocks[booking.block_id]}                   
                                     </li>
                                   ))}
-                              
                                   </ul>                                         
                             </li>                              
 

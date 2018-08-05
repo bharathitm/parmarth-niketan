@@ -94,6 +94,9 @@ deleteAdvanceDonation(donationId){
     .then((response) => {
       return checkError(response);
     })
+    .then((result) => {  
+      notify.show('Advance Donation details deleted successfully!', 'success');     
+    })
     .catch((error) => {
       this.setState({
         isLoaded: false,
@@ -102,10 +105,6 @@ deleteAdvanceDonation(donationId){
       notify.show('Oops! Something went wrong! Please try again!', 'error');
       logError(error);
     });
-
-    if (!this.state.isLoaded){
-      notify.show('Advance Donation details deleted successfully!', 'success');
-    }
 
     //create a newData array which is a clone of state.items, remove the just selected entries from this newData 
       //and re-assign newData to state.items. This causes the component to re-render.

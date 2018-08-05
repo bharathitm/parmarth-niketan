@@ -156,7 +156,7 @@ export class RoomBookings extends Component {
         });
 
         if (this.state.isLoaded){
-            notify.show('Room updated successfully!', 'success');
+            notify.show('Room booking updated successfully!', 'success');
           }
     }
      
@@ -164,8 +164,8 @@ export class RoomBookings extends Component {
     handleDeleteRoomBooking(room_booking_id){
 
         confirmAlert({
-            title: 'Confirm to delete',
-            message: 'Are you sure you want to delete this room from the reservation?',
+            title: 'Confirm to remove',
+            message: 'Are you sure you want to remove this room from the reservation?',
             buttons: [
               {
                 label: 'Yes',
