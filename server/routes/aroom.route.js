@@ -5,14 +5,19 @@ import isAuthenticated from '../middlewares/authenticate';
 
 const router = express.Router();
 
-router.route('/')
+router.route('/:id')
 
     .get( (req, res) => {
-        if ((req.query.adate) != undefined){
-            aroomsCtrl.findByDates(req, res);
-        }
-        else{
-        aroomsCtrl.find(req, res);
+        switch (req.params.id){
+            case "1":
+                aroomsCtrl.getToday(req, res);
+                break;
+            case "2":
+                aroomsCtrl.getCount(req, res);
+                break;
+            case "3":
+                aroomsCtrl.getDetails(req, res);
+                break;
         }
     });
 

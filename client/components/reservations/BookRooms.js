@@ -25,43 +25,22 @@ export class BookRooms extends Component {
     this.handleBlocksChanged = this.handleBlocksChanged.bind(this);
   }
 
-  // componentDidMount(){
-
-  //   if (window.sessionStorage.getItem('searchResults')){
-  //     this.setState({
-  //       isLoaded: true,
-  //       items: JSON.parse(window.sessionStorage.getItem('searchResults')),
-  //     });
-  //     window.sessionStorage.removeItem('searchResults');
-  //   }
-
-  //   if (this.state.items.length > 0){
-  //       this.setAllSelectedRooms();
-  //   }
-  // }
-
-
-  // componentWillUnmount(){
-  //   if (this.state.isLoaded){
-  //     window.sessionStorage.removeItem('searchResults');
-  //     window.sessionStorage.setItem('searchResults', JSON.stringify(this.state.items));
-  //   }
-  // }
+  componentDidMount(){
+    if (this.props.getStore().searchResultItems.length > 0){
+      this.setAllSelectedRooms();
+    }
+  }
 
   setAllSelectedRooms(){
     //rooms
     var selectedRooms = JSON.parse(window.sessionStorage.getItem('selectedRooms'));
-
-    // if (selectedRooms){
-    //   alert(selectedRooms.length);
-    // }
 
     if ((selectedRooms) && (selectedRooms.length > 0)){
         for (var cnt=0; cnt < selectedRooms.length; cnt++){
           document.getElementById(selectedRooms[cnt]).checked = true; 
           this.roomsChanged();
         }
-        window.sessionStorage.removeItem('selectedRooms');
+        //window.sessionStorage.removeItem('selectedRooms');
     }
   }
 
@@ -102,7 +81,7 @@ export class BookRooms extends Component {
       });
     }
 
-    fetch(API_URL + "arooms/?adate=" + this.props.getStore().arrivalDate + "&ddate=" + this.props.getStore().departureDate + "&nR=" + this.props.getStore().noOfRooms + "&rT=" + this.props.getStore().roomType) 
+    fetch(API_URL + "arooms/3?adate=" + this.props.getStore().arrivalDate + "&ddate=" + this.props.getStore().departureDate + "&nR=" + this.props.getStore().noOfRooms + "&rT=" + this.props.getStore().roomType) 
     .then((response) => {
       return checkError(response);
     })
@@ -183,6 +162,7 @@ export class BookRooms extends Component {
           { 
               if(checkboxes[i].checked) {
                 selectedRooms.push(checkboxes[i].id); 
+                
               }
           }
       } 
@@ -198,7 +178,7 @@ export class BookRooms extends Component {
 
       confirmAlert({
         title: 'Add Room Bookings',
-        message: 'Are you sure you want to add these selected rooms to the current reservation?',
+        message: 'Are you sure you want to add the selected ' + selectedRooms.length + ' room(s) to the current reservation?',
         buttons: [
           {
             label: 'Yes',
@@ -212,13 +192,12 @@ export class BookRooms extends Component {
       })
     }
     else {
-      window.sessionStorage.setItem('selectedRooms', JSON.stringify(selectedRooms));
-      window.sessionStorage.setItem('strSelectedRooms', str_rooms);
+      sessionStorage.setItem('selectedRooms', JSON.stringify(selectedRooms));
+      sessionStorage.setItem('strSelectedRooms', str_rooms);
     }
    }
 
    addRoomBookings(str_rooms){
-
     const payload = {
       room_ids_str: str_rooms
     };
@@ -286,11 +265,7 @@ export class BookRooms extends Component {
 
   render() {
 
-    if (this.props.getStore().searchResultItems.length > 0){
-      this.setAllSelectedRooms();
-  }
-
-    //coming from reservations search in Dashboard, directly load Guest Details page
+   //coming from reservations search in Dashboard, directly load Guest Details page
     if(this.props.getStore().searchText != ''){
       this.props.jumpToStep(1);
     }
@@ -409,13 +384,6 @@ export class BookRooms extends Component {
             });
           }
         }
-      // if (!isLoaded && document.getElementById("Form") != null){   
-      //   let myColor = { background: '#1888B7', text: "#FFFFFF" };
-      //   notify.show('Please select search criteria!', 'custom', 5000, myColor);
-      // }
-
-      //alert(this.props.getStore().searchLoaded + " search loaded");
-      //alert(isReRender + " isReRender");
       
       if (isLoaded && this.props.getStore().searchResultItems.length == 0){
         notify.show('No rooms available for given search criteria!', 'error');
@@ -436,7 +404,7 @@ export class BookRooms extends Component {
                        {this.props.getStore().uniqueBlocks.filter(bk => this.props.getStore().filteredBlocks.find( fB => fB == bk)).map(item => (  
                               <div className="divBlocks"> 
                                   <h4>{blocks[item]}</h4> 
-                                  <span className="div-block-totals">Total <br/>Rs.<span id={blocks[item]}>0</span></span>
+                                  <span className="div-block-totals">Total <br/>&#8377;<span id={blocks[item]}>0</span></span>
                                       <ul>
                                         {this.props.getStore().uniqueRooms.filter(bk => bk.block_id == item).map(booking => (
                                           <li>
@@ -447,18 +415,17 @@ export class BookRooms extends Component {
                                                    <b>{booking.room_no}</b>{", " + 
                                                     floors[booking.floor_no] + ", " + 
                                                     booking.total_beds + " beds" }  
-                                                     <span className="sp-block-total">Rs. {booking.room_rent}</span> 
+                                                     <span className="sp-block-total">&#8377; {booking.room_rent}</span> 
                                                     <span className="sp-block-imgs">  
  
   <img src="./img/ac1.png" style={{ visibility: booking.has_AC == 1? 'visible':'hidden', display: booking.has_AC == 1? 'inline':'none' }} /> 
-                                                     </span>  
-                                                             
+                                                     </span>                
                                           </li>
                                           ))} 
                                         </ul> 
                                 </div>                                
                             ))} 
-                             <div className="div-block-totals grand-total" style={{ visibility: this.props.getStore().searchResultItems.length > 0 ? 'visible':'hidden', display: this.props.getStore().searchResultItems.length > 0? 'inline':'none' }}>Grand Total <br/>Rs.<span id="spGrandTotal">0</span></div>                     
+                             <div className="div-block-totals grand-total" style={{ visibility: this.props.getStore().searchResultItems.length > 0 ? 'visible':'hidden', display: this.props.getStore().searchResultItems.length > 0? 'inline':'none' }}>Grand Total <br/>&#8377;<span id="spGrandTotal">0</span></div>                     
                       </div>
                       <div style={{clear: 'both'}}></div>
                      

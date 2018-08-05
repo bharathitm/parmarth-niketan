@@ -13,16 +13,14 @@ body{
     /*padding:2px */
 }
 
-
-
 #divLogin{
     /* height: calc(100vh - 20px); */
     height: calc(100vh - 1px);
     background: url("../img/ps_s.jpg") center center no-repeat;  
     background-size: cover; 
-    -moz-box-shadow: inset 0 0 10px 10px #EFDFBB;
-    -webkit-box-shadow: inset 0 0 10px 10px#EFDFBB;
-    box-shadow: inset 0 0 10px 10px #EFDFBB;
+    -moz-box-shadow: inset 0 0 20px 20px #EFDFBB;
+    -webkit-box-shadow: inset 0 0 20px 20px#EFDFBB;
+    box-shadow: inset 0 0 20px 20px #EFDFBB;
     text-align: center;
     display: flex;
     justify-content: center;
@@ -249,9 +247,6 @@ body{
 } 
 
 /* Reports CSS end here */
-
-
-
 
 /* StepZilla CSS Starts Here */
 
@@ -563,31 +558,6 @@ ol.progtrckr {
   background-color: #F0DDDC;
 }
 
-
-/* .has-error1{
-  -webkit-animation: borderBlink 1s step-end infinite;    
-    animation: borderBlink 1s step-end infinite;    
-}
-
-@-webkit-keyframes borderBlink {    
-  from, to {    
-      border-color: transparent    
-  }    
-  50% {    
-      border-color: red    
-  }    
-}    
-@keyframes borderBlink {    
-  from, to {    
-      border-color: transparent    
-  }    
-  50% {    
-      border-color: red    
-  }    
-}    */
-
-
-
 #slCountries {
   height: 34px;
   width:106%;
@@ -708,6 +678,21 @@ width:100%;
 .checkout-table .div-table-col{
   white-space:nowrap;
   width:21%;
+}
+
+.availability-table{
+  margin: 1em 0 0 1.3em;
+}
+
+.availability-table .div-table-col-header{
+  font-weight: bolder;
+  background: #EA9064;
+  color: white;
+  border:solid 1px silver;
+}
+
+.availability-table .div-table-col{
+  width:20%;
 }
 
 .advance-table .div-table-col-header{

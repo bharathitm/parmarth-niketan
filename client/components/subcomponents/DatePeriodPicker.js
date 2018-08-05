@@ -46,9 +46,15 @@ export class DatePickerInput extends Component {
         this.refs.endDate.selected = date;
     }
 
-    handleShow(){
+    handleCheckIns(){
         if (this.isValidated()){
-            this.props.handleShow();
+            this.props.handleCheckIns();
+        }
+    }
+
+    handleAvailability(){
+        if (this.isValidated()){
+            this.props.handleAvailability();
         }
     }
 
@@ -149,7 +155,8 @@ export class DatePickerInput extends Component {
                                     </div>
                                 </div>
                             <div className ="div-table-col">  
-                                    <button type="button" className="btnBig" onClick={() => this.handleShow()}>Show</button>
+                                    <button type="button" className="btnBig" onClick={() => this.handleCheckIns()}>Show Check Ins</button>&nbsp;&nbsp;&nbsp;
+                                    <button type="button" className="btnBig" onClick={() => this.handleAvailability()}>Show Rooms Availability</button>
                             </div>
                         </div>
                     </div>

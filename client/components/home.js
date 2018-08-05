@@ -88,7 +88,7 @@ export class Home extends React.Component {
                               </div>  
                                     <TabContent for="Dashboard"><h3>Dashboard</h3><Dashboard updateHomeStore={(u) => {this.updateHomeStore(u)}}/></TabContent>
                                     <TabContent for="Reservations"><h3>Reservations</h3><Reservations getHomeStore={() => (this.getHomeStore())} updateHomeStore={(u) => {this.updateHomeStore(u)}}/></TabContent>
-                                    <TabContent for="Reports"><h3>Check In Report</h3><Reports/></TabContent> 
+                                    <TabContent for="Reports"><h3>Reports</h3><Reports/></TabContent> 
                         </Tabs>
                              
                               </div>

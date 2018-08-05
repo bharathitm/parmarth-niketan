@@ -4,6 +4,7 @@ import {blocks} from '../../constants/roomAttributes';
 
 import {logError, checkError} from '../../utils/helpers';
 import {API_URL} from '../../config/config';
+import {notify} from 'react-notify-toast';
 
 export class TodayAvailability extends React.Component {
 
@@ -22,7 +23,7 @@ export class TodayAvailability extends React.Component {
     }
 
     fetchAvailableRooms(){
-      fetch(API_URL + "arooms/")
+      fetch(API_URL + "arooms/1")
       .then((response) => {
       return checkError(response);
       })
@@ -33,6 +34,7 @@ export class TodayAvailability extends React.Component {
           });
         })
       .catch((error) => {
+        alert(error);
         this.setState({
           isLoaded: false,
           error
