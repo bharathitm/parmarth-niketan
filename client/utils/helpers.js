@@ -1,5 +1,6 @@
 
 import {API_URL} from '../config/config';
+import {notify} from 'react-notify-toast';
 
 export function logError(error) {
     const payload = {
@@ -21,11 +22,15 @@ export function logError(error) {
 }
 
 export function checkError(response) {
-    if (response.ok) {
-        return response.json();
-      } else {
+    if (response.status == 200) {
+        return response.data;
+      } 
+     else if (response.status == 403){
+        this.failedLogin();
+     } 
+    else {
         throw new Error(response.statusText);
-      }
+    }
 }
 
 export function getFormattedDate(dt) {
@@ -56,4 +61,17 @@ export function createRoomsString(selectedRooms){
     }
     str_rooms = str_rooms.substring(0,str_rooms.length-1);
     return str_rooms;
+}
+
+export function failedLogin(){
+    sessionStorage.removeItem('accessToken');
+    sessionStorage.removeItem('userName');
+    
+    notify.show("User doesn't have access to portal!", "error");
+
+    setTimeout(this.redirectAgain, 2000);
+}
+
+export function redirectAgain(){    
+    document.location.href = "https://www.google.com/accounts/Logout?continue=https://appengine.google.com/_ah/logout?continue=" + API_URL.substring(0,(API_URL).length-5);
 }

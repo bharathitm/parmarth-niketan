@@ -49,3 +49,9 @@ export const blocks = {
     9: '9 Beds',
     10: '10 Beds'
   };
+
+
+  export const reservationStatuses = {
+    2: "Booked",
+    3: "Checked In"
+  };

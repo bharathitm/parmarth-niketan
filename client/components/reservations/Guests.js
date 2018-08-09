@@ -4,6 +4,7 @@ import countries from '../../constants/countries';
 
 import {logError, checkError} from '../../utils/helpers';
 import {API_URL} from '../../config/config';
+import {fetch, store} from '../../utils/httpUtil';
 import {notify} from 'react-notify-toast';
 
 
@@ -54,7 +55,7 @@ export class Guests extends Component {
         guestId: this.state.items[0].guest_id,
         firstName: this.state.items[0].first_name,
         lastName: this.state.items[0].last_name,
-        email: this.state.items[0].email_id,
+        email: (this.state.items[0].email_id != null? this.state.items[0].email_id: ''),
         phone: this.state.items[0].phone_no,
         address: this.state.items[0].address,
         city: this.state.items[0].city,
@@ -75,7 +76,7 @@ export class Guests extends Component {
         guestId: this.state.items[0].guest_id,
         firstName: this.state.items[0].first_name,
         lastName: this.state.items[0].last_name,
-        email: this.state.items[0].email_id,
+        email: (this.state.items[0].email_id != null? this.state.items[0].email_id: ''),
         phone: this.state.items[0].phone_no,
         address: this.state.items[0].address,
         city: this.state.items[0].city,
@@ -92,7 +93,7 @@ export class Guests extends Component {
 
       this.refs.firstName.value = this.state.items[0].first_name,
       this.refs.lastName.value = this.state.items[0].last_name,
-      this.refs.email.value = this.state.items[0].email_id,
+      this.refs.email.value = (this.state.items[0].email_id != null? this.state.items[0].email_id: ''),
       this.refs.phone.value = this.state.items[0].phone_no,
       this.refs.address.value = this.state.items[0].address, 
       this.refs.city.value = this.state.items[0].city,
@@ -108,7 +109,7 @@ export class Guests extends Component {
       this.props.loadName(name);
     }
     else{
-      notify.show('No Guest Details found!', 'error');
+      notify.show('No Guest details found!', 'error');
       this.props.jumpToStep(0);
     }
 
@@ -118,12 +119,7 @@ export class Guests extends Component {
   }
 
   searchReservation(searchText){
-    fetch(API_URL + "guests/?search=" + searchText, {
-      headers : { 
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-       }
-    })
+    fetch(API_URL, "guests/?search=" + searchText)
     .then((response) => {
         return checkError(response);
     })
@@ -165,18 +161,18 @@ export class Guests extends Component {
           this.props.getStore().country != userInput.country
         ) { 
 
-          this.props.updateStore({
-            ...userInput,
-            savedToCloud: false 
-          }); 
-          
-
           if (this.props.getStore().guestId != null){
             this.updateGuestData();
           }
           else {
               this.insertGuestData();
           }
+
+          this.props.updateStore({
+            ...userInput,
+            savedToCloud: false 
+          }); 
+          
 
           var name = this.refs.firstName.value + " " + this.refs.lastName.value;
           this.props.loadName(name);
@@ -236,11 +232,15 @@ export class Guests extends Component {
   }
 
   _validateData(data) {
+
     return  {
       firstNameVal: (data.firstName != ''),
       lastNameVal: (data.lastName != ''),
       //emailVal: /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/.test(data.email), // required: regex w3c uses in html5
-      emailVal: /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(data.email),
+      
+      emailVal: ((data.email.toString().trim() != '')? 
+      (/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(data.email))
+      : true),
       phoneVal: (data.phone != ''),
       addressVal: (data.address != ''),
       cityVal: (data.city != ''),
@@ -259,7 +259,7 @@ export class Guests extends Component {
     const payload = {
       first_name: this.state.firstName,
       last_name: this.state.lastName,
-      email_id: this.state.email,
+      email_id: (this.state.email != ''? this.state.email: ''),
       phone_no: this.state.phone,
       address: this.state.address,
       city: this.state.city,
@@ -273,15 +273,7 @@ export class Guests extends Component {
     };
 
 
-    fetch(API_URL + "guests/", {
-      method: 'POST',
-      headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(payload)
-
-    })
+    store(API_URL, "guests/", JSON.stringify(payload))
     .then((response) => {
       return checkError(response);
     })
@@ -311,7 +303,7 @@ export class Guests extends Component {
       guest_id: this.props.getStore().guestId,
       first_name: this.state.firstName,
       last_name: this.state.lastName,
-      email_id: this.state.email,
+      email_id: ((this.state.email != null)? this.state.email: ''),
       phone_no: this.state.phone,
       address: this.state.address,
       city: this.state.city,
@@ -322,18 +314,11 @@ export class Guests extends Component {
       e_first_name: this.state.eFirstName,
       e_last_name: this.state.eLastName,
       e_phone_no: this.state.ePhone,
-      e_relationship: this.state.eRelationship
+      e_relationship: this.state.eRelationship,
+      has_email_changed: (this.props.getStore().email != this.refs.email.value? 1 : 0)
     };
 
-    fetch(API_URL + "guests/" + this.props.getStore().guestId, {
-      method: 'POST',
-      headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(payload)
-
-    })
+    store(API_URL, "guests/" + this.props.getStore().guestId, JSON.stringify(payload))
     .then((response) => {
       return checkError(response);
     })
@@ -360,14 +345,7 @@ export class Guests extends Component {
       e_relationship: this.state.eRelationship
     };
 
-    fetch(API_URL + "econtacts/" + this.state.guestEmergencyContactId, {
-      method: 'POST',
-      headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(payload)
-    })
+    store(API_URL, "econtacts/" + this.state.guestEmergencyContactId, JSON.stringify(payload))
     .then((response) => {
       return checkError(response);
     })
@@ -579,7 +557,6 @@ export class Guests extends Component {
                         autoComplete="off"
                         type="email"
                         className={notValidClasses.emailCls}
-                        required
                         defaultValue={this.state.email} 
                         onChange={this.validationCheck} />
                     </div>

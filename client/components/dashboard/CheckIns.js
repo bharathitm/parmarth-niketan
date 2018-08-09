@@ -5,6 +5,8 @@ import {blocks, floors, reservationTypes} from '../../constants/roomAttributes';
 import {logError, checkError, createReservationsString, createRoomsString} from '../../utils/helpers';
 import {API_URL} from '../../config/config';
 
+import {fetch, store} from '../../utils/httpUtil';
+
 import {notify} from 'react-notify-toast';
 
 export class CheckIns extends React.Component {
@@ -31,15 +33,9 @@ export class CheckIns extends React.Component {
     
   
     componentDidMount() {
-
-      let myheader = {
-        "accessToken": sessionStorage.getItem("accessToken")
-      }
       
-      fetch(API_URL + "checkins/", { 
-        method: "GET",
-        headers: myheader
-      })
+      fetch(API_URL, "checkins/")
+
         .then((response) => {
           return checkError(response);
         })
@@ -98,15 +94,9 @@ export class CheckIns extends React.Component {
           str_room_booking_ids: str_rooms
         };
 
-        fetch(API_URL + "checkins/", {
-            method: 'POST',
-            headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(payload)
-          })
-          .then((response) => {
+        store(API_URL, "checkins/", JSON.stringify(payload))
+
+        .then((response) => {
             return checkError(response);
           })
           .then((result) => {

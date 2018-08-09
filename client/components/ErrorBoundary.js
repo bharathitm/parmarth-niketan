@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 
 import {API_URL} from '../config/config';
+import {store} from './../utils/httpUtil';
 
 export class ErrorBoundary extends React.Component {
     constructor(){
@@ -19,14 +20,7 @@ export class ErrorBoundary extends React.Component {
             error_message: error.toString()
         }
 
-        fetch(API_URL + "error/", {
-            method: 'POST',
-            headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(payload)      
-          })
+        store(API_URL, "error/", JSON.stringify(payload))
           .then((response) => {
             return checkError(response);
           });

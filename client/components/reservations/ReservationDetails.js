@@ -1,6 +1,6 @@
 import React, {Component } from 'react';
 
-import {reservationTypes, sanskaras} from '../../constants/roomAttributes';
+import {reservationTypes, sanskaras, reservationStatuses} from '../../constants/roomAttributes';
 
 import { confirmAlert } from 'react-confirm-alert'; 
 
@@ -9,6 +9,7 @@ import moment from 'moment';
 
 import {logError, checkError, getFormattedDate} from '../../utils/helpers';
 import {API_URL} from '../../config/config';
+import {fetch, store, destroy} from '../../utils/httpUtil';
 import { RoomBookings } from '../subcomponents/RoomBookings';
 
 import Collapsible from 'react-collapsible';
@@ -73,8 +74,8 @@ export class ReservationDetails extends Component {
       document.getElementById("next-button").style.marginTop = "0em";
     }
    
-    this.refs.arrivalDate.innerHTML = this.props.getStore().arrivalDate;
-    this.refs.departureDate.innerHTML = this.props.getStore().departureDate;
+    this.refs.arrivalDate.innerHTML = moment(this.props.getStore().arrivalDate).format('MMMM Do YYYY');
+    this.refs.departureDate.innerHTML = moment(this.props.getStore().departureDate).format('MMMM Do YYYY');
 
     //hide Sanskara Div by default
     this.refs.divSanskara.style.visibility = "hidden";
@@ -83,7 +84,7 @@ export class ReservationDetails extends Component {
   fetchReservationDetailsIfExists(){
       if(this.props.getStore().reservationId != null)
       {
-        fetch(API_URL + "reservations/" + this.props.getStore().reservationId)
+        fetch(API_URL, "reservations/" + this.props.getStore().reservationId)
             .then((response) => {
               return checkError(response);
             })
@@ -125,7 +126,7 @@ export class ReservationDetails extends Component {
         comments: (items[0].reservation_comments == null)? '': items[0].reservation_comments,
         reservationTypeId: items[0].reservation_type_id,
         reservationStatusId: items[0].reservation_status_id,
-        sanskaraId: items[0].sanskara_id,
+        sanskaraId: (items[0].sanskara_id == null)? 0 : items[0].sanskara_id,
         advanceReminderOn: (items[0].advance_reminder_on == null)? '' : aReminder,
         arrivalTime: aDate
       });
@@ -138,21 +139,29 @@ export class ReservationDetails extends Component {
         comments: (items[0].reservation_comments == null)? '': items[0].reservation_comments,
         reservationTypeId: items[0].reservation_type_id,
         reservationStatusId: items[0].reservation_status_id,
-        sanskaraId: items[0].sanskara_id,
+        sanskaraId: (items[0].sanskara_id == null)? 0 : items[0].sanskara_id,
         advanceReminderOn: (items[0].advance_reminder_on == null)? '' : aReminder,
         arrivalTime: aDate
       });
 
     
-      this.refs.arrivalDate.innerHTML = aDate.format("YYYY-MM-DD");
-      this.refs.departureDate.innerHTML = items[0].date_of_departure;
+      this.refs.arrivalDate.innerHTML = moment(aDate.format("YYYY-MM-DD")).format('MMMM Do YYYY');
+      this.refs.departureDate.innerHTML = moment(items[0].date_of_departure).format('MMMM Do YYYY');
       this.refs.noOfPpl.value = items[0].no_of_people;
       this.refs.comments.value = (items[0].reservation_comments == null)? '': items[0].reservation_comments;
       this.refs.reservationTypeId.value = items[0].reservation_type_id;
       this.refs.arrivalTime.selected = aDate;
       this.refs.advanceReminderOn.selected = (items[0].advance_reminder_on == null)? '' : aReminder;
       this.refs.sanskaraId.value = (items[0].sanskara_id == null)? 0 : items[0].sanskara_id;
-      //this.refs.reservationStatus.innerHTML = items[0].reservation_status_id;  
+      this.refs.reservationStatus.innerHTML = reservationStatuses[items[0].reservation_status_id];  
+
+      if (items[0].reservation_status_id == 2){
+        this.refs.reservationStatus.style.backgroundColor = 'orange';
+        this.refs.reservationStatus.style.width = '10%';
+      } else {
+        this.refs.reservationStatus.style.backgroundColor = 'green';
+        this.refs.reservationStatus.style.width = '15%';
+      }
       
       //show Sanskara Drop down only if load returns a SanskaraId
       if (this.refs.sanskaraId.value != 0){//Sanskara
@@ -213,6 +222,7 @@ export class ReservationDetails extends Component {
 
     var dt_arrival =  this.state.arrivalDate + " " + moment(this.state.arrivalTime).format("HH:mm").toString();
     
+    alert(this.state.advanceReminderOn);
     const payload = {
       guest_id: this.props.getStore().guestId,
       date_of_arrival: dt_arrival,
@@ -226,15 +236,7 @@ export class ReservationDetails extends Component {
       room_ids_str: window.sessionStorage.getItem('strSelectedRooms').toString()
     };
 
-    fetch(API_URL + "reservations/", {
-      method: 'POST',
-      headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(payload)
-
-    })
+    store(API_URL, "reservations/", JSON.stringify(payload))
     .then((response) => {
       return checkError(response);
     })
@@ -277,17 +279,10 @@ export class ReservationDetails extends Component {
       reservation_comments: this.state.comments,
       reservation_type_id: this.state.reservationTypeId,
       sanskara_id: (this.state.sanskaraId == null)? 0 : this.state.sanskaraId,
-      advance_reminder_on: (this.state.advanceReminderOn == '')? '' : getFormattedDate(this.state.advanceReminderOn).toString()
+      advance_reminder_on: ((this.state.advanceReminderOn == '') || (this.state.advanceReminderOn == null))? '' : getFormattedDate(this.state.advanceReminderOn).toString(),
     };
 
-    fetch(API_URL + "reservations/" + this.state.reservationId, {
-      method: 'POST',
-      headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(payload)
-    })
+    store(API_URL, "reservations/" + this.state.reservationId, JSON.stringify(payload))
     .then((response) => {
       return checkError(response);
     })
@@ -332,7 +327,8 @@ export class ReservationDetails extends Component {
     return {
       arrivalTime: this.refs.arrivalTime.selected,
       reservationTypeId: this.refs.reservationTypeId.value,
-      sanskaraId: (this.refs.sanskaraId.value == 0)? null : this.refs.sanskaraId.value,
+      //sanskaraId: (this.refs.sanskaraId.value == 0)? null : this.refs.sanskaraId.value,
+      sanskaraId: this.refs.sanskaraId.value,
       noOfPpl: this.refs.noOfPpl.value,
       advanceReminderOn: this.refs.advanceReminderOn.selected,
       comments: this.refs.comments.value,
@@ -363,13 +359,7 @@ export class ReservationDetails extends Component {
 
     if(this.state.reservationId != null)
     {      
-      fetch(API_URL + "reservations/" + this.state.reservationId, {
-        method: 'DELETE',
-        headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-          }
-       })
+      destroy(API_URL, "reservations/" + this.state.reservationId)
 
         .then((response) => {
           return checkError(response);
@@ -439,18 +429,15 @@ export class ReservationDetails extends Component {
     //   this.props.jumpToStep(1);
     // }
  
-
       //new guest, new reservation
-      if((this.props.getStore().reservationId == null) && (window.sessionStorage.getItem('strSelectedRooms') == null)){
+      if((this.props.getStore().reservationId == null) && (sessionStorage.getItem('strSelectedRooms') == null)){
           this.props.jumpToStep(1);
       } 
-      
-      
-    
-      // existing guest, new reservation
-      // else if ((this.props.getStore().guestId != null) && (this.props.getStore().reservationId == null)){
-
-      // } // existing guest, existing reservation
+      // // existing guest, new reservation
+      // else if ((this.props.getStore().guestId != null) && (this.props.getStore().reservationId == null) && (window.sessionStorage.getItem('strSelectedRooms') == null)){
+      //   this.props.jumpToStep(1);
+      //  } 
+       // existing guest, existing reservation
       // else if ((this.props.getStore().guestId != null) && (this.props.getStore().reservationId != null)){
 
       // }
@@ -467,10 +454,10 @@ export class ReservationDetails extends Component {
 
     /* Reservation Type */    
     if (typeof this.state.reservationTypeVal == 'undefined' || this.state.reservationTypeVal) {
-      notValidClasses.reservationTypeCls = 'form-control';
+        notValidClasses.reservationTypeCls = 'form-control';
     }
     else {
-       notValidClasses.reservationTypeCls = 'form-control has-error';
+        notValidClasses.reservationTypeCls = 'form-control has-error';
     }
 
     /* No. of People */
@@ -478,16 +465,16 @@ export class ReservationDetails extends Component {
         notValidClasses.noOfPplCls = 'form-control';
     }
     else {
-       notValidClasses.noOfPplCls = 'form-control has-error';
+        notValidClasses.noOfPplCls = 'form-control has-error';
     }
 
      /* Sanskara */
      if (typeof this.state.sanskaraVal == 'undefined' || this.state.sanskaraVal) {
-      notValidClasses.sanskaraCls = 'form-control';
-  }
-  else {
-     notValidClasses.sanskaraCls = 'form-control has-error';
-  }
+        notValidClasses.sanskaraCls = 'form-control';
+      }
+      else {
+        notValidClasses.sanskaraCls = 'form-control has-error';
+      }
 
     return (
       <div className="step step3 review">
@@ -500,15 +487,16 @@ export class ReservationDetails extends Component {
                       <div className="divDates">
                       {/* Arrival Date */}
                       <label className="col-md-4">
-                            Arrival Date: 
-                            <span ref="arrivalDate" className="spnDates" defaultValue={this.state.arrivalDate}>
+                            From:
+                            <span ref="arrivalDate" className="spnDates" defaultValue={moment(this.state.arrivalDate).format('MMMM Do YYYY')}>
+                            </span>
+                            &nbsp;&nbsp;To:
+                            <span ref="departureDate" className="spnDates" defaultValue={moment(this.state.departureDate).format('MMMM Do YYYY')}>
                             </span>
                       </label>
                       {/* Departure Date */}
                       <label className="col-md-4">
-                            Departure Date: 
-                          <span ref="departureDate" className="spnDates" defaultValue={this.state.departureDate}>
-                          </span>
+                      <div id="divReservationStatus" ref="reservationStatus"></div>                          
                       </label>
                     </div>
 
@@ -609,13 +597,18 @@ export class ReservationDetails extends Component {
                       
                       <DatePicker ref="advanceReminderOn"
                         dateFormat="YYYY-MM-DD"
-                       // selected={moment(this.state.advanceReminderOn)}
+                        minDate={moment()}  
                         selected={this.state.advanceReminderOn}
                         onChange={this.handleAdvanceReminderChange} 
                         className="form-control"/>
                       </div>
                     </div>
                 </div>
+                {/* <div className="div-table-col">
+                <div className="form-group col-md-12 content form-block-holder">
+                <div id="divReservationStatus" ref="reservationStatus"></div>
+                </div>
+                </div> */}
               </div>
                <div className = "div-table-row">
                   <div className ="comments-col div-table-col">

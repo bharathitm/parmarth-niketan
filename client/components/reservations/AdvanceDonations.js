@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 
 import {logError, checkError, getFormattedDate} from '../../utils/helpers';
 import {API_URL} from '../../config/config';
+import {fetch, store, destroy} from '../../utils/httpUtil';
 
 import { confirmAlert } from 'react-confirm-alert';
 
@@ -38,7 +39,7 @@ export class AdvanceDonations extends Component {
   fetchAdvanceDonationsIfExists(){
     if(this.props.getReservationStore().reservationId != null)
     {
-      fetch(API_URL + "advance/" + this.props.getReservationStore().reservationId)
+      fetch(API_URL, "advance/" + this.props.getReservationStore().reservationId)
       .then((response) => {
         return checkError(response);
       })
@@ -84,13 +85,7 @@ handleDelete(donationId){
 }
 
 deleteAdvanceDonation(donationId){
-  fetch(API_URL + "advance/" + donationId, {
-    method: 'DELETE',
-    headers: {
-    'Accept': 'application/json',
-    'Content-Type': 'application/json',
-      }
-   })
+  destroy(API_URL, "advance/" + donationId)
     .then((response) => {
       return checkError(response);
     })
@@ -180,15 +175,7 @@ insertAdvanceDonationDetails(){
       is_advance: 1
   };
 
-  fetch(API_URL + "advance/", {
-      method: 'POST',
-      headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(payload)
-
-  })
+  store(API_URL, "advance/", JSON.stringify(payload))
   .then((response) => {
       return checkError(response);
   })
@@ -291,7 +278,7 @@ insertAdvanceDonationDetails(){
 
                         {/*New Input Section */}
                                   <div className = "div-table-row">
-                                        <div className ="div-table-col">
+                                        <div className ="div-table-col col-bordered text-div">
                                         {/* Date*/}
                                           <div className="form-group col-md-12 content form-block-holder">
                                                 <div className="col-md-8">
@@ -305,7 +292,7 @@ insertAdvanceDonationDetails(){
                                                   </div>
                                             </div>
                                       </div>
-                                      <div className ="div-table-col">
+                                      <div className ="div-table-col col-bordered text-div">
                                         {/* Amount*/}
                                           <div className="form-group col-md-12 content form-block-holder">
                                             <div className="col-md-8">
@@ -319,7 +306,7 @@ insertAdvanceDonationDetails(){
                                               </div>
                                             </div>
                                         </div>
-                                      <div className ="div-table-col">
+                                      <div className ="div-table-col col-bordered text-div">
                                           {/* Receipt No*/}
                                         <div className="form-group col-md-12 content form-block-holder">
                                             <div className="col-md-8">
@@ -332,7 +319,7 @@ insertAdvanceDonationDetails(){
                                             </div>
                                           </div>
                                         </div>
-                                        <div className ="div-table-col">
+                                        <div className ="div-table-col col-bordered text-div">
                                           {/* Actions */}
                                         <div className="form-group col-md-12 content form-block-holder">
                                             <div className="col-md-8">

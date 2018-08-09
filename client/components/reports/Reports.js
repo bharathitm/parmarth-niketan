@@ -8,6 +8,7 @@ import {blocks} from '../../constants/roomAttributes';
 
 import {logError, checkError, getFormattedDate} from '../../utils/helpers';
 import {API_URL} from '../../config/config';
+import {fetch} from '../../utils/httpUtil';
 import {notify} from 'react-notify-toast';
 
 
@@ -42,7 +43,7 @@ export class Reports extends React.Component {
         const startDate = (getFormattedDate(this.reportStore.startDate)).toString();
         const endDate = (getFormattedDate(this.reportStore.endDate)).toString();
 
-        fetch(API_URL + "checkins/?adate=" + startDate + "&ddate=" + endDate)
+        fetch(API_URL, "checkins/?adate=" + startDate + "&ddate=" + endDate)
             .then((response) => {
                 return checkError(response);
             })
@@ -89,7 +90,7 @@ export class Reports extends React.Component {
         const startDate = (getFormattedDate(this.reportStore.startDate)).toString();
         const endDate = (getFormattedDate(this.reportStore.endDate)).toString();
 
-        fetch(API_URL + "arooms/2?adate=" + startDate + "&ddate=" + endDate)
+        fetch(API_URL, "arooms/2?adate=" + startDate + "&ddate=" + endDate)
             .then((response) => {
                 return checkError(response);
             })

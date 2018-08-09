@@ -5,6 +5,7 @@ import {blocks, floors, reservationTypes} from '../../constants/roomAttributes';
 import {logError, checkError, createRoomsString} from '../../utils/helpers';
 import { confirmAlert } from 'react-confirm-alert'; 
 import {API_URL} from '../../config/config';
+import {fetch, store} from '../../utils/httpUtil';
 
 import {notify} from 'react-notify-toast';
 
@@ -33,7 +34,7 @@ export class CheckOuts extends React.Component {
 
     componentDidMount() {
     
-      fetch(API_URL + "checkouts/")
+      fetch(API_URL, "checkouts/")
         .then((response) => {
            return checkError(response);
         })
@@ -134,14 +135,7 @@ export class CheckOuts extends React.Component {
             str_room_booking_ids: str_rooms
           };
 
-          fetch(API_URL + "checkouts/id=1", {
-              method: 'POST',
-              headers: {
-              'Accept': 'application/json',
-              'Content-Type': 'application/json',
-              },
-              body: JSON.stringify(payload)
-            })
+          store(API_URL, "checkouts/id=1", JSON.stringify(payload))
             .then((response) => {
               return checkError(response);
             })
@@ -255,14 +249,7 @@ export class CheckOuts extends React.Component {
             receipt_no: receipt_no
           };
 
-          fetch(API_URL + "checkouts/", {
-              method: 'POST',
-              headers: {
-              'Accept': 'application/json',
-              'Content-Type': 'application/json',
-              },
-              body: JSON.stringify(payload)
-            })
+          store(API_URL, "checkouts/", JSON.stringify(payload))
             .then((response) => {
               return checkError(response);
             })

@@ -56,8 +56,8 @@ export class Home extends React.Component {
       }
 
       logout(){
-            window.sessionStorage.removeItem('accessToken');
-            window.sessionStorage.removeItem('userName');
+            sessionStorage.removeItem('accessToken');
+            sessionStorage.removeItem('userName');
             location.reload();
       }
 

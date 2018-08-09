@@ -2,8 +2,9 @@ import React from 'react';
 
 import { GoogleLogin } from 'react-google-login';
 
-import {logError, checkError} from '../utils/helpers';
+import {logError, checkError, failedLogin} from '../utils/helpers';
 import {API_URL, GoogleClientID} from '../config/config';
+import {fetch} from './../utils/httpUtil';
 import {notify} from 'react-notify-toast';
 
 
@@ -23,23 +24,12 @@ export class Login extends React.Component {
         this.checkIfUserExists(response);
     }
 
-    failedLogin(){
-        window.sessionStorage.removeItem('accessToken');
-        window.sessionStorage.removeItem('userName');
-        
-        notify.show("User doesn't have access to portal!", "error");
-
-        setTimeout(this.redirectAgain, 3000)
-    }
-
-    redirectAgain(){    
-        document.location.href = "https://www.google.com/accounts/Logout?continue=https://appengine.google.com/_ah/logout?continue=" + API_URL.substring(0,(API_URL).length-5);
-    }
+   
 
     checkIfUserExists(response){
         if(response.w3.U3 != '')
         {
-          fetch(API_URL + "users/" + response.w3.U3)
+          fetch(API_URL, "users/" + response.w3.U3)
               .then((response) => {
                 return checkError(response);
                 })
@@ -56,7 +46,7 @@ export class Login extends React.Component {
                             );
                         } 
                         else{
-                           this.failedLogin();
+                           failedLogin();
                         }
                   })
                   .catch((error) => {

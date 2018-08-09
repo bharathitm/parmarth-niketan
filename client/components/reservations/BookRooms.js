@@ -3,6 +3,10 @@ import {blocks, floors } from '../../constants/roomAttributes';
 
 import { confirmAlert } from 'react-confirm-alert'; 
 
+import {fetch, store} from '../../utils/httpUtil';
+
+import ScrollUpButton from "react-scroll-up-button";
+
 import moment from 'moment';
 
 import {logError, checkError, getFormattedDate, createRoomsString} from '../../utils/helpers';
@@ -23,12 +27,35 @@ export class BookRooms extends Component {
     }; 
 
     this.handleBlocksChanged = this.handleBlocksChanged.bind(this);
+    this.handleScroll = this.handleScroll.bind(this);
   }
 
+  handleScroll() {
+    if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+        document.getElementById("btnBackToTop").style.display = "block";
+    } else {
+        document.getElementById("btnBackToTop").style.display = "none";
+    }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+   goToTop() {
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
+
+    // var elmnt = document.getElementById("spGrandTotal");
+    // elmnt.scrollIntoView();
+}
+
   componentDidMount(){
+    window.addEventListener('scroll', this.handleScroll);
     if (this.props.getStore().searchResultItems.length > 0){
       this.setAllSelectedRooms();
     }
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('scroll', this.handleScroll);
   }
 
   setAllSelectedRooms(){
@@ -40,7 +67,8 @@ export class BookRooms extends Component {
           document.getElementById(selectedRooms[cnt]).checked = true; 
           this.roomsChanged();
         }
-        sessionStorage.removeItem('selectedRooms');
+        document.getElementById("next-button").style.visibility = "visible";
+        //document.getElementById("next-button").style.marginTop = "-2.6em";
     }
   }
 
@@ -81,7 +109,7 @@ export class BookRooms extends Component {
       });
     }
 
-    fetch(API_URL + "arooms/3?adate=" + this.props.getStore().arrivalDate + "&ddate=" + this.props.getStore().departureDate + "&nR=" + this.props.getStore().noOfRooms + "&rT=" + this.props.getStore().roomType) 
+    fetch(API_URL, "arooms/3?adate=" + this.props.getStore().arrivalDate + "&ddate=" + this.props.getStore().departureDate + "&nR=" + this.props.getStore().noOfRooms + "&rT=" + this.props.getStore().roomType) 
     .then((response) => {
       return checkError(response);
     })
@@ -103,11 +131,22 @@ export class BookRooms extends Component {
       });
 
       var checkboxes = document.getElementsByClassName("chkAllRooms");
-      if (checkboxes.length > 0){
-          for(var i = 0; i < checkboxes.length; i++)  
-          { 
-              checkboxes[i].checked = false;
-          }
+      for(var i = 0; i < checkboxes.length; i++)  
+      { 
+          checkboxes[i].checked = false;
+      }
+
+      var checkboxes = document.getElementsByName("chkAllBlockRooms");  
+      for(var i = 0; i < checkboxes.length; i++)  
+      {  
+        checkboxes[i].checked = false;
+      }
+
+        //reset all the totals back to 0
+        document.getElementById("spGrandTotal").innerHTML = 0;
+        var parentDivForBlockTotal = document.getElementsByClassName("div-block-totals");
+        for (var i = 0; i < parentDivForBlockTotal.length; i ++){
+          parentDivForBlockTotal[i].firstElementChild.innerHTML = 0;
         }
   }
 
@@ -126,7 +165,6 @@ export class BookRooms extends Component {
                   blockTotal += parseFloat(checkboxes[i].value);
                 }
             }
-
             document.getElementById(blocks[this.props.getStore().uniqueBlocks[cnt]]).innerHTML = blockTotal;
             grandTotal += blockTotal
         } 
@@ -137,7 +175,6 @@ export class BookRooms extends Component {
          if (grandTotal != 0){
            wizardOl[0].style.pointerEvents = "auto";
            document.getElementById("next-button").style.visibility = "visible";
-           document.getElementById("next-button").style.marginTop = "-2.6em";
          } else { // no room selected
            wizardOl[0].style.pointerEvents = "none";
            document.getElementById("next-button").style.visibility = "hidden";
@@ -191,7 +228,7 @@ export class BookRooms extends Component {
         ]
       })
     }
-    else {
+    else if (selectedRooms.length > 0) {
       sessionStorage.setItem('selectedRooms', JSON.stringify(selectedRooms));
       sessionStorage.setItem('strSelectedRooms', str_rooms);
     }
@@ -202,14 +239,7 @@ export class BookRooms extends Component {
       room_ids_str: str_rooms
     };
 
-    fetch(API_URL + "roombookings/" + this.props.getStore().reservationId, {
-      method: 'POST',
-      headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(payload)
-    })
+    store(API_URL, "roombookings/" + this.props.getStore().reservationId, JSON.stringify(payload))
     .then((response) => {
       return checkError(response);
     })
@@ -262,6 +292,28 @@ export class BookRooms extends Component {
     }
    }
 
+   selectBlockRooms(){
+    var checkboxes = document.getElementsByName("chkAllBlockRooms");  
+
+    for(var i = 0; i < checkboxes.length; i++)  
+    {  
+       var blockName = checkboxes[i].nextElementSibling.innerHTML;
+        var roomCheckBoxes = document.getElementsByName(blockName);
+          if(checkboxes[i].checked) {
+              for (var x = 0; x < roomCheckBoxes.length; x ++){
+                roomCheckBoxes[x].checked = true;
+              }
+              
+            }
+          else {
+                for (var x = 0; x < roomCheckBoxes.length; x ++){
+                  roomCheckBoxes[x].checked = false;
+                }
+          } 
+          this.roomsChanged();  
+      }
+   }
+
 
   render() {
 
@@ -287,7 +339,7 @@ export class BookRooms extends Component {
 
     var wizardOl = document.getElementsByClassName("progtrckr");
     //new guest, new reservation
-    if((this.props.getStore().guestId == null) && (this.props.getStore().reservationId == null)){
+    if((this.props.getStore().guestId == null) && (this.props.getStore().reservationId == null) && (sessionStorage.getItem('selectedRooms') == null)){
       if (typeof wizardOl[0] != 'undefined'){
         wizardOl[0].style.pointerEvents = "none";
         document.getElementById("next-button").style.visibility = "hidden";
@@ -296,11 +348,9 @@ export class BookRooms extends Component {
     else if ((this.props.getStore().guestId != null) && (this.props.getStore().reservationId == null)){
         wizardOl[0].style.pointerEvents = "auto";
         document.getElementById("next-button").style.visibility = "visible";
-        document.getElementById("next-button").style.marginTop = "-2.6em";
     } // existing guest, existing reservation
     else if ((this.props.getStore().guestId != null) && (this.props.getStore().reservationId != null)){
       wizardOl[0].style.pointerEvents = "auto";
-      document.getElementById("next-button").style.marginTop = "-2.6em";
       document.getElementById("next-button").style.visibility = "visible";
     }
 
@@ -336,6 +386,7 @@ export class BookRooms extends Component {
                 //unique block ids need to be captured in a separate array
                 if (this.props.getStore().searchResultItems[i].block_id != this.props.getStore().searchResultItems[i-1].block_id)
                 {
+                  
                     arrBlocks.push(this.props.getStore().searchResultItems[i].block_id);
 
                     if ((this.props.getStore().noOfRooms != "null") && (this.props.getStore().noOfRooms != null)){
@@ -399,13 +450,15 @@ export class BookRooms extends Component {
                         handleBlocksChanged={() => (this.handleBlocksChanged())}                      
                         handleSearch={() => (this.handleSearch())}>
                   </SearchBox>  
+                  <button type="button" onClick={() => this.goToTop()} id="btnBackToTop" title="Go to Top">Top</button>
                       <div id="divSearchResults">
 
                        <div className="div-block-totals grand-total" style={{ visibility: this.props.getStore().searchResultItems.length > 0 ? 'visible':'hidden', display: this.props.getStore().searchResultItems.length > 0? 'inline':'none' }}>Grand Total &#8377;<span id="spGrandTotal">0</span></div>
   
                        {this.props.getStore().uniqueBlocks.filter(bk => this.props.getStore().filteredBlocks.find( fB => fB == bk)).map(item => (  
                               <div className="divBlocks"> 
-                                  <h4>{blocks[item]}</h4> 
+                                   <input type="checkbox" name="chkAllBlockRooms" onClick={() => this.selectBlockRooms()} />
+                                    <h4>{blocks[item]}</h4> 
                                   <span className="div-block-totals">Total &#8377;<span id={blocks[item]}>0</span></span>
                                       <ul>
                                         {this.props.getStore().uniqueRooms.filter(bk => bk.block_id == item).map(booking => (

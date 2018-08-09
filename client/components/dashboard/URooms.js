@@ -4,6 +4,7 @@ import {blocks, floors} from '../../constants/roomAttributes';
 
 import {logError, checkError, createRoomsString} from '../../utils/helpers';
 import {API_URL} from '../../config/config';
+import {fetch, store} from '../../utils/httpUtil';
 
 import {notify} from 'react-notify-toast';
 
@@ -30,7 +31,7 @@ export class URooms extends React.Component {
     }
 
     fetchUncleanRooms(){
-      fetch(API_URL + "urooms/")
+      fetch(API_URL, "urooms/")
         .then((response) => {
           return checkError(response);
         })
@@ -61,15 +62,7 @@ export class URooms extends React.Component {
             str_room_booking_ids: str_rooms
           };
       
-        fetch(API_URL + "urooms/", {
-            method: 'POST',
-            headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(payload)
-
-          })
+        store(API_URL, "urooms/", JSON.stringify(payload))
           .then((response) => {
             return checkError(response);
           })
@@ -149,7 +142,7 @@ export class URooms extends React.Component {
           return <div><h4>Housekeeping</h4><hr />Loading...</div>;
       } else if (items.length == 0){
           return  (
-          <div><h4>Housekeeping</h4><hr /> No rooms! </div>
+          <div><h4>Housekeeping</h4><hr /> No Rooms! </div>
           );
       } else {
           return (

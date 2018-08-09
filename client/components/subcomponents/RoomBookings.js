@@ -6,6 +6,7 @@ import {blocks, floors} from '../../constants/roomAttributes';
 
 import {logError, checkError, getFormattedDate} from '../../utils/helpers';
 import {API_URL} from '../../config/config';
+import {fetch, store, destroy} from '../../utils/httpUtil';
 import { confirmAlert } from 'react-confirm-alert'; 
 import {notify} from 'react-notify-toast';
 
@@ -37,7 +38,7 @@ export class RoomBookings extends Component {
     fetchRoomBookingsIfExists(){
         if(this.props.getReservationStore().guestId != null)
         {
-          fetch(API_URL + "roombookings/" + this.props.getReservationStore().guestId)
+          fetch(API_URL, "roombookings/" + this.props.getReservationStore().guestId)
               .then((response) => {
                 return checkError(response);
               })
@@ -129,15 +130,7 @@ export class RoomBookings extends Component {
             date_of_departure: document.getElementById(room_booking_id).value
         };
 
-        fetch(API_URL + "roombookings/", {
-            method: 'POST',
-            headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(payload)
-
-        })
+        store(API_URL, "roombookings/", JSON.stringify(payload))
         .then((response) => {
             return checkError(response);
         })
@@ -180,13 +173,7 @@ export class RoomBookings extends Component {
         }
 
         deleteRoomBooking(room_booking_id){
-            fetch(API_URL + "roombookings/" + room_booking_id, {
-                method: 'DELETE',
-                headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                  }
-               })
+            destroy(API_URL, "roombookings/" + room_booking_id)
                 .then((response) => {
                   return checkError(response);
                 })
@@ -299,7 +286,7 @@ export class RoomBookings extends Component {
                                {item.next_arrival_date == null? "Available" : getFormattedDate(item.next_arrival_date)} 
                               </div>
                               <div className ="actions div-table-col col-bordered">
-                              <img src="./img/tick.png" onClick={() => this.handleUpdateRoomBooking(item.room_booking_id)}/>
+                              <img src="./img/tick.png" onClick={() => this.handleUpdateRoomBooking(item.room_booking_id)}/> &nbsp;
                               <img src="./img/delete.png" onClick={() => this.handleDeleteRoomBooking(item.room_booking_id)}/>
                               </div>
                         </div>
