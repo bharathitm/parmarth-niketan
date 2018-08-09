@@ -18,8 +18,6 @@ export function findById(req, res) {
 
     var call_stored_proc = "CALL sp_GetAdvanceDonationDetails('" +  req.params.id + "')";
 
-    console.log(call_stored_proc);
-
     connection.query(call_stored_proc, true, (error, results, fields) => {
     if (error) {
         errorController.LogError(error);
@@ -49,8 +47,6 @@ export function add(req, res) {
     + req.body.receipt_no + "','"
     + req.body.is_advance + 
     "')";
-
-    console.log(call_stored_proc);
 
     connection.query(call_stored_proc, true, (error, results, fields) => {
     if (error) {
@@ -83,8 +79,6 @@ export function update(req, res) {
     + req.body.is_advance + 
     "')";
 
-    console.log(call_stored_proc);
-
     connection.query(call_stored_proc, true, (error, results, fields) => {
     if (error) {
         errorController.LogError(error);
@@ -106,8 +100,6 @@ export function update(req, res) {
 export function cancel(req, res) {
 
     var call_stored_proc = "CALL sp_DeleteAdvanceDonation('" + req.params.id + "')";
-
-    console.log(call_stored_proc);
 
     connection.query(call_stored_proc, true, (error, results, fields) => {
     if (error) {

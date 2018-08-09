@@ -13,9 +13,6 @@ var connection = mysql.createConnection(config);
  * @returns {*}
  */
 export function find(req, res) {
-
-    //console.log(req.headers.accesstoken);
-
     var call_stored_proc = "CALL sp_GetTodaysCheckIns()";
 
     connection.query(call_stored_proc, true, (error, results, fields) => {
@@ -23,8 +20,7 @@ export function find(req, res) {
         errorController.LogError(error);
         return res.send(error.code);
     }
-    res.send(results[0]);
-   
+    res.send(results[0]);   
     });
    //connection.end();     
 }
@@ -41,8 +37,6 @@ export function findByDates(req, res) {
     var call_stored_proc = "CALL sp_GetCheckInDetails('" 
     + req.query.adate + "','"
     + req.query.ddate + "')";    
-
-    console.log(call_stored_proc);
 
     connection.query(call_stored_proc, true, (error, results, fields) => {
     if (error) {
@@ -67,8 +61,6 @@ export function add(req, res) {
     var call_stored_proc = "CALL sp_UpdateTodaysCheckIns('" 
     + req.body.str_reservation_ids + "','"
     + req.body.str_room_booking_ids + "')";
-
-    console.log(call_stored_proc);
 
     connection.query(call_stored_proc, true, (error, results, fields) => {
     if (error) {

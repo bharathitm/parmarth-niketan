@@ -16,14 +16,11 @@ export function findById(req, res) {
 
     var call_stored_proc = "CALL sp_GetReservationDetails('" + req.params.id + "')";
 
-    console.log(call_stored_proc);
-
     connection.query(call_stored_proc, true, (error, results, fields) => {
     if (error) {
         errorController.LogError(error);
         return res.send(error.code);
     }
-    console.log(results[0]);
     res.send(results[0]);
     //connection.end();   
     });
@@ -87,8 +84,6 @@ export function add(req, res) {
     
     call_stored_proc += ")";
 
-    console.log(call_stored_proc);
-
     connection.query(call_stored_proc, true, (error, results, fields) => {
     if (error) {
         errorController.LogError(error);
@@ -109,8 +104,6 @@ export function add(req, res) {
  * @returns {*}
  */
 export function update(req, res) {
-
-    console.log(req.body.advance_reminder_on);
 
     var call_stored_proc = "CALL sp_UpdateReservationDetails('" 
     + req.params.id + "','" // reservation_id
@@ -150,8 +143,6 @@ export function update(req, res) {
 
     call_stored_proc += ")";
 
-    console.log(call_stored_proc);
-
     connection.query(call_stored_proc, true, (error, results, fields) => {
     if (error) {
         errorController.LogError(error);
@@ -173,8 +164,6 @@ export function update(req, res) {
 export function cancel(req, res) {
 
     var call_stored_proc = "CALL sp_CancelReservation('" + req.params.id + "')";
-
-    console.log(call_stored_proc);
 
     connection.query(call_stored_proc, true, (error, results, fields) => {
     if (error) {

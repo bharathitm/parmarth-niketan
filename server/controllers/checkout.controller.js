@@ -21,10 +21,7 @@ export function find(req, res) {
         errorController.LogError(error);
         return res.send(error.code);
     }
-    res.send(results[0]);
-
-    console.log(results[0]);
-   
+    res.send(results[0]);   
     });
     //connection.end();     
 }
@@ -58,8 +55,6 @@ export function add(req, res) {
 
     call_stored_proc += req.body.receipt_no + "')";
 
-    console.log(call_stored_proc);
-
     connection.query(call_stored_proc, true, (error, results, fields) => {
     if (error) {
         errorController.LogError(error);
@@ -91,8 +86,6 @@ export function update(req, res) {
     }
 
     call_stored_proc += req.body.str_room_booking_ids + "')";
-
-    console.log(call_stored_proc);
 
     connection.query(call_stored_proc, true, (error, results, fields) => {
     if (error) {

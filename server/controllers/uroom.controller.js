@@ -39,8 +39,6 @@ export function add(req, res) {
     var call_stored_proc = "CALL sp_UpdateCleanedRooms('" 
     + req.body.str_room_booking_ids + "')"
 
-    console.log(call_stored_proc);
-
     connection.query(call_stored_proc, true, (error, results, fields) => {
     if (error) {
         errorController.LogError(error);

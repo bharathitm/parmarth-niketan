@@ -12,7 +12,7 @@ export function LogError(message) {
    + message + 
    "')";
 
-   //console.log(call_stored_proc);
+   console.log(call_stored_proc + " server side error");
 
    connection.query(call_stored_proc, true, (error, results, fields) => {
 
@@ -31,11 +31,10 @@ export function LogClientError(req, res) {
     + msg + 
     "')";
  
-    console.log(call_stored_proc);
+    console.log(call_stored_proc + " client side error");
  
     connection.query(call_stored_proc, true, (error, results, fields) => {
         if (error) {
-            console.log(error);
             return res.send(error.code);
         }
  

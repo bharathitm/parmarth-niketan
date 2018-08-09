@@ -21,8 +21,6 @@ export function update(req, res) {
     + req.body.e_relationship +  
     "')";
 
-    console.log(call_stored_proc);
-
     connection.query(call_stored_proc, true, (error, results, fields) => {
     if (error) {
         errorController.LogError(error);

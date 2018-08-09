@@ -40,8 +40,6 @@ export function getCount(req, res) {
     + req.query.adate + "','"
     + req.query.ddate + "')"; 
 
-    console.log(call_stored_proc);
-
     connection.query(call_stored_proc, true, (error, results, fields) => {
     if (error) {
         errorController.LogError(error);
