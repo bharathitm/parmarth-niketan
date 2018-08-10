@@ -120,7 +120,7 @@ export class Reports extends React.Component {
                                 updateReportStore={(u) => {this.updateReportStore(u)}}>
                             </DatePeriodPicker>
                 <div className="div-table availability-table" style={{ visibility: this.state.AvailabilityItems.length > 0 ? 'visible':'hidden'}}>  
-                <h4>Rooms Availability from {(getFormattedDate(this.reportStore.startDate)).toString()} to {(getFormattedDate(this.reportStore.endDate)).toString()}</h4>
+                <h4>Rooms Availability from {moment(this.reportStore.startDate).format('dddd, MMMM Do YYYY')} to {moment(this.reportStore.endDate).format('dddd, MMMM Do YYYY')}</h4>
                     <div className = "div-table-row">
                               <div className ="div-table-col div-table-col-header">
                                     Blocks
@@ -144,7 +144,7 @@ export class Reports extends React.Component {
              <div id="divCheckInContents" style={{fontFamily: '"Lucida Sans Unicode"', visibility:'hidden'}}>
                         <h2>SWAMI SHUKDEVANAND TRUST</h2>
                         <h3 style={{margin: 0}}> PARMARTH NIKETAN</h3>
-                        <h4>Check In Details from {(getFormattedDate(this.reportStore.startDate)).toString()} to {(getFormattedDate(this.reportStore.endDate)).toString()}</h4>
+                        <h4>Check In Details from {moment(this.reportStore.startDate).format('dddd, MMMM Do YYYY')} to {moment(this.reportStore.endDate).format('dddd, MMMM Do YYYY')}</h4>
 
                          <table width="100%" style={{borderSpacing: 0,borderCollapse: 'collapse'}}>
                         <tbody>

@@ -5,8 +5,6 @@ import { confirmAlert } from 'react-confirm-alert';
 
 import {fetch, store} from '../../utils/httpUtil';
 
-import ScrollUpButton from "react-scroll-up-button";
-
 import moment from 'moment';
 
 import {logError, checkError, getFormattedDate, createRoomsString} from '../../utils/helpers';

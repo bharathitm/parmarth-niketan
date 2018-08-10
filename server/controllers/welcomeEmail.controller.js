@@ -3,6 +3,10 @@ var mysql = require('mysql');
 var config = require('../mysqlconfig.js');
 var errorController = require('./error.controller');
 
+// var pnAPI = "http://localhost:4000/";
+
+var pnAPI = "http://pn.anandkrish.in:4000/";
+
 var connection = mysql.createConnection(config);
 
 var transporter = nodemailer.createTransport({
@@ -21,11 +25,11 @@ export function SendWelcomeEmail(name, emailId, email_token) {
     try {
 
             var htmlText =  '<br/>Please confirm if you would like to receive correspondence from Parmarth. <br/>';
-            htmlText += '<a target="_blank" href=http://localhost:4000/validateEmail?token=' + email_token + '>Click here</a>';
+            htmlText += '<a target="_blank" href=' + pnAPI + 'validateEmail?token=' + email_token + '>Click here</a>';
             htmlText += '<br/><br/><b>Warm Regards,</b><br/>Parmarth Niketan';
 
             var mailOptions = {
-            from: process.env.GMAIL_USER,
+            from: 'bharathitm@gmail.com',
             to : emailId,
             subject: 'Welcome to the Parmarth family!',
             html: 'Dear ' + name + ',' + htmlText

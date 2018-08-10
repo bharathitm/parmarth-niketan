@@ -155,8 +155,8 @@ export class DatePickerInput extends Component {
                                     </div>
                                 </div>
                             <div className ="div-table-col">  
-                                    <button type="button" className="btnBig" onClick={() => this.handleCheckIns()}>Show Check Ins</button>&nbsp;&nbsp;&nbsp;
-                                    <button type="button" className="btnBig" onClick={() => this.handleAvailability()}>Show Rooms Availability</button>
+                                    <button type="button" className="btnBig" onClick={() => this.handleCheckIns()}>Check Ins</button>&nbsp;&nbsp;&nbsp;
+                                    <button type="button" className="btnBig" onClick={() => this.handleAvailability()}>Availability</button>
                             </div>
                         </div>
                     </div>

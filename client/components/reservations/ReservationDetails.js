@@ -74,8 +74,8 @@ export class ReservationDetails extends Component {
       document.getElementById("next-button").style.marginTop = "0em";
     }
    
-    this.refs.arrivalDate.innerHTML = moment(this.props.getStore().arrivalDate).format('MMMM Do YYYY');
-    this.refs.departureDate.innerHTML = moment(this.props.getStore().departureDate).format('MMMM Do YYYY');
+    this.refs.arrivalDate.innerHTML = moment(this.props.getStore().arrivalDate).format('dddd, MMMM Do YYYY');
+    this.refs.departureDate.innerHTML = moment(this.props.getStore().departureDate).format('dddd, MMMM Do YYYY');
 
     //hide Sanskara Div by default
     this.refs.divSanskara.style.visibility = "hidden";
@@ -145,8 +145,8 @@ export class ReservationDetails extends Component {
       });
 
     
-      this.refs.arrivalDate.innerHTML = moment(aDate.format("YYYY-MM-DD")).format('MMMM Do YYYY');
-      this.refs.departureDate.innerHTML = moment(items[0].date_of_departure).format('MMMM Do YYYY');
+      this.refs.arrivalDate.innerHTML = moment(aDate.format("YYYY-MM-DD")).format('dddd, MMMM Do YYYY');
+      this.refs.departureDate.innerHTML = moment(items[0].date_of_departure).format('dddd, MMMM Do YYYY');
       this.refs.noOfPpl.value = items[0].no_of_people;
       this.refs.comments.value = (items[0].reservation_comments == null)? '': items[0].reservation_comments;
       this.refs.reservationTypeId.value = items[0].reservation_type_id;
@@ -156,11 +156,9 @@ export class ReservationDetails extends Component {
       this.refs.reservationStatus.innerHTML = reservationStatuses[items[0].reservation_status_id];  
 
       if (items[0].reservation_status_id == 2){
-        this.refs.reservationStatus.style.backgroundColor = 'orange';
-        this.refs.reservationStatus.style.width = '10%';
+        this.refs.reservationStatus.style.color = 'orange';
       } else {
-        this.refs.reservationStatus.style.backgroundColor = 'green';
-        this.refs.reservationStatus.style.width = '15%';
+        this.refs.reservationStatus.style.color = 'green';
       }
       
       //show Sanskara Drop down only if load returns a SanskaraId
@@ -222,7 +220,6 @@ export class ReservationDetails extends Component {
 
     var dt_arrival =  this.state.arrivalDate + " " + moment(this.state.arrivalTime).format("HH:mm").toString();
     
-    alert(this.state.advanceReminderOn);
     const payload = {
       guest_id: this.props.getStore().guestId,
       date_of_arrival: dt_arrival,
@@ -488,10 +485,10 @@ export class ReservationDetails extends Component {
                       {/* Arrival Date */}
                       <label className="col-md-4">
                             From:
-                            <span ref="arrivalDate" className="spnDates" defaultValue={moment(this.state.arrivalDate).format('MMMM Do YYYY')}>
+                            <span ref="arrivalDate" className="spnDates" defaultValue={moment(this.state.arrivalDate).format('dddd, MMMM Do YYYY')}>
                             </span>
                             &nbsp;&nbsp;To:
-                            <span ref="departureDate" className="spnDates" defaultValue={moment(this.state.departureDate).format('MMMM Do YYYY')}>
+                            <span ref="departureDate" className="spnDates" defaultValue={moment(this.state.departureDate).format('dddd, MMMM Do YYYY')}>
                             </span>
                       </label>
                       {/* Departure Date */}
@@ -604,11 +601,6 @@ export class ReservationDetails extends Component {
                       </div>
                     </div>
                 </div>
-                {/* <div className="div-table-col">
-                <div className="form-group col-md-12 content form-block-holder">
-                <div id="divReservationStatus" ref="reservationStatus"></div>
-                </div>
-                </div> */}
               </div>
                <div className = "div-table-row">
                   <div className ="comments-col div-table-col">
