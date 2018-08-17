@@ -179,10 +179,10 @@ export class CheckOuts extends React.Component {
                               No. of Days
                               </div>
                               <div className ="div-table-col div-table-col-header">
-                             Room Rent
+                             Room Donation
                               </div>
                               <div className ="div-table-col div-table-col-header">
-                              Total
+                              Total Donation
                               </div>
                       </div>
                     {results.map(item => (
@@ -226,7 +226,22 @@ export class CheckOuts extends React.Component {
                             <input id="txtReceiptNo" className="form-control small-textbox" />
                             </div>
                       </div>
-                  <button type="button" className="btnCheckOut btnBig" onClick={() => { this.checkOutRooms(document.getElementById("txtTotalSum").value, document.getElementById("txtReceiptNo").value); onClose() }}>Check Out</button>
+
+                       <div className="form-group col-md-12 content form-block-holder">
+                          <label className="control-label col-md-4">
+                            Comments: &nbsp;&nbsp;
+                          </label>
+                          <div className="col-md-8">
+                          <textarea id="txtCheckOutComments"
+                              className="form-control" />
+                            </div>
+                      </div>
+                  <button type="button" className="btnCheckOut btnBig" onClick={() => 
+                    { this.checkOutRooms(
+                          document.getElementById("txtTotalSum").value, 
+                          document.getElementById("txtReceiptNo").value,
+                          document.getElementById("txtCheckOutComments").value); 
+                      onClose() }}>Check Out</button>
                   
                 </div>
               )
@@ -235,7 +250,7 @@ export class CheckOuts extends React.Component {
 
         }
 
-        checkOutRooms(amount, receipt_no){
+        checkOutRooms(amount, receipt_no, comments){
 
           var selectedRooms = this.getAllSelectedRooms();
 
@@ -246,7 +261,8 @@ export class CheckOuts extends React.Component {
             int_reservation_id: str_reservations,
             str_room_booking_ids: str_rooms,
             amount: amount,
-            receipt_no: receipt_no
+            receipt_no: receipt_no,
+            comments: comments
           };
 
           store(API_URL, "checkouts/", JSON.stringify(payload))

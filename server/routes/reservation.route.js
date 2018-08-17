@@ -7,6 +7,13 @@ const router = express.Router();
 
 router.route('/')
 
+    .get( (req, res) => {
+        if ((req.query.adate) != undefined){
+            //Fetches reservation details for a given date range
+            reservationCtrl.findByDates(req, res);
+        }
+    })
+
       .post((req, res) => {
         reservationCtrl.add(req, res);
     });

@@ -174,3 +174,29 @@ export function cancel(req, res) {
     //connection.end();   
     });
 }
+
+/**
+ * Find all reservations for given date range
+ *
+ * @param {object} req
+ * @param {object} res
+ * @returns {*}
+ */
+export function findByDates(req, res) {
+
+    var call_stored_proc = "CALL sp_GetReportReservationDetails('" 
+    + req.query.adate + "','"
+    + req.query.ddate + "')";    
+
+    console.log(call_stored_proc);
+
+    connection.query(call_stored_proc, true, (error, results, fields) => {
+    if (error) {
+        errorController.LogError(error);
+        return res.send(error.code);
+    }
+    res.send(results[0]);
+    });
+      
+    //connection.end();   
+}

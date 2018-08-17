@@ -52,6 +52,8 @@ export const blocks = {
 
 
   export const reservationStatuses = {
+    1: "New",
     2: "Booked",
-    3: "Checked In"
+    3: "Checked In",
+    4: "Checked Out"
   };

@@ -172,7 +172,8 @@ insertAdvanceDonationDetails(){
       received_on: getFormattedDate(this.state.advanceReceivedOn).toString(),
       amount: this.state.advanceAmount,
       receipt_no: this.state.advanceReceiptNo,
-      is_advance: 1
+      is_advance: 1,
+      comments: this.refs.comments.value
   };
 
   store(API_URL, "advance/", JSON.stringify(payload))
@@ -201,6 +202,7 @@ insertAdvanceDonationDetails(){
     });
     this.refs.amount.value = '';
     this.refs.receipt.value = '';
+    this.refs.comments.value = '';
   }
 }  
 
@@ -250,10 +252,13 @@ insertAdvanceDonationDetails(){
                               Received On
                               </div>
                               <div className ="div-table-col div-table-col-header">
-                              Amount
+                              Donation Amount
                               </div>
                               <div className ="div-table-col div-table-col-header">
                               Receipt No.
+                              </div>
+                              <div className ="comments div-table-col div-table-col-header">
+                              Comments
                               </div>
                               <div className ="div-table-col div-table-col-header">
                               Actions
@@ -269,6 +274,9 @@ insertAdvanceDonationDetails(){
                               </div>
                               <div className ="div-table-col col-bordered">
                                 {item.receipt_no}
+                              </div>
+                              <div className ="comments div-table-col col-bordered">
+                                {item.comments}
                               </div>
                               <div className ="div-table-col col-bordered">
                               <img src="./img/delete.png" onClick={() => this.handleDelete(item.donation_id)}/>
@@ -316,6 +324,18 @@ insertAdvanceDonationDetails(){
                                                 className={notValidClasses.advanceReceiptNoCls}
                                                 required
                                                 onBlur={this.validationCheck} />
+                                            </div>
+                                          </div>
+                                        </div>
+
+                                         <div className ="comments div-table-col col-bordered text-div">
+                                          {/* Comments*/}
+                                        <div className="form-group col-md-12 content form-block-holder">
+                                            <div className="col-md-8">
+                                              <textarea 
+                                                ref="comments"
+                                                autoComplete="off"
+                                                className="form-control advance-textarea" />
                                             </div>
                                           </div>
                                         </div>

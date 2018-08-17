@@ -9,7 +9,14 @@ router.route('/')
 
     //Fetches today's check out details
     .get( (req, res) => {
-        checkoutsCtrl.find(req, res);
+        if ((req.query.adate) != undefined){
+            //Fetches check in details for a given date range
+            checkoutsCtrl.findByDates(req, res);
+       }
+       else { 
+           //Fetches today's check in details
+           checkoutsCtrl.find(req, res);
+       }
     })
 
 

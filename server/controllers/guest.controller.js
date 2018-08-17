@@ -92,7 +92,7 @@ export function add(req, res) {
     console.log(call_stored_proc);
 
     if ((req.body.email_id != null) && (req.body.email_id != '')){
-        //SendWelcomeEmail(req.body.first_name + " " + req.body.last_name, req.body.email_id, email_token);
+        SendWelcomeEmail(req.body.first_name + " " + req.body.last_name, req.body.email_id, email_token);
     }
     
     connection.query(call_stored_proc, true, (error, results, fields) => {

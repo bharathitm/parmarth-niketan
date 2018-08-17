@@ -24,6 +24,8 @@ export function findById(req, res) {
         return res.send(error.code);
     }
     res.send(results[0]);
+
+    console.log(results[0]);
    
     });
    // connection.end();     
@@ -45,8 +47,15 @@ export function add(req, res) {
     + req.body.received_on + "','"    
     + req.body.amount + "','"
     + req.body.receipt_no + "','"
-    + req.body.is_advance + 
-    "')";
+    + req.body.is_advance + "',";
+
+    if (req.body.comments == ''){
+        call_stored_proc += null;       
+    }
+    else {
+        call_stored_proc +=  "'" + req.body.comments + "'";
+    }
+    call_stored_proc += ")";
 
     connection.query(call_stored_proc, true, (error, results, fields) => {
     if (error) {
@@ -76,8 +85,15 @@ export function update(req, res) {
     + req.body.received_on + "','"    
     + req.body.amount + "','"
     + req.body.receipt_no + "','"
-    + req.body.is_advance + 
-    "')";
+    + req.body.is_advance + "',";
+
+    if (req.body.comments == ''){
+        call_stored_proc += null;       
+    }
+    else {
+        call_stored_proc +=  "'" + req.body.comments + "'";
+    }
+    call_stored_proc += ")";
 
     connection.query(call_stored_proc, true, (error, results, fields) => {
     if (error) {
