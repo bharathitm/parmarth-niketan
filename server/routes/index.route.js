@@ -4,6 +4,7 @@ import reservationRoutes from './reservation.route';
 import roomBookingsRoutes from './roombooking.route';
 import guestRoutes from './guest.route';
 import econtactsRoutes from './econtact.route';
+import gcontactsRoutes from './gcontact.route';
 import advanceRoutes from './advance.route';
 import aroomsRoutes from './aroom.route';
 import checkinsRoutes from './checkin.route';
@@ -29,6 +30,9 @@ router.use('/guests', guestRoutes);
 
 //Guest Emergency Contact details
 router.use('/econtacts', econtactsRoutes);
+
+//Guest Emergency Contact details
+router.use('/gcontacts', gcontactsRoutes);
 
 //Advance donation for reservations
 router.use('/advance', advanceRoutes);

@@ -64,11 +64,11 @@ export function add(req, res) {
     
 
     // If is_a_reference is not set, we pass this as 0
-    if (req.body.is_a_reference == undefined || req.body.is_a_reference == ''){
-        call_stored_proc += "0,"        
+    if (req.body.reference_id == 0 || req.body.reference_id == ''){
+        call_stored_proc += null + ","        
     }
     else {
-        call_stored_proc +=  "'" + req.body.is_a_reference + "',"
+        call_stored_proc +=  "'" + req.body.reference_id + "',"
     }
 
      // Since advance_reminder_on is an optional field, we pass this as null
@@ -135,10 +135,17 @@ export function update(req, res) {
 
     // Since sankara is an optional field, we pass this as null
     if (req.body.sanskara_id == 0){
+        call_stored_proc += null + ","
+    }
+    else {
+        call_stored_proc +=  "'" + req.body.sanskara_id + "',"
+    }
+
+    if (req.body.reference_id == 0 || req.body.reference_id == ''){
         call_stored_proc += null
     }
     else {
-        call_stored_proc +=  "'" + req.body.sanskara_id + "'"
+        call_stored_proc +=  "'" + req.body.reference_id + "'"
     }
 
     call_stored_proc += ")";
@@ -187,8 +194,6 @@ export function findByDates(req, res) {
     var call_stored_proc = "CALL sp_GetReportReservationDetails('" 
     + req.query.adate + "','"
     + req.query.ddate + "')";    
-
-    console.log(call_stored_proc);
 
     connection.query(call_stored_proc, true, (error, results, fields) => {
     if (error) {

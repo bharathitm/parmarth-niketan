@@ -29,7 +29,8 @@ export class Guests extends Component {
       eLastName: props.getStore().eLastName,
       ePhone: props.getStore().ePhone,     
       eRelationship: props.getStore().eRelationship,
-      searchText: null   
+      searchText: null,
+      searchGuestId: null   
     }; 
 
     this._validateOnDemand = true; 
@@ -114,12 +115,13 @@ export class Guests extends Component {
     }
 
     this.props.updateStore({
-      searchText: ''
+      searchText: '',
+      searchGuestId: null
     });
   }
 
-  searchReservation(searchText){
-    fetch(API_URL, "guests/?search=" + searchText)
+  searchReservation(searchText, searchGuestId){
+    ((searchText != '')?fetch(API_URL, "guests/?search=" + searchText):fetch(API_URL, "guests/" + searchGuestId))
     .then((response) => {
         return checkError(response);
     })
@@ -141,6 +143,7 @@ export class Guests extends Component {
         logError(this.constructor.name + " " + error);
       });
   }
+
 
   isValidated() {
   
@@ -366,7 +369,10 @@ export class Guests extends Component {
   render() {
     //if searched from Dashboard
     if(this.props.getStore().searchText != ''){
-      this.searchReservation(this.props.getStore().searchText);
+      this.searchReservation(this.props.getStore().searchText, null);
+      this.props.updateStore
+    } else if(this.props.getStore().searchGuestId != null){
+      this.searchReservation('', this.props.getStore().searchGuestId);
     }
 
     // if (this.props.getStore().firstName != ''){

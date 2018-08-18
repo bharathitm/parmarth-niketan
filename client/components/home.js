@@ -24,7 +24,8 @@ export class Home extends React.Component {
         this.homeStore = {
               validUser: false,
               selectedTab: 'Dashboard',
-              searchText:''
+              searchText:'',
+              searchGuestId: null
         };
   
       this.redirectOnSuccessfulLogin = this.redirectOnSuccessfulLogin.bind(this);
@@ -39,7 +40,6 @@ export class Home extends React.Component {
       }
         
       updateHomeStore(update) {
-
             this.homeStore = {
                   ...this.homeStore,
                   ...update,

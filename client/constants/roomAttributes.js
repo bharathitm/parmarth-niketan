@@ -57,3 +57,8 @@ export const blocks = {
     3: "Checked In",
     4: "Checked Out"
   };
+
+  export const references = {
+    1: "Pujya Swamiji",
+    2: "Sadhviji"
+  };

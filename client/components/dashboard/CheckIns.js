@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {blocks, floors, reservationTypes} from '../../constants/roomAttributes';
+import {blocks, floors, reservationTypes, references} from '../../constants/roomAttributes';
 
 import {logError, checkError, createReservationsString, createRoomsString} from '../../utils/helpers';
 import {API_URL} from '../../config/config';
@@ -172,6 +172,10 @@ export class CheckIns extends React.Component {
             });
       }
 
+      openReservation(gID){
+        this.props.updateDashboardHomeStore(gID);
+      }
+
 
     render() {
 
@@ -185,9 +189,11 @@ export class CheckIns extends React.Component {
       
             checkInReservations.push(
                 {
+                    guest_id: items[0].guest_id,
                     reservation_id: items[0].reservation_id, 
                     name: items[0].first_name + " " + items[0].last_name, 
-                    reservation_type_id: items[0].reservation_type_id
+                    reservation_type_id: items[0].reservation_type_id,
+                    reference_id: items[0].reference_id
                 }
             );
 
@@ -201,9 +207,11 @@ export class CheckIns extends React.Component {
         {
           checkInReservations.push(
                 {
+                    guest_id: items[i].guest_id,
                     reservation_id: items[i].reservation_id, 
                     name: items[i].first_name + " " + items[i].last_name, 
-                    reservation_type_id: items[i].reservation_type_id
+                    reservation_type_id: items[i].reservation_type_id,
+                    reference_id: items[i].reference_id
                 }
             );
         }
@@ -227,7 +235,8 @@ export class CheckIns extends React.Component {
                                 <input type="checkbox" name="checkInReservations"
                                     onClick={() => this.reservationsChanged()}
                                     value={item.reservation_id} />
-                                          {reservationTypes[item.reservation_type_id]} <b>{item.name} </b>     
+                                          {reservationTypes[item.reservation_type_id]} <b><a onClick={() => this.openReservation(item.guest_id)}>{item.name}</a></b> 
+                                          {item.reference_id == null? '': ' ('}<b className="bRef">{references[item.reference_id]}</b>{")"}   
 
                                       <ul>
                                 

@@ -320,6 +320,10 @@ export class BookRooms extends Component {
       this.props.jumpToStep(1);
     }
 
+    if(this.props.getStore().searchGuestId != null){
+      this.props.jumpToStep(1);
+    }
+
     //if no guest details in session, dont allow any other step other than Book Rooms
     // if(this.props.getStore().firstName == ''){
     //   var wizardOl = document.getElementsByClassName("progtrckr");

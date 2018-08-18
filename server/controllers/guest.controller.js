@@ -89,8 +89,6 @@ export function add(req, res) {
     + req.body.e_relationship + "','"
     + email_token + "')";
 
-    console.log(call_stored_proc);
-
     if ((req.body.email_id != null) && (req.body.email_id != '')){
         SendWelcomeEmail(req.body.first_name + " " + req.body.last_name, req.body.email_id, email_token);
     }

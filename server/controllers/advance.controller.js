@@ -1,7 +1,7 @@
 var mysql = require('mysql');
 
 var config = require('../mysqlconfig.js');
-var errorController = require('./error.controller');
+var errorController = require('./error.controller.js');
 
 var connection = mysql.createConnection(config);
 
@@ -24,8 +24,6 @@ export function findById(req, res) {
         return res.send(error.code);
     }
     res.send(results[0]);
-
-    console.log(results[0]);
    
     });
    // connection.end();     

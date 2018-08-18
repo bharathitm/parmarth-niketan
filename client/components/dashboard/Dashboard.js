@@ -57,6 +57,13 @@ export class Dashboard extends React.Component {
         }
       }
 
+      updateDashboardHomeStore(gID){
+        this.props.updateHomeStore({
+            selectedTab: 'Reservations',
+            searchGuestId: gID
+          });
+      }
+
     
     render() {
           return (
@@ -83,10 +90,10 @@ export class Dashboard extends React.Component {
                     </div>
                     <div className = "div-table-row">
                           <div className ="div-table-col div-dashboard-col">
-                              <CheckIns getDashboardStore={() => (this.getDashboardStore())} updateDashboardStore={(u) => {this.updateDashboardStore(u)}}/>
+                              <CheckIns getDashboardStore={() => (this.getDashboardStore())} updateDashboardStore={(u) => {this.updateDashboardStore(u)}} updateDashboardHomeStore={(u) => {this.updateDashboardHomeStore(u)}}/>
                           </div>
                           <div className ="div-table-col div-dashboard-col">
-                              <CheckOuts  getDashboardStore={() => (this.getDashboardStore())} updateDashboardStore={(u) => {this.updateDashboardStore(u)}}/> 
+                              <CheckOuts  getDashboardStore={() => (this.getDashboardStore())} updateDashboardStore={(u) => {this.updateDashboardStore(u)}} updateDashboardHomeStore={(u) => {this.updateDashboardHomeStore(u)}}/> 
                           </div>
                           <div className ="div-table-col div-dashboard-col">
                               <URooms getDashboardStore={() => (this.getDashboardStore())} updateDashboardStore={(u) => {this.updateDashboardStore(u)}}/>  

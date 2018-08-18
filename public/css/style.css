@@ -689,8 +689,22 @@ width:100%;
   padding:0 0 0 1em;
 }
 
+.guest-contacts .div-table-col{
+
+  width: 22%;
+}
+
+.guest-contacts .actions{
+
+  width: 5%;
+}
+
 .advance-table  .comments{
   width:40%;
+}
+
+.guest-contacts .col-md-8{
+  width:90%;
 }
 
 .advance-table .div-table-col .form-block-holder {
@@ -911,4 +925,14 @@ width:100%;
 
 #btnBackToTop:hover {
   background-color: #555;
+}
+
+
+a{
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.bRef{
+  color:#719F5A;
 }

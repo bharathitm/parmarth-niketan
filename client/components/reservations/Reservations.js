@@ -37,6 +37,7 @@ export class Reservations extends React.Component {
         arrivalTime: '',
         reservationTypeId: '',
         sanskaraId: '',
+        referenceId: '',
         noOfPpl: '',
         advanceReminderOn: '',
         comments: '',
@@ -48,6 +49,7 @@ export class Reservations extends React.Component {
         advanceReceiptNo: '',
         savedToCloud: false,
         searchText: '',
+        searchGuestId: null,
         searchLoaded: false,
         searchResultItems: []
       };
@@ -121,6 +123,7 @@ export class Reservations extends React.Component {
         reservationTypeId: '',
         reservationStatusId:'',
         sanskaraId: '',
+        referenceId: '',
         noOfPpl: '',
         advanceReminderOn: '',
         comments: '',
@@ -132,6 +135,7 @@ export class Reservations extends React.Component {
         advanceReceiptNo: '',
         savedToCloud: false,
         searchText: '',
+        searchGuestId: null,
         roomType: null,
         noOfRooms: null,
         searchLoaded: false,
@@ -153,6 +157,14 @@ export class Reservations extends React.Component {
 
         this.props.updateHomeStore({
           searchText: ''
+        });
+      }
+
+      if(this.props.getHomeStore().searchGuestId != null){
+        this.sampleStore.searchGuestId = this.props.getHomeStore().searchGuestId;
+
+        this.props.updateHomeStore({
+          searchGuestId: null
         });
       }
 

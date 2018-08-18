@@ -344,6 +344,10 @@ export class CheckOuts extends React.Component {
 
         }
     
+
+        openReservation(gID){
+          this.props.updateDashboardHomeStore(gID);
+        }
   
     render() {
 
@@ -357,6 +361,7 @@ export class CheckOuts extends React.Component {
 
       checkOutReservations.push(
         {
+            guest_id: items[0].guest_id,
             reservation_id: items[0].reservation_id, 
             name: items[0].first_name + " " + items[0].last_name, 
             reservation_type_id: items[0].reservation_type_id
@@ -372,6 +377,7 @@ export class CheckOuts extends React.Component {
         {
           checkOutReservations.push(
                 {
+                    guest_id: items[i].guest_id,
                     reservation_id: items[i].reservation_id, 
                     name: items[i].first_name + " " + items[i].last_name, 
                     reservation_type_id: items[i].reservation_type_id
@@ -399,7 +405,7 @@ export class CheckOuts extends React.Component {
                             <input type="checkbox" name="checkOutReservations"
                                 onClick={() => this.reservationsChanged(item.reservation_id)}
                                 value={item.reservation_id} />
-                                      {reservationTypes[item.reservation_type_id]} <b>{item.name}</b>
+                                      {reservationTypes[item.reservation_type_id]} <b><a onClick={() => this.openReservation(item.guest_id)}>{item.name}</a></b>
                                 <ul>
                                   {checkOutRooms.filter(bk => bk.reservation_id == item.reservation_id).map(booking => (                                    
                                     <li>
