@@ -236,7 +236,7 @@ export class CheckIns extends React.Component {
                                     onClick={() => this.reservationsChanged()}
                                     value={item.reservation_id} />
                                           {reservationTypes[item.reservation_type_id]} <b><a onClick={() => this.openReservation(item.guest_id)}>{item.name}</a></b> 
-                                          {item.reference_id == null? '': ' ('}<b className="bRef">{references[item.reference_id]}</b>{")"}   
+                                          {item.reference_id == null? '':' - '}<b className="bRef">{references[item.reference_id]}</b>   
 
                                       <ul>
                                 
