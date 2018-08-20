@@ -65,13 +65,13 @@ export class CheckIns extends React.Component {
           for(var i = 0; i < checkboxes.length; i++)  
           {  
                   if(checkboxes[i].checked) {
-                    var roomCheckBoxes = checkboxes[i].nextElementSibling.nextElementSibling.getElementsByTagName("input");
+                    var roomCheckBoxes = checkboxes[i].nextElementSibling.nextElementSibling.nextElementSibling.getElementsByTagName("input");
                         for (var x = 0; x < roomCheckBoxes.length; x ++){
                           roomCheckBoxes[x].checked = true;
                         }
                         
                   } else {
-                      var roomCheckBoxes = checkboxes[i].nextElementSibling.nextElementSibling.getElementsByTagName("input");
+                      var roomCheckBoxes = checkboxes[i].nextElementSibling.nextElementSibling.nextElementSibling.getElementsByTagName("input");
                           for (var x = 0; x < roomCheckBoxes.length; x ++){
                             roomCheckBoxes[x].checked = false;
                           }
