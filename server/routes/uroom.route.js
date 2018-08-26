@@ -1,7 +1,5 @@
 import express from 'express';
 import * as uroomsCtrl from '../controllers/uroom.controller';
-import isAuthenticated from '../middlewares/authenticate';
-
 
 const router = express.Router();
 

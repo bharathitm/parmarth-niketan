@@ -1,4 +1,4 @@
-import { SendWelcomeEmail } from './welcomeEmail.controller.js';
+
 
 var mysql = require('mysql');
 var config = require('../mysqlconfig.js');
@@ -88,11 +88,7 @@ export function add(req, res) {
     + req.body.e_phone_no + "','"
     + req.body.e_relationship + "','"
     + email_token + "')";
-
-    if ((req.body.email_id != null) && (req.body.email_id != '')){
-        SendWelcomeEmail(req.body.first_name + " " + req.body.last_name, req.body.email_id, email_token);
-    }
-    
+ 
     connection.query(call_stored_proc, true, (error, results, fields) => {
     if (error) {
         errorController.LogError(error);
@@ -137,10 +133,6 @@ export function update(req, res) {
     call_stored_proc += req.body.state + "','"
     call_stored_proc += req.body.country_id + "','"
     call_stored_proc += email_token + "')";
-
-    if ((req.body.email_id != null) && (req.body.email_id != '') && req.body.has_email_changed == 1){
-        SendWelcomeEmail(req.body.first_name + " " + req.body.last_name, req.body.email_id, email_token);
-    }
 
     connection.query(call_stored_proc, true, (error, results, fields) => {
     if (error) {

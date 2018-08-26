@@ -1,6 +1,5 @@
 import express from 'express';
 import * as advanceCtrl from '../controllers/advance.controller';
-import isAuthenticated from '../middlewares/authenticate';
 
 
 const router = express.Router();

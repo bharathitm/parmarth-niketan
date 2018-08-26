@@ -36,9 +36,10 @@ export function getToday(req, res) {
  */
 export function getCount(req, res) {
 
-    var call_stored_proc = "CALL sp_GetBlockAvailability('"    
-    + req.query.adate + "','"
-    + req.query.ddate + "')"; 
+    var call_stored_proc = "CALL sp_GetRoomAvailability('"    
+    + req.query.sdate + "')"; 
+
+    console.log(call_stored_proc);
 
     connection.query(call_stored_proc, true, (error, results, fields) => {
     if (error) {
@@ -50,9 +51,34 @@ export function getCount(req, res) {
     });
 }
 
+/**
+ *  Find rooms availability count for given date range
+ *
+ * @param {object} req
+ * @param {object} res
+ * @returns {*}
+ */
+export function getCountBlockWise(req, res) {
+
+    var call_stored_proc = "CALL sp_GetBlockAvailability('"    
+    + req.query.sdate + "')"; 
+
+    console.log(call_stored_proc);
+
+    connection.query(call_stored_proc, true, (error, results, fields) => {
+    if (error) {
+        errorController.LogError(error);
+        return res.send(error.code);
+    }
+    console.log(results[0]);
+    res.send(results[0]);
+   // connection.end();   
+    });
+}
+
 
 /**
- *  Find rooms availability for given date range
+ *  Find rooms availability for given date range - Book Rooms Page
  *
  * @param {object} req
  * @param {object} res
@@ -77,3 +103,4 @@ export function getDetails(req, res) {
    // connection.end();   
     });
 }
+

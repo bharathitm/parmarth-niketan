@@ -1,6 +1,5 @@
 import express from 'express';
 import * as aroomsCtrl from '../controllers/aroom.controller';
-import isAuthenticated from '../middlewares/authenticate';
 
 
 const router = express.Router();
@@ -16,6 +15,9 @@ router.route('/:id')
                 aroomsCtrl.getCount(req, res);
                 break;
             case "3":
+                aroomsCtrl.getCountBlockWise(req, res);
+                break;
+            case "4":
                 aroomsCtrl.getDetails(req, res);
                 break;
         }

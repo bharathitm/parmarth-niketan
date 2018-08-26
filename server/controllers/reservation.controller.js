@@ -4,6 +4,8 @@ var errorController = require('./error.controller');
 
 var connection = mysql.createConnection(config);
 
+var reservationconf =  './reservationconf.controller.js';
+
 
 /**
  *  Find reservation by id
@@ -83,6 +85,10 @@ export function add(req, res) {
     call_stored_proc +=  ",'" + req.body.room_ids_str + "'"
     
     call_stored_proc += ")";
+
+    // if ((req.body.email_id != null) && (req.body.email_id != '')){
+    //     SendConfirmationEmail(req.body.first_name + " " + req.body.last_name, req.body.email_id);
+    // }
 
     connection.query(call_stored_proc, true, (error, results, fields) => {
     if (error) {
