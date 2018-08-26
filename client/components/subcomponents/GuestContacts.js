@@ -80,7 +80,7 @@ handleDelete(gContactId){
   
 }
 
-deleteAdvanceDonation(gContactId){
+deleteGuestContact(gContactId){
   destroy(API_URL, "gcontacts/" + gContactId)
     .then((response) => {
       return checkError(response);

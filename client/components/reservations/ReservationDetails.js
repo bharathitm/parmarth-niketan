@@ -669,16 +669,16 @@ export class ReservationDetails extends Component {
                </RoomBookings>
                </Collapsible>
                <br/>
-               <Collapsible trigger="Guest Contacts" onOpen={() => this.changeCollapsibleOverflow(true)} 
-                    onClose={() => this.changeCollapsibleOverflow(false)}>
-               <GuestContacts getReservationStore={() => (this.getReservationStore())}>
-               </GuestContacts>
-               </Collapsible>
-               <br/>
                 <Collapsible trigger="Advance Donations" onOpen={() => this.changeCollapsibleOverflow(true)} 
                     onClose={() => this.changeCollapsibleOverflow(false)}>
                <AdvanceDonations getReservationStore={() => (this.getReservationStore())}>
                </AdvanceDonations>
+               </Collapsible>
+               <br/>
+               <Collapsible trigger="Guest Contacts" onOpen={() => this.changeCollapsibleOverflow(true)} 
+                    onClose={() => this.changeCollapsibleOverflow(false)}>
+               <GuestContacts getReservationStore={() => (this.getReservationStore())}>
+               </GuestContacts>
                </Collapsible>
                <br/>
                <br/>

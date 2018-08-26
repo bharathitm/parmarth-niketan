@@ -6,6 +6,9 @@ import {logError, checkError} from '../../utils/helpers';
 import {API_URL} from '../../config/config';
 import {fetch} from '../../utils/httpUtil';
 import {notify} from 'react-notify-toast';
+import { confirmAlert } from 'react-confirm-alert';
+import RoomsCalendar from '../subcomponents/Calendar';
+
 
 export class TodayAvailability extends React.Component {
 
@@ -35,7 +38,6 @@ export class TodayAvailability extends React.Component {
           });
         })
       .catch((error) => {
-        alert(error);
         this.setState({
           isLoaded: false,
           error
@@ -43,6 +45,23 @@ export class TodayAvailability extends React.Component {
         notify.show('Oops! Something went wrong! Please try again!', 'error');
         logError(this.constructor.name + " " + error);
       });
+    }
+
+    showAvailabilityCalendar(){
+
+      confirmAlert({
+        customUI: ({ onClose }) => {
+          return (
+            <div className="row room-details">
+            <form id="Form" className="form-horizontal">  
+                <h4>Room Availability</h4>  
+                <img src="./img/close.png" className="imgClose" onClick={onClose}/>
+               <RoomsCalendar></RoomsCalendar>
+                </form>                    
+            </div>
+                )}
+            })
+
     }
 
     render() {
@@ -82,6 +101,7 @@ export class TodayAvailability extends React.Component {
                 ))}
              </ul>
              </div>
+             <a id="lnkRoomsAvailability" onClick={this.showAvailabilityCalendar}>More</a>
              </div>
           );
         }

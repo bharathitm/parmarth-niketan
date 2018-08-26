@@ -1,11 +1,12 @@
 import React from 'react';
 
+// import ReactDOM from 'react-dom';
+
 import ErrorBoundary from '../ErrorBoundary'
 
 import DatePeriodPicker from '../subcomponents/DatePeriodPicker';
 import moment from 'moment';
 import {blocks, reservationStatuses} from '../../constants/roomAttributes';
-import {countries} from '../../constants/countries';
 
 import {logError, checkError, getFormattedDate} from '../../utils/helpers';
 import {API_URL} from '../../config/config';
@@ -24,9 +25,7 @@ export class Reports extends React.Component {
             isLoaded: false,
             ReservationItems: [{}],
             CheckInItems: [{}],
-            CheckOutItems: [{}],
-            AvailabilityItems:[]
-
+            CheckOutItems: [{}]
         };
 
         this.reportStore = {
@@ -53,8 +52,7 @@ export class Reports extends React.Component {
             .then((result) => {
                 this.setState({
                     isLoaded:true,
-                    ReservationItems: result,
-                    AvailabilityItems : []
+                    ReservationItems: result
                   }, function() {
                     this.showReservationReport();
                   }
@@ -82,8 +80,7 @@ export class Reports extends React.Component {
             .then((result) => {
                 this.setState({
                     isLoaded:true,
-                    CheckInItems: result,
-                    AvailabilityItems : []
+                    CheckInItems: result
                   }, function() {
                     this.showCheckInReport();
                   }
@@ -111,8 +108,7 @@ export class Reports extends React.Component {
             .then((result) => {
                 this.setState({
                     isLoaded:true,
-                    CheckOutItems: result,
-                    AvailabilityItems : []
+                    CheckOutItems: result
                   }, function() {
                     this.showCheckOutReport();
                   }
@@ -132,8 +128,8 @@ export class Reports extends React.Component {
         if (this.state.ReservationItems.length > 0){
             var printWindow = window.open('', '', 'height=600,width=800');
             try {
-                    printWindow.document.write('<html><head><title>Reservations Report</title>');
-                    printWindow.document.write('</head><body style="font-family:verdana; font-size:18px;">');
+                    printWindow.document.write('<html><head>');
+                    printWindow.document.write('</head><body style="font-family:verdana; font-size:14px;width:100%;">');
                     printWindow.document.write(document.getElementById("divReservationContents").innerHTML);
                     printWindow.document.write('</body></html>');
                     printWindow.document.close();
@@ -150,8 +146,8 @@ export class Reports extends React.Component {
         if (this.state.CheckInItems.length > 0){
             var printWindow = window.open('', '', 'height=400,width=800');
             try {
-                    printWindow.document.write('<html><head><title>Check In Report</title>');
-                    printWindow.document.write('</head><body style="font-family:verdana; font-size:18px;">');
+                    printWindow.document.write('<html><head>');
+                    printWindow.document.write('</head><body style="font-family:verdana; font-size:14px;width:100%;">');
                     printWindow.document.write(document.getElementById("divCheckInContents").innerHTML);
                     printWindow.document.write('</body></html>');
                     printWindow.document.close();
@@ -168,8 +164,8 @@ export class Reports extends React.Component {
         if (this.state.CheckOutItems.length > 0){
             var printWindow = window.open('', '', 'height=400,width=800');
             try {
-                    printWindow.document.write('<html><head><title>Check Out Report</title>');
-                    printWindow.document.write('</head><body style="font-family:verdana; font-size:18px;">');
+                    printWindow.document.write('<html><head>');
+                    printWindow.document.write('</head><body style="font-family:verdana; font-size:14px;width:100%;">');
                     printWindow.document.write(document.getElementById("divCheckOutContents").innerHTML);
                     printWindow.document.write('</body></html>');
                     printWindow.document.close();
@@ -182,32 +178,9 @@ export class Reports extends React.Component {
         } 
     }
 
-    handleAvailability(){
-
-        const startDate = (getFormattedDate(this.reportStore.startDate)).toString();
-        const endDate = (getFormattedDate(this.reportStore.endDate)).toString();
-
-        fetch(API_URL, "arooms/2?adate=" + startDate + "&ddate=" + endDate)
-            .then((response) => {
-                return checkError(response);
-            })
-            .then((result) => {
-                this.setState({
-                    isLoaded:true,
-                    AvailabilityItems: result,
-                  });
-            })
-            .catch((error) => {
-                this.setState({
-                  isLoaded: false,
-                  error
-                });
-                notify.show('Oops! Something went wrong! Please try again!', 'error');
-                logError(this.constructor.name + " " + error);
-              });
-    }
-
     render() {
+
+     
           return (
             <div className="divError">
                     <ErrorBoundary>
@@ -215,63 +188,42 @@ export class Reports extends React.Component {
                                 handleReservations={() => (this.handleReservations())}
                                 handleCheckIns={() => (this.handleCheckIns())}
                                 handleCheckOuts={() => (this.handleCheckOuts())}
-                                handleAvailability={() => (this.handleAvailability())}
                                 updateReportStore={(u) => {this.updateReportStore(u)}}>
                             </DatePeriodPicker>
-                <div className="div-table availability-table" style={{ visibility: this.state.AvailabilityItems.length > 0 ? 'visible':'hidden'}}>  
-                <h4>Rooms Availability from {moment(this.reportStore.startDate).format('dddd, MMMM Do YYYY')} to {moment(this.reportStore.endDate).format('dddd, MMMM Do YYYY')}</h4>
-                    <div className = "div-table-row">
-                              <div className ="div-table-col div-table-col-header">
-                                    Blocks
-                              </div>
-                              <div className ="div-table-col div-table-col-header">
-                                    Rooms Available
-                              </div>
-                      </div>
-                    {this.state.AvailabilityItems.map(item => (
-                        <div className = "div-table-row">
-                              <div className ="div-table-col">
-                                {blocks[item.block_id]}
-                              </div>
-                              <div className ="div-table-col">
-                                {item.rooms}
-                              </div>
-                        </div>
-                        ))} 
-                </div>
-
                   {/* Reservations */}
 
-             <div id="divReservationContents" style={{fontFamily: 'Courier', visibility:'hidden'}}>
-                        <h3 style={{textAlign: 'center'}}>SWAMI SHUKDEVANAND TRUST</h3>
-                        <h4 style={{margin: 0, textAlign: 'center'}}> PARMARTH NIKETAN</h4>
-                        <h5 style={{textAlign: 'center'}}>Reservation Details from {moment(this.reportStore.startDate).format('dddd, MMMM Do YYYY')} to {moment(this.reportStore.endDate).format('dddd, MMMM Do YYYY')}</h5>
+             <div id="divReservationContents" style={{visibility:'hidden'}}>
+                        <h4 style={{margin: 0, textAlign: 'center'}}>SWAMI SHUKDEVANAND TRUST</h4>
+                        <h5 style={{margin: 0, textAlign: 'center'}}>PARMARTH NIKETAN, SWARAGASHRAM, RISHIKESH</h5>
+                        <h5 style={{margin: 0, textAlign: 'center'}}>PAN NO: AADTS4740C</h5>
+                        <h5 style={{margin: 0, textAlign: 'center'}}>STAY OF SUMMARY</h5>
+                        <h6 style={{textAlign: 'center'}}>Reservation Details from {moment(this.reportStore.startDate).format('dddd, MMMM Do YYYY')} to {moment(this.reportStore.endDate).format('dddd, MMMM Do YYYY')}</h6>
 
-                         <table width="100%" style={{borderSpacing: 0,borderCollapse: 'collapse'}}>
+                        <table style={{borderSpacing: 0,borderCollapse: 'collapse', position: 'absolute', width: '100%', fontSize: 12}}>
                         <tbody>
                             <tr>
-                               
-                                <td style={{margin: 0, padding: 2, border: '1px solid #ddd', fontWeight: 'bold'}}>Guest Name</td>
-                                <td style={{margin: 0, padding: 2, border: '1px solid #ddd', fontWeight: 'bold'}}>Arrival Date</td>
-                                <td style={{margin: 0, padding: 2, border: '1px solid #ddd', fontWeight: 'bold'}}>Departure Date</td>
-                                <td style={{margin: 0, padding: 2, border: '1px solid #ddd', fontWeight: 'bold'}}>No. of People</td>
-                                <td style={{margin: 0, padding: 2, border: '1px solid #ddd', fontWeight: 'bold'}}>Reservation Status</td>
+                                <td style={{margin: 0, padding: '1em', fontWeight: 'bold', borderTop: 'solid 1px black', borderBottom: 'solid 1px black'}}>Guest Name</td>
+                                <td style={{margin: 0, padding: '1em', fontWeight: 'bold', borderTop: 'solid 1px black', borderBottom: 'solid 1px black'}}>Arrival Date</td>
+                                <td style={{margin: 0, padding: '1em', fontWeight: 'bold', borderTop: 'solid 1px black', borderBottom: 'solid 1px black'}}>Departure Date</td>                                                           
+                                <td style={{margin: 0, padding: '1em', fontWeight: 'bold', borderTop: 'solid 1px black', borderBottom: 'solid 1px black'}}>Pax</td>
+                                <td style={{margin: 0, padding: '1em', fontWeight: 'bold', borderTop: 'solid 1px black', borderBottom: 'solid 1px black'}}>Reservation Status</td>
+
                             </tr>
                             {this.state.ReservationItems.map(item => (
                             <tr>
-                                <td style={{margin: 0, padding: 2, border: '1px solid #ddd'}}>
+                                <td style={{margin: 0, padding: '1em', borderBottom: '1px dotted black'}}>
                                     {item.guest_name}
                                 </td>
-                                <td style={{margin: 0, padding: 2, border: '1px solid #ddd'}}>
+                                <td style={{margin: 0, padding: '1em', borderBottom: '1px dotted black'}}>
                                     {item.date_of_arrival}
                                 </td>
-                                <td style={{margin: 0, padding: 2, border: '1px solid #ddd'}}>
+                                <td style={{margin: 0, padding: '1em', borderBottom: '1px dotted black'}}>
                                     {item.date_of_departure}
                                 </td>
-                                <td style={{margin: 0, padding: 2, border: '1px solid #ddd'}}>
+                                <td style={{margin: 0, padding: '1em', borderBottom: '1px dotted black'}}>
                                     {item.no_of_people}
                                 </td>
-                                <td style={{margin: 0, padding: 2, border: '1px solid #ddd'}}>
+                                <td style={{margin: 0, padding: '1em', borderBottom: '1px dotted black'}}>
                                     {reservationStatuses[item.reservation_status_id]}
                                 </td>
                             </tr>
@@ -282,39 +234,37 @@ export class Reports extends React.Component {
 
                 {/* Check Ins */}
 
-             <div id="divCheckInContents" style={{fontFamily: 'Courier', visibility:'hidden'}}>
-                        <h3 style={{textAlign: 'center'}}>SWAMI SHUKDEVANAND TRUST</h3>
-                        <h4 style={{margin: 0, textAlign: 'center'}}> PARMARTH NIKETAN</h4>
-                        <h5 style={{textAlign: 'center'}}>Check In Details from {moment(this.reportStore.startDate).format('dddd, MMMM Do YYYY')} to {moment(this.reportStore.endDate).format('dddd, MMMM Do YYYY')}</h5>
+             <div id="divCheckInContents" style={{visibility:'hidden'}}>
+                        <h4 style={{margin: 0, textAlign: 'center'}}>SWAMI SHUKDEVANAND TRUST</h4>
+                        <h5 style={{margin: 0, textAlign: 'center'}}>PARMARTH NIKETAN, SWARAGASHRAM, RISHIKESH</h5>
+                        <h5 style={{margin: 0, textAlign: 'center'}}>PAN NO: AADTS4740C</h5>
+                        <h5 style={{margin: 0, textAlign: 'center'}}>STAY OF SUMMARY</h5>
+                        <h6 style={{textAlign: 'center'}}>Check In Details from {moment(this.reportStore.startDate).format('dddd, MMMM Do YYYY')} to {moment(this.reportStore.endDate).format('dddd, MMMM Do YYYY')}</h6>
 
-                         <table width="100%" style={{borderSpacing: 0,borderCollapse: 'collapse'}}>
+                        <table style={{borderSpacing: 0,borderCollapse: 'collapse', position: 'absolute', width: '100%', fontSize: 12}}>
                         <tbody>
                             <tr>
-                                <td style={{margin: 0, padding: 2, border: '1px solid #ddd', fontWeight: 'bold'}}>Arrival Date</td>
-                                <td style={{margin: 0, padding: 2, border: '1px solid #ddd', fontWeight: 'bold'}}>Guest Name</td>
-                                <td style={{margin: 0, padding: 2, border: '1px solid #ddd', fontWeight: 'bold'}}>Address</td>
-                                <td style={{margin: 0, padding: 2, border: '1px solid #ddd', fontWeight: 'bold'}}>Email Id</td>
-                                <td style={{margin: 0, padding: 2, border: '1px solid #ddd', fontWeight: 'bold'}}>Phone No.</td>
-                                <td style={{margin: 0, padding: 2, border: '1px solid #ddd', fontWeight: 'bold'}}>No. of People</td>
+                                <td style={{margin: 0, padding: '1em', fontWeight: 'bold', borderTop: 'solid 1px black', borderBottom: 'solid 1px black'}}>Guest Name</td>
+                                <td style={{margin: 0, padding: '1em', fontWeight: 'bold', borderTop: 'solid 1px black', borderBottom: 'solid 1px black'}}>Email Id</td>
+                                <td style={{margin: 0, padding: '1em', fontWeight: 'bold', borderTop: 'solid 1px black', borderBottom: 'solid 1px black'}}>Phone No</td>
+                                <td style={{margin: 0, padding: '1em', fontWeight: 'bold', borderTop: 'solid 1px black', borderBottom: 'solid 1px black'}}>Arrival Date</td>                                                      
+                                <td style={{margin: 0, padding: '1em', fontWeight: 'bold', borderTop: 'solid 1px black', borderBottom: 'solid 1px black'}}>Pax</td>
                             </tr>
                             {this.state.CheckInItems.map(item => (
                             <tr>
-                                <td style={{margin: 0, padding: 2, border: '1px solid #ddd'}}>
-                                    {item.on_date}
-                                </td>
-                                <td style={{margin: 0, padding: 2, border: '1px solid #ddd'}}>
+                                 <td style={{margin: 0, padding: '1em', borderBottom: '1px dotted black'}}>
                                     {item.guest_name}
                                 </td>
-                                <td style={{margin: 0, padding: 2, border: '1px solid #ddd'}}>
-                                    {item.full_address + ", " + countries[item.country_id]} 
-                                </td>
-                                <td style={{margin: 0, padding: 2, border: '1px solid #ddd'}}>
+                                <td style={{margin: 0, padding: '1em', borderBottom: '1px dotted black'}}>
                                     {item.email_id}
                                 </td>
-                                <td style={{margin: 0, padding: 2, border: '1px solid #ddd'}}>
-                                    {item.phone_no}
+                                <td style={{margin: 0, padding: '1em', borderBottom: '1px dotted black'}}>
+                                    {item.phone_no} 
                                 </td>
-                                <td style={{margin: 0, padding: 2, border: '1px solid #ddd'}}>
+                                <td style={{margin: 0, padding: '1em', borderBottom: '1px dotted black'}}>
+                                    {item.on_date}
+                                </td>
+                                <td style={{margin: 0, padding: '1em', borderBottom: '1px dotted black'}}>
                                     {item.no_of_people}
                                 </td>
                             </tr>
@@ -325,40 +275,51 @@ export class Reports extends React.Component {
 
                 {/* Check Outs */}
 
-                 <div id="divCheckOutContents" style={{fontFamily: 'Courier', visibility:'hidden'}}>
-                        <h3 style={{textAlign: 'center'}}>SWAMI SHUKDEVANAND TRUST</h3>
-                        <h4 style={{margin: 0, textAlign: 'center'}}> PARMARTH NIKETAN</h4>
-                        <h5 style={{textAlign: 'center'}}>Check Out Details from {moment(this.reportStore.startDate).format('dddd, MMMM Do YYYY')} to {moment(this.reportStore.endDate).format('dddd, MMMM Do YYYY')}</h5>
+                 <div id="divCheckOutContents" style={{visibility:'hidden'}}>
+                        <h4 style={{margin: 0, textAlign: 'center'}}>SWAMI SHUKDEVANAND TRUST</h4>
+                        <h5 style={{margin: 0, textAlign: 'center'}}>PARMARTH NIKETAN, SWARAGASHRAM, RISHIKESH</h5>
+                        <h5 style={{margin: 0, textAlign: 'center'}}>PAN NO: AADTS4740C</h5>
+                        <h5 style={{margin: 0, textAlign: 'center'}}>STAY OF SUMMARY</h5>
+                        <h6 style={{textAlign: 'center'}}>Check Out Details from {moment(this.reportStore.startDate).format('dddd, MMMM Do YYYY')} to {moment(this.reportStore.endDate).format('dddd, MMMM Do YYYY')}</h6>
 
-                         <table width="100%" style={{borderSpacing: 0,borderCollapse: 'collapse'}}>
+                         <table style={{borderSpacing: 0,borderCollapse: 'collapse', position: 'absolute', width: '100%', fontSize: 12}}>
                         <tbody>
                             <tr>
-                                <td style={{margin: 0, padding: 2, border: '1px solid #ddd', fontWeight: 'bold'}}>Departure Date</td>
-                                <td style={{margin: 0, padding: 2, border: '1px solid #ddd', fontWeight: 'bold'}}>Guest Name</td>
-                                <td style={{margin: 0, padding: 2, border: '1px solid #ddd', fontWeight: 'bold'}}>Address</td>
-                                <td style={{margin: 0, padding: 2, border: '1px solid #ddd', fontWeight: 'bold'}}>Email Id</td>
-                                <td style={{margin: 0, padding: 2, border: '1px solid #ddd', fontWeight: 'bold'}}>Phone No.</td>
-                                <td style={{margin: 0, padding: 2, border: '1px solid #ddd', fontWeight: 'bold'}}>No. of People</td>
+                                <td style={{margin: 0, padding: '1em', fontWeight: 'bold', borderTop: 'solid 1px black', borderBottom: 'solid 1px black'}}>Guest Name</td>
+                                <td style={{margin: 0, padding: '1em', fontWeight: 'bold', borderTop: 'solid 1px black', borderBottom: 'solid 1px black'}}>Email Id</td>
+                                <td style={{margin: 0, padding: '1em', fontWeight: 'bold', borderTop: 'solid 1px black', borderBottom: 'solid 1px black'}}>Phone No</td>
+                                <td style={{margin: 0, padding: '1em', fontWeight: 'bold', borderTop: 'solid 1px black', borderBottom: 'solid 1px black'}}>Arrival Date</td>
+                                <td style={{margin: 0, padding: '1em', fontWeight: 'bold', borderTop: 'solid 1px black', borderBottom: 'solid 1px black'}}>Departure Date</td>                                                           
+                                <td style={{margin: 0, padding: '1em', fontWeight: 'bold', borderTop: 'solid 1px black', borderBottom: 'solid 1px black'}}>Pax</td>
+                                <td style={{margin: 0, padding: '1em', fontWeight: 'bold', borderTop: 'solid 1px black', borderBottom: 'solid 1px black'}}>Receipt No</td>
+                                <td style={{margin: 0, padding: '1em', fontWeight: 'bold', borderTop: 'solid 1px black', borderBottom: 'solid 1px black'}}>Donation Amount</td>
                             </tr>
                             {this.state.CheckOutItems.map(item => (
                             <tr>
-                                <td style={{margin: 0, padding: 2, border: '1px solid #ddd'}}>
-                                    {item.on_date}
-                                </td>
-                                <td style={{margin: 0, padding: 2, border: '1px solid #ddd'}}>
+                                <td style={{margin: 0, padding: '1em', borderBottom: '1px dotted black'}}>
                                     {item.guest_name}
                                 </td>
-                                <td style={{margin: 0, padding: 2, border: '1px solid #ddd'}}>
-                                    {item.full_address + ", " + countries[item.country_id]} 
-                                </td>
-                                <td style={{margin: 0, padding: 2, border: '1px solid #ddd'}}>
+                                <td style={{margin: 0, padding: '1em', borderBottom: '1px dotted black'}}>
                                     {item.email_id}
                                 </td>
-                                <td style={{margin: 0, padding: 2, border: '1px solid #ddd'}}>
-                                    {item.phone_no}
+                                <td style={{margin: 0, padding: '1em', borderBottom: '1px dotted black'}}>
+                                    {item.phone_no} 
                                 </td>
-                                <td style={{margin: 0, padding: 2, border: '1px solid #ddd'}}>
+                                <td style={{margin: 0, padding: '1em', borderBottom: '1px dotted black'}}>
+                                    {item.arr_date}
+                                </td>
+                                <td style={{margin: 0, padding: '1em', borderBottom: '1px dotted black'}}>
+                                    {item.dep_date}
+                                </td>
+                                <td style={{margin: 0, padding: '1em', borderBottom: '1px dotted black'}}>
                                     {item.no_of_people}
+                                </td>
+                                <td style={{margin: 0, padding: '1em', borderBottom: '1px dotted black'}}>
+                                     <div id="divReceiptCheckOut"></div>
+                                     {/* {ReactDOM.render({item.receipt_no}, document.getElementById('divReceiptCheckOut'))} */}
+                                </td>
+                                <td style={{margin: 0, padding: '1em', borderBottom: '1px dotted black'}}>
+                                    {item.amount}
                                 </td>
                             </tr>
                             ))}

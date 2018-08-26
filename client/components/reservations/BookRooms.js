@@ -107,7 +107,7 @@ export class BookRooms extends Component {
       });
     }
 
-    fetch(API_URL, "arooms/3?adate=" + this.props.getStore().arrivalDate + "&ddate=" + this.props.getStore().departureDate + "&nR=" + this.props.getStore().noOfRooms + "&rT=" + this.props.getStore().roomType) 
+    fetch(API_URL, "arooms/4?adate=" + this.props.getStore().arrivalDate + "&ddate=" + this.props.getStore().departureDate + "&nR=" + this.props.getStore().noOfRooms + "&rT=" + this.props.getStore().roomType) 
     .then((response) => {
       return checkError(response);
     })
