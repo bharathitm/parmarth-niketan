@@ -72,17 +72,20 @@ export function update(req, res) {
     + req.body.has_western_toilet + "','"
     + req.body.has_indian_toilet + "','"
     + req.body.has_solar_geyser + "','"    
-    + req.body.is_available + "',"
+    + req.body.is_available + "',";
 
     // Since notes is an optional field, we pass this as null
     if (req.body.notes == '' || req.body.notes == null){
-        call_stored_proc += null        
+        call_stored_proc += null;        
     }
     else {
-        call_stored_proc +=  "'" + req.body.notes + "'"
+        var notes = req.body.notes.replace(/'/g, "''");  
+        call_stored_proc +=  "'" + notes + "'";
     }
 
     call_stored_proc += ")";
+
+    console.log(call_stored_proc);
 
     connection.query(call_stored_proc, true, (error, results, fields) => {
     if (error) {

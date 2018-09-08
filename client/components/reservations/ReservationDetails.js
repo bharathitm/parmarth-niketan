@@ -50,7 +50,8 @@ export class ReservationDetails extends Component {
     this.validationCheck = this.validationCheck.bind(this);
     this.isValidated = this.isValidated.bind(this);
 
-    this.changeCollapsibleOverflow = this.changeCollapsibleOverflow.bind(this);
+    this.changeADCollapsibleOverflow = this.changeADCollapsibleOverflow.bind(this);
+    this.changeGCCollapsibleOverflow = this.changeGCCollapsibleOverflow.bind(this);
   }
 
   populateReservationTypes() {
@@ -234,10 +235,13 @@ export class ReservationDetails extends Component {
 
   insertReservationDetails(){
 
+  
     var dt_arrival =  this.state.arrivalDate + " " + moment(this.state.arrivalTime).format("HH:mm").toString();
     
     const payload = {
       guest_id: this.props.getStore().guestId,
+      email_id: this.props.getStore().email,
+      name : this.props.getStore().firstName + " " + this.props.getStore().lastName,
       date_of_arrival: dt_arrival,
       date_of_departure: this.state.departureDate,
       no_of_people: this.state.noOfPpl,
@@ -423,12 +427,21 @@ export class ReservationDetails extends Component {
     return this.reservationStore;
   }
 
-  changeCollapsibleOverflow(trigger){
+  changeADCollapsibleOverflow(trigger){
     var content = document.getElementsByClassName("Collapsible__contentOuter");
     if (trigger){
       content[1].style.overflow = "visible";
     } else {
       content[1].style.overflow = "hidden";
+    }
+  }
+
+  changeGCCollapsibleOverflow(trigger){
+    var content = document.getElementsByClassName("Collapsible__contentOuter");
+    if (trigger){
+      content[2].style.overflow = "visible";
+    } else {
+      content[2].style.overflow = "hidden";
     }
   }
 
@@ -669,14 +682,14 @@ export class ReservationDetails extends Component {
                </RoomBookings>
                </Collapsible>
                <br/>
-                <Collapsible trigger="Advance Donations" onOpen={() => this.changeCollapsibleOverflow(true)} 
-                    onClose={() => this.changeCollapsibleOverflow(false)}>
+                <Collapsible trigger="Advance Donations" onOpen={() => this.changeADCollapsibleOverflow(true)} 
+                    onClose={() => this.changeADCollapsibleOverflow(false)}>
                <AdvanceDonations getReservationStore={() => (this.getReservationStore())}>
                </AdvanceDonations>
                </Collapsible>
                <br/>
-               <Collapsible trigger="Guest Contacts" onOpen={() => this.changeCollapsibleOverflow(true)} 
-                    onClose={() => this.changeCollapsibleOverflow(false)}>
+               <Collapsible trigger="Guest Contacts" onOpen={() => this.changeGCCollapsibleOverflow(true)} 
+                    onClose={() => this.changeGCCollapsibleOverflow(false)}>
                <GuestContacts getReservationStore={() => (this.getReservationStore())}>
                </GuestContacts>
                </Collapsible>

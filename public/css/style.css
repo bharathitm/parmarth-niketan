@@ -809,7 +809,7 @@ width:100%;
 .divBlocks li{
   border-bottom:solid 1px skyblue;
   margin:1em;
-  width:35%;
+  width:50%;
 }
 
 .sp-block-imgs{
@@ -851,7 +851,7 @@ width:100%;
 }
 
 #divRoomBookings .room-no{
-  width:8%;
+  width:12%;
 }
 #divRoomBookings .details{
   width:25%;

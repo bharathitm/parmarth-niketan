@@ -1,10 +1,12 @@
 var mysql = require('mysql');
 var config = require('../mysqlconfig.js');
-var errorController = require('./error.controller');
-
 var connection = mysql.createConnection(config);
 
-var reservationconf =  './reservationconf.controller.js';
+var errorController = require('./error.controller');
+
+var moment = require('moment');
+
+import { SendConfirmationEmail } from './reservationconf.controller.js';
 
 
 /**
@@ -43,52 +45,53 @@ export function add(req, res) {
     + req.body.date_of_departure + "','"
 
     //no_of_people does not have the ' after the ,  
-    + req.body.no_of_people + "',"
+    + req.body.no_of_people + "',";
 
      // Since reservation_comments is an optional field, we pass this as null
      if (req.body.reservation_comments == ''){
-        call_stored_proc += null  + ","        
+        call_stored_proc += null  + ",";        
     }
     else {
-        call_stored_proc +=  "'" + req.body.reservation_comments.replace("'","''") + "',"
+        var reservation_comments = req.body.reservation_comments.replace(/'/g, "''");  
+        call_stored_proc +=  "'" + reservation_comments + "',";
     }
 
     //reservation_type_id does not have the ' after the ,  
-    call_stored_proc +=  "'" + req.body.reservation_type_id + "',"
+    call_stored_proc +=  "'" + req.body.reservation_type_id + "',";
 
      // Since sanskara_id is an optional field, we pass this as null
     if (req.body.sanskara_id == 0) {
-        call_stored_proc += null  + ","        
+        call_stored_proc += null  + ",";        
     }
     else {
-        call_stored_proc +=  "'" + req.body.sanskara_id + "',"
+        call_stored_proc +=  "'" + req.body.sanskara_id + "',";
     }
     
 
     // If is_a_reference is not set, we pass this as 0
     if (req.body.reference_id == 0 || req.body.reference_id == ''){
-        call_stored_proc += null + ","        
+        call_stored_proc += null + ",";        
     }
     else {
-        call_stored_proc +=  "'" + req.body.reference_id + "',"
+        call_stored_proc +=  "'" + req.body.reference_id + "',";
     }
 
      // Since advance_reminder_on is an optional field, we pass this as null
      if (req.body.advance_reminder_on == ''){
-        call_stored_proc += null
+        call_stored_proc += null;
     }
     else {
-        call_stored_proc +=  "'" + req.body.advance_reminder_on + "'"
+        call_stored_proc +=  "'" + req.body.advance_reminder_on + "'";
     }
 
     //room_ids_str does not have the ' after the ,  
-    call_stored_proc +=  ",'" + req.body.room_ids_str + "'"
+    call_stored_proc +=  ",'" + req.body.room_ids_str + "'";
     
     call_stored_proc += ")";
 
-    // if ((req.body.email_id != null) && (req.body.email_id != '')){
-    //     SendConfirmationEmail(req.body.first_name + " " + req.body.last_name, req.body.email_id);
-    // }
+     if ((req.body.email_id != null) && (req.body.email_id != '')){
+        SendConfirmationEmail(req.body.name, req.body.email_id, (moment(req.body.date_of_arrival).format("MMM Do YY") + " - " + moment(req.body.date_of_departure).format("MMM Do YY")));
+     }
 
     connection.query(call_stored_proc, true, (error, results, fields) => {
     if (error) {
@@ -117,44 +120,47 @@ export function update(req, res) {
     + req.body.date_of_departure + "','"
 
     //no_of_people does not have the ' after the ,  
-    + req.body.no_of_people + "',"
+    + req.body.no_of_people + "',";
 
     // Since reservation_comments is an optional field, we pass this as null
     if (req.body.reservation_comments == '' || req.body.reservation_comments == null){
-        call_stored_proc += null  + ","        
+        call_stored_proc += null  + ",";        
     }
     else {
-        call_stored_proc +=  "'" + req.body.reservation_comments.replace("'","''") + "',"
+        var reservation_comments = req.body.reservation_comments.replace(/'/g, "''");  
+        call_stored_proc +=  "'" + reservation_comments + "',";
     }
 
     // Since advance_reminder_on is an optional field, we pass this as null
     if (req.body.advance_reminder_on == ''){
-        call_stored_proc += null
+        call_stored_proc += null;
     }
     else {
-        call_stored_proc +=  "'" + req.body.advance_reminder_on + "'"
+        call_stored_proc +=  "'" + req.body.advance_reminder_on + "'";
     }
  
-    call_stored_proc +=  ",'" + req.body.reservation_type_id + "',"
+    call_stored_proc +=  ",'" + req.body.reservation_type_id + "',";
 
     //call_stored_proc +=  "'" + req.body.sanskara_id + "'"
 
     // Since sankara is an optional field, we pass this as null
     if (req.body.sanskara_id == 0){
-        call_stored_proc += null + ","
+        call_stored_proc += null + ",";
     }
     else {
-        call_stored_proc +=  "'" + req.body.sanskara_id + "',"
+        call_stored_proc +=  "'" + req.body.sanskara_id + "',";
     }
 
     if (req.body.reference_id == 0 || req.body.reference_id == ''){
-        call_stored_proc += null
+        call_stored_proc += null;
     }
     else {
-        call_stored_proc +=  "'" + req.body.reference_id + "'"
+        call_stored_proc +=  "'" + req.body.reference_id + "'";
     }
 
     call_stored_proc += ")";
+
+    console.log(call_stored_proc);
 
     connection.query(call_stored_proc, true, (error, results, fields) => {
     if (error) {

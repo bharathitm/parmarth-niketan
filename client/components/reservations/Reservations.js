@@ -79,7 +79,9 @@ export class Reservations extends React.Component {
     componentDidMount(){
       //hide Empty component
       var pageLis = document.getElementsByTagName("li");
-      pageLis[3].style.visibility = "hidden";
+      if (pageLis.length > 0){
+        pageLis[3].style.visibility = "hidden";
+      }
     }
 
     redirectToDashboard() {

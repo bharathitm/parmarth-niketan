@@ -10,7 +10,8 @@ export const blocks = {
     9: 'Yamuna Ext',
     10: 'Behind Opposite / Yamuna',
     11: 'Yoga Flats',
-    12: 'Yoga Village'
+    12: 'Yoga Village',
+    13: 'Event Halls'
   };
 
   export const floors = {

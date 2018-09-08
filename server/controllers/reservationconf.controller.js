@@ -1,43 +1,47 @@
 var nodemailer = require('nodemailer');
-var mysql = require('mysql');
-var config = require('../mysqlconfig.js');
 var errorController = require('./error.controller');
 
+var confirmationTextBody = require('../emails/confirmationTextBody.js');
 
-var connection = mysql.createConnection(config);
+var path = require('path');
+var config = require('../config/config');
 
 var transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
-    // user: process.env.GMAIL_USER,
-    // pass: process.env.GMAIL_PASSWORD
-    user: 'bharathitm@gmail.com',
-    pass: 'P1ggych0ps1!'
+    user: config.GMAIL_USER_NAME,
+    pass: config.GMAIL_PASSWORD
   }
 });
 
-
-
-export function SendConfirmationEmail(name, emailId) {
+export function SendConfirmationEmail(name, emailId, dates) {
     try {
-
-            var htmlText =  '<br/>Please confirm if you would like to receive correspondence from Parmarth. <br/>';
-           // htmlText += '<a target="_blank" href=' + pnAPI + 'validateEmail?token=' + email_token + '>Click here</a>';
-            htmlText += '<br/><br/><b>Warm Regards,</b><br/>Parmarth Niketan';
-
             var mailOptions = {
-            from: 'bharathitm@gmail.com',
+            from: config.GMAIL_SENDER,
             to : emailId,
-            subject: 'Welcome to the Parmarth family!',
-            html: 'Dear ' + name + ',' + htmlText
+            subject: 'Confirmation Email from Parmarth Niketan!',
+            html: 'Namaste Divine Soul ' + name + ' ji,<br/><br/>Jai Gange!<br/><br/>We hope everything is wonderful with you and your loved ones.<br/><br/>This is a confirmation for your stay at Parmarth Niketan from <b>' + dates + '</b>.<br/><br/>' + confirmationTextBody,
+            attachments: [
+                        {
+                                filename: 'Welcome.pdf',
+                                path: path.join(__dirname, '../emails/Welcome.pdf'),
+                                contentType: 'application/pdf'
+                        },
+                        {
+                                filename: 'Declaration Form - Indian Nationals.docx',
+                                path: path.join(__dirname, '../emails/Declaration Form - Indian Nationals.docx')
+                        },
+                        {
+                                filename: 'C Form - Foreign Nationals.docx',
+                                path: path.join(__dirname, '../emails/C Form - Foreign Nationals.docx')
+                        }
+                ]
             };
 
             transporter.sendMail(mailOptions, function(error, info){
             if (error) {
                     errorController.LogError(error);
-            } else {
-                console.log('Email sent: ' + info.response);
-            }
+            } 
             });
     } catch (error){
             errorController.LogError(error);

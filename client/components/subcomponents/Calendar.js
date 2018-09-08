@@ -1,8 +1,6 @@
 import React from 'react';
 import BigCalendar from 'react-big-calendar';
 import moment from 'moment';
-
-// import events from './events'
  
 import {logError, checkError, getFormattedDate} from '../../utils/helpers';
 import {blocks} from '../../constants/roomAttributes';
@@ -10,7 +8,6 @@ import {blocks} from '../../constants/roomAttributes';
 import {API_URL} from '../../config/config';
 import {fetch} from '../../utils/httpUtil';
 import {notify} from 'react-notify-toast';
-import { confirmAlert } from 'react-confirm-alert';
 
 BigCalendar.setLocalizer(BigCalendar.momentLocalizer(moment));
 
@@ -25,6 +22,7 @@ export class RoomsCalendar extends React.Component {
         items: [
           {}
         ],
+        eventHalls: [{}],
         events : [],
         eventDetails: []
       };
@@ -39,6 +37,7 @@ export class RoomsCalendar extends React.Component {
       var startDate = getFormattedDate(moment([yearSelected, monthSelected])).toString();
   
       this.loadRoomAvailability(startDate);
+      this.loadEventHallsAvailability(startDate);
     }
 
     
@@ -49,6 +48,7 @@ export class RoomsCalendar extends React.Component {
     var startDate = getFormattedDate(moment([yearSelected, monthSelected])).toString();
 
     this.loadRoomAvailability(startDate);
+    this.loadEventHallsAvailability(startDate);
     }
 
 loadRoomAvailability(startDate){
@@ -62,6 +62,30 @@ loadRoomAvailability(startDate){
               items: result,
             }, function() {
               this.loadEvents();
+            }
+          );
+      })
+        .catch((error) => {
+          this.setState({
+            isLoaded: false,
+            error
+          });
+          notify.show('Oops! Something went wrong! Please try again!', 'error');
+          logError(this.constructor.name + " " + error);
+        });
+    }
+
+    loadEventHallsAvailability(startDate){
+      fetch(API_URL, "arooms/5?sdate=" + startDate)
+        .then((response) => {
+          return checkError(response);
+        })
+        .then((result) => {
+          this.setState({
+              isLoaded:true,
+              eventHalls: result,
+            }, function() {
+              this.loadEventHalls();
             }
           );
       })
@@ -95,6 +119,27 @@ loadRoomAvailability(startDate){
         });
     }
 
+    loadEventHalls(){
+
+      var events = this.state.events;
+        for (var i = 0; i < this.state.eventHalls.length; i++)
+        {
+          events.push(
+              {
+                  title: this.state.eventHalls[i].event_hall,
+                  start: this.state.eventHalls[i].start_date,
+                  end: this.state.eventHalls[i].end_date,
+                  isEventHall: true,
+                  selectable: false
+              }
+          );
+        }
+
+        this.setState({
+          events: events
+        });
+    }
+
     handleEventDateSelected(eventSelected){
       var startDate = getFormattedDate(moment(eventSelected.end).toString());
 
@@ -106,8 +151,6 @@ loadRoomAvailability(startDate){
           this.setState({
             eventDetails: result
           });
-          
-          //this.loadEventDetails(result);
       })
         .catch((error) => {
           this.setState({
@@ -119,22 +162,18 @@ loadRoomAvailability(startDate){
         });
     }
 
-    loadEventDetails(items){
+    eventStyleGetter(event, start, end, isSelected) {
+      
+      var style = {
+      }
 
-      document.getElementById("divEventDetails").innerHTML = items.length;
-      // confirmAlert({
-      //   customUI: ({ onClose }) => {
-      //     return (
-      //       <div className="row room-details">
-      //       <form id="Form" className="form-horizontal">  
-      //           <h4>Block Wise Room Availability</h4>  
-      //           <img src="./img/close.png" className="imgClose" onClick={onClose}/>
-      //          {alert(items.length)}
-      //           </form>                    
-      //       </div>
-      //           )}
-      //       })
-    }
+      if (event.isEventHall){
+          style.backgroundColor = 'sandybrown';
+      }
+      return {
+          style: style
+      };
+  }
     
     render() {      
           return (
@@ -145,6 +184,8 @@ loadRoomAvailability(startDate){
                           views={['month']}
                           onNavigate={(dateSelected) => this.handleMonthChange(dateSelected)}
                           onSelectEvent={(eventSelected) => this.handleEventDateSelected(eventSelected)}
+                          popup={true}
+                          eventPropGetter={(this.eventStyleGetter)}
                           // max={dates.add(dates.endOf(new Date(2015, 17, 1), 'day'), -1, 'hours')}
                           defaultView="month" />
 

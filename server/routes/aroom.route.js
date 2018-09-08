@@ -20,6 +20,9 @@ router.route('/:id')
             case "4":
                 aroomsCtrl.getDetails(req, res);
                 break;
+            case "5":
+                aroomsCtrl.getEventRooms(req, res);
+                break;
         }
     });
 

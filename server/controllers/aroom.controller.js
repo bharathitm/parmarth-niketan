@@ -104,3 +104,27 @@ export function getDetails(req, res) {
     });
 }
 
+
+/**
+ *  Find rooms availability for given date range - Book Rooms Page
+ *
+ * @param {object} req
+ * @param {object} res
+ * @returns {*}
+ */
+export function getEventRooms(req, res) {
+
+    var call_stored_proc = "CALL sp_GetBookedEventRooms('"    
+    + req.query.sdate + "')"; 
+
+    console.log(call_stored_proc);
+
+    connection.query(call_stored_proc, true, (error, results, fields) => {
+    if (error) {
+        errorController.LogError(error);
+        return res.send(error.code);
+    }
+    res.send(results[0]);
+   // connection.end();   
+    });
+}
