@@ -89,32 +89,35 @@ export class CheckIns extends React.Component {
         var str_reservations = createReservationsString(selectedReservations);
         var str_rooms = createRoomsString(selectedRooms);
 
-        const payload = {
-          str_reservation_ids: str_reservations,
-          str_room_booking_ids: str_rooms
-        };
+        if (str_rooms != ''){
 
-        store(API_URL, "checkins/", JSON.stringify(payload))
+            const payload = {
+              str_reservation_ids: str_reservations,
+              str_room_booking_ids: str_rooms
+            };
 
-        .then((response) => {
-            return checkError(response);
-          })
-          .then((result) => {
-            notify.show('Room(s) checked in successfully!', 'success');
-            this.props.updateDashboardStore({
-              hasCheckInsChanged: true
-            });
-          })
-          .catch((error) => {
-            this.setState({
-              isLoaded: false,
-              error
-            });
-            notify.show('Oops! Something went wrong! Please try again!', 'error');
-            logError(error);
-          });
+            store(API_URL, "checkins/", JSON.stringify(payload))
 
-        this.updateCheckInState(selectedReservations, selectedRooms);
+            .then((response) => {
+                return checkError(response);
+              })
+              .then((result) => {
+                notify.show('Room(s) checked in successfully!', 'success');
+                this.props.updateDashboardStore({
+                  hasCheckInsChanged: true
+                });
+              })
+              .catch((error) => {
+                this.setState({
+                  isLoaded: false,
+                  error
+                });
+                notify.show('Oops! Something went wrong! Please try again!', 'error');
+                logError(error);
+              });
+
+            this.updateCheckInState(selectedReservations, selectedRooms);
+          }
       }
 
       getAllSelectedReservations(){

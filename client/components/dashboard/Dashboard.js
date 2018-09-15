@@ -66,6 +66,8 @@ export class Dashboard extends React.Component {
 
     
     render() {
+
+        if (sessionStorage.getItem('accessToken') != null){
           return (
             <div className="divError">    
             <ErrorBoundary>
@@ -104,6 +106,10 @@ export class Dashboard extends React.Component {
             </ErrorBoundary>
             </div>
           );
+        }
+        else{
+            return null;
+        }
     }
 }
 

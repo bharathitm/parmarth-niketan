@@ -3,9 +3,8 @@ import React from 'react';
 import { GoogleLogin } from 'react-google-login';
 
 import {logError, checkError, failedLogin} from '../utils/helpers';
-import {API_URL, GoogleClientID} from '../config/config';
+import {BASE_URL, GoogleClientID} from '../config/config';
 import {fetch} from './../utils/httpUtil';
-import {notify} from 'react-notify-toast';
 
 
 export class Login extends React.Component {
@@ -29,7 +28,7 @@ export class Login extends React.Component {
     checkIfUserExists(response){
         if(response.w3.U3 != '')
         {
-          fetch(API_URL, "users/" + response.w3.U3)
+          fetch(BASE_URL, "users/" + response.w3.U3)
               .then((response) => {
                 return checkError(response);
                 })

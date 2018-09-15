@@ -446,31 +446,11 @@ export class ReservationDetails extends Component {
   }
 
   render() {
-    // redirect to Guest page - 
-   // 1) if search from Dashboard 2) if existing guest but has no active reservation
-    // if((this.props.getStore().searchText != '') || 
-    //   (
-    //     (this.props.getStore().guestId == null) || 
-    //     (this.props.getStore().reservationId == null) && 
-    //     ((window.sessionStorage.getItem('strSelectedRooms') == null) 
-    //     || (window.sessionStorage.getItem('strSelectedRooms').toString().trim() == ''))
-    //   )
-    // ){
-    //   this.props.jumpToStep(1);
-    // }
  
       //new guest, new reservation
       if((this.props.getStore().reservationId == null) && (sessionStorage.getItem('strSelectedRooms') == null)){
           this.props.jumpToStep(1);
       } 
-      // // existing guest, new reservation
-      // else if ((this.props.getStore().guestId != null) && (this.props.getStore().reservationId == null) && (window.sessionStorage.getItem('strSelectedRooms') == null)){
-      //   this.props.jumpToStep(1);
-      //  } 
-       // existing guest, existing reservation
-      // else if ((this.props.getStore().guestId != null) && (this.props.getStore().reservationId != null)){
-
-      // }
 
     let notValidClasses = {};
 

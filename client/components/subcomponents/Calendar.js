@@ -177,7 +177,6 @@ loadRoomAvailability(startDate){
     
     render() {      
           return (
-
                   <div height='500px'>
                       <BigCalendar
                           events={this.state.events}

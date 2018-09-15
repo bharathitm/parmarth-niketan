@@ -40,9 +40,6 @@ export class BookRooms extends Component {
    goToTop() {
     document.body.scrollTop = 0;
     document.documentElement.scrollTop = 0;
-
-    // var elmnt = document.getElementById("spGrandTotal");
-    // elmnt.scrollIntoView();
 }
 
   componentDidMount(){
@@ -66,7 +63,6 @@ export class BookRooms extends Component {
           this.roomsChanged();
         }
         document.getElementById("next-button").style.visibility = "visible";
-        //document.getElementById("next-button").style.marginTop = "-2.6em";
     }
   }
 

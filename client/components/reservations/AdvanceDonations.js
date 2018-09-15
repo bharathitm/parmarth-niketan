@@ -306,6 +306,7 @@ insertAdvanceDonationDetails(){
                                             <div className="col-md-8">
                                               <input
                                                 ref="amount"
+                                                type="number"
                                                 autoComplete="off"
                                                 className={notValidClasses.advanceAmountCls}
                                                 required

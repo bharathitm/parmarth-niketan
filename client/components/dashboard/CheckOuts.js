@@ -214,7 +214,7 @@ export class CheckOuts extends React.Component {
                             Total Sum: &#8377; &nbsp;
                           </label>
                           <div className="col-md-8">
-                            <input id="txtTotalSum" className="form-control small-textbox" defaultValue={sum} />
+                            <input id="txtTotalSum" className="form-control small-textbox" defaultValue={sum} type="number" />
                             </div>
                       </div>
 
@@ -264,7 +264,7 @@ export class CheckOuts extends React.Component {
             receipt_no: receipt_no,
             comments: comments
           };
-
+         
           store(API_URL, "checkouts/", JSON.stringify(payload))
             .then((response) => {
               return checkError(response);

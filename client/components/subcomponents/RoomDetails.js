@@ -307,6 +307,7 @@ export class RoomDetails extends Component {
                                             autoComplete="off"
                                             className={notValidClasses.roomDonationCls}
                                             required
+                                            type="number"
                                             defaultValue={this.state.roomDonation}
                                             onBlur={this.validationCheck} />
                                 </div>

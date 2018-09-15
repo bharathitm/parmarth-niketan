@@ -367,143 +367,140 @@ export class Guests extends Component {
 
 
   render() {
-    //if searched from Dashboard
-    if(this.props.getStore().searchText != ''){
-      this.searchReservation(this.props.getStore().searchText, null);
-      this.props.updateStore
-    } else if(this.props.getStore().searchGuestId != null){
-      this.searchReservation('', this.props.getStore().searchGuestId);
-    }
+      //if searched from Dashboard
+      if(this.props.getStore().searchText != ''){
+        this.searchReservation(this.props.getStore().searchText, null);
+        this.props.updateStore
+      } else if(this.props.getStore().searchGuestId != null){
+        this.searchReservation('', this.props.getStore().searchGuestId);
+      }
 
-    // if (this.props.getStore().firstName != ''){
-           var wizardOl = document.getElementsByClassName("progtrckr");
-          if (typeof wizardOl[0] != 'undefined'){
-            wizardOl[0].style.pointerEvents = "auto";
-            document.getElementById("next-button").style.marginTop = "0em";
-            //document.getElementById("next-button").style.visibility = "visible";
-          }
+      var wizardOl = document.getElementsByClassName("progtrckr");
+      if (typeof wizardOl[0] != 'undefined'){
+        wizardOl[0].style.pointerEvents = "auto";
+        document.getElementById("next-button").style.marginTop = "0em";
+      }
 
-         //new guest, new reservation
-         if((this.props.getStore().guestId == null) && (this.props.getStore().reservationId == null)){
-           //if (typeof wizardOl[0] != 'undefined'){
-             wizardOl[0].style.pointerEvents = "auto";
-             document.getElementById("next-button").style.visibility = "visible";
-           //}
-         } // existing guest, new reservation
-         else if ((this.props.getStore().guestId != null) && (this.props.getStore().reservationId == null)){
-             wizardOl[0].style.pointerEvents = "auto";
-             document.getElementById("next-button").style.visibility = "visible";
-         } // existing guest, existing reservation
-         else if ((this.props.getStore().guestId != null) && (this.props.getStore().reservationId != null)){
+      //new guest, new reservation
+      if((this.props.getStore().guestId == null) && (this.props.getStore().reservationId == null)){
+        if (typeof wizardOl[0] != 'undefined'){
+          wizardOl[0].style.pointerEvents = "auto";
           document.getElementById("next-button").style.visibility = "visible";
-         }
-    // }
+        }
+      } // existing guest, new reservation
+      else if ((this.props.getStore().guestId != null) && (this.props.getStore().reservationId == null)){
+          wizardOl[0].style.pointerEvents = "auto";
+          document.getElementById("next-button").style.visibility = "visible";
+      } // existing guest, existing reservation
+      else if ((this.props.getStore().guestId != null) && (this.props.getStore().reservationId != null)){
+      document.getElementById("next-button").style.visibility = "visible";
+      }
 
-    let notValidClasses = {};
+      let notValidClasses = {};
 
-    /* First Name */
-    if (typeof this.state.firstNameVal == 'undefined' || this.state.firstNameVal) {
-      notValidClasses.firstNameCls = 'form-control';
-    }
-    else {
-       notValidClasses.firstNameCls = 'form-control has-error';
-    }
+      /* First Name */
+      if (typeof this.state.firstNameVal == 'undefined' || this.state.firstNameVal) {
+        notValidClasses.firstNameCls = 'form-control';
+      }
+      else {
+        notValidClasses.firstNameCls = 'form-control has-error';
+      }
 
-    /* Last Name */    
-    if (typeof this.state.lastNameVal == 'undefined' || this.state.lastNameVal) {
-      notValidClasses.lastNameCls = 'form-control';
-    }
-    else {
-       notValidClasses.lastNameCls = 'form-control has-error';
-    }
+      /* Last Name */    
+      if (typeof this.state.lastNameVal == 'undefined' || this.state.lastNameVal) {
+        notValidClasses.lastNameCls = 'form-control';
+      }
+      else {
+        notValidClasses.lastNameCls = 'form-control has-error';
+      }
 
-    /* Email ID */
-    if (typeof this.state.emailVal == 'undefined' || this.state.emailVal) {
-        notValidClasses.emailCls = 'form-control';
-    }
-    else {
-       notValidClasses.emailCls = 'form-control has-error';
-    }
+      /* Email ID */
+      if (typeof this.state.emailVal == 'undefined' || this.state.emailVal) {
+          notValidClasses.emailCls = 'form-control';
+      }
+      else {
+        notValidClasses.emailCls = 'form-control has-error';
+      }
 
-    /* Phone */    
-    if (typeof this.state.phoneVal == 'undefined' || this.state.phoneVal) {
-      notValidClasses.phoneCls = 'form-control';
-    }
-    else {
-        notValidClasses.phoneCls = 'form-control has-error';
-    }
+      /* Phone */    
+      if (typeof this.state.phoneVal == 'undefined' || this.state.phoneVal) {
+        notValidClasses.phoneCls = 'form-control';
+      }
+      else {
+          notValidClasses.phoneCls = 'form-control has-error';
+      }
 
-    /* Address */    
-    if (typeof this.state.addressVal == 'undefined' || this.state.addressVal) {
-      notValidClasses.addressCls = 'form-control';
-    }
-    else {
-        notValidClasses.addressCls = 'form-control has-error';
-    }
+      /* Address */    
+      if (typeof this.state.addressVal == 'undefined' || this.state.addressVal) {
+        notValidClasses.addressCls = 'form-control';
+      }
+      else {
+          notValidClasses.addressCls = 'form-control has-error';
+      }
 
-    /* City */    
-    if (typeof this.state.cityVal == 'undefined' || this.state.cityVal) {
-      notValidClasses.cityCls = 'form-control';
-    }
-    else {
-        notValidClasses.cityCls = 'form-control has-error';
-    }
+      /* City */    
+      if (typeof this.state.cityVal == 'undefined' || this.state.cityVal) {
+        notValidClasses.cityCls = 'form-control';
+      }
+      else {
+          notValidClasses.cityCls = 'form-control has-error';
+      }
 
-    /* PIN */    
-    if (typeof this.state.pinVal == 'undefined' || this.state.pinVal) {
-      notValidClasses.pinCls = 'form-control';
-    }
-    else {
-        notValidClasses.pinCls = 'form-control has-error';
-    }
+      /* PIN */    
+      if (typeof this.state.pinVal == 'undefined' || this.state.pinVal) {
+        notValidClasses.pinCls = 'form-control';
+      }
+      else {
+          notValidClasses.pinCls = 'form-control has-error';
+      }
 
-    /* Region */    
-    if (typeof this.state.regionVal == 'undefined' || this.state.regionVal) {
-      notValidClasses.regionCls = 'form-control';
-    }
-    else {
-        notValidClasses.regionCls = 'form-control has-error';
-    }
+      /* Region */    
+      if (typeof this.state.regionVal == 'undefined' || this.state.regionVal) {
+        notValidClasses.regionCls = 'form-control';
+      }
+      else {
+          notValidClasses.regionCls = 'form-control has-error';
+      }
 
-    /* Country */    
-    if (typeof this.state.countryVal == 'undefined' || this.state.countryVal) {
-      notValidClasses.countryCls= 'form-control';
-    }
-    else {
-        notValidClasses.countryCls = 'form-control has-error';
-    }
+      /* Country */    
+      if (typeof this.state.countryVal == 'undefined' || this.state.countryVal) {
+        notValidClasses.countryCls= 'form-control';
+      }
+      else {
+          notValidClasses.countryCls = 'form-control has-error';
+      }
 
-    /* Emergency Contact First Name */
-    if (typeof this.state.eFirstNameVal == 'undefined' || this.state.eFirstNameVal) {
-      notValidClasses.eFirstNameCls = 'form-control';
-    }
-    else {
-       notValidClasses.eFirstNameCls = 'form-control has-error';
-    }
+      /* Emergency Contact First Name */
+      if (typeof this.state.eFirstNameVal == 'undefined' || this.state.eFirstNameVal) {
+        notValidClasses.eFirstNameCls = 'form-control';
+      }
+      else {
+        notValidClasses.eFirstNameCls = 'form-control has-error';
+      }
 
-    /* Emergency Contact Last Name */    
-    if (typeof this.state.eLastNameVal == 'undefined' || this.state.eLastNameVal) {
-      notValidClasses.eLastNameCls = 'form-control';
-    }
-    else {
-       notValidClasses.eLastNameCls = 'form-control has-error';
-    }
+      /* Emergency Contact Last Name */    
+      if (typeof this.state.eLastNameVal == 'undefined' || this.state.eLastNameVal) {
+        notValidClasses.eLastNameCls = 'form-control';
+      }
+      else {
+        notValidClasses.eLastNameCls = 'form-control has-error';
+      }
 
-    /* Emergency Contact Phone */    
-    if (typeof this.state.ePhoneVal == 'undefined' || this.state.ePhoneVal) {
-      notValidClasses.ePhoneCls = 'form-control';
-    }
-    else {
-        notValidClasses.ePhoneCls = 'form-control has-error';
-    }
+      /* Emergency Contact Phone */    
+      if (typeof this.state.ePhoneVal == 'undefined' || this.state.ePhoneVal) {
+        notValidClasses.ePhoneCls = 'form-control';
+      }
+      else {
+          notValidClasses.ePhoneCls = 'form-control has-error';
+      }
 
-    /* Emergency Contact Relationship */    
-    if (typeof this.state.eRelationshipVal == 'undefined' || this.state.eRelationshipVal) {
-      notValidClasses.eRelationshipCls = 'form-control';
-    }
-    else {
-        notValidClasses.eRelationshipCls = 'form-control has-error';
-    }
+      /* Emergency Contact Relationship */    
+      if (typeof this.state.eRelationshipVal == 'undefined' || this.state.eRelationshipVal) {
+        notValidClasses.eRelationshipCls = 'form-control';
+      }
+      else {
+          notValidClasses.eRelationshipCls = 'form-control has-error';
+      }
 
     return (
       <div className="step step3">

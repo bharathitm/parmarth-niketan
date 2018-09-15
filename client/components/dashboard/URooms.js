@@ -58,30 +58,30 @@ export class URooms extends React.Component {
           var str_rooms = createRoomsString(selectedRooms); 
 
           if (str_rooms != ''){
-          const payload = {
-            str_room_booking_ids: str_rooms
-          };
-      
-        store(API_URL, "urooms/", JSON.stringify(payload))
-          .then((response) => {
-            return checkError(response);
-          })
-          .then((result) => {
-            notify.show('Room(s) marked as cleaned successfully!', 'success');
-            this.props.updateDashboardStore({
-              hasURoomsChanged: true
+            const payload = {
+              str_room_booking_ids: str_rooms
+            };
+        
+          store(API_URL, "urooms/", JSON.stringify(payload))
+            .then((response) => {
+              return checkError(response);
+            })
+            .then((result) => {
+              notify.show('Room(s) marked as cleaned successfully!', 'success');
+              this.props.updateDashboardStore({
+                hasURoomsChanged: true
+              });
+            })
+            .catch((error) => {
+              this.setState({
+                isLoaded: false,
+                error
+              });
+              notify.show('Oops! Something went wrong! Please try again!', 'error');
+              logError(error);
             });
-          })
-          .catch((error) => {
-            this.setState({
-              isLoaded: false,
-              error
-            });
-            notify.show('Oops! Something went wrong! Please try again!', 'error');
-            logError(error);
-          });
 
-          this.updateUncleanRoomsState(selectedRooms);  
+            this.updateUncleanRoomsState(selectedRooms);  
         }    
       }
 

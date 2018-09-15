@@ -177,10 +177,101 @@ export class Reports extends React.Component {
             notify.show('No Check Outs for given date period!', 'error');
         } 
     }
+    getCheckOutRows(){
 
-    render() {
+        var arrCheckOutItems = [];
+        var arrReceipts = [];
+        var arrAmount = [];
+        
+        if (this.state.CheckOutItems.length > 0){
 
-     
+            arrReceipts.push(this.state.CheckOutItems[0].receipt_no);
+            arrAmount.push(this.state.CheckOutItems[0].amount);
+      
+            arrCheckOutItems.push(
+                {
+                    guest_name: this.state.CheckOutItems[0].guest_name,
+                    email_id: this.state.CheckOutItems[0].email_id, 
+                    phone_no: this.state.CheckOutItems[0].phone_no, 
+                    arr_date: this.state.CheckOutItems[0].arr_date,
+                    dep_date: this.state.CheckOutItems[0].dep_date,
+                    no_of_people: this.state.CheckOutItems[0].no_of_people//,
+
+                }
+            );
+        }
+
+
+      for (var i = 1; i < this.state.CheckOutItems.length; i++)
+      {
+            if (this.state.CheckOutItems[i].email_id == this.state.CheckOutItems[i-1].email_id)
+            {
+                arrReceipts.push(this.state.CheckOutItems[i].receipt_no);
+                arrAmount.push(this.state.CheckOutItems[i].amount);
+            }
+            else {
+                arrCheckOutItems[arrCheckOutItems.length-1].receipt_no = arrReceipts;
+                arrCheckOutItems[arrCheckOutItems.length-1].amount = arrAmount;
+                
+                arrReceipts = [];
+                arrAmount = [];
+
+                arrCheckOutItems.push(
+                    {
+                        guest_name: this.state.CheckOutItems[i].guest_name,
+                        email_id: this.state.CheckOutItems[i].email_id, 
+                        phone_no: this.state.CheckOutItems[i].phone_no, 
+                        arr_date: this.state.CheckOutItems[i].arr_date,
+                        dep_date: this.state.CheckOutItems[i].dep_date,
+                        no_of_people: this.state.CheckOutItems[i].no_of_people
+                    }
+                );
+
+                arrReceipts.push(this.state.CheckOutItems[i].receipt_no);
+                arrAmount.push(this.state.CheckOutItems[i].amount);
+            }
+        }
+
+        arrCheckOutItems[arrCheckOutItems.length-1].receipt_no = arrReceipts;
+        arrCheckOutItems[arrCheckOutItems.length-1].amount = arrAmount;
+
+        return arrCheckOutItems.map(item => (
+           
+            <tr>
+                <td style={{margin: 0, padding: '1em', borderBottom: '1px dotted black'}}>
+                    {item.guest_name}
+                </td>
+                <td style={{margin: 0, padding: '1em', borderBottom: '1px dotted black'}}>
+                    {item.email_id}
+                </td>
+                <td style={{margin: 0, padding: '1em', borderBottom: '1px dotted black'}}>
+                    {item.phone_no} 
+                </td>
+                <td style={{margin: 0, padding: '1em', borderBottom: '1px dotted black'}}>
+                    {item.arr_date}
+                </td>
+                <td style={{margin: 0, padding: '1em', borderBottom: '1px dotted black'}}>
+                    {item.dep_date}
+                </td>
+                <td style={{margin: 0, padding: '1em', borderBottom: '1px dotted black'}}>
+                    {item.no_of_people}
+                </td>
+                <td style={{margin: 0, padding: '1em', borderBottom: '1px dotted black'}}>
+                     {item.receipt_no.map((subItem) => (
+                      <p>{subItem} </p>
+                        ))}
+                </td>
+                <td style={{margin: 0, padding: '1em', borderBottom: '1px dotted black'}}>
+                    {item.amount.map((subItem) => (
+                        <p>{subItem} </p>
+                            ))}
+                </td>
+            </tr>
+            ));
+        }
+
+
+    render() {   
           return (
             <div className="divError">
                     <ErrorBoundary>
@@ -209,25 +300,26 @@ export class Reports extends React.Component {
                                 <td style={{margin: 0, padding: '1em', fontWeight: 'bold', borderTop: 'solid 1px black', borderBottom: 'solid 1px black'}}>Reservation Status</td>
 
                             </tr>
-                            {this.state.ReservationItems.map(item => (
-                            <tr>
-                                <td style={{margin: 0, padding: '1em', borderBottom: '1px dotted black'}}>
-                                    {item.guest_name}
-                                </td>
-                                <td style={{margin: 0, padding: '1em', borderBottom: '1px dotted black'}}>
-                                    {item.date_of_arrival}
-                                </td>
-                                <td style={{margin: 0, padding: '1em', borderBottom: '1px dotted black'}}>
-                                    {item.date_of_departure}
-                                </td>
-                                <td style={{margin: 0, padding: '1em', borderBottom: '1px dotted black'}}>
-                                    {item.no_of_people}
-                                </td>
-                                <td style={{margin: 0, padding: '1em', borderBottom: '1px dotted black'}}>
-                                    {reservationStatuses[item.reservation_status_id]}
-                                </td>
-                            </tr>
-                            ))}
+                                {this.state.ReservationItems.map(item => (
+                                <tr>
+                                    <td style={{margin: 0, padding: '1em', borderBottom: '1px dotted black'}}>
+                                        {item.guest_name}
+                                    </td>
+                                    <td style={{margin: 0, padding: '1em', borderBottom: '1px dotted black'}}>
+                                        {item.date_of_arrival}
+                                    </td>
+                                    <td style={{margin: 0, padding: '1em', borderBottom: '1px dotted black'}}>
+                                        {item.date_of_departure}
+                                    </td>
+                                    <td style={{margin: 0, padding: '1em', borderBottom: '1px dotted black'}}>
+                                        {item.no_of_people}
+                                    </td>
+
+                                    <td style={{margin: 0, padding: '1em', borderBottom: '1px dotted black'}}>
+                                        {reservationStatuses[item.reservation_status_id]}
+                                    </td>
+                                </tr>
+                                ))}
                         </tbody>
                         </table>
                 </div>
@@ -247,7 +339,8 @@ export class Reports extends React.Component {
                                 <td style={{margin: 0, padding: '1em', fontWeight: 'bold', borderTop: 'solid 1px black', borderBottom: 'solid 1px black'}}>Guest Name</td>
                                 <td style={{margin: 0, padding: '1em', fontWeight: 'bold', borderTop: 'solid 1px black', borderBottom: 'solid 1px black'}}>Email Id</td>
                                 <td style={{margin: 0, padding: '1em', fontWeight: 'bold', borderTop: 'solid 1px black', borderBottom: 'solid 1px black'}}>Phone No</td>
-                                <td style={{margin: 0, padding: '1em', fontWeight: 'bold', borderTop: 'solid 1px black', borderBottom: 'solid 1px black'}}>Arrival Date</td>                                                      
+                                <td style={{margin: 0, padding: '1em', fontWeight: 'bold', borderTop: 'solid 1px black', borderBottom: 'solid 1px black'}}>Arrival Date</td>    
+                                <td style={{margin: 0, padding: '1em', fontWeight: 'bold', borderTop: 'solid 1px black', borderBottom: 'solid 1px black'}}>Departure Date</td>                                                   
                                 <td style={{margin: 0, padding: '1em', fontWeight: 'bold', borderTop: 'solid 1px black', borderBottom: 'solid 1px black'}}>Pax</td>
                             </tr>
                             {this.state.CheckInItems.map(item => (
@@ -262,7 +355,10 @@ export class Reports extends React.Component {
                                     {item.phone_no} 
                                 </td>
                                 <td style={{margin: 0, padding: '1em', borderBottom: '1px dotted black'}}>
-                                    {item.on_date}
+                                    {item.arr_date}
+                                </td>
+                                <td style={{margin: 0, padding: '1em', borderBottom: '1px dotted black'}}>
+                                    {item.dep_date}
                                 </td>
                                 <td style={{margin: 0, padding: '1em', borderBottom: '1px dotted black'}}>
                                     {item.no_of_people}
@@ -292,37 +388,9 @@ export class Reports extends React.Component {
                                 <td style={{margin: 0, padding: '1em', fontWeight: 'bold', borderTop: 'solid 1px black', borderBottom: 'solid 1px black'}}>Departure Date</td>                                                           
                                 <td style={{margin: 0, padding: '1em', fontWeight: 'bold', borderTop: 'solid 1px black', borderBottom: 'solid 1px black'}}>Pax</td>
                                 <td style={{margin: 0, padding: '1em', fontWeight: 'bold', borderTop: 'solid 1px black', borderBottom: 'solid 1px black'}}>Receipt No</td>
-                                <td style={{margin: 0, padding: '1em', fontWeight: 'bold', borderTop: 'solid 1px black', borderBottom: 'solid 1px black'}}>Donation Amount</td>
+                                <td style={{margin: 0, padding: '1em', fontWeight: 'bold', borderTop: 'solid 1px black', borderBottom: 'solid 1px black'}}>Donation Amount &#8377;</td>
                             </tr>
-                            {this.state.CheckOutItems.map(item => (
-                            <tr>
-                                <td style={{margin: 0, padding: '1em', borderBottom: '1px dotted black'}}>
-                                    {item.guest_name}
-                                </td>
-                                <td style={{margin: 0, padding: '1em', borderBottom: '1px dotted black'}}>
-                                    {item.email_id}
-                                </td>
-                                <td style={{margin: 0, padding: '1em', borderBottom: '1px dotted black'}}>
-                                    {item.phone_no} 
-                                </td>
-                                <td style={{margin: 0, padding: '1em', borderBottom: '1px dotted black'}}>
-                                    {item.arr_date}
-                                </td>
-                                <td style={{margin: 0, padding: '1em', borderBottom: '1px dotted black'}}>
-                                    {item.dep_date}
-                                </td>
-                                <td style={{margin: 0, padding: '1em', borderBottom: '1px dotted black'}}>
-                                    {item.no_of_people}
-                                </td>
-                                <td style={{margin: 0, padding: '1em', borderBottom: '1px dotted black'}}>
-                                     <div id="divReceiptCheckOut"></div>
-                                     {/* {ReactDOM.render({item.receipt_no}, document.getElementById('divReceiptCheckOut'))} */}
-                                </td>
-                                <td style={{margin: 0, padding: '1em', borderBottom: '1px dotted black'}}>
-                                    {item.amount}
-                                </td>
-                            </tr>
-                            ))}
+                            {this.getCheckOutRows()}
                         </tbody>
                         </table>
                 </div>
@@ -330,7 +398,7 @@ export class Reports extends React.Component {
             </ErrorBoundary>
             </div>
           );
-    }
+        }
 }
 
 export default Reports;
