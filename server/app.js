@@ -20,29 +20,29 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 // Router
-// app.use('/api', [function(req, res, next){
-//     console.log('##test1:'+ req.headers['authorization']);
+app.use('/api', [function(req, res, next){
+    //console.log('##test1:'+ req.headers['authorization']);
 
-//     const authorizationHeader = req.headers['authorization'];
-//     let token;
+    const authorizationHeader = req.headers['authorization'];
+    let token;
 
-//     if (authorizationHeader) {
-//         token = authorizationHeader.split(' ')[1];
-//     }
+    if (authorizationHeader) {
+        token = authorizationHeader.split(' ')[1];
+    }
 
-//     console.log(token);
-//     if (token != 'null') {
-//         next();
-//     }
-//     else{
-//         res.status(403).json({
-//                         error: 'No token provided'
-//                     });
-//         return res.send();
-//     }
-// }], routes);
+    //console.log(token);
+    if (token != 'null') {
+        next();
+    }
+    else{
+        res.status(403).json({
+                        error: 'No token provided'
+                    });
+        return res.send();
+    }
+}], routes);
 
- app.use('/api', routes);
+ app.use('/', routes);
 
 app.listen(app.get('port'), app.get('host'), () => {
     console.log(`Server running at http://${app.get('host')}:${app.get('port')}`);

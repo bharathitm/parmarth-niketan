@@ -1,7 +1,5 @@
 import express from 'express';
 import * as roomBookingCtrl from '../controllers/roombooking.controller';
-import isAuthenticated from '../middlewares/authenticate';
-
 
 const router = express.Router();
 

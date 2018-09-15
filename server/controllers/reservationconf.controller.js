@@ -17,9 +17,9 @@ var transporter = nodemailer.createTransport({
 export function SendConfirmationEmail(name, emailId, dates) {
     try {
             var mailOptions = {
-            from: config.GMAIL_SENDER,
+            from: config.GMAIL_USER_NAME,
             to : emailId,
-            subject: 'Confirmation Email from Parmarth Niketan!',
+            subject: 'Reservation Confirmation from Parmarth Niketan!',
             html: 'Namaste Divine Soul ' + name + ' ji,<br/><br/>Jai Gange!<br/><br/>We hope everything is wonderful with you and your loved ones.<br/><br/>This is a confirmation for your stay at Parmarth Niketan from <b>' + dates + '</b>.<br/><br/>' + confirmationTextBody,
             attachments: [
                         {

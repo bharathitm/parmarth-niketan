@@ -1,7 +1,5 @@
 import express from 'express';
 import * as reservationCtrl from '../controllers/reservation.controller';
-import isAuthenticated from '../middlewares/authenticate';
-
 
 const router = express.Router();
 

@@ -1,6 +1,5 @@
 import express from 'express';
 import * as econtactsCtrl from '../controllers/econtact.controller';
-import isAuthenticated from '../middlewares/authenticate';
 
 
 const router = express.Router();

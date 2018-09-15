@@ -1,7 +1,5 @@
 import express from 'express';
 import * as checkinsCtrl from '../controllers/checkin.controller';
-import isAuthenticated from '../middlewares/authenticate';
-
 
 const router = express.Router();
 

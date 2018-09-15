@@ -1,7 +1,5 @@
 import express from 'express';
 import * as guestCtrl from '../controllers/guest.controller';
-import isAuthenticated from '../middlewares/authenticate';
-
 
 const router = express.Router();
 
