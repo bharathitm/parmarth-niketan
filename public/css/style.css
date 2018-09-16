@@ -204,7 +204,6 @@ body{
 
 .div-today-availability-col li {
   float: left;
-  margin:-5px;
   border-right: 1px solid silver;
   /* background-color: #f1a24a; */
   /* background-color: #f1a24a; */
@@ -212,7 +211,7 @@ body{
   text-align: center;
   -webkit-appearance: none;
   box-sizing: border-box;
-  width:125px;
+  width:105px;
   height:55px;
   word-wrap: normal;
 }

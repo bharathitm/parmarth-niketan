@@ -286,7 +286,7 @@ export class RoomBookings extends Component {
                                {item.next_arrival_date == null? "Available" : getFormattedDate(item.next_arrival_date)} 
                               </div>
                               <div className ="actions div-table-col col-bordered">
-                              <img src="./img/tick.png" onClick={() => this.handleUpdateRoomBooking(item.room_booking_id)}/> &nbsp;
+                              <img src="./img/edit.png" onClick={() => this.handleUpdateRoomBooking(item.room_booking_id)}/> &nbsp;
                               <img src="./img/delete.png" onClick={() => this.handleDeleteRoomBooking(item.room_booking_id)}/>
                               </div>
                         </div>

@@ -346,7 +346,7 @@ insertGuestContactDetails(){
                                           {/* Actions */}
                                         <div className="form-group col-md-12 content form-block-holder">
                                             <div className="col-md-8">
-                                        <img src="./img/tick.png" onClick={() => this.handleAdd()}/>
+                                        <img src="./img/edit.png" onClick={() => this.handleAdd()}/>
                                         </div>
                                         </div>
                                           </div>
