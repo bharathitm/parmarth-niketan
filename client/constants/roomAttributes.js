@@ -2,7 +2,7 @@ export const blocks = {
     1: 'Alaknanda',
     2: 'Alaknanda Extn',
     3: 'Ganga Base',
-    4: 'Ganga Dharshan',
+    4: 'Ganga Darshan',
     5: 'Ganga HD',
     6: 'Gomti',
     7: 'Saraswati',
