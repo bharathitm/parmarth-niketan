@@ -76,10 +76,10 @@ export class Home extends React.Component {
                               <Login  parentMethod={this.redirectOnSuccessfulLogin} getHomeStore={() => (this.getHomeStore())} updateHomeStore={(u) => {this.updateHomeStore(u)}} />
                               </div>
                               <div style={{ visibility: sessionStorage.getItem('accessToken') != null? 'visible':'hidden', display: sessionStorage.getItem('accessToken') != null? 'inline':'none' }}> 
-                               <span id="spGreeting">Welcome, <span id="spUserName">{sessionStorage.getItem('userName') != null? sessionStorage.getItem('userName'):''}</span>!&nbsp;
+                               <div id="divGreeting"><span id="spGreeting">Welcome, <span id="spUserName">{sessionStorage.getItem('userName') != null? sessionStorage.getItem('userName'):''}</span></span>!&nbsp;
                                <img className="imgHome" src="./img/settings.png"  onClick={() => this.redirectToSettings()} />&nbsp;
                                <img className="imgHome" src="./img/logout.png" onClick={this.logout}/>
-                               </span> 
+                               </div> 
                               <div id="divHeaderBand">
                               <div id="divLogoBand">
                                     <img src="./img/logo.png" />

@@ -7,7 +7,7 @@ import { confirmAlert } from 'react-confirm-alert';
 import DatePicker from 'react-datepicker';
 import moment from 'moment';
 
-import {logError, checkError, getFormattedDate} from '../../utils/helpers';
+import {logError, checkError} from '../../utils/helpers';
 import {API_URL} from '../../config/config';
 import {fetch, store, destroy} from '../../utils/httpUtil';
 
@@ -32,7 +32,7 @@ export class ReservationDetails extends Component {
       sanskaraId: props.getStore().sanskaraId,
       referenceId: props.getStore().referenceId,
       noOfPpl: props.getStore().noOfPpl,
-      advanceReminderOn: '',
+      //advanceReminderOn: '',
       comments: props.getStore().comments,
       reservationId: props.getStore().reservationId      
     };
@@ -42,7 +42,7 @@ export class ReservationDetails extends Component {
       reservationId: props.getStore().reservationId
     };
       
-    this.handleAdvanceReminderChange = this.handleAdvanceReminderChange.bind(this);
+    //this.handleAdvanceReminderChange = this.handleAdvanceReminderChange.bind(this);
     this.handleArrivalTimeChange = this.handleArrivalTimeChange.bind(this);
 
     this._validateOnDemand = true; 
@@ -141,7 +141,7 @@ export class ReservationDetails extends Component {
         reservationStatusId: items[0].reservation_status_id,
         sanskaraId: (items[0].sanskara_id == null)? 0 : items[0].sanskara_id,
         referenceId: (items[0].reference_id == null)? 0 : items[0].reference_id,
-        advanceReminderOn: (items[0].advance_reminder_on == null)? '' : aReminder,
+        //advanceReminderOn: (items[0].advance_reminder_on == null)? '' : aReminder,
         arrivalTime: aDate
       });
 
@@ -155,7 +155,7 @@ export class ReservationDetails extends Component {
         reservationStatusId: items[0].reservation_status_id,
         sanskaraId: (items[0].sanskara_id == null)? 0 : items[0].sanskara_id,
         referenceId: (items[0].reference_id == null)? 0 : items[0].reference_id,
-        advanceReminderOn: (items[0].advance_reminder_on == null)? '' : aReminder,
+        //advanceReminderOn: (items[0].advance_reminder_on == null)? '' : aReminder,
         arrivalTime: aDate
       });
 
@@ -166,7 +166,7 @@ export class ReservationDetails extends Component {
       this.refs.comments.value = (items[0].reservation_comments == null)? '': items[0].reservation_comments;
       this.refs.reservationTypeId.value = items[0].reservation_type_id;
       this.refs.arrivalTime.selected = aDate;
-      this.refs.advanceReminderOn.selected = (items[0].advance_reminder_on == null)? '' : aReminder;
+      //this.refs.advanceReminderOn.selected = (items[0].advance_reminder_on == null)? '' : aReminder;
       this.refs.sanskaraId.value = (items[0].sanskara_id == null)? 0 : items[0].sanskara_id;
       this.refs.referenceId.value = (items[0].reference_id == null)? 0 : items[0].reference_id;
       this.refs.reservationStatus.innerHTML = reservationStatuses[items[0].reservation_status_id];  
@@ -205,7 +205,7 @@ export class ReservationDetails extends Component {
           this.props.getStore().noOfPpl != userInput.noOfPpl ||
           this.props.getStore().sanskaraId != userInput.sanskaraId ||
           this.props.getStore().referenceId != userInput.referenceId ||
-          this.props.getStore().advanceReminderOn != userInput.advanceReminderOn ||
+          //this.props.getStore().advanceReminderOn != userInput.advanceReminderOn ||
           this.props.getStore().comments.toString() != userInput.comments.toString()
         ) { 
           this.props.updateStore({
@@ -249,7 +249,7 @@ export class ReservationDetails extends Component {
       reservation_type_id: this.state.reservationTypeId,
       sanskara_id: (this.state.sanskaraId == null)? 0 : this.state.sanskaraId,
       reference_id: this.state.referenceId,
-      advance_reminder_on: ((this.state.advanceReminderOn == '') || (this.state.advanceReminderOn == null))? '' : getFormattedDate(this.state.advanceReminderOn).toString(),
+      //advance_reminder_on: ((this.state.advanceReminderOn == '') || (this.state.advanceReminderOn == null))? '' : getFormattedDate(this.state.advanceReminderOn).toString(),
       room_ids_str: window.sessionStorage.getItem('strSelectedRooms').toString()
     };
 
@@ -270,12 +270,12 @@ export class ReservationDetails extends Component {
     });
   }
 
-  handleAdvanceReminderChange(date) {
-    this.setState({
-        advanceReminderOn: date
-    });
-    this.refs.advanceReminderOn.selected = date;
-  }
+  // handleAdvanceReminderChange(date) {
+  //   this.setState({
+  //       advanceReminderOn: date
+  //   });
+  //   this.refs.advanceReminderOn.selected = date;
+  // }
 
   handleArrivalTimeChange(time){
     this.setState({
@@ -297,7 +297,7 @@ export class ReservationDetails extends Component {
       reservation_type_id: this.state.reservationTypeId,
       sanskara_id: (this.state.sanskaraId == null)? 0 : this.state.sanskaraId,
       reference_id: this.state.referenceId,
-      advance_reminder_on: ((this.state.advanceReminderOn == '') || (this.state.advanceReminderOn == null))? '' : getFormattedDate(this.state.advanceReminderOn).toString(),
+      //advance_reminder_on: ((this.state.advanceReminderOn == '') || (this.state.advanceReminderOn == null))? '' : getFormattedDate(this.state.advanceReminderOn).toString(),
     };
 
     store(API_URL, "reservations/" + this.state.reservationId, JSON.stringify(payload))
@@ -335,7 +335,7 @@ export class ReservationDetails extends Component {
       reservationTypeVal: (data.reservationTypeId != 0), // required: anything besides N/A
       noOfPplVal: (data.noOfPpl != ''),
       commentsVal: (true),
-      advanceReminderOnVal: (true),  
+      //advanceReminderOnVal: (true),  
       sanskaraVal: (data.reservationTypeId == 3 && data.sanskaraId == 0)? false : true,
       referenceVal: (true)
     }
@@ -350,7 +350,7 @@ export class ReservationDetails extends Component {
       sanskaraId: this.refs.sanskaraId.value,
       referenceId: this.refs.referenceId.value,
       noOfPpl: this.refs.noOfPpl.value,
-      advanceReminderOn: this.refs.advanceReminderOn.selected,
+      //advanceReminderOn: this.refs.advanceReminderOn.selected,
       comments: this.refs.comments.value,
     };
   }
@@ -416,7 +416,7 @@ export class ReservationDetails extends Component {
       sanskaraId:'',
       referenceId: '',
       noOfPpl:'',
-      advanceReminderOn:'',
+      //advanceReminderOn:'',
       comments:''
     });   
 
@@ -597,9 +597,9 @@ export class ReservationDetails extends Component {
                   </div>
               </div>
              <div className = "div-table-row">
-              <div className ="div-table-col">        
+              {/* <div className ="div-table-col">        
                     {/* Advance Reminder On */}
-                  <div className="form-group col-md-12 content form-block-holder">
+                  {/* <div className="form-group col-md-12 content form-block-holder">
                       <label className="control-label col-md-4">
                       Advance Reminder On:
                       </label>
@@ -612,8 +612,8 @@ export class ReservationDetails extends Component {
                         onChange={this.handleAdvanceReminderChange} 
                         className="form-control"/>
                       </div>
-                    </div>
-                </div>
+                    </div> */}
+                {/* </div> */} 
 
                  <div className ="div-table-col">
                         {/* Reference */}
