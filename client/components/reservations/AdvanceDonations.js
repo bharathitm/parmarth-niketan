@@ -295,6 +295,7 @@ insertAdvanceDonationDetails(){
                                                     selected={this.state.advanceReceivedOn}                             
                                                     onChange={this.handleDateChange} 
                                                     onBlur={this.validationCheck}
+                                                    maxDate={moment()}
                                                     className={notValidClasses.advanceReceivedOnCls} />
                                                 
                                                   </div>

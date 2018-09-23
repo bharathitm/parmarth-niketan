@@ -129,7 +129,7 @@ export class ReservationDetails extends Component {
     if (items.length != 0)
     {
       var aDate = moment(items[0].date_of_arrival);
-      var aReminder = moment(items[0].advance_reminder_on);
+      //var aReminder = moment(items[0].advance_reminder_on);
 
       this.props.updateStore({
         reservationId: items[0].reservation_id,
@@ -196,6 +196,7 @@ export class ReservationDetails extends Component {
 
     const userInput = this._grabUserInput(); 
     const validateNewInput = this._validateData(userInput); 
+
     let isDataValid = false;
 
     if (Object.keys(validateNewInput).every((k) => { return validateNewInput[k] === true })) {
@@ -208,9 +209,9 @@ export class ReservationDetails extends Component {
           //this.props.getStore().advanceReminderOn != userInput.advanceReminderOn ||
           this.props.getStore().comments.toString() != userInput.comments.toString()
         ) { 
+
           this.props.updateStore({
-            ...userInput,
-            savedToCloud: false 
+            ...userInput
           });  
 
           if (this.state.reservationId != null){
@@ -347,7 +348,7 @@ export class ReservationDetails extends Component {
       arrivalTime: this.refs.arrivalTime.selected,
       reservationTypeId: this.refs.reservationTypeId.value,
       //sanskaraId: (this.refs.sanskaraId.value == 0)? null : this.refs.sanskaraId.value,
-      sanskaraId: this.refs.sanskaraId.value,
+      sanskaraId: (this.refs.reservationTypeId.value != 3)? 0: this.refs.sanskaraId.value,
       referenceId: this.refs.referenceId.value,
       noOfPpl: this.refs.noOfPpl.value,
       //advanceReminderOn: this.refs.advanceReminderOn.selected,
@@ -491,7 +492,7 @@ export class ReservationDetails extends Component {
         <div className="row">
           <form id="Form" className="form-horizontal">          
                 <h4>Reservation Details</h4>   
-                <div className="divFloatRight" style={{ visibility: this.props.getStore().reservationId != null ? 'visible':'hidden', display: this.props.getStore().reservationId != null? 'inline':'none' }}>  
+                <div className="divFloatRight" style={{ visibility: (this.props.getStore().reservationId != null) && (this.props.getStore().reservationStatusId == 2) ? 'visible':'hidden', display: (this.props.getStore().reservationId != null) && (this.props.getStore().reservationStatusId == 2)? 'inline':'none' }}>  
                 <button type="button" className="btnBig" onClick={() => this.handleCancel()}>Cancel</button>   
                 </div>
                       <div className="divDates">
