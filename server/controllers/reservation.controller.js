@@ -76,18 +76,19 @@ export function add(req, res) {
         call_stored_proc +=  "'" + req.body.reference_id + "',";
     }
 
-     // Since advance_reminder_on is an optional field, we pass this as null
-     if (req.body.advance_reminder_on == ''){
-        call_stored_proc += null;
-    }
-    else {
-        call_stored_proc +=  "'" + req.body.advance_reminder_on + "'";
-    }
+    //  // Since advance_reminder_on is an optional field, we pass this as null
+    //  if (req.body.advance_reminder_on == ''){
+    //     call_stored_proc += null;
+    // }
+    // else {
+    //     call_stored_proc +=  "'" + req.body.advance_reminder_on + "'";
+    // }
 
     //room_ids_str does not have the ' after the ,  
-    call_stored_proc +=  ",'" + req.body.room_ids_str + "'";
+    call_stored_proc +=  "'" + req.body.room_ids_str + "'";
     
     call_stored_proc += ")";
+
 
      if ((req.body.email_id != null) && (req.body.email_id != '')){
         SendConfirmationEmail(req.body.name, req.body.email_id, (moment(req.body.date_of_arrival).format("MMM Do YY") + " - " + moment(req.body.date_of_departure).format("MMM Do YY")));
@@ -159,8 +160,6 @@ export function update(req, res) {
     }
 
     call_stored_proc += ")";
-
-    console.log(call_stored_proc);
 
     connection.query(call_stored_proc, true, (error, results, fields) => {
     if (error) {
