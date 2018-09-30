@@ -33,8 +33,9 @@ confirmationTextBody += "If you are not dressed appropriately you may not be all
 
 confirmationTextBody += "Safe Travels! May your stay be enlightening and enriching.<br/><br/>";
 
+confirmationTextBody += "<b>This is an automatically generated email. If you have raised any queries during your booking, our team will get back to you shortly!</b>";
+
 confirmationTextBody += "Warm Regards,<br/>Parmarth Niketan"
 
 
-  
   module.exports = confirmationTextBody;

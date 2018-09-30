@@ -41,7 +41,7 @@ export class Rooms extends Component {
     populateBlocks() {
         let items = [];   
     
-        for (let i = 1; i <= 12; i++) {             
+        for (let i = 1; i <= 13; i++) {             
              items.push(<option key={i} value={i}>{blocks[i]}</option>);   
         }
         return items;

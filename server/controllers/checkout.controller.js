@@ -63,8 +63,6 @@ export function add(req, res) {
     }
     call_stored_proc += ")";
 
-    console.log(call_stored_proc);
-
     connection.query(call_stored_proc, true, (error, results, fields) => {
     if (error) {
         errorController.LogError(error);
@@ -97,14 +95,11 @@ export function update(req, res) {
 
     call_stored_proc += req.body.str_room_booking_ids + "')";
 
-    console.log(call_stored_proc);
-
     connection.query(call_stored_proc, true, (error, results, fields) => {
     if (error) {
         errorController.LogError(error);
         return res.send(error.code);
     }
-    console.log(results[0]);
     res.send(results[0]);
     });
       

@@ -21,7 +21,6 @@ if (process.env.NODE_ENV === 'development') {
 
 // Router
 app.use('/api', [function(req, res, next){
-    //console.log('##test1:'+ req.headers['authorization']);
 
     const authorizationHeader = req.headers['authorization'];
     let token;
@@ -30,7 +29,6 @@ app.use('/api', [function(req, res, next){
         token = authorizationHeader.split(' ')[1];
     }
 
-    //console.log(token);
     if (token != 'null') {
         next();
     }

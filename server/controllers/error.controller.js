@@ -12,8 +12,6 @@ export function LogError(message) {
    + message + 
    "')";
 
-   console.log(call_stored_proc + " server side error");
-
    connection.query(call_stored_proc, true, (error, results, fields) => {
 
    });
@@ -30,8 +28,6 @@ export function LogClientError(req, res) {
     var call_stored_proc = "CALL sp_InsertErrorLog('" 
     + msg + 
     "')";
- 
-    console.log(call_stored_proc + " client side error");
  
     connection.query(call_stored_proc, true, (error, results, fields) => {
         if (error) {

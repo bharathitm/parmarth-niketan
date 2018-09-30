@@ -38,8 +38,6 @@ export function find(req, res) {
 
     var call_stored_proc = "CALL sp_GetRoomDetails('" + req.params.id + "')";
 
-    console.log(call_stored_proc);
-
     connection.query(call_stored_proc, true, (error, results, fields) => {
     if (error) {
         errorController.LogError(error);
@@ -84,8 +82,6 @@ export function update(req, res) {
     }
 
     call_stored_proc += ")";
-
-    console.log(call_stored_proc);
 
     connection.query(call_stored_proc, true, (error, results, fields) => {
     if (error) {

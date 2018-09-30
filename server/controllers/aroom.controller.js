@@ -39,8 +39,6 @@ export function getCount(req, res) {
     var call_stored_proc = "CALL sp_GetRoomAvailability('"    
     + req.query.sdate + "')"; 
 
-    console.log(call_stored_proc);
-
     connection.query(call_stored_proc, true, (error, results, fields) => {
     if (error) {
         errorController.LogError(error);
@@ -63,14 +61,11 @@ export function getCountBlockWise(req, res) {
     var call_stored_proc = "CALL sp_GetBlockAvailability('"    
     + req.query.sdate + "')"; 
 
-    console.log(call_stored_proc);
-
     connection.query(call_stored_proc, true, (error, results, fields) => {
     if (error) {
         errorController.LogError(error);
         return res.send(error.code);
     }
-    console.log(results[0]);
     res.send(results[0]);
    // connection.end();   
     });
@@ -91,8 +86,6 @@ export function getDetails(req, res) {
     + req.query.ddate + "',"
     //+ req.query.nR + "," // no_of_rooms
     + req.query.rT + ")"; //total_beds
-
-    console.log(call_stored_proc);
 
     connection.query(call_stored_proc, true, (error, results, fields) => {
     if (error) {
@@ -116,8 +109,6 @@ export function getEventRooms(req, res) {
 
     var call_stored_proc = "CALL sp_GetBookedEventRooms('"    
     + req.query.sdate + "')"; 
-
-    console.log(call_stored_proc);
 
     connection.query(call_stored_proc, true, (error, results, fields) => {
     if (error) {
