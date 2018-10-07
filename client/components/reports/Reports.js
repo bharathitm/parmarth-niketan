@@ -241,9 +241,10 @@ export class Reports extends React.Component {
             }
         }
 
-        arrCheckOutItems[arrCheckOutItems.length-1].receipt_no = arrReceipts;
-        arrCheckOutItems[arrCheckOutItems.length-1].amount = arrAmount;
-
+        if (arrCheckOutItems.length > 1){
+            arrCheckOutItems[arrCheckOutItems.length-1].receipt_no = arrReceipts;
+            arrCheckOutItems[arrCheckOutItems.length-1].amount = arrAmount;
+        
         return arrCheckOutItems.map(item => (
            
             <tr>
@@ -278,6 +279,7 @@ export class Reports extends React.Component {
                 </td>
             </tr>
             ));
+                    }
         }
 
 
