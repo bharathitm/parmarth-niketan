@@ -69,7 +69,6 @@ export class CheckOuts extends React.Component {
               
               if(checkboxes[i].checked) {
                 var roomCheckBoxes = checkboxes[i].nextElementSibling.nextElementSibling.getElementsByTagName("input");
-                //alert(roomCheckBoxes.length);
                     for (var x = 0; x < roomCheckBoxes.length; x ++){
                       roomCheckBoxes[x].checked = true;
                     }
@@ -194,10 +193,10 @@ export class CheckOuts extends React.Component {
                                 {item.no_of_days}
                               </div>
                               <div className ="div-table-col col-bordered">
-                              &#8377; {item.room_rent}
+                              &#8377; {item.room_rent.toLocaleString('en-IN')}
                               </div>
                               <div className ="div-table-col col-bordered">
-                              &#8377; {item.total}
+                              &#8377; {item.total.toLocaleString('en-IN')}
                               </div>
                         </div>
                         ))} 
@@ -205,7 +204,7 @@ export class CheckOuts extends React.Component {
                          <div className="form-group col-md-12 content form-block-holder">
                           <label className="control-label col-md-4">
                             Donation Received: 
-                            &#8377; {(results[0].donationAmount != null? results[0].donationAmount: "0")}
+                            &#8377; {(results[0].donationAmount != null? results[0].donationAmount.toLocaleString('en-IN'): "0")}
                             </label>
                         </div>
 

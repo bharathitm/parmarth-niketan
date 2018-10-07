@@ -177,6 +177,15 @@ export class Reports extends React.Component {
             notify.show('No Check Outs for given date period!', 'error');
         } 
     }
+
+    checkLocale(subItem){
+        if (subItem == undefined){
+            return subItem;
+        }
+        else {
+            return subItem.toLocaleString('en-IN');
+        }
+    }
     getCheckOutRows(){
 
         var arrCheckOutItems = [];
@@ -263,7 +272,8 @@ export class Reports extends React.Component {
                 </td>
                 <td style={{margin: 0, padding: '1em', borderBottom: '1px dotted black'}}>
                     {item.amount.map((subItem) => (
-                        <p>{subItem} </p>
+                        <p>&#8377;{this.checkLocale(subItem)}</p>
+                
                             ))}
                 </td>
             </tr>
@@ -388,7 +398,7 @@ export class Reports extends React.Component {
                                 <td style={{margin: 0, padding: '1em', fontWeight: 'bold', borderTop: 'solid 1px black', borderBottom: 'solid 1px black'}}>Departure Date</td>                                                           
                                 <td style={{margin: 0, padding: '1em', fontWeight: 'bold', borderTop: 'solid 1px black', borderBottom: 'solid 1px black'}}>Pax</td>
                                 <td style={{margin: 0, padding: '1em', fontWeight: 'bold', borderTop: 'solid 1px black', borderBottom: 'solid 1px black'}}>Receipt No</td>
-                                <td style={{margin: 0, padding: '1em', fontWeight: 'bold', borderTop: 'solid 1px black', borderBottom: 'solid 1px black'}}>Donation Amount &#8377;</td>
+                                <td style={{margin: 0, padding: '1em', fontWeight: 'bold', borderTop: 'solid 1px black', borderBottom: 'solid 1px black'}}>Donation Amount</td>
                             </tr>
                             {this.getCheckOutRows()}
                         </tbody>

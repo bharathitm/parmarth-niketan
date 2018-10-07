@@ -270,7 +270,7 @@ insertAdvanceDonationDetails(){
                                 {getFormattedDate(item.received_on).toString()}
                               </div>
                               <div className ="div-table-col col-bordered">
-                              &#8377; {item.amount}
+                              &#8377; {item.amount.toLocaleString('en-IN')}
                               </div>
                               <div className ="div-table-col col-bordered">
                                 {item.receipt_no}

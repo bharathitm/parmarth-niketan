@@ -159,11 +159,14 @@ export class BookRooms extends Component {
                   blockTotal += parseFloat(checkboxes[i].value);
                 }
             }
-            document.getElementById(blocks[this.props.getStore().uniqueBlocks[cnt]]).innerHTML = blockTotal;
+            var aDate = moment(this.props.getStore().arrivalDate);
+            var dDate = moment(this.props.getStore().departureDate);
+            blockTotal = (blockTotal * (dDate.diff(aDate, 'days')));
+            document.getElementById(blocks[this.props.getStore().uniqueBlocks[cnt]]).innerHTML = blockTotal.toLocaleString('en-IN');
             grandTotal += blockTotal
         } 
 
-        document.getElementById("spGrandTotal").innerHTML = grandTotal;
+        document.getElementById("spGrandTotal").innerHTML = grandTotal.toLocaleString('en-IN');
         var wizardOl = document.getElementsByClassName("progtrckr");
         //if any room selected
          if (grandTotal != 0){
@@ -325,7 +328,6 @@ export class BookRooms extends Component {
     //   var wizardOl = document.getElementsByClassName("progtrckr");
     //   if (typeof wizardOl[0] != 'undefined'){
     //     wizardOl[0].style.pointerEvents = "none";
-    //     alert("hide next button");
     //     document.getElementById("next-button").style.visibility = "hidden";
     //   }
     // } // reverse whatever is done above
@@ -468,7 +470,7 @@ export class BookRooms extends Component {
                                                    <b>{booking.room_no}</b>{", " + 
                                                     floors[booking.floor_no] + ", " + 
                                                     booking.total_beds + " beds" }  
-                                                     <span className="sp-block-total">&#8377; {booking.room_rent}</span> 
+                                                     <span className="sp-block-total">&#8377;{booking.room_rent.toLocaleString('en-IN')}</span> 
                                                     <span className="sp-block-imgs">  
  
   <img src="./img/ac1.png" style={{ visibility: booking.has_AC == 1? 'visible':'hidden', display: booking.has_AC == 1? 'inline':'none' }} /> 

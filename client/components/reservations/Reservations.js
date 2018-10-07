@@ -89,7 +89,7 @@ export class Reservations extends React.Component {
       this.props.updateHomeStore({
           selectedTab: 'Dashboard'
         });
-        window.location.reload();
+        //window.location.reload();
     }
 
     clearGuestSession(){
