@@ -89,16 +89,17 @@ export function add(req, res) {
     
     call_stored_proc += ")";
 
-
-     if ((req.body.email_id != null) && (req.body.email_id != '')){
-        SendConfirmationEmail(req.body.name, req.body.email_id, (moment(req.body.date_of_arrival).format("MMM Do YY") + " - " + moment(req.body.date_of_departure).format("MMM Do YY")));
-     }
-
     connection.query(call_stored_proc, true, (error, results, fields) => {
     if (error) {
         errorController.LogError(error);
         return res.send(error.code);
     }
+
+
+    if ((req.body.email_id != null) && (req.body.email_id != '')){
+       SendConfirmationEmail(req.body.name, req.body.email_id, (moment(req.body.date_of_arrival, "YYYY-MM-D HH:mm").format("MMM Do, YYYY") + " - " + moment(req.body.date_of_departure, "YYYY-MM-D").format("MMM Do, YYYY")), results[0][0].noOfRooms, results[0][0].totalAmt);
+    }
+
     res.send(results[0]);
     });
       
