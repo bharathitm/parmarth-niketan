@@ -1,6 +1,6 @@
 import React, {Component } from 'react';
 
-import {reservationTypes, sanskaras, reservationStatuses, references} from '../../constants/roomAttributes';
+import {reservationTypes, sanskaras, reservationStatuses} from '../../constants/roomAttributes';
 
 import { confirmAlert } from 'react-confirm-alert'; 
 
@@ -30,7 +30,7 @@ export class ReservationDetails extends Component {
       arrivalTime: '',
       reservationTypeId: props.getStore().reservationTypeId,
       sanskaraId: props.getStore().sanskaraId,
-      referenceId: props.getStore().referenceId,
+      // referenceId: props.getStore().referenceId,
       noOfPpl: props.getStore().noOfPpl,
       //advanceReminderOn: '',
       comments: props.getStore().comments,
@@ -72,14 +72,14 @@ export class ReservationDetails extends Component {
     return items;
   } 
 
-  populateReferences() {
-    let items = [];   
+  // populateReferences() {
+  //   let items = [];   
 
-    for (let i = 1; i <= 2; i++) {             
-         items.push(<option key={i} value={i}>{references[i]}</option>);   
-    }
-    return items;
-  } 
+  //   for (let i = 1; i <= 2; i++) {             
+  //        items.push(<option key={i} value={i}>{references[i]}</option>);   
+  //   }
+  //   return items;
+  // } 
 
   componentDidMount() {
     if (this.props.getStore().guestId != null){
@@ -140,7 +140,7 @@ export class ReservationDetails extends Component {
         reservationTypeId: items[0].reservation_type_id,
         reservationStatusId: items[0].reservation_status_id,
         sanskaraId: (items[0].sanskara_id == null)? 0 : items[0].sanskara_id,
-        referenceId: (items[0].reference_id == null)? 0 : items[0].reference_id,
+        // referenceId: (items[0].reference_id == null)? 0 : items[0].reference_id,
         //advanceReminderOn: (items[0].advance_reminder_on == null)? '' : aReminder,
         arrivalTime: aDate
       });
@@ -154,7 +154,7 @@ export class ReservationDetails extends Component {
         reservationTypeId: items[0].reservation_type_id,
         reservationStatusId: items[0].reservation_status_id,
         sanskaraId: (items[0].sanskara_id == null)? 0 : items[0].sanskara_id,
-        referenceId: (items[0].reference_id == null)? 0 : items[0].reference_id,
+        //referenceId: (items[0].reference_id == null)? 0 : items[0].reference_id,
         //advanceReminderOn: (items[0].advance_reminder_on == null)? '' : aReminder,
         arrivalTime: aDate
       });
@@ -168,7 +168,7 @@ export class ReservationDetails extends Component {
       this.refs.arrivalTime.selected = aDate;
       //this.refs.advanceReminderOn.selected = (items[0].advance_reminder_on == null)? '' : aReminder;
       this.refs.sanskaraId.value = (items[0].sanskara_id == null)? 0 : items[0].sanskara_id;
-      this.refs.referenceId.value = (items[0].reference_id == null)? 0 : items[0].reference_id;
+      //this.refs.referenceId.value = (items[0].reference_id == null)? 0 : items[0].reference_id;
       this.refs.reservationStatus.innerHTML = reservationStatuses[items[0].reservation_status_id];  
 
       if (items[0].reservation_status_id == 2){
@@ -205,7 +205,7 @@ export class ReservationDetails extends Component {
           this.props.getStore().reservationTypeId != userInput.reservationTypeId ||
           this.props.getStore().noOfPpl != userInput.noOfPpl ||
           this.props.getStore().sanskaraId != userInput.sanskaraId ||
-          this.props.getStore().referenceId != userInput.referenceId ||
+          // this.props.getStore().referenceId != userInput.referenceId ||
           //this.props.getStore().advanceReminderOn != userInput.advanceReminderOn ||
           this.props.getStore().comments.toString() != userInput.comments.toString()
         ) { 
@@ -249,9 +249,10 @@ export class ReservationDetails extends Component {
       reservation_comments: this.state.comments,
       reservation_type_id: this.state.reservationTypeId,
       sanskara_id: (this.state.sanskaraId == null)? 0 : this.state.sanskaraId,
-      reference_id: this.state.referenceId,
+      //reference_id: this.state.referenceId,
       //advance_reminder_on: ((this.state.advanceReminderOn == '') || (this.state.advanceReminderOn == null))? '' : getFormattedDate(this.state.advanceReminderOn).toString(),
-      room_ids_str: window.sessionStorage.getItem('strSelectedRooms').toString()
+      room_ids_str: window.sessionStorage.getItem('strSelectedRooms').toString(),
+      reference_id: this.props.getStore().referenceId
     };
 
     store(API_URL, "reservations/", JSON.stringify(payload))
@@ -297,7 +298,7 @@ export class ReservationDetails extends Component {
       reservation_comments: this.state.comments,
       reservation_type_id: this.state.reservationTypeId,
       sanskara_id: (this.state.sanskaraId == null)? 0 : this.state.sanskaraId,
-      reference_id: this.state.referenceId,
+      // reference_id: this.state.referenceId,
       //advance_reminder_on: ((this.state.advanceReminderOn == '') || (this.state.advanceReminderOn == null))? '' : getFormattedDate(this.state.advanceReminderOn).toString(),
     };
 
@@ -349,7 +350,7 @@ export class ReservationDetails extends Component {
       reservationTypeId: this.refs.reservationTypeId.value,
       //sanskaraId: (this.refs.sanskaraId.value == 0)? null : this.refs.sanskaraId.value,
       sanskaraId: (this.refs.reservationTypeId.value != 3)? 0: this.refs.sanskaraId.value,
-      referenceId: this.refs.referenceId.value,
+      // referenceId: this.refs.referenceId.value,
       noOfPpl: this.refs.noOfPpl.value,
       //advanceReminderOn: this.refs.advanceReminderOn.selected,
       comments: this.refs.comments.value,
@@ -415,7 +416,7 @@ export class ReservationDetails extends Component {
       arrivalTime:'',
       reservation_type_id:'',
       sanskaraId:'',
-      referenceId: '',
+      //referenceId: '',
       noOfPpl:'',
       //advanceReminderOn:'',
       comments:''
@@ -517,7 +518,7 @@ export class ReservationDetails extends Component {
                               {/* Arrival Time */}
                               <div className="form-group col-md-12 content form-block-holder">
                                     <label className="control-label col-md-4">
-                                      Arrival Time: *
+                                      Arrival Time:
                                     </label>
                                     <div className="col-md-8">
                                           <DatePicker
@@ -539,7 +540,7 @@ export class ReservationDetails extends Component {
                       {/* No. of People */}
                       <div className="form-group col-md-12 content form-block-holder">
                         <label className="control-label col-md-4">
-                          No. of People: *
+                          No. of People:
                         </label>
                         <div className="col-md-8">
                           <input
@@ -558,7 +559,7 @@ export class ReservationDetails extends Component {
                         {/* Reservation Type */}
                         <div className="form-group col-md-12 content form-block-holder">
                             <label className="control-label col-md-4">
-                            Reservation Type: *
+                            Reservation Type:
                             </label>
                             <div className="col-md-8">
                                       <select id="slReservationTypes"
@@ -579,7 +580,7 @@ export class ReservationDetails extends Component {
                         {/* Sanskara Type */}
                         <div ref="divSanskara" className="form-group col-md-12 content form-block-holder">
                         <label className="control-label col-md-4">
-                        Sanskara:*
+                        Sanskara:
                         </label>
                         <div className="col-md-8">
 
@@ -597,7 +598,7 @@ export class ReservationDetails extends Component {
                           </div>
                   </div>
               </div>
-             <div className = "div-table-row">
+             {/* <div className = "div-table-row"> */}
               {/* <div className ="div-table-col">        
                     {/* Advance Reminder On */}
                   {/* <div className="form-group col-md-12 content form-block-holder">
@@ -616,9 +617,9 @@ export class ReservationDetails extends Component {
                     </div> */}
                 {/* </div> */} 
 
-                 <div className ="div-table-col">
+                 {/* <div className ="div-table-col"> */}
                         {/* Reference */}
-                        <div className="form-group col-md-12 content form-block-holder">
+                        {/* <div className="form-group col-md-12 content form-block-holder">
                             <label className="control-label col-md-4">
                             Referred By:
                             </label>
@@ -634,9 +635,9 @@ export class ReservationDetails extends Component {
                                         {this.populateReferences()}                   
                                       </select>                      
                               </div>
-                            </div>
-                  </div>
-              </div>
+                            </div> */}
+                  {/* </div>
+              </div> */}
                <div className = "div-table-row">
                   <div className ="comments-col div-table-col">
                       {/* Comments */}

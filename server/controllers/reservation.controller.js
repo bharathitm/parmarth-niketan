@@ -66,23 +66,6 @@ export function add(req, res) {
     else {
         call_stored_proc +=  "'" + req.body.sanskara_id + "',";
     }
-    
-
-    // If is_a_reference is not set, we pass this as 0
-    if (req.body.reference_id == 0 || req.body.reference_id == ''){
-        call_stored_proc += null + ",";        
-    }
-    else {
-        call_stored_proc +=  "'" + req.body.reference_id + "',";
-    }
-
-    //  // Since advance_reminder_on is an optional field, we pass this as null
-    //  if (req.body.advance_reminder_on == ''){
-    //     call_stored_proc += null;
-    // }
-    // else {
-    //     call_stored_proc +=  "'" + req.body.advance_reminder_on + "'";
-    // }
 
     //room_ids_str does not have the ' after the ,  
     call_stored_proc +=  "'" + req.body.room_ids_str + "'";
@@ -97,7 +80,9 @@ export function add(req, res) {
 
 
     if ((req.body.email_id != null) && (req.body.email_id != '')){
-       SendConfirmationEmail(req.body.name, req.body.email_id, (moment(req.body.date_of_arrival, "YYYY-MM-D HH:mm").format("MMM Do, YYYY") + " - " + moment(req.body.date_of_departure, "YYYY-MM-D").format("MMM Do, YYYY")), results[0][0].noOfRooms, results[0][0].totalAmt);
+       SendConfirmationEmail(req.body.name, req.body.email_id, (moment(req.body.date_of_arrival, "YYYY-MM-D HH:mm").format("MMM Do, YYYY") 
+       + " - " + moment(req.body.date_of_departure, "YYYY-MM-D").format("MMM Do, YYYY")), results[0][0].noOfRooms, results[0][0].totalAmt, results[0][0].reservationId,
+        req.body.reservation_type_id, req.body.sanskara_id, req.body.reference_id);
     }
 
     res.send(results[0]);

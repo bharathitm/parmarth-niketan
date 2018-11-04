@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 
 import countries from '../../constants/countries';
+import {references} from '../../constants/roomAttributes';
 
 import {logError, checkError} from '../../utils/helpers';
 import {API_URL} from '../../config/config';
@@ -15,6 +16,7 @@ export class Guests extends Component {
     this.state = {
       isLoaded: false,
       error: null,
+      referenceId: props.getStore().referenceId,
       firstName: props.getStore().firstName,
       lastName: props.getStore().lastName,
       email: props.getStore().email,
@@ -49,49 +51,60 @@ export class Guests extends Component {
     return items;
   }
 
+  populateReferences() {
+    let items = [];   
+
+    for (let i = 1; i <= 4; i++) {             
+         items.push(<option key={i} value={i}>{references[i]}</option>);   
+    }
+    return items;
+  } 
+
   loadGuestDetails(){
     if (this.state.items.length != 0)
     {
       this.props.updateStore({
+        referenceId: (this.state.items[0].reference_id == null)? 0 : this.state.items[0].reference_id,
         guestId: this.state.items[0].guest_id,
         firstName: this.state.items[0].first_name,
         lastName: this.state.items[0].last_name,
         email: (this.state.items[0].email_id != null? this.state.items[0].email_id: ''),
         phone: this.state.items[0].phone_no,
-        address: this.state.items[0].address,
-        city: this.state.items[0].city,
-        pin: this.state.items[0].zip_code,
-        region: this.state.items[0].state,
+        address: (this.state.items[0].address == null)? '' : this.state.items[0].address,
+        city: (this.state.items[0].city == null)? '' : this.state.items[0].city,
+        pin: (this.state.items[0].zip_code == null)? '' : this.state.items[0].zip_code,
+        region: (this.state.items[0].state == null)? '' : this.state.items[0].state,
         country: this.state.items[0].country_id,
         guestEmergencyContactId: this.state.items[0].guest_emergency_contact_id,
-        eFirstName: this.state.items[0].e_first_name,
-        eLastName: this.state.items[0].e_last_name,
-        ePhone: this.state.items[0].e_phone_no,
-        eRelationship: this.state.items[0].e_relationship,
+        eFirstName: (this.state.items[0].e_first_name == null)? '' : this.state.items[0].e_first_name,
+        eLastName: (this.state.items[0].e_last_name == null)? '' : this.state.items[0].e_last_name,
+        ePhone: (this.state.items[0].e_phone_no == null)? '' : this.state.items[0].e_phone_no,
+        eRelationship: (this.state.items[0].e_relationship == null)? '' : this.state.items[0].e_relationship,
         reservationId: this.state.items[0].reservation_id,
         arrivalDate: this.state.items[0].date_of_arrival,
         departureDate: this.state.items[0].date_of_departure
       });
 
       this.setState({
+        referenceId: (this.state.items[0].reference_id == null)? 0 : this.state.items[0].reference_id,
         guestId: this.state.items[0].guest_id,
         firstName: this.state.items[0].first_name,
         lastName: this.state.items[0].last_name,
         email: (this.state.items[0].email_id != null? this.state.items[0].email_id: ''),
         phone: this.state.items[0].phone_no,
-        address: this.state.items[0].address,
-        city: this.state.items[0].city,
-        pin: this.state.items[0].zip_code,
-        region: this.state.items[0].state,
+        address: (this.state.items[0].address == null)? '' : this.state.items[0].address,
+        city: (this.state.items[0].city == null)? '' : this.state.items[0].city,
+        pin: (this.state.items[0].zip_code == null)? '' : this.state.items[0].zip_code,
+        region: (this.state.items[0].state == null)? '' : this.state.items[0].state,
         country: this.state.items[0].country_id,
         guestEmergencyContactId: this.state.items[0].guest_emergency_contact_id,
-        eFirstName: this.state.items[0].e_first_name,
-        eLastName: this.state.items[0].e_last_name,
-        ePhone: this.state.items[0].e_phone_no,
-        eRelationship: this.state.items[0].e_relationship 
+        eFirstName: (this.state.items[0].e_first_name == null)? '' : this.state.items[0].e_first_name,
+        eLastName: (this.state.items[0].e_last_name == null)? '' : this.state.items[0].e_last_name,
+        ePhone: (this.state.items[0].e_phone_no == null)? '' : this.state.items[0].e_phone_no,
+        eRelationship: (this.state.items[0].e_relationship == null)? '' : this.state.items[0].e_relationship,
       });
     
-
+      this.refs.referenceId.value = (this.state.items[0].reference_id == null)? 0 : this.state.items[0].reference_id;
       this.refs.firstName.value = this.state.items[0].first_name,
       this.refs.lastName.value = this.state.items[0].last_name,
       this.refs.email.value = (this.state.items[0].email_id != null? this.state.items[0].email_id: ''),
@@ -153,6 +166,7 @@ export class Guests extends Component {
 
     if (Object.keys(validateNewInput).every((k) => { return validateNewInput[k] === true })) {
         if (
+          this.props.getStore().referenceId != userInput.referenceId ||
           this.props.getStore().firstName != userInput.firstName || 
           this.props.getStore().lastName != userInput.lastName || 
           this.props.getStore().email != userInput.email || 
@@ -164,38 +178,35 @@ export class Guests extends Component {
           this.props.getStore().country != userInput.country
         ) { 
 
-          if (this.props.getStore().guestId != null){
-            this.updateGuestData();
-          }
-          else {
-              this.insertGuestData();
-          }
-
-          this.props.updateStore({
-            ...userInput,
-            savedToCloud: false 
-          }); 
-          
-
-          var name = this.refs.firstName.value + " " + this.refs.lastName.value;
-          this.props.loadName(name);
+              if (this.props.getStore().guestId != null){
+                this.updateGuestData();
+              }
+              else {
+                  this.insertGuestData();
+              }
+              
+              var name = this.refs.firstName.value + " " + this.refs.lastName.value;
+              this.props.loadName(name);
         }
+
         if (
           this.props.getStore().eFirstName != userInput.eFirstName ||
           this.props.getStore().eLastName != userInput.eLastName ||
           this.props.getStore().ePhone != userInput.ePhone ||
           this.props.getStore().eRelationship != userInput.eRelationship
         ){
-
-          this.props.updateStore({
-            ...userInput,
-            savedToCloud: false 
-          });  
-
-          if (this.state.guestEmergencyContactId != ''){
-            this.updateEmergencyContactData();
-          } 
+              if (this.state.guestEmergencyContactId != null){
+                this.updateEmergencyContactData();
+              } 
+              else {
+                this.insertEmergencyContactData();
+              }
         }
+
+        this.props.updateStore({
+          ...userInput,
+          savedToCloud: false 
+        }); 
 
         isDataValid = true;
     }
@@ -218,6 +229,7 @@ export class Guests extends Component {
 
   _grabUserInput() {
     return {
+      referenceId: this.refs.referenceId.value,
       firstName: this.refs.firstName.value,
       lastName: this.refs.lastName.value,
       email: this.refs.email.value,
@@ -238,41 +250,52 @@ export class Guests extends Component {
 
     return  {
       firstNameVal: (data.firstName != ''),
-      lastNameVal: (data.lastName != ''),
-      //emailVal: /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/.test(data.email), // required: regex w3c uses in html5
-      
-      emailVal: ((data.email.toString().trim() != '')? 
-      (/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(data.email))
-      : true),
+      lastNameVal: (data.lastName != ''),   
+      emailVal: 
+          ((data.email.toString().trim() != '')? 
+           (/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(data.email))
+          : true),
       phoneVal: (data.phone != ''),
-      addressVal: (data.address != ''),
-      cityVal: (data.city != ''),
-      pinVal: (data.pin != ''),
-      regionVal: (data.region != ''),
-      countryVal: (data.country != 0), 
-      eFirstNameVal: (data.eFirstName != ''),
-      eLastNameVal: (data.eLastName != ''),
-      ePhoneVal: (data.ePhone != ''),
-      eRelationshipVal: (data.eRelationship != '')
+
+      // addressVal: (data.address != ''),
+      // cityVal: (data.city != ''),
+      // pinVal: (data.pin != ''),
+      // regionVal: (data.region != ''),
+      // countryVal: (data.country != 0), 
+      // eFirstNameVal: (data.eFirstName != ''),
+      // eLastNameVal: (data.eLastName != ''),
+      // ePhoneVal: (data.ePhone != ''),
+      // eRelationshipVal: (data.eRelationship != '')
+      
+      addressVal: (data.referenceId != 0)? true: (data.address.toString().trim() != ''),
+      cityVal: (data.referenceId != 0)? true: (data.city.toString().trim() != ''),
+      pinVal: (data.referenceId != 0)? true: (data.pin.toString().trim() != ''),
+      regionVal: (data.referenceId != 0)? true: (data.region.toString().trim() != ''),
+      countryVal: (data.country != 0),
+      eFirstNameVal: (data.referenceId != 0)? true: (data.eFirstName.toString().trim() != ''),
+      eLastNameVal: (data.referenceId != 0)? true: (data.eLastName.toString().trim() != ''),
+      ePhoneVal: (data.referenceId != 0)? true: (data.ePhone.toString().trim() != ''),
+      eRelationshipVal: (data.referenceId != 0)? true: (data.eRelationship.toString().trim() != ''),
     }
   }
 
   insertGuestData(){
 
     const payload = {
-      first_name: this.state.firstName,
-      last_name: this.state.lastName,
+      reference_id: this.state.referenceId,
+      first_name: this.state.firstName.toString().trim(),
+      last_name: this.state.lastName.toString().trim(),
       email_id: (this.state.email != ''? this.state.email: ''),
-      phone_no: this.state.phone,
-      address: this.state.address,
-      city: this.state.city,
-      zip_code: this.state.pin,
-      state: this.state.region,
+      phone_no: this.state.phone.toString().trim(),
+      address: this.state.address.toString().trim(),
+      city: this.state.city.toString().trim(),
+      zip_code: this.state.pin.toString().trim(),
+      state: this.state.region.toString().trim(),
       country_id: this.state.country,
-      e_first_name: this.state.eFirstName,
-      e_last_name: this.state.eLastName,
-      e_phone_no: this.state.ePhone,
-      e_relationship: this.state.eRelationship
+      e_first_name: this.state.eFirstName.toString().trim(),
+      e_last_name: this.state.eLastName.toString().trim(),
+      e_phone_no: this.state.ePhone.toString().trim(),
+      e_relationship: this.state.eRelationship.toString().trim()
     };
 
 
@@ -303,21 +326,22 @@ export class Guests extends Component {
 
   updateGuestData(){
     const payload = {
+      reference_id: this.state.referenceId,
       guest_id: this.props.getStore().guestId,
-      first_name: this.state.firstName,
-      last_name: this.state.lastName,
+      first_name: this.state.firstName.toString().trim(),
+      last_name: this.state.lastName.toString().trim(),
       email_id: ((this.state.email != null)? this.state.email: ''),
-      phone_no: this.state.phone,
-      address: this.state.address,
-      city: this.state.city,
-      zip_code: this.state.pin,
-      state: this.state.region,
+      phone_no: this.state.phone.toString().trim(),
+      address: this.state.address.toString().trim(),
+      city: this.state.city.toString().trim(),
+      zip_code: this.state.pin.toString().trim(),
+      state: this.state.region.toString().trim(),
       country_id: this.state.country,
       guest_emergency_contact_id: this.state.guestEmergencyContactId,
-      e_first_name: this.state.eFirstName,
-      e_last_name: this.state.eLastName,
-      e_phone_no: this.state.ePhone,
-      e_relationship: this.state.eRelationship,
+      e_first_name: this.state.eFirstName.toString().trim(),
+      e_last_name: this.state.eLastName.toString().trim(),
+      e_phone_no: this.state.ePhone.toString().trim(),
+      e_relationship: this.state.eRelationship.toString().trim(),
       has_email_changed: (this.props.getStore().email != this.refs.email.value? 1 : 0)
     };
 
@@ -338,14 +362,41 @@ export class Guests extends Component {
     });
   }
 
+  insertEmergencyContactData(){
+
+    const payload = {
+      guest_id: this.state.guestId,
+      e_first_name: this.state.eFirstName.toString().trim(),
+      e_last_name: this.state.eLastName.toString().trim(),
+      e_phone_no: this.state.ePhone.toString().trim(),
+      e_relationship: this.state.eRelationship.toString().trim()
+    };
+
+    store(API_URL, "econtacts/", JSON.stringify(payload))
+    .then((response) => {
+      return checkError(response);
+    })
+    .then((result) => {  
+      notify.show('Guest emergency contact details inserted successfully!', 'success');  
+    })
+    .catch((error) => {
+      this.setState({
+        isLoaded: false,
+        error
+      });
+      notify.show('Oops! Something went wrong! Please try again!', 'error');
+      logError(error);
+    });
+   }
+
   updateEmergencyContactData(){
 
     const payload = {
       guest_emergency_contact_id: this.state.guestEmergencyContactId,
-      e_first_name: this.state.eFirstName,
-      e_last_name: this.state.eLastName,
-      e_phone_no: this.state.ePhone,
-      e_relationship: this.state.eRelationship
+      e_first_name: this.state.eFirstName.toString().trim(),
+      e_last_name: this.state.eLastName.toString().trim(),
+      e_phone_no: this.state.ePhone.toString().trim(),
+      e_relationship: this.state.eRelationship.toString().trim()
     };
 
     store(API_URL, "econtacts/" + this.state.guestEmergencyContactId, JSON.stringify(payload))
@@ -507,14 +558,40 @@ export class Guests extends Component {
         <div className="row">
           <form id="Form" className="form-horizontal">          
                 <h4>Guest Contact Details</h4>  
-            
                        <div className = "div-table">
+
+                        <div className = "div-table-row">
+                          <div className ="div-table-col">
+
+                  {/* Reference */}
+                      <div className="form-group col-md-12 content form-block-holder">
+                            <label className="control-label col-md-4">
+                            Referred By:
+                            </label>
+                            <div className="col-md-8">
+                                      <select id="slReference"
+                                        ref="referenceId"
+                                        autoComplete="off"
+                                        className="form-control"
+                                        required
+                                        onBlur={this.validationCheck}
+                                        defaultValue={this.state.referenceId}>
+                                        <option value="0">Please select</option>
+                                        {this.populateReferences()}                   
+                                      </select>                      
+                              </div>
+                            </div>
+
+                          </div>
+                        </div>
+
+
                     <div className = "div-table-row">
                           <div className ="div-table-col">
                    {/* First Name */}
                     <div className="form-group col-md-12 content form-block-holder">
                           <label className="control-label col-md-4">
-                            First Name: *
+                            First Name:
                           </label>
                           <div className="col-md-8">
                             <input
@@ -531,7 +608,7 @@ export class Guests extends Component {
                    {/* Last Name */}
                     <div className="form-group col-md-12 content form-block-holder">
                       <label className="control-label col-md-4">
-                        Last Name: *
+                        Last Name:
                       </label>
                       <div className="col-md-8">
                         <input
@@ -570,7 +647,7 @@ export class Guests extends Component {
                     {/* Phone */}
                   <div className="form-group col-md-12 content form-block-holder">
                       <label className="control-label col-md-4">
-                        Phone: *
+                        Phone:
                       </label>
                       <div className="col-md-8">
                         <input
@@ -590,7 +667,7 @@ export class Guests extends Component {
                       {/* Street Address */}
                       <div className="form-group col-md-12 content form-block-holder long-col">
                           <label className="control-label col-md-4">
-                            Address: *
+                            Address:
                           </label>
                           <div className="col-md-8">
                             <input
@@ -609,7 +686,7 @@ export class Guests extends Component {
                         {/* City */}
                         <div className="form-group col-md-12 content form-block-holder">
                           <label className="control-label col-md-4">
-                            City: *
+                            City:
                           </label>
                           <div className="col-md-8">
                             <input
@@ -626,11 +703,10 @@ export class Guests extends Component {
                           {/* ZIP / Postal Code / PIN */}
                           <div className="form-group col-md-12 content form-block-holder">
                             <label className="control-label col-md-4">
-                            ZIP / Postal Code / PIN: *
+                            ZIP / Postal Code / PIN:
                             </label>
                             <div className="col-md-8">
                               <input
-                                type="number"
                                 ref="pin"
                                 autoComplete="off"
                                 className={notValidClasses.pinCls}
@@ -647,7 +723,7 @@ export class Guests extends Component {
                         {/* State / Province / Region */}
                         <div className="form-group col-md-12 content form-block-holder">
                             <label className="control-label col-md-4">
-                            State / Province / Region: *
+                            State / Province / Region:
                             </label>
                             <div className="col-md-8">
                               <input
@@ -665,7 +741,7 @@ export class Guests extends Component {
                           {/* Country */}
                           <div className="form-group col-md-12 content form-block-holder">
                               <label className="control-label col-md-4">
-                              Country: *
+                              Country:
                               </label>
                               <div className="col-md-8">
                                 <select id="slCountries"
@@ -692,7 +768,7 @@ export class Guests extends Component {
                    {/* First Name */}
                     <div className="form-group col-md-12 content form-block-holder">
                           <label className="control-label col-md-4">
-                            First Name:*
+                            First Name:
                           </label>
                           <div className="col-md-8">
                             <input
@@ -709,7 +785,7 @@ export class Guests extends Component {
                    {/* Last Name */}
                     <div className="form-group col-md-12 content form-block-holder">
                       <label className="control-label col-md-4">
-                        Last Name:*
+                        Last Name:
                       </label>
                       <div className="col-md-8">
                         <input
@@ -728,7 +804,7 @@ export class Guests extends Component {
                     {/* Phone */}
                   <div className="form-group col-md-12 content form-block-holder">
                       <label className="control-label col-md-4">
-                        Phone: *
+                        Phone:
                       </label>
                       <div className="col-md-8">
                         <input
@@ -746,7 +822,7 @@ export class Guests extends Component {
                       {/* Relationship */}
                       <div className="form-group col-md-12 content form-block-holder">
                           <label className="control-label col-md-4">
-                            Relationship: *
+                            Relationship:
                           </label>
                           <div className="col-md-8">
                             <input

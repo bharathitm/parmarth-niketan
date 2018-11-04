@@ -151,20 +151,27 @@ export class BookRooms extends Component {
 
         var checkboxes = document.getElementsByName(blocks[this.props.getStore().uniqueBlocks[cnt]]);  
 
-        if (checkboxes.length > 0){
+        //if (checkboxes.length > 0){
           var blockTotal = 0;
+          var blockName = '';
             for(var i = 0; i < checkboxes.length; i++)  
             { 
                 if(checkboxes[i].checked) {
                   blockTotal += parseFloat(checkboxes[i].value);
+                  blockName = checkboxes[i].name;
                 }
             }
             var aDate = moment(this.props.getStore().arrivalDate);
             var dDate = moment(this.props.getStore().departureDate);
-            blockTotal = (blockTotal * (dDate.diff(aDate, 'days')));
+
+            if (dDate.diff(aDate, 'days') != 0){
+              if (blockName != 'Event Halls') {
+                  blockTotal = (blockTotal * (dDate.diff(aDate, 'days')));
+              }
+            } 
             document.getElementById(blocks[this.props.getStore().uniqueBlocks[cnt]]).innerHTML = blockTotal.toLocaleString('en-IN');
             grandTotal += blockTotal
-        } 
+        //} 
 
         document.getElementById("spGrandTotal").innerHTML = grandTotal.toLocaleString('en-IN');
         var wizardOl = document.getElementsByClassName("progtrckr");
@@ -262,6 +269,7 @@ export class BookRooms extends Component {
       filteredBlocks: this.props.getStore().uniqueBlocks
     });
 
+    // block names under Filter
     var checkboxes = document.getElementsByName("chkBlocks"); 
     var atleastOneChecked = false;
       
@@ -269,18 +277,46 @@ export class BookRooms extends Component {
       var arr = [];
         for(var i = 0; i < checkboxes.length; i++)  
         { 
+          
             if(checkboxes[i].checked) {
               arr.push(checkboxes[i].value); 
               atleastOneChecked = true;
+              // this.setState({
+              //   isReRender: true
+              // });
+
               this.setState({
                 isReRender: true
-              });
-            }
+              }, function() {
+
+                  // //reset all the totals back to 0
+                  // document.getElementById("spGrandTotal").innerHTML = 0;
+                  // var parentDivForBlockTotal = document.getElementsByClassName("div-block-totals");
+                  // for (var i = 0; i < parentDivForBlockTotal.length; i ++){
+                  //   parentDivForBlockTotal[i].firstElementChild.innerHTML = 0;
+                  // }
+
+              }
+              );
+            } //else {
+                // var chkBoxes = document.getElementsByClassName("chkAllRooms");
+                // for(var i = 0; i < chkBoxes.length; i++)  
+                // { 
+                //   chkBoxes[i].checked = false;
+                // }
+              
+          
+                // var chkBoxes = document.getElementsByName("chkAllBlockRooms");  
+                // for(var i = 0; i < chkBoxes.length; i++)  
+                // {  
+                //   chkBoxes[i].checked = false;
+                // }
+                //}
+             }
         }
         this.props.updateStore({
           filteredBlocks: arr
         });
-    }
 
     if (!atleastOneChecked){
         this.setState({

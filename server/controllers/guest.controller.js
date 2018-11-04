@@ -4,7 +4,7 @@ var mysql = require('mysql');
 var config = require('../mysqlconfig.js');
 var errorController = require('./error.controller.js');
 
-var crypto = require('crypto');
+//var crypto = require('crypto');
 
 var connection = mysql.createConnection(config);
 
@@ -15,6 +15,7 @@ var connection = mysql.createConnection(config);
  * @param {object} res
  * @returns {*}
  */
+// used when navigated from Check In/ Check Outs widget
 export function findById(req, res) {
 
     var call_stored_proc = "CALL sp_GetGuestDetails('" + req.params.id + "')";
@@ -62,32 +63,99 @@ export function search(req, res) {
  */
 export function add(req, res) {
 
-    var email_token = crypto.randomBytes(64).toString('hex').substring(0,200);
+   // var email_token = crypto.randomBytes(64).toString('hex').substring(0,200);
 
-    var call_stored_proc = "CALL sp_InsertGuestDetails('" 
-    + req.body.first_name + "','"
+    var call_stored_proc = "CALL sp_InsertGuestDetails(" 
 
-    // Since email_id is an optional field, we pass this as null
-    if (req.body.email_id == undefined){
-        call_stored_proc +=  req.body.last_name + "',"
-        + null  + ",'"        
+    // If is_a_reference is not set, we pass this as 0
+    if (req.body.reference_id == 0 || req.body.reference_id == ''){
+        call_stored_proc += null + ",";        
     }
     else {
-        call_stored_proc +=  req.body.last_name + "','"
-        + req.body.email_id + "','"
+        call_stored_proc +=  "'" + req.body.reference_id + "',";
     }
+
+    call_stored_proc += "'" + req.body.first_name + "'";
+    call_stored_proc += ",";
+    call_stored_proc += "'" + req.body.last_name + "'";
+    call_stored_proc += ",";
+
+    if (req.body.email_id != ''){
+        call_stored_proc +=  "'" + req.body.email_id + "'";   
+    }
+    else {
+        call_stored_proc += null;
+    }
+
+    call_stored_proc += ",";
+
+    call_stored_proc +=  "'" + req.body.phone_no + "'";
     
-    call_stored_proc +=  req.body.phone_no + "','"
-    + req.body.address + "','"
-    + req.body.city + "','"
-    + req.body.zip_code + "','"
-    + req.body.state + "','"
-    + req.body.country_id + "','"
-    + req.body.e_first_name + "','"
-    + req.body.e_last_name + "','"    
-    + req.body.e_phone_no + "','"
-    + req.body.e_relationship + "','"
-    + email_token + "')";
+    call_stored_proc += ",";
+
+    if (req.body.address != ''){
+        call_stored_proc += "'" + req.body.address + "'";
+    } else {
+        call_stored_proc += null;
+    }
+
+    call_stored_proc += ",";
+
+    if (req.body.city != ''){
+        call_stored_proc += "'" + req.body.city + "'";
+    } else {
+        call_stored_proc += null;
+    }
+
+    call_stored_proc += ",";
+
+    if (req.body.zip_code != ''){
+        call_stored_proc += "'" + req.body.zip_code + "'";
+    } else {
+        call_stored_proc += null;
+    }
+
+    call_stored_proc += ",";
+
+    if (req.body.state != ''){
+        call_stored_proc += "'" + req.body.state + "'";
+    } else {
+        call_stored_proc += null;
+    }
+
+    call_stored_proc += ",'" + req.body.country_id + "',";
+
+    if (req.body.e_first_name != ''){
+        call_stored_proc += "'" + req.body.e_first_name + "'";
+    } else {
+        call_stored_proc += null;
+    }
+
+    call_stored_proc += ",";
+
+    if (req.body.e_last_name != ''){
+        call_stored_proc += "'" + req.body.e_last_name + "'";
+    } else {
+        call_stored_proc += null;
+    }
+
+    call_stored_proc += ",";
+
+    if (req.body.e_phone_no != ''){
+        call_stored_proc += "'" + req.body.e_phone_no + "'";
+    } else {
+        call_stored_proc += null;
+    }
+
+    call_stored_proc += ",";
+
+    if (req.body.e_relationship != ''){
+        call_stored_proc += "'" + req.body.e_relationship + "'";
+    } else {
+        call_stored_proc += null;
+    }
+
+    call_stored_proc += ")";
  
     connection.query(call_stored_proc, true, (error, results, fields) => {
     if (error) {
@@ -111,28 +179,63 @@ export function add(req, res) {
 export function update(req, res) {
 
     
-    var email_token = crypto.randomBytes(64).toString('hex').substring(0,200);
+    //var email_token = crypto.randomBytes(64).toString('hex').substring(0,200);
 
     var call_stored_proc = "CALL sp_UpdateGuestDetails('" 
     + req.params.id + "','"
     + req.body.first_name + "','"
     + req.body.last_name + "',"
 
-    if (req.body.email_id == ''){
-        call_stored_proc += null  + ",'"        
+    if (req.body.email_id != ''){
+        call_stored_proc +=  "'" + req.body.email_id + "'";   
     }
     else {
-        call_stored_proc +=  "'" + req.body.email_id+ "','"
+        call_stored_proc += null;
     }
 
-    //+ req.body.email_id + "','"
-    call_stored_proc += req.body.phone_no + "','"
-    call_stored_proc += req.body.address + "','"
-    call_stored_proc += req.body.city + "','"
-    call_stored_proc += req.body.zip_code + "','"
-    call_stored_proc += req.body.state + "','"
-    call_stored_proc += req.body.country_id + "','"
-    call_stored_proc += email_token + "')";
+    call_stored_proc += ",'" + req.body.phone_no + "',"
+
+    if (req.body.address != ''){
+        call_stored_proc += "'" + req.body.address + "'";
+    } else {
+        call_stored_proc += null;
+    }
+
+    call_stored_proc += ",";
+
+    if (req.body.city != ''){
+        call_stored_proc += "'" + req.body.city + "'";
+    } else {
+        call_stored_proc += null;
+    }
+
+    call_stored_proc += ",";
+
+    if (req.body.zip_code != ''){
+        call_stored_proc += "'" + req.body.zip_code + "'";
+    } else {
+        call_stored_proc += null;
+    }
+
+    call_stored_proc += ",";
+
+    if (req.body.state != ''){
+        call_stored_proc += "'" + req.body.state + "'";
+    } else {
+        call_stored_proc += null;
+    }
+
+    call_stored_proc += ",'" + req.body.country_id + "',";
+
+    // If is_a_reference is not set, we pass this as 0
+    if (req.body.reference_id == 0 || req.body.reference_id == ''){
+        call_stored_proc += null;        
+    }
+    else {
+        call_stored_proc +=  "'" + req.body.reference_id + "'";
+    }
+
+    call_stored_proc += ")";
 
     connection.query(call_stored_proc, true, (error, results, fields) => {
     if (error) {

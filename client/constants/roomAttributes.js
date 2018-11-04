@@ -63,7 +63,5 @@ export const blocks = {
     1: "Pujya Swamiji",
     2: "Sadhviji",
     3: "Swamini ji",
-    4: "Nandini ji",
-    5: "Deepak ji",
-    6: "Lakhi ji"
+    4: "Ganga Nandini ji"
   };
