@@ -17,8 +17,20 @@ router.route('/:id')
 
 //Cancels room booking
 .delete((req, res) => {
-    roomBookingCtrl.cancel(req, res);
+
+    if ((req.query.rId) != undefined){
+        //Cancels room bookings for a given reservation Id
+        if (req.params.id == 1){
+            roomBookingCtrl.removeAll(req, res); // removes all room bookings
+        } else {
+            roomBookingCtrl.removeWL(req, res); // removes Wait List room bookings
+        }
+    } else {
+        roomBookingCtrl.cancel(req, res);
+    }
 });
+
+
 
 router.route('/')
 

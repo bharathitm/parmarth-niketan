@@ -11,7 +11,7 @@ var connection = mysql.createConnection(mysqlconfig);
 var arrSplitUpResults = "";
 
 
-export function SendConfirmationEmail(name, emailId, dates, noOfRooms, totalAmt, reservationId, reservationTypeId, sanskaraId, referenceId) {
+export function SendConfirmationEmail(name, emailId, dates, noOfRooms, totalAmt, reservationId, reservationTypeId, sanskaraId, referenceId, has_WL) {
 
         var htmlText = 'Namaste Divine Soul ' + name + ' ji,<br/><br/>Jai Gange!<br/><br/>';
 
@@ -20,15 +20,33 @@ export function SendConfirmationEmail(name, emailId, dates, noOfRooms, totalAmt,
                 switch (sanskaraId){
                         case "1": //Mundan
                                 htmlText = ConstructMundanText(htmlText, dates, noOfRooms);
-                                SendEmail(emailId, htmlText + commonEmailText);
+                                if (has_WL == 0){ // if wait list don't show donation details
+                                        GetDonationSplitUp(reservationId, function (){                               
+                                                htmlText += 'Based on the room(s) reserved for you, the suggested donation amount is <b>&#8377; ' + totalAmt.toLocaleString('en-IN') + '</b>. The split up is as follows: <br/> ';
+                                                htmlText += ConstructSplitUpStr();
+                                                htmlText += 'This will also include complimentary yoga classes. ';
+                                                SendEmail(emailId, htmlText + commonEmailText);
+                                        });
+                                } else {
+                                        SendEmail(emailId, htmlText + commonEmailText);
+                                }
                                 break;   
                         case "2": //Janeo
                                 htmlText = ConstructJaneoText(htmlText, dates, noOfRooms);
-                                SendEmail(emailId, htmlText + commonEmailText);
+                                if (has_WL == 0){ // if wait list don't show donation details
+                                        GetDonationSplitUp(reservationId, function (){                               
+                                                htmlText += 'Based on the room(s) reserved for you, the suggested donation amount is <b>&#8377; ' + totalAmt.toLocaleString('en-IN') + '</b>. The split up is as follows: <br/> ';
+                                                htmlText += ConstructSplitUpStr();
+                                                htmlText += 'This will also include complimentary yoga classes. ';
+                                                SendEmail(emailId, htmlText + commonEmailText);
+                                        });
+                                } else {
+                                        SendEmail(emailId, htmlText + commonEmailText);
+                                }
                                 break; 
                         case "3": // Marriage
                                 htmlText = ConstructCommonIntro1(htmlText, dates, noOfRooms);
-                                if (referenceId == 0){ // if reference don't show donation details
+                                if (has_WL == 0){ // if wait list don't show donation details
                                         GetDonationSplitUp(reservationId, function (){                               
                                                 htmlText += 'Based on the room(s) reserved for you, the suggested donation amount is <b>&#8377; ' + totalAmt.toLocaleString('en-IN') + '</b>. The split up is as follows: <br/> ';
                                                 htmlText += ConstructSplitUpStr();
@@ -45,7 +63,16 @@ export function SendConfirmationEmail(name, emailId, dates, noOfRooms, totalAmt,
                                 break;    
                         case "5": //Special Pooja
                                 htmlText = ConstructPoojaText(htmlText, dates, noOfRooms);
-                                SendEmail(emailId, htmlText + commonEmailText);
+                                if (has_WL == 0){ // if wait list don't show donation details
+                                        GetDonationSplitUp(reservationId, function (){                               
+                                                htmlText += 'Based on the room(s) reserved for you, the suggested donation amount is <b>&#8377; ' + totalAmt.toLocaleString('en-IN') + '</b>. The split up is as follows: <br/> ';
+                                                htmlText += ConstructSplitUpStr();
+                                                htmlText += 'This will also include complimentary yoga classes. ';
+                                                SendEmail(emailId, htmlText + commonEmailText);
+                                        });
+                                } else {
+                                        SendEmail(emailId, htmlText + commonEmailText);
+                                }
                                 break;                                  
                 }
         }
@@ -80,16 +107,20 @@ export function SendConfirmationEmail(name, emailId, dates, noOfRooms, totalAmt,
                 htmlText += 'We hope everything is wonderful with you and your loved ones.<br/><br/>';
                 htmlText += 'This is a confirmation for your stay at Parmarth Niketan Ashram from <b>' + dates + '</b>.<br/><br/>';
                 htmlText += 'As requested, we have reserved <b>' + noOfRooms + ' room(s) </b> for your visit with us.<br/><br/>';
-                GetDonationSplitUp(reservationId, function (){                               
-                        htmlText += 'Based on the room(s) reserved for you, the suggested donation amount is <b>&#8377; ' + totalAmt.toLocaleString('en-IN') + '</b>. The split up is as follows: <br/> ';
-                        htmlText += ConstructSplitUpStr();
-                        htmlText += 'This will also include complimentary yoga classes. ';
-                        SendEmail(emailId, htmlText + commonEmailText);
-                });
+                if (has_WL == 0){ // if wait list don't show donation details
+                        GetDonationSplitUp(reservationId, function (){                               
+                                htmlText += 'Based on the room(s) reserved for you, the suggested donation amount is <b>&#8377; ' + totalAmt.toLocaleString('en-IN') + '</b>. The split up is as follows: <br/> ';
+                                htmlText += ConstructSplitUpStr();
+                                htmlText += 'This will also include complimentary yoga classes. ';
+                                SendEmail(emailId, htmlText + commonEmailText);
+                        });
+                } else {
+                        SendEmail(emailId, htmlText + commonEmailText);       
+                }
         }
         else { // every thing else
                 htmlText = ConstructCommonIntro1(htmlText, dates, noOfRooms);
-                if (referenceId == "0"){ // if reference don't show donation details
+                if ((referenceId == 0) && (has_WL == 0)){ // if reference don't show donation details
                         GetDonationSplitUp(reservationId, function (){                               
                                 htmlText += 'Based on the room(s) reserved for you, the suggested donation amount is <b>&#8377; ' + totalAmt.toLocaleString('en-IN') + '</b>. The split up is as follows: <br/> ';
                                 htmlText += ConstructSplitUpStr();

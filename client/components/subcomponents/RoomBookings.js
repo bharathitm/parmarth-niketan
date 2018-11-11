@@ -7,14 +7,14 @@ import {blocks, floors} from '../../constants/roomAttributes';
 import {logError, checkError, getFormattedDate} from '../../utils/helpers';
 import {API_URL} from '../../config/config';
 import {fetch, store, destroy} from '../../utils/httpUtil';
-import { confirmAlert } from 'react-confirm-alert'; 
+import { confirmAlert } from 'react-confirm-alert';
 import {notify} from 'react-notify-toast';
 
 export class RoomBookings extends Component {
 
     constructor(props) {
       super(props);
-  
+
       this.state = {
         items: [],
         isLoaded: false,
@@ -23,12 +23,15 @@ export class RoomBookings extends Component {
         dDAtes: [
             {}
           ]
-      }; 
+      };
 
       this._validateOnDemand = true;
       this.validationCheck = this.validationCheck.bind(this);
-  
+
       this.handleDateChange = this.handleDateChange.bind(this);
+
+      this.handleDeleteAllRoomBookings = this.handleDeleteAllRoomBookings.bind(this);
+      this.handleDeleteWLRoomBookings = this.handleDeleteWLRoomBookings.bind(this);
     }
 
     componentDidMount() {
@@ -54,7 +57,7 @@ export class RoomBookings extends Component {
                     {
                         depDates.push(this.state.items[i].date_of_departure);
                     }
-                
+
                     this.setState({
                           dDAtes: depDates
                     });
@@ -70,7 +73,7 @@ export class RoomBookings extends Component {
                 });
           }
     }
-    
+
 
     handleDateChange(date, index) {
         var newArray = this.state.dDAtes;
@@ -78,17 +81,17 @@ export class RoomBookings extends Component {
         this.setState({
           dDates: newArray
         });
-        this.refs[index].selected = moment(date);        
+        this.refs[index].selected = moment(date);
       }
 
 
     validationCheck() {
         if (!this._validateOnDemand)
           return;
-    
+
         const userInput = this._grabUserInput(); // grab user entered vals
         const validateNewInput = this._validateData(userInput); // run the new input against the validator
-    
+
         this.setState(Object.assign(userInput, validateNewInput));
     }
 
@@ -99,17 +102,17 @@ export class RoomBookings extends Component {
           advanceReceiptNo: this.refs.receipt.value
         };
     }
-    
+
     _validateData(data) {
         return  {
           advanceReceivedOnVal:  (data.advanceReceivedOn == null || data.advanceReceivedOn == undefined)? false: true,
           advanceAmountVal: (data.advanceAmount != ''),
-          advanceReceiptNoVal: (data.advanceReceiptNo != '') 
+          advanceReceiptNoVal: (data.advanceReceiptNo != '')
         };
     }
 
 
-    
+
     handleAdd() {
         const userInput = this._grabUserInput(); // grab user entered vals
         const validateNewInput = this._validateData(userInput); // run the new input against the validator
@@ -122,7 +125,7 @@ export class RoomBookings extends Component {
             this.setState(Object.assign(userInput, validateNewInput));
         }
     }
-    
+
     handleUpdateRoomBooking(room_booking_id){
 
         const payload = {
@@ -134,7 +137,7 @@ export class RoomBookings extends Component {
         .then((response) => {
             return checkError(response);
         })
-        .then((result) => {   
+        .then((result) => {
                 this.setState({
                 isLoaded: true
                 });
@@ -152,8 +155,8 @@ export class RoomBookings extends Component {
             notify.show('Room booking updated successfully!', 'success');
           }
     }
-     
-    
+
+
     handleDeleteRoomBooking(room_booking_id){
 
         confirmAlert({
@@ -189,28 +192,114 @@ export class RoomBookings extends Component {
                 if (this.state.isLoaded){
                     notify.show('Room removed from the reservation successfully!', 'success');
                   }
-      
-                //create a newData array which is a clone of state.items, remove the just selected entries from this newData 
+
+                //create a newData array which is a clone of state.items, remove the just selected entries from this newData
                   //and re-assign newData to state.items. This causes the component to re-render.
                   var newData = this.state.items;
-      
+
                   for (var x=0; x< newData.length; x++){
                       if (newData[x].room_booking_id == room_booking_id){
                       newData.splice(x,1);
                       }
                   }
-      
+
                   if (newData.length == 0){
                       this.setState({
                           hasRoomBookings: false
                         });
                   }
-      
+
                   this.setState({
                     items: newData
                   });
         }
-    
+
+        handleDeleteAllRoomBookings(){
+
+            this._validateOnDemand = false;
+
+            confirmAlert({
+              title: 'Confirm to cancel',
+              message: 'Are you sure you want to remove all ' + this.state.items.length + ' room bookings for this current reservation?',
+              buttons: [
+                {
+                  label: 'Yes',
+                  onClick: () => this.removeAllRooms(),
+                },
+                {
+                  label: 'No',
+                  onClick: () => false
+                }
+              ]
+            })
+          }
+
+          removeAllRooms(){
+            if(this.props.getReservationStore().reservationId != null)
+            {
+                destroy(API_URL, "roombookings/1?rId=" + this.props.getReservationStore().reservationId)
+
+                .then((response) => {
+                  return checkError(response);
+                })
+                .then((result) => {
+                    notify.show('All rooms removed successfully', 'success');
+                  })
+                .catch((error) => {
+                  this.setState({
+                    isLoaded: false,
+                    error
+                  });
+                  notify.show('Oops! Something went wrong! Please try again!', 'error');
+                  logError(error);
+                });
+                this.fetchRoomBookingsIfExists();
+              }
+          }
+
+          handleDeleteWLRoomBookings(){
+
+            this._validateOnDemand = false;
+
+            confirmAlert({
+              title: 'Confirm to cancel',
+              message: 'Are you sure you want to remove all the Wait List room bookings for this current reservation?',
+              buttons: [
+                {
+                  label: 'Yes',
+                  onClick: () => this.removeWLRooms(),
+                },
+                {
+                  label: 'No',
+                  onClick: () => false
+                }
+              ]
+            })
+          }
+
+          removeWLRooms(){
+            if(this.props.getReservationStore().reservationId != null)
+            {
+                destroy(API_URL, "roombookings/2?rId=" + this.props.getReservationStore().reservationId)
+
+                .then((response) => {
+                  return checkError(response);
+                })
+                .then((result) => {
+                    notify.show('All Wait List rooms removed successfully', 'success');
+                  })
+                .catch((error) => {
+                  this.setState({
+                    isLoaded: false,
+                    error
+                  });
+                  notify.show('Oops! Something went wrong! Please try again!', 'error');
+                  logError(error);
+                });
+                this.fetchRoomBookingsIfExists();
+              }
+          }
+
 
     render() {
 
@@ -224,7 +313,7 @@ export class RoomBookings extends Component {
        notValidClasses.advanceReceivedOnCls = 'form-control has-error';
     }
 
-    /* advanceAmount */    
+    /* advanceAmount */
     if (typeof this.state.advanceAmountVal == 'undefined' || this.state.advanceAmountVal) {
       notValidClasses.advanceAmountCls = 'form-control';
     }
@@ -239,9 +328,19 @@ export class RoomBookings extends Component {
             </div>
         );
     } else {
-        return (  
+        return (
             <div id="divRoomBookings" style={{ visibility: this.state.hasRoomBookings? 'visible':'hidden', display: this.state.hasRoomBookings? 'inline':'none' }}>
-             <div className = "div-table advance-table">
+                 <div className="divFloatRight" style={{width: '0'}}>
+                 {/* <table><tr>
+                   <td> */}
+                     <button type="button" className="btnBig" style={{marginTop: '2em'}} onClick={() => this.handleDeleteWLRoomBookings()}>Remove WL</button>
+                     {/* </td>
+                   <td> */}
+                     <button type="button" className="btnBig" style={{marginTop: '2em'}} onClick={() => this.handleDeleteAllRoomBookings()}>Remove All</button>
+                     {/* </td>
+                  </tr></table> */}
+                 </div>
+             <div className = "div-table advance-table" style={{width: '90%'}}>
                     <div className = "div-table-row">
                               <div className ="room-no div-table-col div-table-col-header">
                               Room No.
@@ -271,26 +370,26 @@ export class RoomBookings extends Component {
                                 {floors[item.floor_no] +", " + blocks[item.block_id] + ", " + item.total_beds + " beds"}
                               </div>
                               <div className ="dates div-table-col col-bordered">
-                                  {getFormattedDate(item.date_of_arrival)}                             
+                                  {getFormattedDate(item.date_of_arrival)}
                               </div>
                               <div className ="dates div-table-col col-bordered">
                               <DatePicker id={item.room_booking_id.toString()} ref={this.state.items.indexOf(item)}
                                     dateFormat="YYYY-MM-DD"
                                     minDate={moment(item.date_of_arrival)}
                                     maxDate={(item.next_arrival_date == null)? null: item.next_arrival_date}
-                                    selected={moment(this.state.dDAtes[this.state.items.indexOf(item)])}  
-                                    onChange={(value) => this.handleDateChange(value, this.state.items.indexOf(item))} 
+                                    selected={moment(this.state.dDAtes[this.state.items.indexOf(item)])}
+                                    onChange={(value) => this.handleDateChange(value, this.state.items.indexOf(item))}
                                     className="form-control"/>
                               </div>
                               <div className ="dates div-table-col col-bordered">
-                               {item.next_arrival_date == null? "Available" : getFormattedDate(item.next_arrival_date)} 
+                               {item.next_arrival_date == null? "Available" : getFormattedDate(item.next_arrival_date)}
                               </div>
                               <div className ="actions div-table-col col-bordered">
                               <img src="./img/edit.png" onClick={() => this.handleUpdateRoomBooking(item.room_booking_id)}/> &nbsp;
                               <img src="./img/delete.png" onClick={() => this.handleDeleteRoomBooking(item.room_booking_id)}/>
                               </div>
                         </div>
-                        ))}  
+                        ))}
                     </div>
             </div>
             );

@@ -69,7 +69,7 @@ export class Guests extends Component {
         firstName: this.state.items[0].first_name,
         lastName: this.state.items[0].last_name,
         email: (this.state.items[0].email_id != null? this.state.items[0].email_id: ''),
-        phone: this.state.items[0].phone_no,
+        phone: (this.state.items[0].phone_no == null)? '' : this.state.items[0].phone_no,
         address: (this.state.items[0].address == null)? '' : this.state.items[0].address,
         city: (this.state.items[0].city == null)? '' : this.state.items[0].city,
         pin: (this.state.items[0].zip_code == null)? '' : this.state.items[0].zip_code,
@@ -91,7 +91,7 @@ export class Guests extends Component {
         firstName: this.state.items[0].first_name,
         lastName: this.state.items[0].last_name,
         email: (this.state.items[0].email_id != null? this.state.items[0].email_id: ''),
-        phone: this.state.items[0].phone_no,
+        phone: (this.state.items[0].phone_no == null)? '' : this.state.items[0].phone_no,
         address: (this.state.items[0].address == null)? '' : this.state.items[0].address,
         city: (this.state.items[0].city == null)? '' : this.state.items[0].city,
         pin: (this.state.items[0].zip_code == null)? '' : this.state.items[0].zip_code,
@@ -255,18 +255,7 @@ export class Guests extends Component {
           ((data.email.toString().trim() != '')? 
            (/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(data.email))
           : true),
-      phoneVal: (data.phone != ''),
-
-      // addressVal: (data.address != ''),
-      // cityVal: (data.city != ''),
-      // pinVal: (data.pin != ''),
-      // regionVal: (data.region != ''),
-      // countryVal: (data.country != 0), 
-      // eFirstNameVal: (data.eFirstName != ''),
-      // eLastNameVal: (data.eLastName != ''),
-      // ePhoneVal: (data.ePhone != ''),
-      // eRelationshipVal: (data.eRelationship != '')
-      
+      phoneVal: (data.email.toString().trim() != '')? true: (data.phone != ''),   // If email is provided, phone number can be skipped  
       addressVal: (data.referenceId != 0)? true: (data.address.toString().trim() != ''),
       cityVal: (data.referenceId != 0)? true: (data.city.toString().trim() != ''),
       pinVal: (data.referenceId != 0)? true: (data.pin.toString().trim() != ''),

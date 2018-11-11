@@ -169,6 +169,8 @@ loadRoomAvailability(startDate){
 
       if (event.isEventHall){
           style.backgroundColor = 'sandybrown';
+      } else if (parseInt(event.title) < 0 ){
+        style.backgroundColor = 'red';
       }
       return {
           style: style

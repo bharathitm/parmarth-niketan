@@ -34,14 +34,16 @@ export class SearchBox extends Component {
   }
 
   componentDidMount(){
-    if(this.props.getSearchStore().reservationId != null){
+    //if(this.props.getSearchStore().reservationId != null){
+      if(this.props.getSearchStore().arrivalDate != null){
       this.setState({
         arrivalDate: moment(this.props.getSearchStore().arrivalDate),
         departureDate: moment(this.props.getSearchStore().departureDate)
       });
       this.refs.arrivalDate.selected = this.props.getSearchStore().arrivalDate;
       this.refs.departureDate.selected = this.props.getSearchStore().departureDate;
-    }    
+
+    }   
   }
 
   handleArrivalDateChange(date) {
@@ -127,7 +129,20 @@ export class SearchBox extends Component {
 
     for (let i = 0; i < this.props.getSearchStore().uniqueBlocks.length; i++) {           
       var blockRooms = this.props.getSearchStore().uniqueRooms.filter(bk => bk.block_id == this.props.getSearchStore().uniqueBlocks[i]);
-      items.push(<li><input type="checkbox" name="chkBlocks" onClick={() => this.props.handleBlocksChanged()} value={this.props.getSearchStore().uniqueBlocks[i]} /> {blocks[this.props.getSearchStore().uniqueBlocks[i]]} ({blockRooms.length})</li>);   
+
+      if (this.props.getSearchStore().uniqueBlocks[i] == 13){
+        items.push(<li>
+          <input type="checkbox" name="chkBlocks" onClick={() => this.props.handleBlocksChanged()} value={this.props.getSearchStore().uniqueBlocks[i]} /> 
+        {blocks[this.props.getSearchStore().uniqueBlocks[i]]}     
+        </li>); 
+      } else if (this.props.getSearchStore().uniqueBlocks[i] != 14){
+        items.push(<li>
+          <input type="checkbox" name="chkBlocks" onClick={() => this.props.handleBlocksChanged()} value={this.props.getSearchStore().uniqueBlocks[i]} /> 
+        {blocks[this.props.getSearchStore().uniqueBlocks[i]]}  
+        ({blockRooms.length})  
+        </li>); 
+
+      }  
     }
     return items;
   }

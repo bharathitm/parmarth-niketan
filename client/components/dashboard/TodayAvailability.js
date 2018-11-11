@@ -55,6 +55,7 @@ export class TodayAvailability extends React.Component {
             <div className="row room-details">
             <form id="Form" className="form-horizontal">  
                 <h4>Room Availability</h4>  
+                <b>Note:</b> Yoga Village rooms are not considered in the count below.
                 <img src="./img/close.png" className="imgClose" onClick={onClose}/>
                <RoomsCalendar></RoomsCalendar>
                 </form>                    
@@ -80,7 +81,7 @@ export class TodayAvailability extends React.Component {
          this.fetchAvailableRooms();
       }
    
-      const { isLoaded, error, items } = this.state;
+      const { isLoaded, items } = this.state;
 
        if (!isLoaded) {
         return <div><h4>Today's Availability</h4><hr />Loading...</div>;
@@ -95,7 +96,8 @@ export class TodayAvailability extends React.Component {
              <ul>
                  {items.map(item => (
                   <li key={item.block_id}>
-                    <span className="spBlockCount">   {item.count} </span><br/>
+                  {}
+                    <span className="spBlockCount" style={{color: item.block_id == 14? 'red': ''}}>{item.count}</span><br/>
                    <span className="spBlockName"> {blocks[item.block_id]} </span>
                   </li>
                 ))}

@@ -141,8 +141,16 @@ export class CheckIns extends React.Component {
           
           for(var i = 0; i < checkboxes.length; i++)  
           {  
+
+     
                   if(checkboxes[i].checked) {
-                    selectedRooms.push(checkboxes[i].value);  
+
+                    if (checkboxes[i].id == '14'){
+                      notify.show('Oops! Some rooms are in Wait List. Please re-allocate and try again!', 'error');
+                      return false;
+                    } else {
+                        selectedRooms.push(checkboxes[i].value);  
+                    }
                   }         
           }
           return selectedRooms;
@@ -182,7 +190,7 @@ export class CheckIns extends React.Component {
 
     render() {
 
-      let { isLoaded, error, items, checkInReservations, checkInRooms } = this.state;
+      let { isLoaded, items, checkInReservations, checkInRooms } = this.state;
 
       //clearing these as selecting check box re-renders the component and the check boxes are doubling up every time
       checkInReservations = [];
@@ -247,7 +255,7 @@ export class CheckIns extends React.Component {
                                   
                                           <li>
                                               <input type="checkbox" name="checkInRooms"
-                                                  key={booking.reservation_id} 
+                                                  id={booking.block_id} 
                                                   value={booking.room_booking_id} />
                                                     {booking.room_no + ", " + floors[booking.floor_no] + ", " + blocks[booking.block_id]}                 
                                           </li>

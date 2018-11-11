@@ -252,8 +252,11 @@ export class ReservationDetails extends Component {
       //reference_id: this.state.referenceId,
       //advance_reminder_on: ((this.state.advanceReminderOn == '') || (this.state.advanceReminderOn == null))? '' : getFormattedDate(this.state.advanceReminderOn).toString(),
       room_ids_str: window.sessionStorage.getItem('strSelectedRooms').toString(),
-      reference_id: this.props.getStore().referenceId
+      reference_id: this.props.getStore().referenceId,
+      has_WL: (window.sessionStorage.getItem('waitingListCnt').toString().trim() != ''? 1: 0)
     };
+
+   
 
     store(API_URL, "reservations/", JSON.stringify(payload))
     .then((response) => {

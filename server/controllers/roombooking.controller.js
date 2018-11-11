@@ -97,3 +97,48 @@ export function cancel(req, res) {
     //connection.end();   
     });
 }
+
+/**
+ *  Removes all room booking for reservation id
+ *
+ * @param {object} req
+ * @param {object} res
+ * @returns {*}
+ */
+
+export function removeAll(req, res) {
+
+    var call_stored_proc = "CALL sp_CancelRoomBookings('"+ req.query.rId + "'," + null + ")";
+
+    connection.query(call_stored_proc, true, (error, results, fields) => {
+    if (error) {
+        errorController.LogError(error);
+        return res.send(error.code);
+    }
+ 
+    //connection.end();   
+    });
+}
+
+
+/**
+ *  Removes all Wait List room booking for reservation id
+ *
+ * @param {object} req
+ * @param {object} res
+ * @returns {*}
+ */
+
+export function removeWL(req, res) {
+
+    var call_stored_proc = "CALL sp_CancelWLRoomBookings('"+ req.query.rId + "')";
+
+    connection.query(call_stored_proc, true, (error, results, fields) => {
+    if (error) {
+        errorController.LogError(error);
+        return res.send(error.code);
+    }
+ 
+    //connection.end();   
+    });
+}

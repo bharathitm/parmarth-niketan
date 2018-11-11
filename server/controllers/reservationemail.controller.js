@@ -45,4 +45,5 @@ export function SendEmail(emailId, emailText){
       } catch (error){
             errorController.LogError(error);
       }
+      
 }

@@ -41,7 +41,7 @@ export function findById(req, res) {
  */
 export function search(req, res) {
 
-    var call_stored_proc = "CALL sp_SearchGuests('" + req.query.search + "')";    
+    var call_stored_proc = "CALL sp_SearchGuests('" + req.query.search + "')";   
 
     connection.query(call_stored_proc, true, (error, results, fields) => {
     if (error) {
@@ -89,7 +89,11 @@ export function add(req, res) {
 
     call_stored_proc += ",";
 
-    call_stored_proc +=  "'" + req.body.phone_no + "'";
+    if (req.body.phone_no != ''){
+        call_stored_proc += "'" + req.body.phone_no + "'";
+    } else {
+        call_stored_proc += null;
+    }
     
     call_stored_proc += ",";
 
@@ -193,7 +197,13 @@ export function update(req, res) {
         call_stored_proc += null;
     }
 
-    call_stored_proc += ",'" + req.body.phone_no + "',"
+    if (req.body.phone_no != ''){
+        call_stored_proc += "'" + req.body.phone_no + "'";
+    } else {
+        call_stored_proc += null;
+    }
+    
+    call_stored_proc += ",";
 
     if (req.body.address != ''){
         call_stored_proc += "'" + req.body.address + "'";

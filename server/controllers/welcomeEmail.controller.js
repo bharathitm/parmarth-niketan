@@ -38,9 +38,7 @@ export function SendWelcomeEmail(name, emailId, email_token) {
             transporter.sendMail(mailOptions, function(error, info){
             if (error) {
                     errorController.LogError(error);
-            } else {
-                console.log('Email sent: ' + info.response);
-            }
+            } 
             });
     } catch (error){
             errorController.LogError(error);
