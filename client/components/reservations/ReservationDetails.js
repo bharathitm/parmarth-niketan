@@ -254,9 +254,7 @@ export class ReservationDetails extends Component {
       room_ids_str: window.sessionStorage.getItem('strSelectedRooms').toString(),
       reference_id: this.props.getStore().referenceId,
       has_WL: (window.sessionStorage.getItem('waitingListCnt').toString().trim() != ''? 1: 0)
-    };
-
-   
+    }; 
 
     store(API_URL, "reservations/", JSON.stringify(payload))
     .then((response) => {
@@ -270,7 +268,7 @@ export class ReservationDetails extends Component {
         isLoaded: false,
         error
       });
-      notify.show('Oops! Something went wrong! Please try again!', 'error');
+      notify.show('Oops! Something went wrong! Please try again reservations insert!', 'error');
       logError(error);
     });
   }
@@ -314,7 +312,7 @@ export class ReservationDetails extends Component {
         isLoaded: false,
         error
       });
-      notify.show('Oops! Something went wrong! Please try again!', 'error');
+      notify.show('Oops! Something went wrong! Please try again reservations update!', 'error');
       logError(error);
     });
 

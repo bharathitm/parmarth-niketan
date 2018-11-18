@@ -164,6 +164,8 @@ export class Guests extends Component {
     const validateNewInput = this._validateData(userInput); 
     let isDataValid = false;
 
+    let isNewGuest = false;
+
     if (Object.keys(validateNewInput).every((k) => { return validateNewInput[k] === true })) {
         if (
           this.props.getStore().referenceId != userInput.referenceId ||
@@ -182,6 +184,7 @@ export class Guests extends Component {
                 this.updateGuestData();
               }
               else {
+                  isNewGuest = true;
                   this.insertGuestData();
               }
               
@@ -189,6 +192,7 @@ export class Guests extends Component {
               this.props.loadName(name);
         }
 
+        if (isNewGuest == false){
         if (
           this.props.getStore().eFirstName != userInput.eFirstName ||
           this.props.getStore().eLastName != userInput.eLastName ||
@@ -202,6 +206,7 @@ export class Guests extends Component {
                 this.insertEmergencyContactData();
               }
         }
+      }
 
         this.props.updateStore({
           ...userInput,
@@ -286,7 +291,6 @@ export class Guests extends Component {
       e_phone_no: this.state.ePhone.toString().trim(),
       e_relationship: this.state.eRelationship.toString().trim()
     };
-
 
     store(API_URL, "guests/", JSON.stringify(payload))
     .then((response) => {
