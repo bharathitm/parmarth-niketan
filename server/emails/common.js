@@ -5,6 +5,13 @@ In order to have a quick check-in and also a hassle-free stay at the Ashram, ple
 As a general rule, you can check-in anytime between <b>8 am – 9 pm </b>and check-out before <b>10 am</b>. \
 If you would require an early check-in and/or a late check-out, please let us know in advance so that we can make the necessary arrangements. \
 </li> \
+<li>\
+If you are reaching the Ashram after/early hours, kindly remember to send us a reminder with your exact arrival details, \
+the day before of your arrival by <b>5 pm</b> via email and telephone. \
+We will leave room keys with the security guard at the Ashram gate. You may collect from him by giving him your original ID. \
+In the morning, please go to the reception office to fill out the paperwork and pick up your ID. \
+Also, as this might be a temporary room just for the night, please don't unpack too much. You will get the exact room info in the morning at the reception office.\
+</li>\
 <li> \
 If you need to contact the Ashram while en route, please call us at 0135-2434301, 0135-2434302, 7830060088 or 09411106609. After arrival, \
 please go to the reception office to check-in. \

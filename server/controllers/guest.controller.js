@@ -197,6 +197,8 @@ export function update(req, res) {
         call_stored_proc += null;
     }
 
+    call_stored_proc += ",";
+
     if (req.body.phone_no != ''){
         call_stored_proc += "'" + req.body.phone_no + "'";
     } else {

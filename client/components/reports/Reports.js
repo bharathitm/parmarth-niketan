@@ -310,7 +310,7 @@ export class Reports extends React.Component {
                                 <td style={{margin: 0, padding: '1em', fontWeight: 'bold', borderTop: 'solid 1px black', borderBottom: 'solid 1px black'}}>Departure Date</td>                                                           
                                 <td style={{margin: 0, padding: '1em', fontWeight: 'bold', borderTop: 'solid 1px black', borderBottom: 'solid 1px black'}}>Pax</td>
                                 <td style={{margin: 0, padding: '1em', fontWeight: 'bold', borderTop: 'solid 1px black', borderBottom: 'solid 1px black'}}>Reservation Status</td>
-
+                                <td style={{margin: 0, padding: '1em', fontWeight: 'bold', borderTop: 'solid 1px black', borderBottom: 'solid 1px black'}}>Comments</td>
                             </tr>
                                 {this.state.ReservationItems.map(item => (
                                 <tr>
@@ -329,6 +329,9 @@ export class Reports extends React.Component {
 
                                     <td style={{margin: 0, padding: '1em', borderBottom: '1px dotted black'}}>
                                         {reservationStatuses[item.reservation_status_id]}
+                                    </td>
+                                    <td style={{margin: 0, padding: '1em', borderBottom: '1px dotted black'}}>
+                                        {item.reservation_comments}
                                     </td>
                                 </tr>
                                 ))}

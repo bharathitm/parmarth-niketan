@@ -57,7 +57,7 @@ export class ReservationDetails extends Component {
   populateReservationTypes() {
     let items = [];   
 
-    for (let i = 1; i <= 6; i++) {             
+    for (let i = 1; i <= 7; i++) {             
          items.push(<option key={i} value={i}>{reservationTypes[i]}</option>);   
     }
     return items;

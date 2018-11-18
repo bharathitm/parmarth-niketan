@@ -114,35 +114,33 @@ export function update(req, res) {
     }
     else {
         var reservation_comments = req.body.reservation_comments.replace(/'/g, "''");  
-        call_stored_proc +=  "'" + reservation_comments + "',";
+        call_stored_proc +=  "'" + reservation_comments + "'";
     }
 
-    // Since advance_reminder_on is an optional field, we pass this as null
-    if (req.body.advance_reminder_on == ''){
-        call_stored_proc += null;
-    }
-    else {
-        call_stored_proc +=  "'" + req.body.advance_reminder_on + "'";
-    }
+    // // Since advance_reminder_on is an optional field, we pass this as null
+    // if (req.body.advance_reminder_on == ''){
+    //     call_stored_proc += null;
+    // }
+    // else {
+    //     call_stored_proc +=  "'" + req.body.advance_reminder_on + "'";
+    // }
  
     call_stored_proc +=  ",'" + req.body.reservation_type_id + "',";
 
-    //call_stored_proc +=  "'" + req.body.sanskara_id + "'"
-
     // Since sankara is an optional field, we pass this as null
     if (req.body.sanskara_id == 0){
-        call_stored_proc += null + ",";
-    }
-    else {
-        call_stored_proc +=  "'" + req.body.sanskara_id + "',";
-    }
-
-    if (req.body.reference_id == 0 || req.body.reference_id == ''){
         call_stored_proc += null;
     }
     else {
-        call_stored_proc +=  "'" + req.body.reference_id + "'";
+        call_stored_proc +=  "'" + req.body.sanskara_id + "'";
     }
+
+    // if (req.body.reference_id == 0 || req.body.reference_id == ''){
+    //     call_stored_proc += null;
+    // }
+    // else {
+    //     call_stored_proc +=  "'" + req.body.reference_id + "'";
+    // }
 
     call_stored_proc += ")";
 
@@ -189,7 +187,7 @@ export function findByDates(req, res) {
 
     var call_stored_proc = "CALL sp_GetReportReservationDetails('" 
     + req.query.adate + "','"
-    + req.query.ddate + "')";    
+    + req.query.ddate + "')";  
 
     connection.query(call_stored_proc, true, (error, results, fields) => {
     if (error) {

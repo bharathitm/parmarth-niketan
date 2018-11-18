@@ -28,7 +28,8 @@ export const blocks = {
     3: 'Sanskara',
     4: 'Agent',
     5: 'Course',
-    6: 'Katha'
+    6: 'Katha',
+    7: 'Sevak'
   };
 
   export const sanskaras = {
@@ -49,7 +50,9 @@ export const blocks = {
     7: '7 Beds',
     8: '8 Beds',
     9: '9 Beds',
-    10: '10 Beds'
+    10: '10 Beds',
+    11: '11 Beds',
+    12: '12 Beds'
   };
 
 

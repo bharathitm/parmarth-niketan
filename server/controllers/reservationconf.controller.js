@@ -120,7 +120,7 @@ export function SendConfirmationEmail(name, emailId, dates, noOfRooms, totalAmt,
         }
         else { // every thing else
                 htmlText = ConstructCommonIntro1(htmlText, dates, noOfRooms);
-                if ((referenceId == 0) && (has_WL == 0)){ // if reference don't show donation details
+                if ((referenceId == 0) && (has_WL == 0) && reservationTypeId != "7"){ // if reference don't show donation details
                         GetDonationSplitUp(reservationId, function (){                               
                                 htmlText += 'Based on the room(s) reserved for you, the suggested donation amount is <b>&#8377; ' + totalAmt.toLocaleString('en-IN') + '</b>. The split up is as follows: <br/> ';
                                 htmlText += ConstructSplitUpStr();
