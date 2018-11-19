@@ -117,7 +117,7 @@ export class RoomDetails extends Component {
     populateRoomTypes() {
         let items = [];   
     
-        for (let i = 1; i <= 10; i++) {             
+        for (let i = 1; i <= 11; i++) {             
              items.push(<option key={i} value={i}>{roomTypes[i]}</option>);   
         }
         return items;
