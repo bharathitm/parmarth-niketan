@@ -6,7 +6,7 @@ var errorController = require('./error.controller.js');
 
 //var crypto = require('crypto');
 
-var connection = mysql.createConnection(config);
+var pool = mysql.createPool(config);
 
 /**
  *  Find guest details by id
@@ -20,16 +20,83 @@ export function findById(req, res) {
 
     var call_stored_proc = "CALL sp_GetGuestDetails('" + req.params.id + "')";
 
-    connection.query(call_stored_proc, true, (error, results, fields) => {
-    if (error) {
-        errorController.LogError(error);
-        return res.send(error.code);       
-    }
-    res.send(results[0]);
-   
-    });
-      
-   // connection.end();    
+    pool.getConnection(function(error, connection) {
+        if (error) {
+            errorController.LogError(error);
+            return res.send(error.code);
+        } 
+
+        connection.query(call_stored_proc, true, (error, results, fields) => {
+            res.send(results[0]); 
+            connection.release();
+
+            if (error) {
+                errorController.LogError(error);
+                return res.send(error.code);
+            }
+
+        });
+    });       
+}
+
+/**
+ * Search email ids
+ *
+ * @param {object} req
+ * @param {object} res
+ * @returns {*}
+ */
+export function searchEmailIds(req, res) {
+
+    var call_stored_proc = "CALL sp_GetGuestEmailIds('" + req.query.email + "')";   
+
+    pool.getConnection(function(error, connection) {
+        if (error) {
+            errorController.LogError(error);
+            return res.send(error.code);
+        } 
+
+        connection.query(call_stored_proc, true, (error, results, fields) => {
+            res.send(results[0]); 
+            connection.release();
+
+            if (error) {
+                errorController.LogError(error);
+                return res.send(error.code);
+            }
+
+        });
+    });    
+}
+
+/**
+ * Search email ids
+ *
+ * @param {object} req
+ * @param {object} res
+ * @returns {*}
+ */
+export function searchPhoneNos(req, res) {
+
+    var call_stored_proc = "CALL sp_GetGuestPhoneNos('" + req.query.phone + "')";   
+
+    pool.getConnection(function(error, connection) {
+        if (error) {
+            errorController.LogError(error);
+            return res.send(error.code);
+        } 
+
+        connection.query(call_stored_proc, true, (error, results, fields) => {
+            res.send(results[0]); 
+            connection.release();
+
+            if (error) {
+                errorController.LogError(error);
+                return res.send(error.code);
+            }
+
+        });
+    });    
 }
 
 /**
@@ -43,15 +110,23 @@ export function search(req, res) {
 
     var call_stored_proc = "CALL sp_SearchGuests('" + req.query.search + "')";   
 
-    connection.query(call_stored_proc, true, (error, results, fields) => {
-    if (error) {
-        errorController.LogError(error);
-        return res.send(error.code);
-    }
-    res.send(results[0]);
-    });
-      
-    //connection.end();   
+    pool.getConnection(function(error, connection) {
+        if (error) {
+            errorController.LogError(error);
+            return res.send(error.code);
+        } 
+
+        connection.query(call_stored_proc, true, (error, results, fields) => {
+            res.send(results[0]); 
+            connection.release();
+
+            if (error) {
+                errorController.LogError(error);
+                return res.send(error.code);
+            }
+
+        });
+    });     
 }
 
 /**
@@ -161,16 +236,23 @@ export function add(req, res) {
 
     call_stored_proc += ")";
  
-    connection.query(call_stored_proc, true, (error, results, fields) => {
-    if (error) {
-        errorController.LogError(error);
-        return res.send(error.code);
-    }
-    res.send(results[0]);
-    });
-      
-   // connection.end();   
+    pool.getConnection(function(error, connection) {
+        if (error) {
+            errorController.LogError(error);
+            return res.send(error.code);
+        } 
 
+        connection.query(call_stored_proc, true, (error, results, fields) => {
+            res.send(results[0]); 
+            connection.release();
+
+            if (error) {
+                errorController.LogError(error);
+                return res.send(error.code);
+            }
+
+        });
+    });      
 }
 
 /**
@@ -249,13 +331,21 @@ export function update(req, res) {
 
     call_stored_proc += ")";
 
-    connection.query(call_stored_proc, true, (error, results, fields) => {
-    if (error) {
-        errorController.LogError(error);
-        return res.send(error.code);
-    }
-    res.send(results[0]);
-    });
-      
-    //connection.end();   
+    pool.getConnection(function(error, connection) {
+        if (error) {
+            errorController.LogError(error);
+            return res.send(error.code);
+        } 
+
+        connection.query(call_stored_proc, true, (error, results, fields) => {
+            res.send(results[0]); 
+            connection.release();
+
+            if (error) {
+                errorController.LogError(error);
+                return res.send(error.code);
+            }
+
+        });
+    });      
 }

@@ -6,7 +6,7 @@ import ErrorBoundary from '../ErrorBoundary'
 
 import DatePeriodPicker from '../subcomponents/DatePeriodPicker';
 import moment from 'moment';
-import {blocks, reservationStatuses} from '../../constants/roomAttributes';
+import {reservationStatuses} from '../../constants/roomAttributes';
 
 import {logError, checkError, getFormattedDate} from '../../utils/helpers';
 import {API_URL} from '../../config/config';
@@ -305,17 +305,21 @@ export class Reports extends React.Component {
                         <table style={{borderSpacing: 0,borderCollapse: 'collapse', position: 'absolute', width: '100%', fontSize: 12}}>
                         <tbody>
                             <tr>
-                                <td style={{margin: 0, padding: '1em', fontWeight: 'bold', borderTop: 'solid 1px black', borderBottom: 'solid 1px black'}}>Guest Name</td>
-                                <td style={{margin: 0, padding: '1em', fontWeight: 'bold', borderTop: 'solid 1px black', borderBottom: 'solid 1px black'}}>Arrival Date</td>
-                                <td style={{margin: 0, padding: '1em', fontWeight: 'bold', borderTop: 'solid 1px black', borderBottom: 'solid 1px black'}}>Departure Date</td>                                                           
-                                <td style={{margin: 0, padding: '1em', fontWeight: 'bold', borderTop: 'solid 1px black', borderBottom: 'solid 1px black'}}>Pax</td>
-                                <td style={{margin: 0, padding: '1em', fontWeight: 'bold', borderTop: 'solid 1px black', borderBottom: 'solid 1px black'}}>Reservation Status</td>
-                                <td style={{margin: 0, padding: '1em', fontWeight: 'bold', borderTop: 'solid 1px black', borderBottom: 'solid 1px black'}}>Comments</td>
+                                <td style={{margin: 0, padding: '1em', fontWeight: 'bold', borderTop: 'solid 1px black', borderBottom: 'solid 1px black', width: '15%'}}>Guest Name</td>
+                                <td style={{margin: 0, padding: '1em', fontWeight: 'bold', borderTop: 'solid 1px black', borderBottom: 'solid 1px black', width: '15%'}}>Contact Details</td>
+                                <td style={{margin: 0, padding: '1em', fontWeight: 'bold', borderTop: 'solid 1px black', borderBottom: 'solid 1px black', width: '10%'}}>Arrival Date</td>
+                                <td style={{margin: 0, padding: '1em', fontWeight: 'bold', borderTop: 'solid 1px black', borderBottom: 'solid 1px black', width: '10%'}}>Departure Date</td>                                                           
+                                <td style={{margin: 0, padding: '1em', fontWeight: 'bold', borderTop: 'solid 1px black', borderBottom: 'solid 1px black', width: '2%'}}>Pax</td>
+                                <td style={{margin: 0, padding: '1em', fontWeight: 'bold', borderTop: 'solid 1px black', borderBottom: 'solid 1px black'}}>Room Nos</td>
+                                <td style={{margin: 0, padding: '1em', fontWeight: 'bold', borderTop: 'solid 1px black', borderBottom: 'solid 1px black', width: '5%'}}>Reservation Status</td>
                             </tr>
                                 {this.state.ReservationItems.map(item => (
-                                <tr>
+                                <tr>   
                                     <td style={{margin: 0, padding: '1em', borderBottom: '1px dotted black'}}>
-                                        {item.guest_name}
+                                        {item.guest_name} <br/> {item.reservation_comments}
+                                    </td>
+                                    <td style={{margin: 0, padding: '1em', borderBottom: '1px dotted black'}}>
+                                        {item.phone_no} <br/> {item.email_id}
                                     </td>
                                     <td style={{margin: 0, padding: '1em', borderBottom: '1px dotted black'}}>
                                         {item.date_of_arrival}
@@ -326,12 +330,11 @@ export class Reports extends React.Component {
                                     <td style={{margin: 0, padding: '1em', borderBottom: '1px dotted black'}}>
                                         {item.no_of_people}
                                     </td>
-
                                     <td style={{margin: 0, padding: '1em', borderBottom: '1px dotted black'}}>
-                                        {reservationStatuses[item.reservation_status_id]}
+                                        {item.room_nos}
                                     </td>
                                     <td style={{margin: 0, padding: '1em', borderBottom: '1px dotted black'}}>
-                                        {item.reservation_comments}
+                                        {reservationStatuses[item.reservation_status_id]}
                                     </td>
                                 </tr>
                                 ))}
@@ -351,12 +354,12 @@ export class Reports extends React.Component {
                         <table style={{borderSpacing: 0,borderCollapse: 'collapse', position: 'absolute', width: '100%', fontSize: 12}}>
                         <tbody>
                             <tr>
-                                <td style={{margin: 0, padding: '1em', fontWeight: 'bold', borderTop: 'solid 1px black', borderBottom: 'solid 1px black'}}>Guest Name</td>
-                                <td style={{margin: 0, padding: '1em', fontWeight: 'bold', borderTop: 'solid 1px black', borderBottom: 'solid 1px black'}}>Email Id</td>
-                                <td style={{margin: 0, padding: '1em', fontWeight: 'bold', borderTop: 'solid 1px black', borderBottom: 'solid 1px black'}}>Phone No</td>
-                                <td style={{margin: 0, padding: '1em', fontWeight: 'bold', borderTop: 'solid 1px black', borderBottom: 'solid 1px black'}}>Arrival Date</td>    
-                                <td style={{margin: 0, padding: '1em', fontWeight: 'bold', borderTop: 'solid 1px black', borderBottom: 'solid 1px black'}}>Departure Date</td>                                                   
-                                <td style={{margin: 0, padding: '1em', fontWeight: 'bold', borderTop: 'solid 1px black', borderBottom: 'solid 1px black'}}>Pax</td>
+                                <td style={{margin: 0, padding: '1em', fontWeight: 'bold', borderTop: 'solid 1px black', borderBottom: 'solid 1px black', width: '15%'}}>Guest Name</td>
+                                <td style={{margin: 0, padding: '1em', fontWeight: 'bold', borderTop: 'solid 1px black', borderBottom: 'solid 1px black', width: '15%'}}>Contact Details</td>
+                                <td style={{margin: 0, padding: '1em', fontWeight: 'bold', borderTop: 'solid 1px black', borderBottom: 'solid 1px black', width: '10%'}}>Arrival Date</td>
+                                <td style={{margin: 0, padding: '1em', fontWeight: 'bold', borderTop: 'solid 1px black', borderBottom: 'solid 1px black', width: '10%'}}>Departure Date</td>                                                  
+                                <td style={{margin: 0, padding: '1em', fontWeight: 'bold', borderTop: 'solid 1px black', borderBottom: 'solid 1px black', width: '2%'}}>Pax</td>
+                                <td style={{margin: 0, padding: '1em', fontWeight: 'bold', borderTop: 'solid 1px black', borderBottom: 'solid 1px black'}}>Room Nos</td>
                             </tr>
                             {this.state.CheckInItems.map(item => (
                             <tr>
@@ -364,10 +367,7 @@ export class Reports extends React.Component {
                                     {item.guest_name}
                                 </td>
                                 <td style={{margin: 0, padding: '1em', borderBottom: '1px dotted black'}}>
-                                    {item.email_id}
-                                </td>
-                                <td style={{margin: 0, padding: '1em', borderBottom: '1px dotted black'}}>
-                                    {item.phone_no} 
+                                    {item.phone_no} <br/> {item.email_id}
                                 </td>
                                 <td style={{margin: 0, padding: '1em', borderBottom: '1px dotted black'}}>
                                     {item.arr_date}
@@ -377,6 +377,9 @@ export class Reports extends React.Component {
                                 </td>
                                 <td style={{margin: 0, padding: '1em', borderBottom: '1px dotted black'}}>
                                     {item.no_of_people}
+                                </td>
+                                <td style={{margin: 0, padding: '1em', borderBottom: '1px dotted black'}}>
+                                    {item.room_nos} 
                                 </td>
                             </tr>
                             ))}
@@ -396,16 +399,44 @@ export class Reports extends React.Component {
                          <table style={{borderSpacing: 0,borderCollapse: 'collapse', position: 'absolute', width: '100%', fontSize: 12}}>
                         <tbody>
                             <tr>
-                                <td style={{margin: 0, padding: '1em', fontWeight: 'bold', borderTop: 'solid 1px black', borderBottom: 'solid 1px black'}}>Guest Name</td>
-                                <td style={{margin: 0, padding: '1em', fontWeight: 'bold', borderTop: 'solid 1px black', borderBottom: 'solid 1px black'}}>Email Id</td>
-                                <td style={{margin: 0, padding: '1em', fontWeight: 'bold', borderTop: 'solid 1px black', borderBottom: 'solid 1px black'}}>Phone No</td>
-                                <td style={{margin: 0, padding: '1em', fontWeight: 'bold', borderTop: 'solid 1px black', borderBottom: 'solid 1px black'}}>Arrival Date</td>
-                                <td style={{margin: 0, padding: '1em', fontWeight: 'bold', borderTop: 'solid 1px black', borderBottom: 'solid 1px black'}}>Departure Date</td>                                                           
-                                <td style={{margin: 0, padding: '1em', fontWeight: 'bold', borderTop: 'solid 1px black', borderBottom: 'solid 1px black'}}>Pax</td>
-                                <td style={{margin: 0, padding: '1em', fontWeight: 'bold', borderTop: 'solid 1px black', borderBottom: 'solid 1px black'}}>Receipt No</td>
-                                <td style={{margin: 0, padding: '1em', fontWeight: 'bold', borderTop: 'solid 1px black', borderBottom: 'solid 1px black'}}>Donation Amount</td>
+                                <td style={{margin: 0, padding: '1em', fontWeight: 'bold', borderTop: 'solid 1px black', borderBottom: 'solid 1px black', width: '15%'}}>Guest Name</td>
+                                <td style={{margin: 0, padding: '1em', fontWeight: 'bold', borderTop: 'solid 1px black', borderBottom: 'solid 1px black', width: '15%'}}>Contact Details</td>
+                                <td style={{margin: 0, padding: '1em', fontWeight: 'bold', borderTop: 'solid 1px black', borderBottom: 'solid 1px black', width: '10%'}}>Arrival Date</td>
+                                <td style={{margin: 0, padding: '1em', fontWeight: 'bold', borderTop: 'solid 1px black', borderBottom: 'solid 1px black', width: '10%'}}>Departure Date</td>                                                           
+                                <td style={{margin: 0, padding: '1em', fontWeight: 'bold', borderTop: 'solid 1px black', borderBottom: 'solid 1px black', width: '2%'}}>Pax</td>
+                                <td style={{margin: 0, padding: '1em', fontWeight: 'bold', borderTop: 'solid 1px black', borderBottom: 'solid 1px black'}}>Room Nos</td>
+                                <td style={{margin: 0, padding: '1em', fontWeight: 'bold', borderTop: 'solid 1px black', borderBottom: 'solid 1px black', width: '7%'}}>Receipt No</td>
+                                <td style={{margin: 0, padding: '1em', fontWeight: 'bold', borderTop: 'solid 1px black', borderBottom: 'solid 1px black', width: '7%'}}>Donation Amount</td>
                             </tr>
-                            {this.getCheckOutRows()}
+                            {/* {this.getCheckOutRows()} */}
+                            {this.state.CheckOutItems.map(item => (
+                            <tr>
+                                 <td style={{margin: 0, padding: '1em', borderBottom: '1px dotted black'}}>
+                                    {item.guest_name}
+                                </td>
+                                <td style={{margin: 0, padding: '1em', borderBottom: '1px dotted black'}}>
+                                    {item.phone_no} <br/> {item.email_id}
+                                </td>
+                                <td style={{margin: 0, padding: '1em', borderBottom: '1px dotted black'}}>
+                                    {item.arr_date}
+                                </td>
+                                <td style={{margin: 0, padding: '1em', borderBottom: '1px dotted black'}}>
+                                    {item.dep_date}
+                                </td>
+                                <td style={{margin: 0, padding: '1em', borderBottom: '1px dotted black'}}>
+                                    {item.no_of_people}
+                                </td>
+                                <td style={{margin: 0, padding: '1em', borderBottom: '1px dotted black'}}>
+                                    {item.room_nos}
+                                </td>
+                                <td style={{margin: 0, padding: '1em', borderBottom: '1px dotted black'}}>
+                                    {item.rec_no}
+                                </td>
+                                <td style={{margin: 0, padding: '1em', borderBottom: '1px dotted black'}}>
+                                   {item.amt}
+                                </td>
+                            </tr>
+                            ))}
                         </tbody>
                         </table>
                 </div>

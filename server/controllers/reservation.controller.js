@@ -1,6 +1,6 @@
 var mysql = require('mysql');
 var config = require('../mysqlconfig.js');
-var connection = mysql.createConnection(config);
+var pool = mysql.createPool(config);
 
 var errorController = require('./error.controller');
 
@@ -20,14 +20,23 @@ export function findById(req, res) {
 
     var call_stored_proc = "CALL sp_GetReservationDetails('" + req.params.id + "')";
 
-    connection.query(call_stored_proc, true, (error, results, fields) => {
-    if (error) {
-        errorController.LogError(error);
-        return res.send(error.code);
-    }
-    res.send(results[0]);
-    //connection.end();   
-    });
+    pool.getConnection(function(error, connection) {
+        if (error) {
+            errorController.LogError(error);
+            return res.send(error.code);
+        } 
+
+        connection.query(call_stored_proc, true, (error, results, fields) => {
+            res.send(results[0]); 
+            connection.release();
+
+            if (error) {
+                errorController.LogError(error);
+                return res.send(error.code);
+            }
+
+        });
+    });    
 }
 
 /**
@@ -72,23 +81,28 @@ export function add(req, res) {
     
     call_stored_proc += ")";
 
-    connection.query(call_stored_proc, true, (error, results, fields) => {
-    if (error) {
-        errorController.LogError(error);
-        return res.send(error.code);
-    }
+    pool.getConnection(function(error, connection) {
+        if (error) {
+            errorController.LogError(error);
+            return res.send(error.code);
+        } 
 
-    if ((req.body.email_id != null) && (req.body.email_id != '')){
-       SendConfirmationEmail(req.body.name, req.body.email_id, (moment(req.body.date_of_arrival, "YYYY-MM-D HH:mm").format("MMM Do, YYYY") 
-       + " - " + moment(req.body.date_of_departure, "YYYY-MM-D").format("MMM Do, YYYY")), results[0][0].noOfRooms, results[0][0].totalAmt, results[0][0].reservationId,
-        req.body.reservation_type_id, req.body.sanskara_id, req.body.reference_id, req.body.has_WL);
-    }
+        connection.query(call_stored_proc, true, (error, results, fields) => {
+            if ((req.body.email_id != null) && (req.body.email_id != '')){
+                SendConfirmationEmail(req.body.name, req.body.email_id, (moment(req.body.date_of_arrival, "YYYY-MM-D HH:mm").format("MMM Do, YYYY") 
+                + " - " + moment(req.body.date_of_departure, "YYYY-MM-D").format("MMM Do, YYYY")), results[0][0].noOfRooms, results[0][0].totalAmt, results[0][0].reservationId,
+                 req.body.reservation_type_id, req.body.sanskara_id, req.body.reference_id, req.body.has_WL);
+             }
+            res.send(results[0]); 
+            connection.release();
 
-    res.send(results[0]);
-    });
-      
-    //connection.end();   
+            if (error) {
+                errorController.LogError(error);
+                return res.send(error.code);
+            }
 
+        });
+    });    
 }
 
 /**
@@ -135,23 +149,25 @@ export function update(req, res) {
         call_stored_proc +=  "'" + req.body.sanskara_id + "'";
     }
 
-    // if (req.body.reference_id == 0 || req.body.reference_id == ''){
-    //     call_stored_proc += null;
-    // }
-    // else {
-    //     call_stored_proc +=  "'" + req.body.reference_id + "'";
-    // }
-
     call_stored_proc += ")";
 
-    connection.query(call_stored_proc, true, (error, results, fields) => {
-    if (error) {
-        errorController.LogError(error);
-        return res.send(error.code);
-    }
-    });
-      
-    //connection.end();   
+
+    pool.getConnection(function(error, connection) {
+        if (error) {
+            errorController.LogError(error);
+            return res.send(error.code);
+        } 
+
+        connection.query(call_stored_proc, true, (error, results, fields) => {
+            connection.release();
+
+            if (error) {
+                errorController.LogError(error);
+                return res.send(error.code);
+            }
+
+        });
+    });     
 }
 
 /**
@@ -166,14 +182,22 @@ export function cancel(req, res) {
 
     var call_stored_proc = "CALL sp_CancelReservation('" + req.params.id + "')";
 
-    connection.query(call_stored_proc, true, (error, results, fields) => {
-    if (error) {
-        errorController.LogError(error);
-        return res.send(error.code);
-    }
- 
-    //connection.end();   
-    });
+    pool.getConnection(function(error, connection) {
+        if (error) {
+            errorController.LogError(error);
+            return res.send(error.code);
+        } 
+
+        connection.query(call_stored_proc, true, (error, results, fields) => {
+            connection.release();
+
+            if (error) {
+                errorController.LogError(error);
+                return res.send(error.code);
+            }
+
+        });
+    });    
 }
 
 /**
@@ -189,13 +213,21 @@ export function findByDates(req, res) {
     + req.query.adate + "','"
     + req.query.ddate + "')";  
 
-    connection.query(call_stored_proc, true, (error, results, fields) => {
-    if (error) {
-        errorController.LogError(error);
-        return res.send(error.code);
-    }
-    res.send(results[0]);
-    });
-      
-    //connection.end();   
+    pool.getConnection(function(error, connection) {
+        if (error) {
+            errorController.LogError(error);
+            return res.send(error.code);
+        } 
+
+        connection.query(call_stored_proc, true, (error, results, fields) => {
+            res.send(results[0]); 
+            connection.release();
+
+            if (error) {
+                errorController.LogError(error);
+                return res.send(error.code);
+            }
+
+        });
+    });     
 }

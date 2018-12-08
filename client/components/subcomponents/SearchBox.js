@@ -118,7 +118,7 @@ export class SearchBox extends Component {
 
     items.push(<option value="null">Room Type</option>); 
 
-    for (let i = 1; i <= 10; i++) {             
+    for (let i = 1; i <= 12; i++) {             
          items.push(<option key={i} value={i}>{roomTypes[i]}</option>);   
     }
     return items;

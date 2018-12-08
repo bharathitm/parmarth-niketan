@@ -2,7 +2,7 @@ var mysql = require('mysql');
 var config = require('../mysqlconfig.js');
 var errorController = require('./error.controller');
 
-var connection = mysql.createConnection(config);
+var pool = mysql.createPool(config);
 
 
 /**
@@ -16,14 +16,23 @@ export function getToday(req, res) {
 
     var call_stored_proc = "CALL sp_GetTodaysRoomAvailabilityCount()";
 
-    connection.query(call_stored_proc, true, (error, results, fields) => {
-    if (error) {
-        errorController.LogError(error);
-        return res.send(error.code);
-    }
-    res.send(results[0]);
-    //connection.end();   
-    });
+    pool.getConnection(function(error, connection) {
+        if (error) {
+            errorController.LogError(error);
+            return res.send(error.code);
+        } 
+
+        connection.query(call_stored_proc, true, (error, results, fields) => {
+            res.send(results[0]); 
+            connection.release();
+
+            if (error) {
+                errorController.LogError(error);
+                return res.send(error.code);
+            }
+
+        });
+    });    
 }
 
 
@@ -39,14 +48,23 @@ export function getCount(req, res) {
     var call_stored_proc = "CALL sp_GetRoomAvailability('"    
     + req.query.sdate + "')"; 
 
-    connection.query(call_stored_proc, true, (error, results, fields) => {
-    if (error) {
-        errorController.LogError(error);
-        return res.send(error.code);
-    }
-    res.send(results[0]);
-   // connection.end();   
-    });
+    pool.getConnection(function(error, connection) {
+        if (error) {
+            errorController.LogError(error);
+            return res.send(error.code);
+        } 
+
+        connection.query(call_stored_proc, true, (error, results, fields) => {
+            res.send(results[0]); 
+            connection.release();
+
+            if (error) {
+                errorController.LogError(error);
+                return res.send(error.code);
+            }
+
+        });
+    });    
 }
 
 /**
@@ -61,14 +79,23 @@ export function getCountBlockWise(req, res) {
     var call_stored_proc = "CALL sp_GetBlockAvailability('"    
     + req.query.sdate + "')"; 
 
-    connection.query(call_stored_proc, true, (error, results, fields) => {
-    if (error) {
-        errorController.LogError(error);
-        return res.send(error.code);
-    }
-    res.send(results[0]);
-   // connection.end();   
-    });
+    pool.getConnection(function(error, connection) {
+        if (error) {
+            errorController.LogError(error);
+            return res.send(error.code);
+        } 
+
+        connection.query(call_stored_proc, true, (error, results, fields) => {
+            res.send(results[0]); 
+            connection.release();
+
+            if (error) {
+                errorController.LogError(error);
+                return res.send(error.code);
+            }
+
+        });
+    });    
 }
 
 
@@ -87,14 +114,23 @@ export function getDetails(req, res) {
     //+ req.query.nR + "," // no_of_rooms
     + req.query.rT + ")"; //total_beds
 
-    connection.query(call_stored_proc, true, (error, results, fields) => {
-    if (error) {
-        errorController.LogError(error);
-        return res.send(error.code);
-    }
-    res.send(results[0]);
-   // connection.end();   
-    });
+    pool.getConnection(function(error, connection) {
+        if (error) {
+            errorController.LogError(error);
+            return res.send(error.code);
+        } 
+
+        connection.query(call_stored_proc, true, (error, results, fields) => {
+            res.send(results[0]); 
+            connection.release();
+
+            if (error) {
+                errorController.LogError(error);
+                return res.send(error.code);
+            }
+
+        });
+    });    
 }
 
 
@@ -110,12 +146,21 @@ export function getEventRooms(req, res) {
     var call_stored_proc = "CALL sp_GetBookedEventRooms('"    
     + req.query.sdate + "')"; 
 
-    connection.query(call_stored_proc, true, (error, results, fields) => {
-    if (error) {
-        errorController.LogError(error);
-        return res.send(error.code);
-    }
-    res.send(results[0]);
-   // connection.end();   
-    });
+    pool.getConnection(function(error, connection) {
+        if (error) {
+            errorController.LogError(error);
+            return res.send(error.code);
+        } 
+
+        connection.query(call_stored_proc, true, (error, results, fields) => {
+            res.send(results[0]); 
+            connection.release();
+
+            if (error) {
+                errorController.LogError(error);
+                return res.send(error.code);
+            }
+
+        });
+    });    
 }

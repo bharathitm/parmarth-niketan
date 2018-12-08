@@ -8,7 +8,6 @@ import {API_URL} from '../../config/config';
 import {fetch, store} from '../../utils/httpUtil';
 import {notify} from 'react-notify-toast';
 
-
 export class Guests extends Component {
   constructor(props) {
     super(props);
@@ -32,13 +31,180 @@ export class Guests extends Component {
       ePhone: props.getStore().ePhone,     
       eRelationship: props.getStore().eRelationship,
       searchText: null,
-      searchGuestId: null   
+      searchGuestId: null,   
+      emailQuery: '',
+      phoneQuery: '',
+      emailResults: [],
+      phoneResults: []
     }; 
 
     this._validateOnDemand = true; 
 
     this.validationCheck = this.validationCheck.bind(this);
     this.isValidated = this.isValidated.bind(this);
+
+    this.handleEmailChange = this.handleEmailChange.bind(this);
+    this.validateRepEmail = this.validateRepEmail.bind(this);
+    this.populateEmailSuggestions = this.populateEmailSuggestions.bind(this);
+
+    this.handlePhoneChange = this.handlePhoneChange.bind(this);
+    this.validateRepPhone = this.validateRepPhone.bind(this);
+    this.populatePhoneSuggestions = this.populatePhoneSuggestions.bind(this);
+  }
+
+  
+  handleEmailChange() {
+
+    this.validationCheck();
+
+    this.setState({
+      emailQuery: this.refs.email.value
+    }, function() {
+      if (this.state.emailQuery && this.state.emailQuery.length > 1) {
+        if (this.state.emailQuery.length % 2 === 0) {
+          this.getEmailInfo();
+        }
+      } 
+      if (this.refs.email.value.toString().trim() == ""){
+          document.getElementById("divEmailSuggestions").style.visibility = "hidden";
+      }
+    });       
+  }
+
+  
+  handlePhoneChange() {
+
+    this.validationCheck();
+
+    this.setState({
+      phoneQuery: this.refs.phone.value
+    }, function() {
+      if (this.state.phoneQuery && this.state.phoneQuery.length > 1) {
+        if (this.state.phoneQuery.length % 2 === 0) {
+          this.getPhoneInfo();
+        }
+      } 
+      if (this.refs.phone.value.toString().trim() == ""){
+        document.getElementById("divPhoneSuggestions").style.visibility = "hidden";
+      }
+    });       
+  }
+
+  getEmailInfo = () => {
+    fetch(API_URL, "guests/?email=" + this.state.emailQuery)
+    .then((response) => {
+        return checkError(response);
+    })
+    .then((result) => {
+        this.setState({
+          emailResults: result,
+        }, function() {
+          if (this.state.emailResults.length != 0){
+            document.getElementById("divEmailSuggestions").style.visibility = "visible";
+          } else { 
+            document.getElementById("divEmailSuggestions").style.visibility = "hidden";
+          }
+        }
+      ); 
+    })
+    .catch((error) => {
+        this.setState({
+          isLoaded: false,
+          error
+        });
+        notify.show('Oops! Something went wrong! Please try again!', 'error');
+        logError(this.constructor.name + " " + error);
+      });
+  }
+
+  getPhoneInfo = () => {
+    fetch(API_URL, "guests/?phone=" + this.state.phoneQuery)
+    .then((response) => {
+        return checkError(response);
+    })
+    .then((result) => {
+        this.setState({
+          phoneResults: result,
+        }, function() {
+          if (this.state.phoneResults.length != 0){
+            document.getElementById("divPhoneSuggestions").style.visibility = "visible";
+          } else {
+            document.getElementById("divPhoneSuggestions").style.visibility = "hidden";
+          }
+        }
+      ); 
+
+    })
+    .catch((error) => {
+        this.setState({
+          isLoaded: false,
+          error
+        });
+        notify.show('Oops! Something went wrong! Please try again!', 'error');
+        logError(this.constructor.name + " " + error);
+      });
+  }
+
+  validateRepEmail(){
+    if (document.getElementById("divEmailSuggestions").style.visibility == "visible"){
+      for (let i = 0; i < this.state.emailResults.length; i++) {             
+        if (this.state.emailResults[i].email_id == this.refs.email.value){
+          notify.show('Oops! Guest Email ID already exists. Please select from the available options!', 'error');
+          return false;
+        }
+      }
+    } else {
+      return true;
+    }
+  }
+
+  validateRepPhone(){
+    if (document.getElementById("divPhoneSuggestions").style.visibility == "visible"){
+      for (let i = 0; i < this.state.phoneResults.length; i++) {             
+         if (this.state.phoneResults[i].phone_no == this.refs.phone.value){
+          notify.show('Oops! Guest Phone already exists. Please select from the available options!', 'error');
+          return false;
+         }     
+      }
+    } else {
+      return true;
+    }
+  }
+
+  populateEmailSuggestions(){
+    if (this.state.emailResults.length != 0){
+      document.getElementById("divEmailSuggestions").style.visibility == "visible";
+    }
+        let items = []; 
+
+        for (let i = 0; i < this.state.emailResults.length; i++) {             
+            items.push(<li key={i} value={i} onClick={() => this.fillGuestId(this.state.emailResults[i].guest_id)}>{this.state.emailResults[i].email_id}</li>);    
+        }
+        return items;
+  }
+
+  populatePhoneSuggestions(){
+    if (this.state.emailResults.length != 0){
+      document.getElementById("divEmailSuggestions").style.visibility == "visible";
+    }
+
+      let items = []; 
+
+      for (let i = 0; i < this.state.phoneResults.length; i++) {             
+          items.push(<li key={i} value={i} onClick={() => this.fillGuestId(this.state.phoneResults[i].guest_id)}>{this.state.phoneResults[i].phone_no}</li>);    
+      }
+      return items;
+}
+
+  fillGuestId(guest_id){
+    this.props.updateStore({
+      searchGuestId: guest_id
+    });
+
+    this.searchReservation('', guest_id);
+
+    document.getElementById("divEmailSuggestions").style.visibility = "hidden";
+    document.getElementById("divPhoneSuggestions").style.visibility = "hidden";
   }
 
 
@@ -79,11 +245,19 @@ export class Guests extends Component {
         eFirstName: (this.state.items[0].e_first_name == null)? '' : this.state.items[0].e_first_name,
         eLastName: (this.state.items[0].e_last_name == null)? '' : this.state.items[0].e_last_name,
         ePhone: (this.state.items[0].e_phone_no == null)? '' : this.state.items[0].e_phone_no,
-        eRelationship: (this.state.items[0].e_relationship == null)? '' : this.state.items[0].e_relationship,
-        reservationId: this.state.items[0].reservation_id,
-        arrivalDate: this.state.items[0].date_of_arrival,
-        departureDate: this.state.items[0].date_of_departure
+        eRelationship: (this.state.items[0].e_relationship == null)? '' : this.state.items[0].e_relationship //,
+        // reservationId: this.state.items[0].reservation_id,
+        // arrivalDate: this.state.items[0].date_of_arrival,
+        // departureDate: this.state.items[0].date_of_departure
       });
+
+      if (this.state.items[0].reservation_id != null){
+        this.props.updateStore({
+          reservationId: this.state.items[0].reservation_id,
+          arrivalDate: this.state.items[0].date_of_arrival,
+          departureDate: this.state.items[0].date_of_departure
+        });
+      }
 
       this.setState({
         referenceId: (this.state.items[0].reference_id == null)? 0 : this.state.items[0].reference_id,
@@ -134,7 +308,12 @@ export class Guests extends Component {
   }
 
   searchReservation(searchText, searchGuestId){
-    ((searchText != '')?fetch(API_URL, "guests/?search=" + searchText):fetch(API_URL, "guests/" + searchGuestId))
+    this.props.updateStore({
+      searchText: '',
+      searchGuestId: null
+    });
+
+    ((searchText != '')?fetch(API_URL, "guests/?search=" + searchText):fetch(API_URL, "guests/" + searchGuestId))    
     .then((response) => {
         return checkError(response);
     })
@@ -164,6 +343,12 @@ export class Guests extends Component {
     const validateNewInput = this._validateData(userInput); 
     let isDataValid = false;
 
+    if (this.validateRepEmail() == false){
+      return false;
+    } else if (this.validateRepPhone() == false){
+      return false;
+    }
+
     let isNewGuest = false;
 
     if (Object.keys(validateNewInput).every((k) => { return validateNewInput[k] === true })) {
@@ -178,8 +363,7 @@ export class Guests extends Component {
           this.props.getStore().pin != userInput.pin || 
           this.props.getStore().region != userInput.region || 
           this.props.getStore().country != userInput.country
-        ) { 
-
+        ) {               
               if (this.props.getStore().guestId != null){
                 this.updateGuestData();
               }
@@ -409,12 +593,10 @@ export class Guests extends Component {
     });
    }
 
-
   render() {
       //if searched from Dashboard
       if(this.props.getStore().searchText != ''){
         this.searchReservation(this.props.getStore().searchText, null);
-        this.props.updateStore
       } else if(this.props.getStore().searchGuestId != null){
         this.searchReservation('', this.props.getStore().searchGuestId);
       }
@@ -574,11 +756,8 @@ export class Guests extends Component {
                                       </select>                      
                               </div>
                             </div>
-
                           </div>
                         </div>
-
-
                     <div className = "div-table-row">
                           <div className ="div-table-col">
                    {/* First Name */}
@@ -616,7 +795,6 @@ export class Guests extends Component {
                   </div>
               </div>
 
-
              <div className = "div-table-row">
               <div className ="div-table-col">        
                   {/* Email ID */}
@@ -627,11 +805,16 @@ export class Guests extends Component {
                     <div className="col-md-8">
                       <input
                         ref="email"
-                        autoComplete="off"
+                        autoComplete="new_email"
                         type="email"
                         className={notValidClasses.emailCls}
                         defaultValue={this.state.email} 
-                        onChange={this.validationCheck} />
+                        onChange={this.handleEmailChange} />
+                       <div id="divEmailSuggestions" class="autocomplete" style={{ visibility: this.state.emailResults.length != 0 ? 'visible':'hidden'}}>
+                       <ul>
+                          {(this.refs.email != undefined && this.refs.email.value != "")? this.populateEmailSuggestions(): null}
+                       </ul>
+                       </div>
                     </div>
                   </div>
 
@@ -646,11 +829,16 @@ export class Guests extends Component {
                         <input
                           type="number"
                           ref="phone"
-                          autoComplete="off"
+                          autoComplete="new_phone"
                           className={notValidClasses.phoneCls}
                           required
                           defaultValue={this.state.phone} 
-                           onChange={this.validationCheck}/>
+                          onChange={this.handlePhoneChange}/>
+                          <div id="divPhoneSuggestions" class="autocomplete" style={{ visibility: this.state.phoneResults.length != 0 ? 'visible':'hidden'}}>
+                              <ul>
+                                {(this.refs.phone != undefined && this.refs.phone.value != "")? this.populatePhoneSuggestions(): null}  
+                              </ul>
+                       </div>
                       </div>
                     </div>
                   </div>

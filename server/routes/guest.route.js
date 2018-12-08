@@ -7,7 +7,13 @@ router.route('/')
 
     //Search guest details
     .get( (req, res) => {
-        guestCtrl.search(req, res);
+        if ((req.query.email) != undefined){
+            guestCtrl.searchEmailIds(req, res);
+        } else if ((req.query.phone) != undefined){
+            guestCtrl.searchPhoneNos(req, res);
+        } else {
+            guestCtrl.search(req, res);
+        }
     })
 
     .post((req, res) => {

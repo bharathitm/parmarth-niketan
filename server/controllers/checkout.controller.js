@@ -2,7 +2,7 @@ var mysql = require('mysql');
 var config = require('../mysqlconfig.js');
 var errorController = require('./error.controller');
 
-var connection = mysql.createConnection(config);
+var pool = mysql.createPool(config);
 
 
 /**
@@ -16,14 +16,23 @@ export function find(req, res) {
 
     var call_stored_proc = "CALL sp_GetTodaysCheckOuts()";
 
-    connection.query(call_stored_proc, true, (error, results, fields) => {
-    if (error) {
-        errorController.LogError(error);
-        return res.send(error.code);
-    }
-    res.send(results[0]);   
-    });
-    //connection.end();     
+    pool.getConnection(function(error, connection) {
+        if (error) {
+            errorController.LogError(error);
+            return res.send(error.code);
+        } 
+
+        connection.query(call_stored_proc, true, (error, results, fields) => {
+            res.send(results[0]); 
+            connection.release();
+
+            if (error) {
+                errorController.LogError(error);
+                return res.send(error.code);
+            }
+
+        });
+    });       
 }
 
 
@@ -63,15 +72,23 @@ export function add(req, res) {
     }
     call_stored_proc += ")";
 
-    connection.query(call_stored_proc, true, (error, results, fields) => {
-    if (error) {
-        errorController.LogError(error);
-        return res.send(error.code);
-    }
-    res.send(results[0]);
-    });
-      
-    //connection.end();   
+    pool.getConnection(function(error, connection) {
+        if (error) {
+            errorController.LogError(error);
+            return res.send(error.code);
+        } 
+
+        connection.query(call_stored_proc, true, (error, results, fields) => {
+            res.send(results[0]); 
+            connection.release();
+
+            if (error) {
+                errorController.LogError(error);
+                return res.send(error.code);
+            }
+
+        });
+    });      
 }
 
 
@@ -95,15 +112,23 @@ export function update(req, res) {
 
     call_stored_proc += req.body.str_room_booking_ids + "')";
 
-    connection.query(call_stored_proc, true, (error, results, fields) => {
-    if (error) {
-        errorController.LogError(error);
-        return res.send(error.code);
-    }
-    res.send(results[0]);
-    });
-      
-    //connection.end();   
+    pool.getConnection(function(error, connection) {
+        if (error) {
+            errorController.LogError(error);
+            return res.send(error.code);
+        } 
+
+        connection.query(call_stored_proc, true, (error, results, fields) => {
+            res.send(results[0]); 
+            connection.release();
+
+            if (error) {
+                errorController.LogError(error);
+                return res.send(error.code);
+            }
+
+        });
+    });      
 }
 
 /**
@@ -119,13 +144,21 @@ export function findByDates(req, res) {
     + req.query.adate + "','"
     + req.query.ddate + "')";    
 
-    connection.query(call_stored_proc, true, (error, results, fields) => {
-    if (error) {
-        errorController.LogError(error);
-        return res.send(error.code);
-    }
-    res.send(results[0]);
-    });
-      
-    //connection.end();   
+    pool.getConnection(function(error, connection) {
+        if (error) {
+            errorController.LogError(error);
+            return res.send(error.code);
+        } 
+
+        connection.query(call_stored_proc, true, (error, results, fields) => {
+            res.send(results[0]); 
+            connection.release();
+
+            if (error) {
+                errorController.LogError(error);
+                return res.send(error.code);
+            }
+
+        });
+    });     
 }

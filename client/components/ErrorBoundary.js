@@ -17,7 +17,7 @@ export class ErrorBoundary extends React.Component {
         //send to error reporting service
 
         const payload = {
-            error_message: error.toString()
+            error_message: error.toString() + " - " + info.toString()
         }
 
         store(API_URL, "error/", JSON.stringify(payload))

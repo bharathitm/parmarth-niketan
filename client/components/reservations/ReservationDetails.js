@@ -72,15 +72,6 @@ export class ReservationDetails extends Component {
     return items;
   } 
 
-  // populateReferences() {
-  //   let items = [];   
-
-  //   for (let i = 1; i <= 2; i++) {             
-  //        items.push(<option key={i} value={i}>{references[i]}</option>);   
-  //   }
-  //   return items;
-  // } 
-
   componentDidMount() {
     if (this.props.getStore().guestId != null){
       this.fetchReservationDetailsIfExists();
@@ -95,6 +86,7 @@ export class ReservationDetails extends Component {
   }
 
   fetchReservationDetailsIfExists(){
+
       if(this.props.getStore().reservationId != null)
       {
         fetch(API_URL, "reservations/" + this.props.getStore().reservationId)
@@ -336,7 +328,7 @@ export class ReservationDetails extends Component {
     return  {
       arrivalTimeVal: (data.arrivalTime == null || data.arrivalTime == '')? false: true,
       reservationTypeVal: (data.reservationTypeId != 0), // required: anything besides N/A
-      noOfPplVal: (data.noOfPpl != ''),
+      noOfPplVal: (data.noOfPpl.toString().trim() != ''),
       commentsVal: (true),
       //advanceReminderOnVal: (true),  
       sanskaraVal: (data.reservationTypeId == 3 && data.sanskaraId == 0)? false : true,
@@ -549,6 +541,7 @@ export class ReservationDetails extends Component {
                             autoComplete="off"
                             className={notValidClasses.noOfPplCls}
                             required
+                            type="number"
                             defaultValue={this.state.noOfPpl}
                             onBlur={this.validationCheck} />
                         </div>

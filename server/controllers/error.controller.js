@@ -1,7 +1,7 @@
 var mysql = require('mysql');
 var config = require('../mysqlconfig.js');
 
-var connection = mysql.createConnection(config);
+var pool = mysql.createPool(config);
 
 
 
@@ -12,11 +12,22 @@ export function LogError(message) {
    + message + 
    "')";
 
-   connection.query(call_stored_proc, true, (error, results, fields) => {
+   pool.getConnection(function(error, connection) {
+    if (error) {
+        errorController.LogError(error);
+        return res.send(error.code);
+    } 
 
-   });
-     
-   //connection.end();   
+    connection.query(call_stored_proc, true, (error, results, fields) => {
+        connection.release();
+
+        if (error) {
+            errorController.LogError(error);
+            return res.send(error.code);
+        }
+
+    });
+});    
 }
 
 
@@ -29,12 +40,20 @@ export function LogClientError(req, res) {
     + msg + 
     "')";
  
-    connection.query(call_stored_proc, true, (error, results, fields) => {
+    pool.getConnection(function(error, connection) {
         if (error) {
+            errorController.LogError(error);
             return res.send(error.code);
-        }
- 
-    });
-      
-    //connection.end();   
+        } 
+
+        connection.query(call_stored_proc, true, (error, results, fields) => {
+            connection.release();
+
+            if (error) {
+                errorController.LogError(error);
+                return res.send(error.code);
+            }
+
+        });
+    });    
  }

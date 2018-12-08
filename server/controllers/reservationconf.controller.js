@@ -6,7 +6,7 @@ var errorController = require('./error.controller');
 
 var mysql = require('mysql');
 var mysqlconfig = require('../mysqlconfig.js');
-var connection = mysql.createConnection(mysqlconfig);
+var pool = mysql.createPool(mysqlconfig);
 
 var arrSplitUpResults = "";
 
@@ -135,18 +135,27 @@ export function SendConfirmationEmail(name, emailId, dates, noOfRooms, totalAmt,
 
     function GetDonationSplitUp(reservationId, _callback){
             var call_stored_proc = "CALL sp_GetReservationDonationSplitUp('" + reservationId + "')";
-
-            connection.query(call_stored_proc, true, (error, results, fields) => {
-            if (error) {
-                errorController.LogError(error);
-                return res.send(error.code);       
-            }
-            if (results){
-                arrSplitUpResults = results[0];
-                _callback();
-            }
-           
-            });            
+          
+            pool.getConnection(function(error, connection) {
+                if (error) {
+                    errorController.LogError(error);
+                    return res.send(error.code);
+                } 
+        
+                connection.query(call_stored_proc, true, (error, results, fields) => {
+                        if (results){
+                                arrSplitUpResults = results[0];
+                                _callback();
+                                }
+                        connection.release();
+        
+                        if (error) {
+                                errorController.LogError(error);
+                                return res.send(error.code);
+                        }
+        
+                });
+            });    
     }
 
     function ConstructSplitUpStr(){

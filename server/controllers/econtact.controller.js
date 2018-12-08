@@ -2,7 +2,7 @@ var mysql = require('mysql');
 var config = require('../mysqlconfig.js');
 var errorController = require('./error.controller.js');
 
-var connection = mysql.createConnection(config);
+var pool = mysql.createPool(config);
 
 /**
  * Insert emergency contact for Guest Id
@@ -51,13 +51,23 @@ export function add(req, res) {
 
     call_stored_proc += ")";
 
-    connection.query(call_stored_proc, true, (error, results, fields) => {
-    if (error) {
-        errorController.LogError(error);
-        return res.send(error.code);
-    }
-    res.send(results[0]);
-    });  
+    pool.getConnection(function(error, connection) {
+        if (error) {
+            errorController.LogError(error);
+            return res.send(error.code);
+        } 
+
+        connection.query(call_stored_proc, true, (error, results, fields) => {
+            res.send(results[0]); 
+            connection.release();
+
+            if (error) {
+                errorController.LogError(error);
+                return res.send(error.code);
+            }
+
+        });
+    });     
 }
 
 /**
@@ -107,11 +117,21 @@ export function update(req, res) {
 
     call_stored_proc += ")";
 
-    connection.query(call_stored_proc, true, (error, results, fields) => {
-    if (error) {
-        errorController.LogError(error);
-        return res.send(error.code);
-    }
-    res.send(results[0]);
-    });  
+    pool.getConnection(function(error, connection) {
+        if (error) {
+            errorController.LogError(error);
+            return res.send(error.code);
+        } 
+
+        connection.query(call_stored_proc, true, (error, results, fields) => {
+            res.send(results[0]); 
+            connection.release();
+
+            if (error) {
+                errorController.LogError(error);
+                return res.send(error.code);
+            }
+
+        });
+    });     
 }
