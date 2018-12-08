@@ -184,8 +184,8 @@ export class Guests extends Component {
   }
 
   populatePhoneSuggestions(){
-    if (this.state.emailResults.length != 0){
-      document.getElementById("divEmailSuggestions").style.visibility == "visible";
+    if (this.state.phoneResults.length != 0){
+      document.getElementById("divPhoneSuggestions").style.visibility == "visible";
     }
 
       let items = []; 
