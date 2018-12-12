@@ -7,6 +7,7 @@ import {logError, checkError} from '../../utils/helpers';
 import {API_URL} from '../../config/config';
 import {fetch, store} from '../../utils/httpUtil';
 import {notify} from 'react-notify-toast';
+import { confirmAlert } from 'react-confirm-alert';
 
 export class Guests extends Component {
   constructor(props) {
@@ -50,6 +51,8 @@ export class Guests extends Component {
     this.handlePhoneChange = this.handlePhoneChange.bind(this);
     this.validateRepPhone = this.validateRepPhone.bind(this);
     this.populatePhoneSuggestions = this.populatePhoneSuggestions.bind(this);
+
+    this.handleSelectedReservation = this.handleSelectedReservation.bind(this);
   }
 
   
@@ -245,19 +248,20 @@ export class Guests extends Component {
         eFirstName: (this.state.items[0].e_first_name == null)? '' : this.state.items[0].e_first_name,
         eLastName: (this.state.items[0].e_last_name == null)? '' : this.state.items[0].e_last_name,
         ePhone: (this.state.items[0].e_phone_no == null)? '' : this.state.items[0].e_phone_no,
-        eRelationship: (this.state.items[0].e_relationship == null)? '' : this.state.items[0].e_relationship //,
-        // reservationId: this.state.items[0].reservation_id,
-        // arrivalDate: this.state.items[0].date_of_arrival,
-        // departureDate: this.state.items[0].date_of_departure
+        eRelationship: (this.state.items[0].e_relationship == null)? '' : this.state.items[0].e_relationship 
       });
 
-      if (this.state.items[0].reservation_id != null){
-        this.props.updateStore({
-          reservationId: this.state.items[0].reservation_id,
-          arrivalDate: this.state.items[0].date_of_arrival,
-          departureDate: this.state.items[0].date_of_departure
-        });
-      }
+      if (this.state.items.length > 1){
+        this.chooseReservations(this.state.items);
+      } else {
+        if (this.state.items[0].reservation_id != null){
+          this.props.updateStore({
+            reservationId: this.state.items[0].reservation_id,
+            arrivalDate: this.state.items[0].date_of_arrival,
+            departureDate: this.state.items[0].date_of_departure
+          });
+        }
+    }
 
       this.setState({
         referenceId: (this.state.items[0].reference_id == null)? 0 : this.state.items[0].reference_id,
@@ -306,6 +310,66 @@ export class Guests extends Component {
       searchGuestId: null
     });
   }
+
+  chooseReservations(items){
+
+    confirmAlert({
+      customUI: ({ onClose }) => {
+
+        return (
+          <div>
+            <h4>Available Reservations</h4>  
+            <img src="./img/close.png" className="imgClose" onClick={onClose}/>
+                
+              <div className = "div-table advance-table checkout-table">
+              <div className = "div-table-row">
+                        <div className ="div-table-col div-table-col-header" style={{width:'30%'}}>
+                        Arrival Date
+                        </div>
+                        <div className ="div-table-col div-table-col-header">
+                        Departure Date
+                        </div>
+                        <div className ="div-table-col div-table-col-header">
+                        No. of People
+                        </div>
+                        <div className ="div-table-col div-table-col-header" style={{width:'10%'}}>
+                        Actions
+                        </div>
+                </div>
+              {items.map(item => (
+                  <div className = "div-table-row">
+                        <div className ="div-table-col col-bordered" style={{width:'30%'}}>
+                          {item.date_of_arrival}
+                        </div>
+                        <div className ="div-table-col col-bordered">
+                          {item.date_of_departure}
+                        </div>
+                        <div className ="div-table-col col-bordered">
+                          {item.no_of_people}
+                        </div>
+                        <div className ="div-table-col col-bordered" style={{width:'10%'}}>
+                          <a onClick={() => {this.handleSelectedReservation(item.reservation_id, item.date_of_arrival, item.date_of_departure);  onClose();}} >Open</a>
+                        </div>
+                  </div>
+                  ))} 
+                </div>
+          </div>
+        )
+      }
+    })
+  }
+
+  handleSelectedReservation(rId, arrDate, depDate){
+
+    this.props.updateStore({
+      reservationId: rId,
+      arrivalDate: arrDate,
+      departureDate: depDate
+    });   
+
+    this.props.jumpToStep(2);
+  }
+
 
   searchReservation(searchText, searchGuestId){
     this.props.updateStore({
@@ -810,7 +874,7 @@ export class Guests extends Component {
                         className={notValidClasses.emailCls}
                         defaultValue={this.state.email} 
                         onChange={this.handleEmailChange} />
-                       <div id="divEmailSuggestions" class="autocomplete" style={{ visibility: this.state.emailResults.length != 0 ? 'visible':'hidden'}}>
+                       <div id="divEmailSuggestions" className="autocomplete" style={{ visibility: this.state.emailResults.length != 0 ? 'visible':'hidden'}}>
                        <ul>
                           {(this.refs.email != undefined && this.refs.email.value != "")? this.populateEmailSuggestions(): null}
                        </ul>
@@ -834,7 +898,7 @@ export class Guests extends Component {
                           required
                           defaultValue={this.state.phone} 
                           onChange={this.handlePhoneChange}/>
-                          <div id="divPhoneSuggestions" class="autocomplete" style={{ visibility: this.state.phoneResults.length != 0 ? 'visible':'hidden'}}>
+                          <div id="divPhoneSuggestions" className="autocomplete" style={{ visibility: this.state.phoneResults.length != 0 ? 'visible':'hidden'}}>
                               <ul>
                                 {(this.refs.phone != undefined && this.refs.phone.value != "")? this.populatePhoneSuggestions(): null}  
                               </ul>

@@ -115,6 +115,8 @@ export class BookRooms extends Component {
         this.setState({
           isLoaded: true
         });
+        sessionStorage.setItem("arrivalDate", this.props.getStore().arrivalDate);
+        sessionStorage.setItem("departureDate", this.props.getStore().departureDate);
       })
       .catch((error) => {
         this.setState({
@@ -154,7 +156,7 @@ export class BookRooms extends Component {
       var blockTotal = 0;
       var blockName = '';
       for (var i = 0; i < checkboxes.length; i++) {
-        if (checkboxes[i].checked) {
+        if (checkboxes[i].checked) {      
           blockTotal += parseFloat(checkboxes[i].value);
           blockName = checkboxes[i].name;
         }
@@ -387,20 +389,6 @@ export class BookRooms extends Component {
     if (this.props.getStore().searchGuestId != null) {
       this.props.jumpToStep(1);
     }
-
-    //if no guest details in session, dont allow any other step other than Book Rooms
-    // if(this.props.getStore().firstName == ''){
-    //   var wizardOl = document.getElementsByClassName("progtrckr");
-    //   if (typeof wizardOl[0] != 'undefined'){
-    //     wizardOl[0].style.pointerEvents = "none";
-    //     document.getElementById("next-button").style.visibility = "hidden";
-    //   }
-    // } // reverse whatever is done above
-    // else if (this.props.getStore().firstName != ''){
-    //     var wizardOl = document.getElementsByClassName("progtrckr");
-    //     wizardOl[0].style.pointerEvents = "auto";
-    //     document.getElementById("next-button").style.visibility = "visible";
-    // }
 
     var wizardOl = document.getElementsByClassName("progtrckr");
     //new guest, new reservation

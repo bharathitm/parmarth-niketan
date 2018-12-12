@@ -30,9 +30,7 @@ export class ReservationDetails extends Component {
       arrivalTime: '',
       reservationTypeId: props.getStore().reservationTypeId,
       sanskaraId: props.getStore().sanskaraId,
-      // referenceId: props.getStore().referenceId,
       noOfPpl: props.getStore().noOfPpl,
-      //advanceReminderOn: '',
       comments: props.getStore().comments,
       reservationId: props.getStore().reservationId      
     };
@@ -42,7 +40,6 @@ export class ReservationDetails extends Component {
       reservationId: props.getStore().reservationId
     };
       
-    //this.handleAdvanceReminderChange = this.handleAdvanceReminderChange.bind(this);
     this.handleArrivalTimeChange = this.handleArrivalTimeChange.bind(this);
 
     this._validateOnDemand = true; 
@@ -121,7 +118,6 @@ export class ReservationDetails extends Component {
     if (items.length != 0)
     {
       var aDate = moment(items[0].date_of_arrival);
-      //var aReminder = moment(items[0].advance_reminder_on);
 
       this.props.updateStore({
         reservationId: items[0].reservation_id,
@@ -132,8 +128,6 @@ export class ReservationDetails extends Component {
         reservationTypeId: items[0].reservation_type_id,
         reservationStatusId: items[0].reservation_status_id,
         sanskaraId: (items[0].sanskara_id == null)? 0 : items[0].sanskara_id,
-        // referenceId: (items[0].reference_id == null)? 0 : items[0].reference_id,
-        //advanceReminderOn: (items[0].advance_reminder_on == null)? '' : aReminder,
         arrivalTime: aDate
       });
 
@@ -146,8 +140,6 @@ export class ReservationDetails extends Component {
         reservationTypeId: items[0].reservation_type_id,
         reservationStatusId: items[0].reservation_status_id,
         sanskaraId: (items[0].sanskara_id == null)? 0 : items[0].sanskara_id,
-        //referenceId: (items[0].reference_id == null)? 0 : items[0].reference_id,
-        //advanceReminderOn: (items[0].advance_reminder_on == null)? '' : aReminder,
         arrivalTime: aDate
       });
 
@@ -158,9 +150,7 @@ export class ReservationDetails extends Component {
       this.refs.comments.value = (items[0].reservation_comments == null)? '': items[0].reservation_comments;
       this.refs.reservationTypeId.value = items[0].reservation_type_id;
       this.refs.arrivalTime.selected = aDate;
-      //this.refs.advanceReminderOn.selected = (items[0].advance_reminder_on == null)? '' : aReminder;
       this.refs.sanskaraId.value = (items[0].sanskara_id == null)? 0 : items[0].sanskara_id;
-      //this.refs.referenceId.value = (items[0].reference_id == null)? 0 : items[0].reference_id;
       this.refs.reservationStatus.innerHTML = reservationStatuses[items[0].reservation_status_id];  
 
       if (items[0].reservation_status_id == 2){
@@ -182,12 +172,72 @@ export class ReservationDetails extends Component {
     }
   }
 
-  
+  handleAddAnotherReservation(){
+
+    this.setState({
+      reservationId: null,
+      arrivalTime: '',
+      noOfPpl: '',
+      comments: '',
+      reservationTypeId: 0
+    });
+
+    this.props.updateStore({
+      reservationId: null,
+      arrivalTime: '',
+      noOfPpl: '',
+      comments: '',
+      reservationTypeId: 0
+    });
+
+    if (sessionStorage.getItem('selectedRooms') == null){
+
+      this.setState({
+        arrivalDate: null,
+        departureDate: null
+      });
+
+      this.props.updateStore({
+        arrivalDate: null,
+        departureDate: null
+      });
+
+      this.props.jumpToStep(0);
+
+    } else {
+
+
+      this.refs.arrivalDate.innerHTML = moment(sessionStorage.getItem("arrivalDate")).format('dddd, MMMM Do YYYY');
+      this.refs.departureDate.innerHTML = moment(sessionStorage.getItem("departureDate")).format('dddd, MMMM Do YYYY');
+
+      this.refs.reservationStatus.innerHTML = "";
+
+      this.refs.arrivalTime.selected = '';
+      this.refs.reservationTypeId.value = 0;
+      this.refs.noOfPpl.value = '';
+      this.refs.comments.value = '';
+
+      this.setState({
+        arrivalDate: sessionStorage.getItem("arrivalDate"),
+        departureDate: sessionStorage.getItem("departureDate")
+      });
+
+      this.props.updateStore({
+        arrivalDate: sessionStorage.getItem("arrivalDate"),
+        departureDate: sessionStorage.getItem("departureDate")
+      });
+
+    }
+  }
+
 
   isValidated() {
 
     const userInput = this._grabUserInput(); 
     const validateNewInput = this._validateData(userInput); 
+
+    sessionStorage.setItem("arrivalDate", null);
+    sessionStorage.setItem("departureDate", null);
 
     let isDataValid = false;
 
@@ -197,8 +247,6 @@ export class ReservationDetails extends Component {
           this.props.getStore().reservationTypeId != userInput.reservationTypeId ||
           this.props.getStore().noOfPpl != userInput.noOfPpl ||
           this.props.getStore().sanskaraId != userInput.sanskaraId ||
-          // this.props.getStore().referenceId != userInput.referenceId ||
-          //this.props.getStore().advanceReminderOn != userInput.advanceReminderOn ||
           this.props.getStore().comments.toString() != userInput.comments.toString()
         ) { 
 
@@ -228,7 +276,6 @@ export class ReservationDetails extends Component {
 
   insertReservationDetails(){
 
-  
     var dt_arrival =  this.state.arrivalDate + " " + moment(this.state.arrivalTime).format("HH:mm").toString();
     
     const payload = {
@@ -243,9 +290,9 @@ export class ReservationDetails extends Component {
       sanskara_id: (this.state.sanskaraId == null)? 0 : this.state.sanskaraId,
       //reference_id: this.state.referenceId,
       //advance_reminder_on: ((this.state.advanceReminderOn == '') || (this.state.advanceReminderOn == null))? '' : getFormattedDate(this.state.advanceReminderOn).toString(),
-      room_ids_str: window.sessionStorage.getItem('strSelectedRooms').toString(),
+      room_ids_str: sessionStorage.getItem('strSelectedRooms').toString(),
       reference_id: this.props.getStore().referenceId,
-      has_WL: (window.sessionStorage.getItem('waitingListCnt').toString().trim() != ''? 1: 0)
+      has_WL: (sessionStorage.getItem('waitingListCnt').toString().trim() != ''? 1: 0)
     }; 
 
     store(API_URL, "reservations/", JSON.stringify(payload))
@@ -265,13 +312,6 @@ export class ReservationDetails extends Component {
     });
   }
 
-  // handleAdvanceReminderChange(date) {
-  //   this.setState({
-  //       advanceReminderOn: date
-  //   });
-  //   this.refs.advanceReminderOn.selected = date;
-  // }
-
   handleArrivalTimeChange(time){
     this.setState({
       arrivalTime: time
@@ -290,9 +330,7 @@ export class ReservationDetails extends Component {
       no_of_people: this.state.noOfPpl,
       reservation_comments: this.state.comments,
       reservation_type_id: this.state.reservationTypeId,
-      sanskara_id: (this.state.sanskaraId == null)? 0 : this.state.sanskaraId,
-      // reference_id: this.state.referenceId,
-      //advance_reminder_on: ((this.state.advanceReminderOn == '') || (this.state.advanceReminderOn == null))? '' : getFormattedDate(this.state.advanceReminderOn).toString(),
+      sanskara_id: (this.state.sanskaraId == null)? 0 : this.state.sanskaraId
     };
 
     store(API_URL, "reservations/" + this.state.reservationId, JSON.stringify(payload))
@@ -329,8 +367,7 @@ export class ReservationDetails extends Component {
       arrivalTimeVal: (data.arrivalTime == null || data.arrivalTime == '')? false: true,
       reservationTypeVal: (data.reservationTypeId != 0), // required: anything besides N/A
       noOfPplVal: (data.noOfPpl.toString().trim() != ''),
-      commentsVal: (true),
-      //advanceReminderOnVal: (true),  
+      commentsVal: (true), 
       sanskaraVal: (data.reservationTypeId == 3 && data.sanskaraId == 0)? false : true,
       referenceVal: (true)
     }
@@ -341,11 +378,8 @@ export class ReservationDetails extends Component {
     return {
       arrivalTime: this.refs.arrivalTime.selected,
       reservationTypeId: this.refs.reservationTypeId.value,
-      //sanskaraId: (this.refs.sanskaraId.value == 0)? null : this.refs.sanskaraId.value,
       sanskaraId: (this.refs.reservationTypeId.value != 3)? 0: this.refs.sanskaraId.value,
-      // referenceId: this.refs.referenceId.value,
       noOfPpl: this.refs.noOfPpl.value,
-      //advanceReminderOn: this.refs.advanceReminderOn.selected,
       comments: this.refs.comments.value,
     };
   }
@@ -409,9 +443,7 @@ export class ReservationDetails extends Component {
       arrivalTime:'',
       reservation_type_id:'',
       sanskaraId:'',
-      //referenceId: '',
       noOfPpl:'',
-      //advanceReminderOn:'',
       comments:''
     });   
 
@@ -440,8 +472,7 @@ export class ReservationDetails extends Component {
     }
   }
 
-  render() {
- 
+  render() { 
       //new guest, new reservation
       if((this.props.getStore().reservationId == null) && (sessionStorage.getItem('strSelectedRooms') == null)){
           this.props.jumpToStep(1);
@@ -485,9 +516,10 @@ export class ReservationDetails extends Component {
       <div className="step step3 review">
         <div className="row">
           <form id="Form" className="form-horizontal">          
-                <h4>Reservation Details</h4>   
-                <div className="divFloatRight" style={{ visibility: (this.props.getStore().reservationId != null) && (this.props.getStore().reservationStatusId == 2) ? 'visible':'hidden', display: (this.props.getStore().reservationId != null) && (this.props.getStore().reservationStatusId == 2)? 'inline':'none' }}>  
-                <button type="button" className="btnBig" onClick={() => this.handleCancel()}>Cancel</button>   
+                <h4>Reservation Details</h4>  
+                <div className="divFloatRight" style={{ visibility: (this.props.getStore().reservationId != null) ? 'visible':'hidden', display: (this.props.getStore().reservationId != null)? 'inline':'none' }}> 
+                  <a style={{fontWeight: 'bolder', color: '#ED823A'}} onClick={() => this.handleAddAnotherReservation()}>Add Another Reservation?</a>  
+                <button type="button" className="btnBig" style={{ visibility: (this.props.getStore().reservationStatusId == 2) ? 'visible':'hidden', display: (this.props.getStore().reservationStatusId == 2)? 'inline':'none' }} onClick={() => this.handleCancel()}>Cancel</button>   
                 </div>
                       <div className="divDates">
                       {/* Arrival Date */}
@@ -564,7 +596,7 @@ export class ReservationDetails extends Component {
                                         defaultValue={this.state.reservationTypeId}
                                         onChange={() => this.handleReservationTypeChange()}
                                         onBlur={this.validationCheck}>
-                                        <option value="">Please select</option>
+                                        <option value="0">Please select</option>
                                         {this.populateReservationTypes()}                   
                                       </select>                      
                               </div>

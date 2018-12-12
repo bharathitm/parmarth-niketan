@@ -2,6 +2,7 @@ var mysql = require('mysql');
 var config = require('../mysqlconfig.js');
 
 var pool = mysql.createPool(config);
+var errorController = require('./error.controller');
 
 
 
@@ -15,7 +16,6 @@ export function LogError(message) {
    pool.getConnection(function(error, connection) {
     if (error) {
         errorController.LogError(error);
-        return res.send(error.code);
     } 
 
     connection.query(call_stored_proc, true, (error, results, fields) => {
@@ -23,9 +23,8 @@ export function LogError(message) {
 
         if (error) {
             errorController.LogError(error);
-            return res.send(error.code);
         }
-
+        
     });
 });    
 }

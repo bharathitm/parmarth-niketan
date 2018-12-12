@@ -34,7 +34,6 @@ export class SearchBox extends Component {
   }
 
   componentDidMount(){
-    //if(this.props.getSearchStore().reservationId != null){
       if(this.props.getSearchStore().arrivalDate != null){
       this.setState({
         arrivalDate: moment(this.props.getSearchStore().arrivalDate),
@@ -42,7 +41,6 @@ export class SearchBox extends Component {
       });
       this.refs.arrivalDate.selected = this.props.getSearchStore().arrivalDate;
       this.refs.departureDate.selected = this.props.getSearchStore().departureDate;
-
     }   
   }
 

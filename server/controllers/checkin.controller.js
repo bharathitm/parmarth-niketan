@@ -79,8 +79,17 @@ export function findByDates(req, res) {
 export function add(req, res) {
 
     var call_stored_proc = "CALL sp_UpdateTodaysCheckIns('" 
-    + req.body.str_reservation_ids + "','"
-    + req.body.str_room_booking_ids + "')";
+    
+    + req.body.str_reservation_ids + "',"
+
+    if (req.body.str_room_booking_ids != ''){
+        call_stored_proc +=  "'" + req.body.str_room_booking_ids + "'";   
+    }
+    else {
+        call_stored_proc += null;
+    }
+
+    call_stored_proc += ")";
 
     pool.getConnection(function(error, connection) {
         if (error) {

@@ -152,7 +152,6 @@ export class CheckOuts extends React.Component {
 
         }
 
-
         loadCheckOutTotalDetails(results){
 
           confirmAlert({
@@ -407,10 +406,13 @@ export class CheckOuts extends React.Component {
                                 <ul>
                                   {checkOutRooms.filter(bk => bk.reservation_id == item.reservation_id).map(booking => (                                    
                                     <li>
-                                        <input type="checkbox" name="checkOutRooms"
+
+                                      {checkOutRooms.filter(bk => bk.reservation_id == item.reservation_id).length > 1?
+                                        (<span><input type="checkbox" name="checkOutRooms"
                                             className={booking.reservation_id} onClick={() => this.roomsChanged(booking.reservation_id)}
                                             value={booking.room_booking_id} />
-                                              {booking.room_no + ", " + floors[booking.floor_no] + ", " + blocks[booking.block_id]}                   
+                                              {booking.room_no} ,  {floors[booking.floor_no]}, {blocks[booking.block_id]}</span>)
+                                              : booking.room_no + ", " + floors[booking.floor_no] + ", " + blocks[booking.block_id]}                
                                     </li>
                                   ))}
                                   </ul>                                         

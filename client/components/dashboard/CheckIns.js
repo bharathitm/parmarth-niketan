@@ -89,7 +89,7 @@ export class CheckIns extends React.Component {
         var str_reservations = createReservationsString(selectedReservations);
         var str_rooms = createRoomsString(selectedRooms);
 
-        if (str_rooms != ''){
+        if ((str_reservations != '') || (str_rooms != '')){
 
             const payload = {
               str_reservation_ids: str_reservations,
@@ -141,8 +141,6 @@ export class CheckIns extends React.Component {
           
           for(var i = 0; i < checkboxes.length; i++)  
           {  
-
-     
                   if(checkboxes[i].checked) {
 
                     if (checkboxes[i].id == '14'){
@@ -250,17 +248,17 @@ export class CheckIns extends React.Component {
                                           {item.reference_id == null? '':' - '}<b className="bRef">{references[item.reference_id]}</b>   
 
                                       <ul>
-                                
                                           {checkInRooms.filter(bk => bk.reservation_id == item.reservation_id).map(booking => (
-                                  
-                                          <li>
-                                              <input type="checkbox" name="checkInRooms"
-                                                  id={booking.block_id} 
-                                                  value={booking.room_booking_id} />
-                                                    {booking.room_no + ", " + floors[booking.floor_no] + ", " + blocks[booking.block_id]}                 
+                                          <li>                                           
+                                            {checkInRooms.filter(bk => bk.reservation_id == item.reservation_id).length > 1?
+
+(<span><input type="checkbox" name="checkInRooms" id={booking.block_id} value={booking.room_booking_id} /> {booking.room_no}, {floors[booking.floor_no]}, {blocks[booking.block_id]} </span>)
+
+                                            : booking.room_no + ", " + floors[booking.floor_no] + ", " + blocks[booking.block_id]}
+                                                  
                                           </li>
                                           ))}
-                                        </ul>                                         
+                                      </ul>                                         
                             </li>                              
                       ))}                     
                   </ol>                    
