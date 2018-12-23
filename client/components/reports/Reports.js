@@ -311,12 +311,12 @@ export class Reports extends React.Component {
                                 <td style={{margin: 0, padding: '1em', fontWeight: 'bold', borderTop: 'solid 1px black', borderBottom: 'solid 1px black', width: '10%'}}>Departure Date</td>                                                           
                                 <td style={{margin: 0, padding: '1em', fontWeight: 'bold', borderTop: 'solid 1px black', borderBottom: 'solid 1px black', width: '2%'}}>Pax</td>
                                 <td style={{margin: 0, padding: '1em', fontWeight: 'bold', borderTop: 'solid 1px black', borderBottom: 'solid 1px black'}}>Room Nos</td>
-                                <td style={{margin: 0, padding: '1em', fontWeight: 'bold', borderTop: 'solid 1px black', borderBottom: 'solid 1px black', width: '5%'}}>Reservation Status</td>
+                                <td style={{margin: 0, padding: '1em', fontWeight: 'bold', borderTop: 'solid 1px black', borderBottom: 'solid 1px black', width: '15%'}}>Reservation Status</td>
                             </tr>
                                 {this.state.ReservationItems.map(item => (
                                 <tr>   
                                     <td style={{margin: 0, padding: '1em', borderBottom: '1px dotted black'}}>
-                                        {item.guest_name} <br/> {item.reservation_comments}
+                                        {item.guest_name} 
                                     </td>
                                     <td style={{margin: 0, padding: '1em', borderBottom: '1px dotted black'}}>
                                         {item.phone_no} <br/> {item.email_id}
@@ -335,6 +335,7 @@ export class Reports extends React.Component {
                                     </td>
                                     <td style={{margin: 0, padding: '1em', borderBottom: '1px dotted black'}}>
                                         {reservationStatuses[item.reservation_status_id]}
+                                        <br/> <u> { item.reservation_comments} </u>
                                     </td>
                                 </tr>
                                 ))}

@@ -37,7 +37,7 @@ export class RoomsCalendar extends React.Component {
       var startDate = getFormattedDate(moment([yearSelected, monthSelected])).toString();
   
       this.loadRoomAvailability(startDate);
-      this.loadEventHallsAvailability(startDate);
+      //this.loadEventHallsAvailability(startDate);
     }
 
     
@@ -48,7 +48,7 @@ export class RoomsCalendar extends React.Component {
     var startDate = getFormattedDate(moment([yearSelected, monthSelected])).toString();
 
     this.loadRoomAvailability(startDate);
-    this.loadEventHallsAvailability(startDate);
+    //this.loadEventHallsAvailability(startDate);
     }
 
 loadRoomAvailability(startDate){
@@ -61,7 +61,7 @@ loadRoomAvailability(startDate){
               isLoaded:true,
               items: result,
             }, function() {
-              this.loadEvents();
+              this.loadEventHallsAvailability(startDate);
             }
           );
       })
@@ -85,7 +85,7 @@ loadRoomAvailability(startDate){
               isLoaded:true,
               eventHalls: result,
             }, function() {
-              this.loadEventHalls();
+              this.loadEvents();
             }
           );
       })
@@ -114,14 +114,6 @@ loadRoomAvailability(startDate){
           );
         }
 
-        this.setState({
-          events: events
-        });
-    }
-
-    loadEventHalls(){
-
-      var events = this.state.events;
         for (var i = 0; i < this.state.eventHalls.length; i++)
         {
           events.push(
@@ -139,6 +131,27 @@ loadRoomAvailability(startDate){
           events: events
         });
     }
+
+    // loadEventHalls(){
+
+    //   var events = this.state.events;
+    //     for (var i = 0; i < this.state.eventHalls.length; i++)
+    //     {
+    //       events.push(
+    //           {
+    //               title: this.state.eventHalls[i].event_hall,
+    //               start: this.state.eventHalls[i].start_date,
+    //               end: this.state.eventHalls[i].end_date,
+    //               isEventHall: true,
+    //               selectable: false
+    //           }
+    //       );
+    //     }
+
+    //     this.setState({
+    //       events: events
+    //     });
+    // }
 
     handleEventDateSelected(eventSelected){
       var startDate = getFormattedDate(moment(eventSelected.end).toString());

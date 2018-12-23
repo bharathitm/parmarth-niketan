@@ -91,7 +91,7 @@ export function add(req, res) {
             if ((req.body.email_id != null) && (req.body.email_id != '')){
                 SendConfirmationEmail(req.body.name, req.body.email_id, (moment(req.body.date_of_arrival, "YYYY-MM-D HH:mm").format("MMM Do, YYYY") 
                 + " - " + moment(req.body.date_of_departure, "YYYY-MM-D").format("MMM Do, YYYY")), results[0][0].noOfRooms, results[0][0].totalAmt, results[0][0].reservationId,
-                 req.body.reservation_type_id, req.body.sanskara_id, req.body.reference_id, req.body.has_WL);
+                 req.body.reservation_type_id, req.body.sanskara_id, req.body.reference_id, req.body.has_WL, req.body.email_comments);
              }
             res.send(results[0]); 
             connection.release();
@@ -130,14 +130,6 @@ export function update(req, res) {
         var reservation_comments = req.body.reservation_comments.replace(/'/g, "''");  
         call_stored_proc +=  "'" + reservation_comments + "'";
     }
-
-    // // Since advance_reminder_on is an optional field, we pass this as null
-    // if (req.body.advance_reminder_on == ''){
-    //     call_stored_proc += null;
-    // }
-    // else {
-    //     call_stored_proc +=  "'" + req.body.advance_reminder_on + "'";
-    // }
  
     call_stored_proc +=  ",'" + req.body.reservation_type_id + "',";
 

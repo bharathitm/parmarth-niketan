@@ -11,9 +11,15 @@ var pool = mysql.createPool(mysqlconfig);
 var arrSplitUpResults = "";
 
 
-export function SendConfirmationEmail(name, emailId, dates, noOfRooms, totalAmt, reservationId, reservationTypeId, sanskaraId, referenceId, has_WL) {
+export function SendConfirmationEmail(name, emailId, dates, noOfRooms, totalAmt, reservationId, reservationTypeId, sanskaraId, referenceId, has_WL, email_comments) {
 
         var htmlText = 'Namaste Divine Soul ' + name + ' ji,<br/><br/>Jai Gange!<br/><br/>';
+
+        if (email_comments != null){
+                htmlText += "<b>Comments from Parmarth Niketan Team:</b><br/>";
+                htmlText += "<i>" + email_comments + "</i>";
+                htmlText += "<br/><br/>";
+        }
 
          if (reservationTypeId == "3") // sanskara
         {
@@ -78,29 +84,38 @@ export function SendConfirmationEmail(name, emailId, dates, noOfRooms, totalAmt,
         }
         else if (reservationTypeId == "4"){ // travel agent
                 htmlText += 'We hope everything is wonderful with you and your loved ones.<br/><br/>It is wonderful that your clients have chosen Parmarth Niketan Ashram for their stay in Rishikesh.<br/><br/>';
-                htmlText += 'This is a confirmation for their stay at Parmarth Niketan Ashram from <b>' + dates + '</b>.<br/><br/>';  
-                htmlText += 'As requested, we have reserved <b>' + noOfRooms + ' room(s) </b> for their visit with us. ';
-                htmlText += 'Unfortunately as rooms are subject to availability, we <b>cannot guarantee a specific room in advance. </b>';
-                htmlText += 'We’ve however noted your preference for the rooms (if any) and will intimate you upon arrival if the exact room(s) ';
-                htmlText += 'you requested is available. Please inquire at the reception office during check-in.<br/><br/>';
+                htmlText += 'This is a <b>tentative</b> confirmation for their stay at Parmarth Niketan Ashram from <b>' + dates + '</b>.<br/><br/>';  
+                htmlText += 'As requested, we have reserved <b>' + noOfRooms + ' room(s) </b> for their visit with us. <br/><br/>';
 
                 GetDonationSplitUp(reservationId, function (){                               
                         htmlText += 'Based on the room(s) reserved for you, the suggested donation amount is <b>&#8377; ' + totalAmt.toLocaleString('en-IN') + '</b>.The split up is as follows: <br/> ';
                         htmlText += ConstructSplitUpStr();
                         htmlText += 'This will also include complimentary yoga classes. ';
-                        htmlText += 'To confirm this reservation, please send us the following information:<br/>';
+                        htmlText += 'To confirm this reservation, we would require the <b>non-refundable</b> donation to be sent to the below mentioned bank account and also the following information along with a scanned copy of the bank receipt:<br/>';
                         htmlText += '<ol>';
-                        htmlText += '<li>Travel Agency Name:</li>';
-                        htmlText += '<li>Name of Travel Agent:</li>';
-                        htmlText += '<li>Mobile number of Travel Agent:</li>';
-                        htmlText += '<li>Name of Group Leader / Client:</li>';
+                        htmlText += '<li>Agency Name:</li>';
+                        htmlText += '<li>Travel Agent Name:</li>';
+                        htmlText += '<li>Travel Agent Mobile Number:</li>';
+                        htmlText += '<li>Donation Date:</li>';
+                        htmlText += '<li>Donation Amount:</li>';
+                        htmlText += '<li>Bank Details (Name, Branch):</li>';
+                        htmlText += '<li>Mode of Transfer (wire transfer, internet banking or direct deposit):</li>';
+                        htmlText += '<li>Group Leader / Client Name:</li>';
                         htmlText += '<li>Client’s Country of Passport:</li>';
                         htmlText += '<li>Date of Arrival</li>';
                         htmlText += '<li>Date of Departure</li>';
                         htmlText += '<li>Number of People</li>';
                         //htmlText += '<li>Preference of rooms</li>';
                         htmlText += '</ol><br/>';
-                        htmlText += 'Upon receipt of the above details we will send you additional information to secure and confirm this reservation. '
+                        htmlText += '<b>Bank Details</b><ul>';
+                        htmlText += '<li>Account Name: <b>Swami Shukdevanand Trust</b></li>';
+                        htmlText += '<li>Account Number: <b>10373187320</b></li>';
+                        htmlText += '<li>Bank: <b>State Bank of India, Swargashram Branch, Rishikesh, Distt. Pauri Garhwal, Himalayas, Uttarakhand, India</b></li>';
+                        htmlText += '<li>MICR Code: <b>249002004</b></li>';
+                        htmlText += '<li>IFSC Code: <b>SBIN0002493</b></li>';
+                        htmlText += '<li>CIF No: <b>80288369212</b></li>';
+                        htmlText += '</ul><br/>';
+                        htmlText += 'Upon receipt of the above details we will <b>confirm this reservation</b>. '
                         SendEmail(emailId, htmlText + commonEmailText);
                 });
         } else if (reservationTypeId == "6"){ // kathas

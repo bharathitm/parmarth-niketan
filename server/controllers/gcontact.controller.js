@@ -48,9 +48,27 @@ export function add(req, res) {
     + req.body.reservation_id + "','"
     + req.body.guest_id + "','"
     + req.body.c_first_name + "','"    
-    + req.body.c_last_name + "','"
-    + req.body.c_phone_no + "','"
-    + req.body.c_email_id + "')";
+    + req.body.c_last_name + "',";
+
+    if (req.body.c_phone_no != ''){
+        call_stored_proc +=  "'" + req.body.c_phone_no + "'";   
+    }
+    else {
+        call_stored_proc += null;
+    }
+
+    call_stored_proc += ",";
+
+    if (req.body.c_email_id != ''){
+        call_stored_proc +=  "'" + req.body.c_email_id + "'";   
+    }
+    else {
+        call_stored_proc += null;
+    }
+
+    call_stored_proc += ")";
+
+    console.log(call_stored_proc);
 
     pool.getConnection(function(error, connection) {
         if (error) {

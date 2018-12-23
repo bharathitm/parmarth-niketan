@@ -32,6 +32,7 @@ export class ReservationDetails extends Component {
       sanskaraId: props.getStore().sanskaraId,
       noOfPpl: props.getStore().noOfPpl,
       comments: props.getStore().comments,
+      emailComments: null,
       reservationId: props.getStore().reservationId      
     };
 
@@ -288,11 +289,10 @@ export class ReservationDetails extends Component {
       reservation_comments: this.state.comments,
       reservation_type_id: this.state.reservationTypeId,
       sanskara_id: (this.state.sanskaraId == null)? 0 : this.state.sanskaraId,
-      //reference_id: this.state.referenceId,
-      //advance_reminder_on: ((this.state.advanceReminderOn == '') || (this.state.advanceReminderOn == null))? '' : getFormattedDate(this.state.advanceReminderOn).toString(),
       room_ids_str: sessionStorage.getItem('strSelectedRooms').toString(),
       reference_id: this.props.getStore().referenceId,
-      has_WL: (sessionStorage.getItem('waitingListCnt').toString().trim() != ''? 1: 0)
+      has_WL: (sessionStorage.getItem('waitingListCnt').toString().trim() != ''? 1: 0),
+      email_comments: this.state.emailComments
     }; 
 
     store(API_URL, "reservations/", JSON.stringify(payload))
@@ -381,6 +381,7 @@ export class ReservationDetails extends Component {
       sanskaraId: (this.refs.reservationTypeId.value != 3)? 0: this.refs.sanskaraId.value,
       noOfPpl: this.refs.noOfPpl.value,
       comments: this.refs.comments.value,
+      emailComments: (this.refs.emailComments.value.toString().trim() != '')? this.refs.emailComments.value : null
     };
   }
 
@@ -624,46 +625,6 @@ export class ReservationDetails extends Component {
                           </div>
                   </div>
               </div>
-             {/* <div className = "div-table-row"> */}
-              {/* <div className ="div-table-col">        
-                    {/* Advance Reminder On */}
-                  {/* <div className="form-group col-md-12 content form-block-holder">
-                      <label className="control-label col-md-4">
-                      Advance Reminder On:
-                      </label>
-                      <div className="col-md-8">
-                      
-                      <DatePicker ref="advanceReminderOn"
-                        dateFormat="YYYY-MM-DD"
-                        minDate={moment()}  
-                        selected={this.state.advanceReminderOn}
-                        onChange={this.handleAdvanceReminderChange} 
-                        className="form-control"/>
-                      </div>
-                    </div> */}
-                {/* </div> */} 
-
-                 {/* <div className ="div-table-col"> */}
-                        {/* Reference */}
-                        {/* <div className="form-group col-md-12 content form-block-holder">
-                            <label className="control-label col-md-4">
-                            Referred By:
-                            </label>
-                            <div className="col-md-8">
-                                      <select id="slReference"
-                                        ref="referenceId"
-                                        autoComplete="off"
-                                        className="form-control"
-                                        required
-                                        onBlur={this.validationCheck}
-                                        defaultValue={this.state.referenceId}>
-                                        <option value="0">Please select</option>
-                                        {this.populateReferences()}                   
-                                      </select>                      
-                              </div>
-                            </div> */}
-                  {/* </div>
-              </div> */}
                <div className = "div-table-row">
                   <div className ="comments-col div-table-col">
                       {/* Comments */}
@@ -682,6 +643,26 @@ export class ReservationDetails extends Component {
                         </div>
                     </div>
               </div>
+
+               <div className = "div-table-row" style={{ visibility: this.props.getStore().reservationId == null ? 'visible':'hidden', display: this.props.getStore().reservationId == null? 'inline':'none' }}>
+                  <div className ="comments-col div-table-col">
+                      {/* Email Comments */}
+                      <div className="form-group col-md-12 content form-block-holder long-col">
+                          <label className="control-label col-md-4">
+                            Email Comments:
+                          </label>
+                          <div className="col-md-8">
+                            <textarea
+                              ref="emailComments"
+                              autoComplete="off"
+                              className="form-control"
+                              onBlur={this.validationCheck}
+                              defaultValue={this.state.emailComments} />
+                          </div>
+                        </div>
+                    </div>
+              </div>
+
              </div>
               <div style={{ visibility: this.props.getStore().reservationId != null ? 'visible':'hidden', display: this.props.getStore().reservationId != null? 'inline':'none' }}>
                <br/>
