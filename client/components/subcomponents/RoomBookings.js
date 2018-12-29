@@ -39,9 +39,9 @@ export class RoomBookings extends Component {
     }
 
     fetchRoomBookingsIfExists(){
-        if(this.props.getReservationStore().guestId != null)
+        if(this.props.getReservationStore().reservationId != null)
         {
-          fetch(API_URL, "roombookings/" + this.props.getReservationStore().guestId)
+          fetch(API_URL, "roombookings/" + this.props.getReservationStore().reservationId)
               .then((response) => {
                 return checkError(response);
               })
