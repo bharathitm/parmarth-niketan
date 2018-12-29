@@ -143,7 +143,7 @@ export class CheckIns extends React.Component {
           {  
                   if(checkboxes[i].checked) {
 
-                    if (checkboxes[i].id == '14'){
+                    if (checkboxes[i].id == '11'){
                       notify.show('Oops! Some rooms are in Wait List. Please re-allocate and try again!', 'error');
                       return false;
                     } else {

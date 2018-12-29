@@ -128,12 +128,12 @@ export class SearchBox extends Component {
     for (let i = 0; i < this.props.getSearchStore().uniqueBlocks.length; i++) {           
       var blockRooms = this.props.getSearchStore().uniqueRooms.filter(bk => bk.block_id == this.props.getSearchStore().uniqueBlocks[i]);
 
-      if (this.props.getSearchStore().uniqueBlocks[i] == 13){
+      if (this.props.getSearchStore().uniqueBlocks[i] == 10){
         items.push(<li>
           <input type="checkbox" name="chkBlocks" onClick={() => this.props.handleBlocksChanged()} value={this.props.getSearchStore().uniqueBlocks[i]} /> 
         {blocks[this.props.getSearchStore().uniqueBlocks[i]]}     
         </li>); 
-      } else if (this.props.getSearchStore().uniqueBlocks[i] != 14){
+      } else if (this.props.getSearchStore().uniqueBlocks[i] != 11){
         items.push(<li>
           <input type="checkbox" name="chkBlocks" onClick={() => this.props.handleBlocksChanged()} value={this.props.getSearchStore().uniqueBlocks[i]} /> 
         {blocks[this.props.getSearchStore().uniqueBlocks[i]]}  

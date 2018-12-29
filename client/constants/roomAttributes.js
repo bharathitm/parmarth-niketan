@@ -1,18 +1,15 @@
 export const blocks = {
     1: 'Alaknanda',
-    2: 'Alaknanda Extn',
-    3: 'Ganga Base',
-    4: 'Ganga Darshan',
-    5: 'Ganga HD',
-    6: 'Gomti',
-    7: 'Saraswati',
-    8: 'Yamuna',
-    9: 'Yamuna Ext',
-    10: 'Behind Opposite / Yamuna',
-    11: 'Yoga Flats',
-    12: 'Yoga Village',
-    13: 'Event Halls',
-    14: 'Wait List'
+    2: 'Ganga',
+    3: 'Ganga Darshan',
+    4: 'Himalaya Darshan',
+    5: 'Gomti',
+    6: 'Saraswati',
+    7: 'Yamuna',
+    8: 'Yoga Flats',
+    9: 'Yoga Village',
+    10: 'Event Halls',
+    11: 'Wait List'
   };
 
   export const floors = {

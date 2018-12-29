@@ -366,12 +366,12 @@ export class BookRooms extends Component {
 
       if (this.refs.txtWaitingListCnt != undefined){
         if (this.refs.txtWaitingListCnt.value.toString().trim() != ''){
-          document.getElementById("blk_14").checked = true;
+          document.getElementById("blk_11").checked = true;
           wizardOl[0].style.pointerEvents = "auto";
           document.getElementById("next-button").style.visibility = "visible";
       }
       else {
-        document.getElementById("blk_14").checked = false;
+        document.getElementById("blk_11").checked = false;
         wizardOl[0].style.pointerEvents = "none";
         document.getElementById("next-button").style.visibility = "hidden";
       }
@@ -509,12 +509,11 @@ export class BookRooms extends Component {
                 <div className="divBlocks">
                   <input type="checkbox" name="chkAllBlockRooms" id={"blk_" + item} onClick={() => this.selectBlockRooms()} />
                   <h4>{blocks[item]}</h4>
-                  {/* <span className="div-block-totals" style={{ visibility: item != 14 ? 'visible' : 'hidden', display: item != 14 ? 'block' : 'none' }}>Total &#8377;<span id={blocks[item]}>0</span></span> */}
                   <span className="div-block-totals">Total &#8377;<span id={blocks[item]}>0</span></span>
                   <ul>
                     {this.props.getStore().uniqueRooms.filter(bk => bk.block_id == item).map(booking => (
                       <span>
-                      <li style={{ visibility: booking.block_id != 14 ? 'visible' : 'hidden', display: booking.block_id != 14 ? 'block' : 'none' }}>
+                      <li style={{ visibility: booking.block_id != 11 ? 'visible' : 'hidden', display: booking.block_id != 11 ? 'block' : 'none' }}>
                         <input type="checkbox" name={blocks[item]} className="chkAllRooms"
                           onClick={() => this.roomsChanged()}
                           id={booking.room_id}
@@ -527,7 +526,7 @@ export class BookRooms extends Component {
                           <img src="./img/ac1.png" style={{ visibility: booking.has_AC == 1 ? 'visible' : 'hidden', display: booking.has_AC == 1 ? 'inline' : 'none' }} />
                         </span>
                       </li>
-                       <span style={{ visibility: booking.block_id == 14 ? 'visible' : 'hidden', display: booking.block_id == 14 ? 'inline' : 'none' }}>
+                       <span style={{ visibility: booking.block_id == 11 ? 'visible' : 'hidden', display: booking.block_id == 11 ? 'inline' : 'none' }}>
                        <label className="control-label col-md-4">
                           No. of Rooms:
                         </label>
