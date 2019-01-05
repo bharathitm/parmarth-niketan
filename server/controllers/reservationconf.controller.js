@@ -93,19 +93,10 @@ export function SendConfirmationEmail(name, emailId, dates, noOfRooms, totalAmt,
                         htmlText += 'This will also include complimentary yoga classes. ';
                         htmlText += 'To confirm this reservation, we would require the <b>non-refundable</b> donation to be sent to the below mentioned bank account and also the following information along with a scanned copy of the bank receipt:<br/>';
                         htmlText += '<ol>';
-                        htmlText += '<li>Agency Name:</li>';
-                        htmlText += '<li>Travel Agent Name:</li>';
-                        htmlText += '<li>Travel Agent Mobile Number:</li>';
                         htmlText += '<li>Donation Date:</li>';
                         htmlText += '<li>Donation Amount:</li>';
                         htmlText += '<li>Bank Details (Name, Branch):</li>';
                         htmlText += '<li>Mode of Transfer (wire transfer, internet banking or direct deposit):</li>';
-                        htmlText += '<li>Group Leader / Client Name:</li>';
-                        htmlText += '<li>Client’s Country of Passport:</li>';
-                        htmlText += '<li>Date of Arrival</li>';
-                        htmlText += '<li>Date of Departure</li>';
-                        htmlText += '<li>Number of People</li>';
-                        //htmlText += '<li>Preference of rooms</li>';
                         htmlText += '</ol><br/>';
                         htmlText += '<b>Bank Details</b><ul>';
                         htmlText += '<li>Account Name: <b>Swami Shukdevanand Trust</b></li>';
@@ -179,12 +170,12 @@ export function SendConfirmationEmail(name, emailId, dates, noOfRooms, totalAmt,
                 str += "<ul>";
                 for (var i=0; i< arrSplitUpResults.length; i++){
                         str += "<li>";
-                        if (arrSplitUpResults[i].block_id != "13"){
+                        if (arrSplitUpResults[i].block_id != "10"){
                                 str += arrSplitUpResults[i].block_name + ": ";
                         } else {
                                 str += arrSplitUpResults[i].room_no + ": "; 
                         }
-                        str += arrSplitUpResults[i].rooms_cnt + " room(s) X " + arrSplitUpResults[i].noOfDays + " day(s) X &#8377; " 
+                        str += arrSplitUpResults[i].rooms_cnt + " room(s) (" + arrSplitUpResults[i].total_beds + " beds) X " + arrSplitUpResults[i].noOfDays + " day(s) X &#8377; " 
                                 + arrSplitUpResults[i].room_rent.toLocaleString('en-IN') + " = <b>&#8377; " 
                                 + parseFloat(arrSplitUpResults[i].rooms_cnt * arrSplitUpResults[i].noOfDays * arrSplitUpResults[i].room_rent).toLocaleString('en-IN') 
                                 + "</b>";
@@ -192,6 +183,55 @@ export function SendConfirmationEmail(name, emailId, dates, noOfRooms, totalAmt,
                         str += "</li>";
                 }
                 str += "</ul>";
+
+                str += "<br/>";
+                str += "For your reference the minimum donation chart for accomodation is as follows:<br/>";
+                str += "<table style='border:solid 1px silver'>";
+
+                str += "<tr>";
+                str += "<th>Block</th>";
+                str += "<th>2-bedder room</th>";
+                str += "<th>3-bedder rooms</th>";
+                str += "</tr>";
+
+                str += "<tr>";
+                str += "<td style='border:solid 1px silver;padding:0.2em;'>Alakananda, Gomti, Ganga (cooler)</td>";
+                str += "<td style='border:solid 1px silver;padding:0.2em;'>&#8377; 800/night</td>";
+                str += "<td style='border:solid 1px silver;padding:0.2em;'>&#8377; 900/night</td>";
+                str += "</tr>";
+
+                str += "<tr>";
+                str += "<td style='border:solid 1px silver;padding:0.2em;'>Himalaya Darshan (cooler)</td>";
+                str += "<td style='border:solid 1px silver;padding:0.2em;'>&#8377; 1200/night</td>";
+                str += "<td style='border:solid 1px silver;padding:0.2em;'> - </td>";
+                str += "</tr>";
+
+                str += "<tr>";
+                str += "<td style='border:solid 1px silver;padding:0.2em;'>Yamuna, Yoga Village (cooler)</td>";
+                str += "<td style='border:solid 1px silver;padding:0.2em;'>&#8377; 1400/night</td>";
+                str += "<td style='border:solid 1px silver;padding:0.2em;'>&#8377; 1800/night</td>";
+                str += "</tr>";
+
+                str += "<tr>";
+                str += "<td style='border:solid 1px silver;padding:0.2em;'>Himalaya Darshan (AC)</td>";
+                str += "<td style='border:solid 1px silver;padding:0.2em;'>&#8377; 1600/night</td>";
+                str += "<td style='border:solid 1px silver;padding:0.2em;'> - </td>";
+                str += "</tr>";
+
+                str += "<tr>";
+                str += "<td style='border:solid 1px silver;padding:0.2em;'>Yamuna (AC)</td>";
+                str += "<td style='border:solid 1px silver;padding:0.2em;'>&#8377; 1800/night</td>";
+                str += "<td style='border:solid 1px silver;padding:0.2em;'>&#8377; 2100/night</td>";
+                str += "</tr>";
+
+                str += "<tr>";
+                str += "<td style='border:solid 1px silver;padding:0.2em;'>Ganga Darshan (AC)</td>";
+                str += "<td style='border:solid 1px silver;padding:0.2em;'>&#8377; 2200/night</td>";
+                str += "<td style='border:solid 1px silver;padding:0.2em;'>&#8377; 2400/night</td>";
+                str += "</tr>";
+
+                str += "</table>";
+                str += "<br/>";
             }
             return str;
         
@@ -233,7 +273,6 @@ function ConstructCommonMid1(commonText){
         commonText += '<li>Mobile No:</li>';
         commonText += '<li># of adults:</li>';
         commonText += '<li># of children:</li>';
-        //commonText += '<li>Preference of rooms:</li>';
         commonText += '</ul><br/>';  
         return commonText;
 }
