@@ -221,7 +221,7 @@ render() {
                                 selected={this.state.arrivalDate}
                                 onChange={this.handleArrivalDateChange} 
                                  onBlur={this.validationCheck} 
-                                 minDate={moment().subtract(1, 'days')}                        
+                                 minDate={moment().subtract(5, 'days')}                        
                                 className={notValidClasses.arrivalDateCls}/>
                     </div>
         </div>

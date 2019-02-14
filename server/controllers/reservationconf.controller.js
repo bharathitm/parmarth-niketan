@@ -194,17 +194,14 @@ export function SendConfirmationEmail(name, emailId, dates, noOfRooms, totalAmt,
                 str += "<th>3-bedder rooms</th>";
                 str += "</tr>";
 
-                str += "<tr>";
-                str += "<td style='border:solid 1px silver;padding:0.2em;'>Alakananda, Gomti, Ganga (cooler)</td>";
+                if (reservationTypeId != "4"){
 
-                if (reservationTypeId == "4"){
-                        str += "<td style='border:solid 1px silver;padding:0.2em;'> - </td>";
-                } else {
-                        str += "<td style='border:solid 1px silver;padding:0.2em;'>&#8377; 800/night</td>";
+                        str += "<tr>";
+                        str += "<td style='border:solid 1px silver;padding:0.2em;'>Alakananda, Gomti, Ganga (cooler)</td>";
+                        str += "<td style='border:solid 1px silver;padding:0.2em;'>&#8377; 800/night</td>";              
+                        str += "<td style='border:solid 1px silver;padding:0.2em;'>&#8377; 900/night</td>";
+                        str += "</tr>";
                 }
-                
-                str += "<td style='border:solid 1px silver;padding:0.2em;'>&#8377; 900/night</td>";
-                str += "</tr>";
 
                 str += "<tr>";
                 str += "<td style='border:solid 1px silver;padding:0.2em;'>Himalaya Darshan (cooler)</td>";
