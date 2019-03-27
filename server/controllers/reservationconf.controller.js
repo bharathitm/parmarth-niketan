@@ -15,13 +15,27 @@ export function SendConfirmationEmail(name, emailId, dates, noOfRooms, totalAmt,
 
         var htmlText = 'Namaste Divine Soul ' + name + ' ji,<br/><br/>Jai Gange!<br/><br/>';
 
-        if (email_comments != null){
-                htmlText += "<b>Comments from Parmarth Niketan Team:</b><br/>";
-                htmlText += "<i>" + email_comments + "</i>";
-                htmlText += "<br/><br/>";
+        if (reservationTypeId == "2") // retreats
+        {
+                htmlText = ConstructCommonIntro1(htmlText, dates, noOfRooms);
+                if ((referenceId == 0) && (has_WL == 0)){ // if reference don't show donation details -- CHECK IF THESE TWO CLAUSES ARE NEEDED
+                        GetDonationSplitUp(reservationId, function (){                               
+                                htmlText += 'Based on the room(s) reserved for you, the suggested donation amount is <b>&#8377; ' + totalAmt.toLocaleString('en-IN') + '</b>. The split up is as follows: <br/> ';
+                                htmlText += ConstructSplitUpStr(reservationTypeId);
+                                htmlText += 'This will also include complimentary yoga classes. For any further details, please write to us at ';
+                                htmlText += 'tara@parmarth.com ';
+                                htmlText += 'or inquire at the reception office upon arrival.<br/><br/>';
+                                AddComments(emailId, htmlText, commonEmailText, email_comments);
+                        });
+                } else {
+                        htmlText += ConstructMinDonationChart("", reservationTypeId); //show only the minimum donation chart
+                        htmlText += 'For any further details, please write to us at ';
+                        htmlText += 'tara@parmarth.com ';
+                        htmlText += 'or inquire at the reception office upon arrival.<br/><br/>';
+                        AddComments(emailId, htmlText, commonEmailText, email_comments);
+                }
         }
-
-         if (reservationTypeId == "3") // sanskara
+        else if (reservationTypeId == "3") // sanskara
         {
                 switch (sanskaraId){
                         case "1": //Mundan
@@ -30,11 +44,16 @@ export function SendConfirmationEmail(name, emailId, dates, noOfRooms, totalAmt,
                                         GetDonationSplitUp(reservationId, function (){                               
                                                 htmlText += 'Based on the room(s) reserved for you, the suggested donation amount is <b>&#8377; ' + totalAmt.toLocaleString('en-IN') + '</b>. The split up is as follows: <br/> ';
                                                 htmlText += ConstructSplitUpStr(reservationTypeId);
-                                                htmlText += 'This will also include complimentary yoga classes. ';
-                                                SendEmail(emailId, htmlText + commonEmailText);
+                                                htmlText += 'This will also include complimentary yoga classes. For any further details, please write to us at ';
+                                                htmlText += 'tara@parmarth.com ';
+                                                htmlText += 'or inquire at the reception office upon arrival.<br/><br/>';
+                                                AddComments(emailId, htmlText, commonEmailText, email_comments);
                                         });
                                 } else {
-                                        SendEmail(emailId, htmlText + commonEmailText);
+                                        htmlText += 'For any further details, please write to us at ';
+                                        htmlText += 'tara@parmarth.com ';
+                                        htmlText += 'or inquire at the reception office upon arrival.<br/><br/>';
+                                        AddComments(emailId, htmlText, commonEmailText, email_comments);
                                 }
                                 break;   
                         case "2": //Janeo
@@ -43,11 +62,16 @@ export function SendConfirmationEmail(name, emailId, dates, noOfRooms, totalAmt,
                                         GetDonationSplitUp(reservationId, function (){                               
                                                 htmlText += 'Based on the room(s) reserved for you, the suggested donation amount is <b>&#8377; ' + totalAmt.toLocaleString('en-IN') + '</b>. The split up is as follows: <br/> ';
                                                 htmlText += ConstructSplitUpStr(reservationTypeId);
-                                                htmlText += 'This will also include complimentary yoga classes. ';
-                                                SendEmail(emailId, htmlText + commonEmailText);
+                                                htmlText += 'This will also include complimentary yoga classes. For any further details, please write to us at ';
+                                                htmlText += 'tara@parmarth.com ';
+                                                htmlText += 'or inquire at the reception office upon arrival.<br/><br/>';
+                                                AddComments(emailId, htmlText, commonEmailText, email_comments);
                                         });
                                 } else {
-                                        SendEmail(emailId, htmlText + commonEmailText);
+                                        htmlText += 'For any further details, please write to us at ';
+                                        htmlText += 'tara@parmarth.com ';
+                                        htmlText += 'or inquire at the reception office upon arrival.<br/><br/>';
+                                        AddComments(emailId, htmlText, commonEmailText, email_comments);
                                 }
                                 break; 
                         case "3": // Marriage
@@ -56,16 +80,24 @@ export function SendConfirmationEmail(name, emailId, dates, noOfRooms, totalAmt,
                                         GetDonationSplitUp(reservationId, function (){                               
                                                 htmlText += 'Based on the room(s) reserved for you, the suggested donation amount is <b>&#8377; ' + totalAmt.toLocaleString('en-IN') + '</b>. The split up is as follows: <br/> ';
                                                 htmlText += ConstructSplitUpStr(reservationTypeId);
-                                                htmlText += 'This will also include complimentary yoga classes. ';
-                                                SendEmail(emailId, htmlText + commonEmailText);
+                                                htmlText += 'This will also include complimentary yoga classes. For any further details, please write to us at ';
+                                                htmlText += 'tara@parmarth.com ';
+                                                htmlText += 'or inquire at the reception office upon arrival.<br/><br/>';
+                                                AddComments(emailId, htmlText, commonEmailText, email_comments);
                                         });
                                 } else {
-                                        SendEmail(emailId, htmlText + commonEmailText);
+                                        htmlText += 'For any further details, please write to us at ';
+                                        htmlText += 'tara@parmarth.com ';
+                                        htmlText += 'or inquire at the reception office upon arrival.<br/><br/>';
+                                        AddComments(emailId, htmlText, commonEmailText, email_comments);
                                 }
                                 break;                                    
                         case "4": //Asthi Visarjan
                                 htmlText = ConstructAsthiText(htmlText, dates, noOfRooms);
-                                SendEmail(emailId, htmlText + commonEmailText);
+                                htmlText += 'For any further details, please write to us at ';
+                                htmlText += 'tara@parmarth.com ';
+                                htmlText += 'or inquire at the reception office upon arrival.<br/><br/>';
+                                AddComments(emailId, htmlText, commonEmailText, email_comments);
                                 break;    
                         case "5": //Special Pooja
                                 htmlText = ConstructPoojaText(htmlText, dates, noOfRooms);
@@ -73,11 +105,16 @@ export function SendConfirmationEmail(name, emailId, dates, noOfRooms, totalAmt,
                                         GetDonationSplitUp(reservationId, function (){                               
                                                 htmlText += 'Based on the room(s) reserved for you, the suggested donation amount is <b>&#8377; ' + totalAmt.toLocaleString('en-IN') + '</b>. The split up is as follows: <br/> ';
                                                 htmlText += ConstructSplitUpStr(reservationTypeId);
-                                                htmlText += 'This will also include complimentary yoga classes. ';
-                                                SendEmail(emailId, htmlText + commonEmailText);
+                                                htmlText += 'This will also include complimentary yoga classes. For any further details, please write to us at ';
+                                                htmlText += 'tara@parmarth.com ';
+                                                htmlText += 'or inquire at the reception office upon arrival.<br/><br/>';
+                                                AddComments(emailId, htmlText, commonEmailText, email_comments);
                                         });
                                 } else {
-                                        SendEmail(emailId, htmlText + commonEmailText);
+                                        htmlText += 'For any further details, please write to us at ';
+                                        htmlText += 'tara@parmarth.com ';
+                                        htmlText += 'or inquire at the reception office upon arrival.<br/><br/>';
+                                        AddComments(emailId, htmlText, commonEmailText, email_comments);
                                 }
                                 break;                                  
                 }
@@ -106,8 +143,11 @@ export function SendConfirmationEmail(name, emailId, dates, noOfRooms, totalAmt,
                         htmlText += '<li>IFSC Code: <b>SBIN0002493</b></li>';
                         htmlText += '<li>CIF No: <b>80288369212</b></li>';
                         htmlText += '</ul><br/>';
-                        htmlText += 'Upon receipt of the above details we will <b>confirm this reservation</b>. '
-                        SendEmail(emailId, htmlText + commonEmailText);
+                        htmlText += 'Upon receipt of the above details we will <b>confirm this reservation</b>. ';
+                        htmlText += 'For any further details, please write to us at ';
+                        htmlText += 'tara@parmarth.com ';
+                        htmlText += 'or inquire at the reception office upon arrival.<br/><br/>';
+                        AddComments(emailId, htmlText, commonEmailText, email_comments);
                 });
         } else if (reservationTypeId == "6"){ // kathas
                 htmlText += 'We hope everything is wonderful with you and your loved ones.<br/><br/>';
@@ -117,11 +157,17 @@ export function SendConfirmationEmail(name, emailId, dates, noOfRooms, totalAmt,
                         GetDonationSplitUp(reservationId, function (){                               
                                 htmlText += 'Based on the room(s) reserved for you, the suggested donation amount is <b>&#8377; ' + totalAmt.toLocaleString('en-IN') + '</b>. The split up is as follows: <br/> ';
                                 htmlText += ConstructSplitUpStr(reservationTypeId);
-                                htmlText += 'This will also include complimentary yoga classes. ';
-                                SendEmail(emailId, htmlText + commonEmailText);
+                                htmlText += 'This will also include complimentary yoga classes. For any further details, please write to us at ';
+                                htmlText += 'reservations@parmarth.com ';
+                                htmlText += 'or inquire at the reception office upon arrival.<br/><br/>';
+                                AddComments(emailId, htmlText, commonEmailText, email_comments);
                         });
                 } else {
-                        SendEmail(emailId, htmlText + commonEmailText);       
+                        htmlText += ConstructMinDonationChart("", reservationTypeId); //show only the minimum donation chart
+                        htmlText += 'For any further details, please write to us at ';
+                        htmlText += 'reservations@parmarth.com ';
+                        htmlText += 'or inquire at the reception office upon arrival.<br/><br/>';
+                        AddComments(emailId, htmlText, commonEmailText, email_comments);       
                 }
         }
         else { // every thing else
@@ -130,11 +176,17 @@ export function SendConfirmationEmail(name, emailId, dates, noOfRooms, totalAmt,
                         GetDonationSplitUp(reservationId, function (){                               
                                 htmlText += 'Based on the room(s) reserved for you, the suggested donation amount is <b>&#8377; ' + totalAmt.toLocaleString('en-IN') + '</b>. The split up is as follows: <br/> ';
                                 htmlText += ConstructSplitUpStr(reservationTypeId);
-                                htmlText += 'This will also include complimentary yoga classes. ';
-                                SendEmail(emailId, htmlText + commonEmailText);
+                                htmlText += 'This will also include complimentary yoga classes. For any further details, please write to us at ';
+                                htmlText += 'reservations@parmarth.com ';
+                                htmlText += 'or inquire at the reception office upon arrival.<br/><br/>';
+                                AddComments(emailId, htmlText, commonEmailText, email_comments);
                         });
                 } else {
-                        SendEmail(emailId, htmlText + commonEmailText);
+                        htmlText += ConstructMinDonationChart("", reservationTypeId); //show only the minimum donation chart
+                        htmlText += 'For any further details, please write to us at ';
+                        htmlText += 'reservations@parmarth.com ';
+                        htmlText += 'or inquire at the reception office upon arrival.<br/><br/>';
+                        AddComments(emailId, htmlText, commonEmailText, email_comments);
                 }
         }  
 }
@@ -184,67 +236,78 @@ export function SendConfirmationEmail(name, emailId, dates, noOfRooms, totalAmt,
                 }
                 str += "</ul>";
 
-                str += "<br/>";
-                str += "For your reference the minimum donation chart for accomodation is as follows:<br/>";
-                str += "<table style='border:solid 1px silver'>";
+           ConstructMinDonationChart(str, reservationTypeId);
 
-                str += "<tr>";
-                str += "<th>Block</th>";
-                str += "<th>2-bedder room</th>";
-                str += "<th>3-bedder rooms</th>";
-                str += "</tr>";
-
-                if (reservationTypeId != "4"){
-
-                        str += "<tr>";
-                        str += "<td style='border:solid 1px silver;padding:0.2em;'>Alakananda, Gomti, Ganga (cooler)</td>";
-                        str += "<td style='border:solid 1px silver;padding:0.2em;'>&#8377; 800/night</td>";              
-                        str += "<td style='border:solid 1px silver;padding:0.2em;'>&#8377; 900/night</td>";
-                        str += "</tr>";
-                }
-
-                str += "<tr>";
-                str += "<td style='border:solid 1px silver;padding:0.2em;'>Himalaya Darshan (cooler)</td>";
-                str += "<td style='border:solid 1px silver;padding:0.2em;'>&#8377; 1200/night</td>";
-                str += "<td style='border:solid 1px silver;padding:0.2em;'> - </td>";
-                str += "</tr>";
-
-                str += "<tr>";
-                str += "<td style='border:solid 1px silver;padding:0.2em;'>Yamuna, Yoga Village (cooler)</td>";
-                str += "<td style='border:solid 1px silver;padding:0.2em;'>&#8377; 1400/night</td>";
-                str += "<td style='border:solid 1px silver;padding:0.2em;'>&#8377; 1800/night</td>";
-                str += "</tr>";
-
-                str += "<tr>";
-                str += "<td style='border:solid 1px silver;padding:0.2em;'>Himalaya Darshan (AC)</td>";
-                str += "<td style='border:solid 1px silver;padding:0.2em;'>&#8377; 1600/night</td>";
-                str += "<td style='border:solid 1px silver;padding:0.2em;'> - </td>";
-                str += "</tr>";
-
-                str += "<tr>";
-                str += "<td style='border:solid 1px silver;padding:0.2em;'>Yamuna (AC)</td>";
-                str += "<td style='border:solid 1px silver;padding:0.2em;'>&#8377; 1800/night</td>";
-                str += "<td style='border:solid 1px silver;padding:0.2em;'>&#8377; 2100/night</td>";
-                str += "</tr>";
-
-                str += "<tr>";
-                str += "<td style='border:solid 1px silver;padding:0.2em;'>Ganga Darshan (AC)</td>";
-                str += "<td style='border:solid 1px silver;padding:0.2em;'>&#8377; 2200/night</td>";
-                str += "<td style='border:solid 1px silver;padding:0.2em;'>&#8377; 2400/night</td>";
-                str += "</tr>";
-
-                str += "</table>";
-                str += "<br/>";
-            }
-            return str;
-        
+           return str;
     }
+}
+
+function ConstructMinDonationChart(strSplitUp, reservationTypeId){
+
+        var str = strSplitUp;
+
+        str += "<br/>";
+        str += "For your reference the minimum donation chart for accommodation is as follows:<br/>";
+        str += "<table style='border:solid 1px silver'>";
+
+        str += "<tr>";
+        str += "<th>Block</th>";
+        str += "<th>2-bedder room</th>";
+        str += "<th>3-bedder rooms</th>";
+        str += "</tr>";
+
+        if (reservationTypeId != "4"){
+
+                str += "<tr>";
+                str += "<td style='border:solid 1px silver;padding:0.2em;'>Alakananda, Gomti, Ganga (cooler)</td>";
+                str += "<td style='border:solid 1px silver;padding:0.2em;'>&#8377; 800/night</td>";              
+                str += "<td style='border:solid 1px silver;padding:0.2em;'>&#8377; 900/night</td>";
+                str += "</tr>";
+        }
+
+        str += "<tr>";
+        str += "<td style='border:solid 1px silver;padding:0.2em;'>Himalaya Darshan (cooler)</td>";
+        str += "<td style='border:solid 1px silver;padding:0.2em;'>&#8377; 1200/night</td>";
+        str += "<td style='border:solid 1px silver;padding:0.2em;'> - </td>";
+        str += "</tr>";
+
+        str += "<tr>";
+        str += "<td style='border:solid 1px silver;padding:0.2em;'>Yamuna</td>";
+        str += "<td style='border:solid 1px silver;padding:0.2em;'>&#8377; 1200/night</td>";
+        str += "<td style='border:solid 1px silver;padding:0.2em;'>&#8377; 1800/night</td>";
+        str += "</tr>";
+
+        str += "<tr>";
+        str += "<td style='border:solid 1px silver;padding:0.2em;'>Himalaya Darshan (AC)</td>";
+        str += "<td style='border:solid 1px silver;padding:0.2em;'>&#8377; 1600/night</td>";
+        str += "<td style='border:solid 1px silver;padding:0.2em;'> - </td>";
+        str += "</tr>";
+
+        str += "<tr>";
+        str += "<td style='border:solid 1px silver;padding:0.2em;'>Yamuna (AC)</td>";
+        str += "<td style='border:solid 1px silver;padding:0.2em;'>&#8377; 1800/night</td>";
+        str += "<td style='border:solid 1px silver;padding:0.2em;'>&#8377; 2100/night</td>";
+        str += "</tr>";
+
+        str += "<tr>";
+        str += "<td style='border:solid 1px silver;padding:0.2em;'>Ganga Darshan (AC)</td>";
+        str += "<td style='border:solid 1px silver;padding:0.2em;'>&#8377; 2200/night</td>";
+        str += "<td style='border:solid 1px silver;padding:0.2em;'>&#8377; 2400/night</td>";
+        str += "</tr>";
+
+        str += "</table>";
+        str += "<br/>";
+        
+        return str;
+    }
+
+   
 
 function ConstructCommonIntro1(commonText, dates, noOfRooms){
         commonText += 'We hope everything is wonderful with you and your loved ones.<br/><br/>';
         commonText += 'This is a confirmation for your stay at Parmarth Niketan Ashram from <b>' + dates + '</b>.<br/><br/>';
         commonText += 'As requested, we have reserved <b>' + noOfRooms + ' room(s) </b> for your visit with us. ';
-        commonText += 'Unfortunately as rooms are subject to availability, we <b>cannot guarantee a specific room in advance. </b>';
+        commonText += 'As rooms are subject to availability, we <b>cannot guarantee a specific room in advance. </b>';
         commonText += 'We’ve however noted your preference for the rooms (if any) and will intimate you upon arrival if the exact room(s) ';
         commonText += 'you requested is available. Please inquire at the reception office during check-in.<br/><br/>';
         return commonText;
@@ -253,7 +316,7 @@ function ConstructCommonIntro1(commonText, dates, noOfRooms){
 function ConstructCommonIntro2(commonText, dates, noOfRooms){
         commonText += 'This is a confirmation for your stay at Parmarth Niketan Ashram from <b>' + dates + '</b>.<br/><br/>';  
         commonText += 'As requested, we have reserved <b>' + noOfRooms + ' room(s) </b> for your visit with us. ';
-        commonText += 'Unfortunately as rooms are subject to availability, we <b>cannot guarantee a specific room in advance. </b>';
+        commonText += 'As rooms are subject to availability, we <b>cannot guarantee a specific room in advance. </b>';
         commonText += 'We’ve however noted your preference for the rooms (if any) and will intimate you upon arrival if the exact room(s) ';
         commonText += 'you requested is available. Please inquire at the reception office during check-in.<br/><br/>';
         return commonText;
@@ -342,5 +405,19 @@ function ConstructPoojaText(poojaText, dates, noOfRooms){
         poojaText += 'If you are interested in performing a Gau Pooja or hosting a Bhandara for the Swamis, Rishikumars and Brahmacharis at the Ashram or ';
         poojaText += 'sponsoring clothes for the Rishikumars etc, please discuss with the office reception staff when you are at the Ashram.<br/><br/>';
         return poojaText;
+}
+
+function AddComments(emailId, emailText, commonEmailText, email_comments){
+
+        var htmlText = "";
+        htmlText = emailText;
+        
+        if (email_comments != null){
+                htmlText += "<b>Comments from Parmarth Niketan Reservations Team:</b><br/>";
+                htmlText += "<i>" + email_comments + "</i>";
+                htmlText += "<br/><br/>";
+        }
+        SendEmail(emailId, htmlText + commonEmailText);
+
 }
 

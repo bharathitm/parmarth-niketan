@@ -305,6 +305,12 @@ export class RoomBookings extends Component {
 
     let notValidClasses = {};
 
+    const arrRoomNos = this.state.items.map((item) => {
+      return (
+        item.room_no
+      );
+    });
+
     /* advanceReceivedOn */
     if (typeof this.state.advanceReceivedOnVal == 'undefined' || this.state.advanceReceivedOnVal) {
       notValidClasses.advanceReceivedOnCls = 'form-control';
@@ -330,17 +336,11 @@ export class RoomBookings extends Component {
     } else {
         return (
             <div id="divRoomBookings" style={{ visibility: this.state.hasRoomBookings? 'visible':'hidden', display: this.state.hasRoomBookings? 'inline':'none' }}>
-                 <div className="divFloatRight" style={{width: '0'}}>
-                 {/* <table><tr>
-                   <td> */}
-                     <button type="button" className="btnBig" style={{marginTop: '2em'}} onClick={() => this.handleDeleteWLRoomBookings()}>Remove WL</button>
-                     {/* </td>
-                   <td> */}
-                     <button type="button" className="btnBig" style={{marginTop: '2em'}} onClick={() => this.handleDeleteAllRoomBookings()}>Remove All</button>
-                     {/* </td>
-                  </tr></table> */}
-                 </div>
-             <div className = "div-table advance-table" style={{width: '90%'}}>
+                 <table>
+                   <tbody>
+                   <tr>
+                     <td style={{width: '75%'}}>
+             <div className = "div-table advance-table" style={{width: '110%'}}>
                     <div className = "div-table-row">
                               <div className ="room-no div-table-col div-table-col-header">
                               Room No.
@@ -391,6 +391,25 @@ export class RoomBookings extends Component {
                         </div>
                         ))}
                     </div>
+
+                    </td>
+                     <td style={{width: '15%', fontSize: '10pt'}}>
+                       
+                    <div>
+                      <a onClick={() => this.handleDeleteAllRoomBookings()}>Remove all rooms?</a> <br/>
+                      <a style={{
+                          visibility: arrRoomNos.includes("WL") == true ? 'visible':'hidden', 
+                          display: arrRoomNos.includes("WL") == true? 'inline':'none' }} 
+                          onClick={() => this.handleDeleteWLRoomBookings()}>
+                          Remove Waiting List rooms?
+                      </a>        
+                    </div>
+
+                     </td>
+                   </tr>
+                   </tbody>
+                  </table>
+
             </div>
             );
         }

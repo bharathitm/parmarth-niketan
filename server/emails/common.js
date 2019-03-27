@@ -1,5 +1,4 @@
-export var confirmationTextBody = "For any further details, please write to us at reservations@parmarth.com or inquire at the reception office upon arrival.<br/><br/> \
-In order to have a quick check-in and also a hassle-free stay at the Ashram, please read the following instructions carefully - \
+export var confirmationTextBody = "In order to have a quick check-in and also a hassle-free stay at the Ashram, please read the following instructions carefully - \
 <ul>\
 <li> \
 As a general rule, you can check-in anytime between <b>8 am – 9 pm </b>and check-out before <b>10 am</b>. \
@@ -55,13 +54,12 @@ Donations may be offered in cash with Rupees, or most major currencies, or by cr
 <b>All funds received are donations to Swami Shukdevand Trust which manages the Ashram and its humanitarian services. We will not be able to refund any donations. \
 Thank you so much for your understanding. </b> <br/><br/>\
 Safe Travels! May your stay be enlightening and enriching. <br/><br/> \
-<i>This is an automatically generated email. If you have raised any queries during your booking, our team will get back to you shortly! </i> <br/><br/> \
+<i>This is an automatically generated email. If you have any questions, please email us! </i> <br/><br/> \
 Warm Regards,<br/> \
-Parmarth Niketan <br/><br/>\
+Parmarth Niketan Reservations Team <br/><br/>\
 <b>Websites & Social Media<b/> <br/>\
-Kumbh Mela 2019 - Jan 12 - Feb 28, 2019 <a href='https://kumbhamela2019.org'>Website</a> <br/>\
-International Yoga Festival - Mar 1 - 7, 2019 <a href='https://www.facebook.com/ParmarthNiketan/videos/10156033368262698'>IYF Promo Video</a> | \
-<a href='https://www.eventbrite.com/e/international-yoga-festival-2019-tickets-47746921327'>Registration</a> | \
+Kumbh Mela 2019 - <a href='https://kumbhamela2019.org'>Website</a> <br/>\
+International Yoga Festival - <a href='https://www.facebook.com/ParmarthNiketan/videos/10156033368262698'>IYF Promo Video</a> | \
 <a href='https://www.internationalyogafestival.org'>Website</a> | \
 <a href='https://www.facebook.com/internationalyogafestival'>Facebook</a> | \
 <a href='https://twitter.com/IntlYogaFest'>Twitter</a> | \

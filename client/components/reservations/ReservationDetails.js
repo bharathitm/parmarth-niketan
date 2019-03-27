@@ -76,8 +76,8 @@ export class ReservationDetails extends Component {
       document.getElementById("next-button").style.marginTop = "0em";
     }
    
-    this.refs.arrivalDate.innerHTML = moment(this.props.getStore().arrivalDate).format('dddd, MMMM Do YYYY');
-    this.refs.departureDate.innerHTML = moment(this.props.getStore().departureDate).format('dddd, MMMM Do YYYY');
+    this.refs.arrivalDate.innerHTML = moment(this.props.getStore().arrivalDate).format('ddd, MMM Do YYYY');
+    this.refs.departureDate.innerHTML = moment(this.props.getStore().departureDate).format('ddd, MMM Do YYYY');
 
     //hide Sanskara Div by default
     this.refs.divSanskara.style.visibility = "hidden";
@@ -145,8 +145,8 @@ export class ReservationDetails extends Component {
       });
 
     
-      this.refs.arrivalDate.innerHTML = moment(aDate.format("YYYY-MM-DD")).format('dddd, MMMM Do YYYY');
-      this.refs.departureDate.innerHTML = moment(items[0].date_of_departure).format('dddd, MMMM Do YYYY');
+      this.refs.arrivalDate.innerHTML = moment(aDate.format("YYYY-MM-DD")).format('ddd, MMM Do YYYY');
+      this.refs.departureDate.innerHTML = moment(items[0].date_of_departure).format('ddd, MMM Do YYYY');
       this.refs.noOfPpl.value = items[0].no_of_people;
       this.refs.comments.value = (items[0].reservation_comments == null)? '': items[0].reservation_comments;
       this.refs.reservationTypeId.value = items[0].reservation_type_id;
@@ -208,8 +208,8 @@ export class ReservationDetails extends Component {
     } else {
 
 
-      this.refs.arrivalDate.innerHTML = moment(sessionStorage.getItem("arrivalDate")).format('dddd, MMMM Do YYYY');
-      this.refs.departureDate.innerHTML = moment(sessionStorage.getItem("departureDate")).format('dddd, MMMM Do YYYY');
+      this.refs.arrivalDate.innerHTML = moment(sessionStorage.getItem("arrivalDate")).format('ddd, MMM Do YYYY');
+      this.refs.departureDate.innerHTML = moment(sessionStorage.getItem("departureDate")).format('ddd, MMM Do YYYY');
 
       this.refs.reservationStatus.innerHTML = "";
 
@@ -473,6 +473,167 @@ export class ReservationDetails extends Component {
     }
   }
 
+   //Check Out button click
+   handleEarlyCheckOut() {
+
+    var str_reservations = this.state.reservationId;
+
+    if (str_reservations != ''){
+      this.fetchCheckOutTotal(str_reservations);
+    } 
+  }
+
+  fetchCheckOutTotal(str_reservations){
+
+    const payload = {
+      str_reservation_ids: str_reservations,
+      str_room_booking_ids: ''
+    };
+
+    store(API_URL, "checkouts/id=1", JSON.stringify(payload))
+      .then((response) => {
+        return checkError(response);
+      })
+      .then((result) => {
+        this.loadCheckOutTotalDetails(result);
+      })
+      .catch((error) => {
+        this.setState({
+          isLoaded: false,
+          error
+        });
+        notify.show('Oops! Something went wrong! Please try again!', 'error');
+        logError(error);
+      });
+
+  }
+
+  loadCheckOutTotalDetails(results){
+
+    confirmAlert({
+      customUI: ({ onClose }) => {
+
+        var sum = 0;
+        for (var i = 0; i < results.length; i++) {
+          sum += results[i].total;
+        }
+
+        return (
+          <div>
+            <h4>Check Out Rooms</h4>  
+            <img src="./img/close.png" className="imgClose" onClick={onClose}/>
+                
+              <div className = "div-table advance-table checkout-table">
+              <div className = "div-table-row">
+                        <div className ="div-table-col div-table-col-header">
+                       Room No
+                        </div>
+                        <div className ="div-table-col div-table-col-header">
+                        No. of Days
+                        </div>
+                        <div className ="div-table-col div-table-col-header">
+                       Room Donation
+                        </div>
+                        <div className ="div-table-col div-table-col-header">
+                        Total Donation
+                        </div>
+                </div>
+              {results.map(item => (
+                  <div className = "div-table-row" key={item.donation_id}>
+                        <div className ="div-table-col col-bordered">
+                          {item.room_no}
+                        </div>
+                        <div className ="div-table-col col-bordered">
+                          {item.no_of_days}
+                        </div>
+                        <div className ="div-table-col col-bordered">
+                        &#8377; {item.room_rent.toLocaleString('en-IN')}
+                        </div>
+                        <div className ="div-table-col col-bordered">
+                        &#8377; {item.total.toLocaleString('en-IN')}
+                        </div>
+                  </div>
+                  ))} 
+                </div>
+                   <div className="form-group col-md-12 content form-block-holder">
+                    <label className="control-label col-md-4">
+                      Donation Received: 
+                      &#8377; {(results[0].donationAmount != null? results[0].donationAmount.toLocaleString('en-IN'): "0")}
+                      </label>
+                  </div>
+
+                   <div className="form-group col-md-12 content form-block-holder">
+                    <label className="control-label col-md-4">
+                      Total Sum: &#8377; &nbsp;
+                    </label>
+                    <div className="col-md-8">
+                      <input id="txtTotalSum" className="form-control small-textbox" defaultValue={sum} type="number" />
+                      </div>
+                </div>
+
+                 <div className="form-group col-md-12 content form-block-holder">
+                    <label className="control-label col-md-4">
+                      Receipt No: &nbsp;&nbsp;
+                    </label>
+                    <div className="col-md-8">
+                      <input id="txtReceiptNo" className="form-control small-textbox" />
+                      </div>
+                </div>
+
+                 <div className="form-group col-md-12 content form-block-holder">
+                    <label className="control-label col-md-4">
+                      Comments: &nbsp;&nbsp;
+                    </label>
+                    <div className="col-md-8">
+                    <textarea id="txtCheckOutComments"
+                        className="form-control" />
+                      </div>
+                </div>
+            <button type="button" className="btnCheckOut btnBig" onClick={() => 
+              { this.checkOutRooms(
+                    document.getElementById("txtTotalSum").value, 
+                    document.getElementById("txtReceiptNo").value,
+                    document.getElementById("txtCheckOutComments").value); 
+                onClose() }}>Check Out</button>
+            
+          </div>
+        )
+      }
+    })
+
+  }
+
+  checkOutRooms(amount, receipt_no, comments){
+
+    var str_reservations = this.state.reservationId;
+
+    const payload = {
+      int_reservation_id: str_reservations,
+      str_room_booking_ids: '',
+      amount: amount,
+      receipt_no: receipt_no,
+      comments: comments
+    };
+   
+    store(API_URL, "checkouts/", JSON.stringify(payload))
+      .then((response) => {
+        return checkError(response);
+      })
+      .then((result) => {
+        this.clearReservationDetails();
+        notify.show('Reservation checked out successfully!', 'success');  
+      })
+      .catch((error) => {
+        this.setState({
+          isLoaded: false,
+          error
+        });
+        notify.show('Oops! Something went wrong! Please try again!', 'error');
+        logError(error);
+      });    
+  }
+
+
   render() { 
       //new guest, new reservation
       if((this.props.getStore().reservationId == null) && (sessionStorage.getItem('strSelectedRooms') == null)){
@@ -520,16 +681,17 @@ export class ReservationDetails extends Component {
                 <h4>Reservation Details</h4>  
                 <div className="divFloatRight" style={{ visibility: (this.props.getStore().reservationId != null) ? 'visible':'hidden', display: (this.props.getStore().reservationId != null)? 'inline':'none' }}> 
                   <a style={{fontWeight: 'bolder', color: '#ED823A'}} onClick={() => this.handleAddAnotherReservation()}>Add Another Reservation?</a>  
-                <button type="button" className="btnBig" style={{ visibility: (this.props.getStore().reservationStatusId == 2) ? 'visible':'hidden', display: (this.props.getStore().reservationStatusId == 2)? 'inline':'none' }} onClick={() => this.handleCancel()}>Cancel</button>   
+                <button type="button" className="btnBig" style={{ backgroundColor: 'grey', visibility: (this.props.getStore().reservationStatusId == 2) ? 'visible':'hidden', display: (this.props.getStore().reservationStatusId == 2)? 'inline':'none' }} onClick={() => this.handleCancel()}>Cancel</button>
+                <button type="button" className="btnBig" style={{ visibility: (this.props.getStore().reservationStatusId == 3) ? 'visible':'hidden', display: (this.props.getStore().reservationStatusId == 3)? 'inline':'none' }} onClick={() => this.handleEarlyCheckOut()}>Early Check Out</button>   
                 </div>
                       <div className="divDates">
                       {/* Arrival Date */}
                       <label className="col-md-4">
                             From:
-                            <span ref="arrivalDate" className="spnDates" defaultValue={moment(this.state.arrivalDate).format('dddd, MMMM Do YYYY')}>
+                            <span ref="arrivalDate" className="spnDates" defaultValue={moment(this.state.arrivalDate).format('ddd, MMM Do YYYY')}>
                             </span>
                             &nbsp;&nbsp;To:
-                            <span ref="departureDate" className="spnDates" defaultValue={moment(this.state.departureDate).format('dddd, MMMM Do YYYY')}>
+                            <span ref="departureDate" className="spnDates" defaultValue={moment(this.state.departureDate).format('ddd, MMM Do YYYY')}>
                             </span>
                       </label>
                       {/* Departure Date */}

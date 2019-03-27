@@ -215,6 +215,7 @@ export class BookRooms extends Component {
 
             }
           }
+          sessionStorage.setItem('waitingListCnt', "");
         }
       } else {
           if (this.refs.txtWaitingListCnt.value != ""){
