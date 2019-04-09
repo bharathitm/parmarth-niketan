@@ -11,6 +11,8 @@ router.route('/')
             guestCtrl.searchEmailIds(req, res);
         } else if ((req.query.phone) != undefined){
             guestCtrl.searchPhoneNos(req, res);
+        // } else if ((req.query.rId) != undefined){
+        //     guestCtrl.searchByReservationId(req, res);
         } else {
             guestCtrl.search(req, res);
         }

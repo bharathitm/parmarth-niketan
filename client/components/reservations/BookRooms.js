@@ -143,11 +143,19 @@ export class BookRooms extends Component {
     for (var i = 0; i < parentDivForBlockTotal.length; i++) {
       parentDivForBlockTotal[i].firstElementChild.innerHTML = 0;
     }
+
+    //reset all the beds count back to 0
+    document.getElementById("spGrandBeds").innerHTML = 0;
+    var parentDivForBlockBeds = document.getElementsByClassName("div-block-beds");
+    for (var i = 0; i < parentDivForBlockBeds.length; i++) {
+      parentDivForBlockBeds[i].firstElementChild.innerHTML = 0;
+    }
   }
 
   //rooms check box click
   roomsChanged() {
     var grandTotal = 0;
+    var grandBeds = 0;
     for (var cnt = 0; cnt < this.props.getStore().uniqueBlocks.length; cnt++) {
 
       var checkboxes = document.getElementsByName(blocks[this.props.getStore().uniqueBlocks[cnt]]);
@@ -155,28 +163,40 @@ export class BookRooms extends Component {
       //if (checkboxes.length > 0){
       var blockTotal = 0;
       var blockName = '';
+      var room_no = 0;
+      var blockBeds = 0;
+
       for (var i = 0; i < checkboxes.length; i++) {
         if (checkboxes[i].checked) {      
           blockTotal += parseFloat(checkboxes[i].value);
           blockName = checkboxes[i].name;
+          room_no = checkboxes[i].id;
+          if ((blockName != 'Event Halls') && (blockName != 'Wait List')) {
+            blockBeds += parseFloat(checkboxes[i].getAttribute("data-beds"));
+          }
         }
       }
       var aDate = moment(this.props.getStore().arrivalDate);
       var dDate = moment(this.props.getStore().departureDate);
 
       if (dDate.diff(aDate, 'days') != 0) {
-        if ((blockName != 'Event Halls') && (blockName != 'Wait List')) {
+        if ((parseInt(room_no) >= 416 && parseInt(room_no) <= 425) || (parseInt(room_no) == 442) || (parseInt(room_no) == 443)){
+          blockTotal = (blockTotal * (dDate.diff(aDate, 'days')));
+        } else if ((blockName != 'Event Halls') && (blockName != 'Wait List')) {
           blockTotal = (blockTotal * (dDate.diff(aDate, 'days')));
         }
       }
 
       if (document.getElementById(blocks[this.props.getStore().uniqueBlocks[cnt]]) != null) {
         document.getElementById(blocks[this.props.getStore().uniqueBlocks[cnt]]).innerHTML = blockTotal.toLocaleString('en-IN');
+        document.getElementById(blocks[this.props.getStore().uniqueBlocks[cnt]]+ "_beds").innerHTML = blockBeds;
         grandTotal += blockTotal;
+        grandBeds += blockBeds;
       }
       //} 
 
       document.getElementById("spGrandTotal").innerHTML = grandTotal.toLocaleString('en-IN');
+      document.getElementById("spGrandBeds").innerHTML = grandBeds;
 
       // var selectedRooms = this.getAllSelectedRooms();
       // var str_rooms = createRoomsString(selectedRooms);
@@ -280,8 +300,11 @@ export class BookRooms extends Component {
         logError(error);
       });
 
-    this.props.jumpToStep(2);
-
+      if (this.props.getStore().isRequest == 1){
+        this.props.jumpToStep(1);
+      } else {
+        this.props.jumpToStep(2);
+      }
   }
 
   handleBlocksChanged() {
@@ -323,6 +346,13 @@ export class BookRooms extends Component {
             var parentDivForBlockTotal = document.getElementsByClassName("div-block-totals");
             for (var i = 0; i < parentDivForBlockTotal.length; i ++){
               parentDivForBlockTotal[i].firstElementChild.innerHTML = 0;
+            }
+
+            //reset all the beds back to 0
+            document.getElementById("spGrandBeds").innerHTML = 0;
+            var parentDivForBlockBeds = document.getElementsByClassName("div-block-beds");
+            for (var i = 0; i < parentDivForBlockBeds.length; i ++){
+              parentDivForBlockBeds[i].firstElementChild.innerHTML = 0;
             }
 
           }
@@ -381,13 +411,10 @@ export class BookRooms extends Component {
 
 
   render() {
-
     //coming from reservations search in Dashboard, directly load Guest Details page
-    if (this.props.getStore().searchText != '') {
-      this.props.jumpToStep(1);
-    }
-
-    if (this.props.getStore().searchGuestId != null) {
+    if ((this.props.getStore().searchText != null) || 
+        (this.props.getStore().searchGuestId != null) || 
+        (this.props.getStore().searchReservationId != null)){
       this.props.jumpToStep(1);
     }
 
@@ -505,12 +532,17 @@ export class BookRooms extends Component {
             <div id="divSearchResults">
 
               <div className="div-block-totals grand-total" style={{ visibility: this.props.getStore().searchResultItems.length > 0 ? 'visible' : 'hidden', display: this.props.getStore().searchResultItems.length > 0 ? 'inline' : 'none' }}>Grand Total &#8377;<span id="spGrandTotal">0</span></div>
+              <div className="div-block-totals grand-beds" style={{ visibility: this.props.getStore().searchResultItems.length > 0 ? 'visible' : 'hidden', display: this.props.getStore().searchResultItems.length > 0 ? 'inline' : 'none' }}>Total Beds <span id="spGrandBeds">0</span></div>
 
               {this.props.getStore().uniqueBlocks.filter(bk => this.props.getStore().filteredBlocks.find(fB => fB == bk)).map(item => (
                 <div className="divBlocks">
                   <input type="checkbox" name="chkAllBlockRooms" id={"blk_" + item} onClick={() => this.selectBlockRooms()} />
                   <h4>{blocks[item]}</h4>
+                  <span id="spEventHallLegend" style={{ visibility: blocks[item] == 'Event Halls' ? 'visible' : 'hidden', display: blocks[item] == 'Event Halls' ? 'block' : 'none' }}>
+                  Yoga Halls, Samadhi Mandir are on a per day basis.
+                  </span>
                   <span className="div-block-totals">Total &#8377;<span id={blocks[item]}>0</span></span>
+                  <span className="div-block-beds">Beds <span id={blocks[item] + "_beds"}>0</span></span>
                   <ul>
                     {this.props.getStore().uniqueRooms.filter(bk => bk.block_id == item).map(booking => (
                       <span>
@@ -518,6 +550,7 @@ export class BookRooms extends Component {
                         <input type="checkbox" name={blocks[item]} className="chkAllRooms"
                           onClick={() => this.roomsChanged()}
                           id={booking.room_id}
+                          data-beds={booking.total_beds}
                           value={booking.room_rent} />
                         <b>{booking.room_no}</b>{", " +
                           floors[booking.floor_no] + ", " +

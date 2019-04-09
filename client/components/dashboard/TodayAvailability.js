@@ -96,8 +96,8 @@ export class TodayAvailability extends React.Component {
              <ul>
                  {items.map(item => (
                   <li key={item.block_id} style={{ visibility: item.block_id != 10 ? 'visible':'hidden', display: item.block_id != 10? 'inline':'none' }}>
-                    <span className="spBlockCount" style={{color: item.block_id == 11? 'red': ''}}>{item.count}</span><br/>
-                   <span className="spBlockName"> {blocks[item.block_id]} </span>
+                    <span className="spCount" style={{color: item.block_id == 11? 'red': ''}}>{item.count}</span><br/>
+                   <span className="spNameCount"> {blocks[item.block_id]} </span>
                   </li>
                 ))}
              </ul>

@@ -33,7 +33,7 @@ export class ReservationDetails extends Component {
       noOfPpl: props.getStore().noOfPpl,
       comments: props.getStore().comments,
       emailComments: null,
-      reservationId: props.getStore().reservationId      
+      reservationId: props.getStore().reservationId   
     };
 
     this.reservationStore = {
@@ -51,6 +51,7 @@ export class ReservationDetails extends Component {
     this.changeADCollapsibleOverflow = this.changeADCollapsibleOverflow.bind(this);
     this.changeGCCollapsibleOverflow = this.changeGCCollapsibleOverflow.bind(this);
   }
+
 
   populateReservationTypes() {
     let items = [];   
@@ -74,6 +75,12 @@ export class ReservationDetails extends Component {
     if (this.props.getStore().guestId != null){
       this.fetchReservationDetailsIfExists();
       document.getElementById("next-button").style.marginTop = "0em";
+    //  if (this.props.getStore().searchReservationId != null){
+    //   this.props.updateStore({
+    //     searchReservationId: null
+    //   });
+    //    this.props.jumpToStep(0);
+    //  }
     }
    
     this.refs.arrivalDate.innerHTML = moment(this.props.getStore().arrivalDate).format('ddd, MMM Do YYYY');
@@ -231,7 +238,6 @@ export class ReservationDetails extends Component {
     }
   }
 
-
   isValidated() {
 
     const userInput = this._grabUserInput(); 
@@ -248,7 +254,8 @@ export class ReservationDetails extends Component {
           this.props.getStore().reservationTypeId != userInput.reservationTypeId ||
           this.props.getStore().noOfPpl != userInput.noOfPpl ||
           this.props.getStore().sanskaraId != userInput.sanskaraId ||
-          this.props.getStore().comments.toString() != userInput.comments.toString()
+          this.props.getStore().comments.toString() != userInput.comments.toString() ||
+          (this.props.getStore().isRequest == 1) // update happens even if no data is changed. only reservation_status needs to be changed and email sent out. Can be re-written!
         ) { 
 
           this.props.updateStore({
@@ -259,7 +266,7 @@ export class ReservationDetails extends Component {
             this.updateReservationDetails();
           }
           else {
-              this.insertReservationDetails();
+            this.insertReservationDetails();
           }
         }
         isDataValid = true;
@@ -268,7 +275,9 @@ export class ReservationDetails extends Component {
         this.setState(Object.assign(userInput, validateNewInput));
     }  
 
-    if (isDataValid){
+    if (isDataValid && this.props.getStore().isRequest == 1){
+      this.props.redirectToRequests(this.props.getStore().reservationTypeId);
+    } else if(isDataValid) {
       this.props.redirectToDashboard();
     }
 
@@ -301,6 +310,7 @@ export class ReservationDetails extends Component {
     })
     .then((result) => {  
           notify.show('New reservation added successfully!', 'success');     
+
     })
     .catch((error) => {
       this.setState({
@@ -324,14 +334,34 @@ export class ReservationDetails extends Component {
 
     var dt_arrival =  this.state.arrivalDate + " " + moment(this.state.arrivalTime).format("HH:mm").toString();
 
-    const payload = {
-      date_of_arrival: dt_arrival,
-      date_of_departure: this.state.departureDate,
-      no_of_people: this.state.noOfPpl,
-      reservation_comments: this.state.comments,
-      reservation_type_id: this.state.reservationTypeId,
-      sanskara_id: (this.state.sanskaraId == null)? 0 : this.state.sanskaraId
-    };
+    var payload = {};
+
+    if (this.props.getStore().isRequest == 0){
+      payload = {
+        date_of_arrival: dt_arrival,
+        date_of_departure: this.state.departureDate,
+        no_of_people: this.state.noOfPpl,
+        reservation_comments: this.state.comments,
+        reservation_type_id: this.state.reservationTypeId,
+        sanskara_id: (this.state.sanskaraId == null)? 0 : this.state.sanskaraId,
+        isRequest: this.props.getStore().isRequest
+      };
+    } else {
+      payload = {
+        date_of_arrival: dt_arrival,
+        date_of_departure: this.state.departureDate,
+        no_of_people: this.state.noOfPpl,
+        reservation_comments: this.state.comments,
+        reservation_type_id: this.state.reservationTypeId,
+        sanskara_id: (this.state.sanskaraId == null)? 0 : this.state.sanskaraId,
+        isRequest: this.props.getStore().isRequest,
+        email_id: this.props.getStore().email,
+        name : this.props.getStore().firstName + " " + this.props.getStore().lastName,
+        reference_id: this.props.getStore().referenceId,
+        has_WL: (sessionStorage.getItem('waitingListCnt').toString().trim() != ''? 1: 0),
+        email_comments: this.state.emailComments
+      };
+    }
 
     store(API_URL, "reservations/" + this.state.reservationId, JSON.stringify(payload))
     .then((response) => {
@@ -346,7 +376,10 @@ export class ReservationDetails extends Component {
       logError(error);
     });
 
-    if (this.state.isLoaded){
+    if (this.state.isLoaded && this.props.getStore().isRequest == 1){
+      notify.show('New reservation added successfully!', 'success');
+      
+    } else if (this.state.isLoaded){
       notify.show('Reservation details updated successfully!', 'success');
     }
   }
@@ -679,7 +712,7 @@ export class ReservationDetails extends Component {
         <div className="row">
           <form id="Form" className="form-horizontal">          
                 <h4>Reservation Details</h4>  
-                <div className="divFloatRight" style={{ visibility: (this.props.getStore().reservationId != null) ? 'visible':'hidden', display: (this.props.getStore().reservationId != null)? 'inline':'none' }}> 
+                <div className="divFloatRight" style={{ visibility: (this.props.getStore().reservationId != null && this.props.getStore().isRequest != 1) ? 'visible':'hidden', display: (this.props.getStore().reservationId != null && this.props.getStore().isRequest != 1)? 'inline':'none' }}> 
                   <a style={{fontWeight: 'bolder', color: '#ED823A'}} onClick={() => this.handleAddAnotherReservation()}>Add Another Reservation?</a>  
                 <button type="button" className="btnBig" style={{ backgroundColor: 'grey', visibility: (this.props.getStore().reservationStatusId == 2) ? 'visible':'hidden', display: (this.props.getStore().reservationStatusId == 2)? 'inline':'none' }} onClick={() => this.handleCancel()}>Cancel</button>
                 <button type="button" className="btnBig" style={{ visibility: (this.props.getStore().reservationStatusId == 3) ? 'visible':'hidden', display: (this.props.getStore().reservationStatusId == 3)? 'inline':'none' }} onClick={() => this.handleEarlyCheckOut()}>Early Check Out</button>   
@@ -696,7 +729,7 @@ export class ReservationDetails extends Component {
                       </label>
                       {/* Departure Date */}
                       <label className="col-md-4">
-                      <div id="divReservationStatus" ref="reservationStatus"></div>                          
+                      <div id="divReservationStatus" className="spReservationDetails" ref="reservationStatus"></div>                      
                       </label>
                     </div>
 
@@ -806,7 +839,7 @@ export class ReservationDetails extends Component {
                     </div>
               </div>
 
-               <div className = "div-table-row" style={{ visibility: this.props.getStore().reservationId == null ? 'visible':'hidden', display: this.props.getStore().reservationId == null? 'inline':'none' }}>
+               <div className = "div-table-row" style={{ visibility: this.props.getStore().reservationId == null || this.props.getStore().isRequest == 1 ? 'visible':'hidden', display: this.props.getStore().reservationId == null || this.props.getStore().isRequest == 1? 'inline':'none' }}>
                   <div className ="comments-col div-table-col">
                       {/* Email Comments */}
                       <div className="form-group col-md-12 content form-block-holder long-col">
@@ -826,10 +859,10 @@ export class ReservationDetails extends Component {
               </div>
 
              </div>
-              <div style={{ visibility: this.props.getStore().reservationId != null ? 'visible':'hidden', display: this.props.getStore().reservationId != null? 'inline':'none' }}>
+              <div style={{ visibility: this.props.getStore().reservationId != null && this.props.getStore().isRequest != 1? 'visible':'hidden', display: this.props.getStore().reservationId != null && this.props.getStore().isRequest != 1? 'inline':'none' }}>
                <br/>
                <Collapsible trigger="Room Bookings">
-               <RoomBookings getReservationStore={() => (this.getReservationStore())}>
+               <RoomBookings getReservationStore={() => (this.getReservationStore())} updateReservationStore={(u) => {this.updateReservationStore(u)}}>
                </RoomBookings>
                </Collapsible>
                <br/>

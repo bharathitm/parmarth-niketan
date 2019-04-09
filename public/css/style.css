@@ -216,13 +216,13 @@ body{
   word-wrap: normal;
 }
 
-.spBlockCount{
+.spCount{
   font-size:16pt;
   font-weight:bolder;
   color:#719F5A;
 }
 
-.spBlockName{
+.spNameCount{
   font-size:9pt;
 }
 
@@ -425,7 +425,7 @@ ol.progtrckr {
   }
 
   .form-horizontal .comments-col{
-    height:150px;
+    height:100px;
   }
 
   .form-horizontal h4{
@@ -592,7 +592,14 @@ width:100%;
   font-weight: bolder;
   margin-top: -0.8em;
   font-size: 16pt;
-  
+}
+
+.spReservationDetails{
+  margin-right:1em;
+}
+
+.spReservationDetails span {
+  font-weight:bold;
 }
 
 .col-md-12 {
@@ -817,7 +824,7 @@ width:100%;
   margin:-0.5em 0 -0.4em 0;
 }
 
-.div-block-totals{
+.div-block-totals, .div-block-beds{
   float:right;
   margin:-1em 1em 0 0;
   font-weight:bolder;
@@ -825,16 +832,27 @@ width:100%;
   text-align: center;
 }
 
-.sp-block-total{
+.sp-block-total, .sp-block-beds{
   margin:0.8em 0 0 1em;
   font-weight: bold;
   color:#278EDE;
 }
 
+#spEventHallLegend{
+  font-size:12pt;
+}
+
+
+
 .grand-total{
-  margin-top:-2.3em;
+  margin-top:-2.5em;
   margin-right:-2em;
   font-size:16pt;
+}
+
+.grand-beds{
+  margin-top:-1.3em;
+  font-size:12pt;
 }
 
 /* Book Rooms specific ends here */
@@ -848,12 +866,14 @@ width:100%;
 }
 
 #divRoomBookings .room-no{
-  width:12%;
+  width:14%;
 }
 #divRoomBookings .details{
   width:25%;
 }
-
+#divRoomBookings .dates{
+  width:13%;
+}
 
 #divRoomBookings .actions{
   width:10%;
@@ -1008,3 +1028,4 @@ a{
   border-bottom: solid 1px skyblue;
 
 }
+

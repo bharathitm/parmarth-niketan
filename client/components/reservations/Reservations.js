@@ -48,8 +48,10 @@ export class Reservations extends React.Component {
         advanceReceivedOn: '',
         advanceReceiptNo: '',
         savedToCloud: false,
-        searchText: '',
+        searchText: null,
         searchGuestId: null,
+        searchReservationId: null,
+        isRequest: 0,
         searchLoaded: false,
         searchResultItems: []
       };
@@ -86,10 +88,25 @@ export class Reservations extends React.Component {
 
     redirectToDashboard() {
       this.clearGuestSession();
+
+      var selectedTab = "";
+      if ((sessionStorage.getItem('roleId') == 1) || (sessionStorage.getItem('roleId') == 2)) {
+            selectedTab = "Requests"
+      } else {
+            selectedTab = "Dashboard"
+      }
+
       this.props.updateHomeStore({
-          selectedTab: 'Dashboard'
+          selectedTab: selectedTab
         });
-        //window.location.reload();
+    }
+
+    redirectToRequests(type) {
+      this.clearGuestSession();
+      this.props.updateHomeStore({
+          selectedTab: 'Requests',
+          refreshRequestTab: type
+        });
     }
 
     clearGuestSession(){
@@ -104,7 +121,7 @@ export class Reservations extends React.Component {
 
       window.sessionStorage.removeItem('searchResults');
       window.sessionStorage.removeItem('selectedRooms');
-      window.sessionStorage.removeItem('strSelectedRooms');
+      window.sessionStorage.removeItem('strSelectedRooms'); 
     
       this.sampleStore = {
         arrivalDate: null,
@@ -137,8 +154,10 @@ export class Reservations extends React.Component {
         advanceReceivedOn: '',
         advanceReceiptNo: '',
         savedToCloud: false,
-        searchText: '',
+        searchText: null,
         searchGuestId: null,
+        searchReservationId: null,
+        isRequest: 0,
         roomType: null,
         noOfRooms: null,
         searchLoaded: false,
@@ -155,15 +174,25 @@ export class Reservations extends React.Component {
     }
 
     render() {
-      if(this.props.getHomeStore().searchText != ''){
+      if(this.props.getHomeStore().searchText != null){
         this.sampleStore.searchText = this.props.getHomeStore().searchText;
 
         this.props.updateHomeStore({
-          searchText: ''
+          searchText: null
         });
       }
 
-      if(this.props.getHomeStore().searchGuestId != null){
+      if(this.props.getHomeStore().searchReservationId != null){
+        this.sampleStore.searchReservationId = this.props.getHomeStore().searchReservationId;
+        this.sampleStore.searchGuestId = this.props.getHomeStore().searchGuestId;
+        this.sampleStore.isRequest = this.props.getHomeStore().isRequest;
+
+        this.props.updateHomeStore({
+          searchReservationId: null,
+          searchGuestId: null,
+          isRequest: 0
+        });
+      } else if(this.props.getHomeStore().searchGuestId != null){
         this.sampleStore.searchGuestId = this.props.getHomeStore().searchGuestId;
 
         this.props.updateHomeStore({
@@ -175,7 +204,7 @@ export class Reservations extends React.Component {
         [
             {name: 'Book Rooms', component: <BookRooms getStore={() => (this.getStore())} redirectToDashboard={() => (this.redirectToDashboard())} getName={() => (this.getName())} updateStore={(u) => {this.updateStore(u)}}/>},
             {name: 'Guest', component: <Guests getStore={() => (this.getStore())} redirectToDashboard={() => (this.redirectToDashboard())} loadName={(u) => {this.loadName(u)}} updateStore={(u) => {this.updateStore(u)}}/>},
-            {name: 'Reservation', component: <ReservationDetails getStore={() => (this.getStore())} redirectToDashboard={() => (this.redirectToDashboard())} updateStore={(u) => {this.updateStore(u)}}/>},
+            {name: 'Reservation', component: <ReservationDetails getStore={() => (this.getStore())} redirectToDashboard={() => (this.redirectToDashboard())} redirectToRequests={(t) => (this.redirectToRequests(t))} updateStore={(u) => {this.updateStore(u)}}/>},
             {name: 'E', component: <Empty/>}
         ]
 

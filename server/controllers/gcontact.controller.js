@@ -68,8 +68,6 @@ export function add(req, res) {
 
     call_stored_proc += ")";
 
-    console.log(call_stored_proc);
-
     pool.getConnection(function(error, connection) {
         if (error) {
             errorController.LogError(error);

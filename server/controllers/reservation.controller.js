@@ -114,8 +114,15 @@ export function add(req, res) {
  */
 export function update(req, res) {
 
-    var call_stored_proc = "CALL sp_UpdateReservationDetails('" 
-    + req.params.id + "','" // reservation_id
+    var call_stored_proc = "";
+    
+    if (req.body.isRequest == 0){
+        call_stored_proc = "CALL sp_UpdateReservationDetails('";
+    } else {
+        call_stored_proc = "CALL sp_UpdateReservationForRequests('"; 
+    }
+
+    call_stored_proc += req.params.id + "','" // reservation_id
     + req.body.date_of_arrival + "','"
     + req.body.date_of_departure + "','"
 
@@ -124,7 +131,7 @@ export function update(req, res) {
 
     // Since reservation_comments is an optional field, we pass this as null
     if (req.body.reservation_comments == '' || req.body.reservation_comments == null){
-        call_stored_proc += null  + ",";        
+        call_stored_proc += null;        
     }
     else {
         var reservation_comments = req.body.reservation_comments.replace(/'/g, "''");  
@@ -143,7 +150,6 @@ export function update(req, res) {
 
     call_stored_proc += ")";
 
-
     pool.getConnection(function(error, connection) {
         if (error) {
             errorController.LogError(error);
@@ -151,6 +157,11 @@ export function update(req, res) {
         } 
 
         connection.query(call_stored_proc, true, (error, results, fields) => {
+           if ((req.body.isRequest != 0) && (req.body.email_id != null) && (req.body.email_id != '')){
+                SendConfirmationEmail(req.body.name, req.body.email_id, (moment(req.body.date_of_arrival, "YYYY-MM-D HH:mm").format("MMM Do, YYYY") 
+                + " - " + moment(req.body.date_of_departure, "YYYY-MM-D").format("MMM Do, YYYY")), results[0][0].noOfRooms, results[0][0].totalAmt, req.params.id,
+                 req.body.reservation_type_id, req.body.sanskara_id, req.body.reference_id, req.body.has_WL, req.body.email_comments);
+             }
             connection.release();
 
             if (error) {

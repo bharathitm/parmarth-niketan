@@ -4,6 +4,7 @@ import ErrorBoundary from './ErrorBoundary';
 
 import {Login } from './login'; 
 import {Tabs, TabLink, TabContent} from 'react-tabs-redux';
+import { Requests } from './requests/Requests';
 import { Dashboard } from './dashboard/Dashboard';
 import { Rooms } from './Rooms';
 import { Reservations } from './reservations/Reservations';
@@ -15,17 +16,21 @@ export class Home extends React.Component {
 
       constructor(props) {
         super(props);
-
+        this.Requests = React.createRef();
+     
         this.state = {
             validUser: false,
-            selectedTab: "Dashboard"
+            selectedTab: null
         };
 
         this.homeStore = {
               validUser: false,
-              selectedTab: 'Dashboard',
-              searchText:'',
-              searchGuestId: null
+              selectedTab: null,
+              searchText: null,
+              searchGuestId: null,
+              searchReservationId: null,
+              isRequest: 0,
+              refreshRequestTab: null
         };
   
       this.redirectOnSuccessfulLogin = this.redirectOnSuccessfulLogin.bind(this);
@@ -44,15 +49,32 @@ export class Home extends React.Component {
                   ...this.homeStore,
                   ...update,
                   }     
-
             this.selectTab(this.homeStore.selectedTab);
+
+            if (this.homeStore.refreshRequestTab != null){
+                  this.Requests.current.refreshRequestTab(this.homeStore.refreshRequestTab);
+            }
       }
       
 
       redirectOnSuccessfulLogin(){
+
+            var selectedTab = "";
+            if ((sessionStorage.getItem('roleId') == 1) || (sessionStorage.getItem('roleId') == 2)) {
+                  selectedTab = "Requests"
+            } else {
+                  selectedTab = "Dashboard"
+            }
+
             this.setState({
-                  validUser:true
-            });        
+                  validUser:true,
+                  selectedTab: selectedTab
+            });   
+            
+            this.homeStore = {
+              selectedTab: selectedTab
+        };
+            
       }
 
       redirectToSettings(){
@@ -86,13 +108,23 @@ export class Home extends React.Component {
                               </div>
                               </div> 
 
-                        <Tabs className="tabs" handleSelect={this.selectTab} selectedTab={this.state.selectedTab}>
-                              <div className="tab-links">            
-                                    <TabLink to="Dashboard">Dashboard</TabLink>                                     
-                                    <TabLink to="Reservations">Reservations</TabLink>  
-                                    <TabLink to="Reports">Reports</TabLink>
+                        <Tabs renderActiveTabContentOnly={true} className="tabs" handleSelect={this.selectTab} selectedTab={this.state.selectedTab}>
+                              <div className="tab-links">     
+                                    <div style={{ visibility: sessionStorage.getItem('roleId') != 3? 'visible':'hidden', display: sessionStorage.getItem('roleId') != 3? 'inline':'none' }}>   
+                                          <TabLink to="Requests">Requests</TabLink> 
+                                    </div>    
+                                    <div style={{ visibility: sessionStorage.getItem('roleId') != 2? 'visible':'hidden', display: sessionStorage.getItem('roleId') != 2? 'inline':'none' }}>    
+                                          <TabLink to="Dashboard">Dashboard</TabLink>    
+                                    </div>
+                                          <TabLink to="Reservations">Reservations</TabLink>  
+                                          <TabLink to="Reports">Reports</TabLink>
                               </div>  
-                                    <TabContent for="Dashboard"><h3>Dashboard</h3><Dashboard updateHomeStore={(u) => {this.updateHomeStore(u)}}/></TabContent>                                    
+                              <div style={{ visibility: sessionStorage.getItem('roleId') != 3? 'visible':'hidden', display: sessionStorage.getItem('roleId') != 3? 'inline':'none' }}>   
+                                    <TabContent for="Requests"><h3>Requests</h3><Requests ref={this.Requests} getHomeStore={() => (this.getHomeStore())} updateHomeStore={(u) => {this.updateHomeStore(u)}}/></TabContent>  
+                              </div>
+                              <div style={{ visibility: sessionStorage.getItem('roleId') != 2? 'visible':'hidden', display: sessionStorage.getItem('roleId') != 2? 'inline':'none' }}>   
+                                    <TabContent for="Dashboard"><h3>Dashboard</h3><Dashboard updateHomeStore={(u) => {this.updateHomeStore(u)}}/></TabContent>    
+                              </div>
                                     <TabContent for="Reservations"><h3>Reservations</h3><Reservations getHomeStore={() => (this.getHomeStore())} updateHomeStore={(u) => {this.updateHomeStore(u)}}/></TabContent>
                                     <TabContent for="Reports"><h3>Reports</h3><Reports/></TabContent> 
                                     <TabContent for="Settings"><h3>Rooms</h3><Rooms updateHomeStore={(u) => {this.updateHomeStore(u)}}/></TabContent>

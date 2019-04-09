@@ -204,7 +204,7 @@ export class Guests extends Component {
       searchGuestId: guest_id
     });
 
-    this.searchReservation('', guest_id);
+    this.searchReservation(null, guest_id);
 
     document.getElementById("divEmailSuggestions").style.visibility = "hidden";
     document.getElementById("divPhoneSuggestions").style.visibility = "hidden";
@@ -306,7 +306,7 @@ export class Guests extends Component {
     }
 
     this.props.updateStore({
-      searchText: '',
+      searchText: null,
       searchGuestId: null
     });
   }
@@ -372,12 +372,19 @@ export class Guests extends Component {
 
 
   searchReservation(searchText, searchGuestId){
+
+    var redirectToReservation = false;
+    if (this.props.getStore().searchReservationId != null){
+      redirectToReservation = true;
+    }
+
     this.props.updateStore({
-      searchText: '',
-      searchGuestId: null
+      searchText: null,
+      searchGuestId: null,
+      searchReservationId: null
     });
 
-    ((searchText != '')?fetch(API_URL, "guests/?search=" + searchText):fetch(API_URL, "guests/" + searchGuestId))    
+    ((searchText != null)?fetch(API_URL, "guests/?search=" + searchText):fetch(API_URL, "guests/" + searchGuestId))    
     .then((response) => {
         return checkError(response);
     })
@@ -387,6 +394,12 @@ export class Guests extends Component {
         items: result,
       }, function() {
         this.loadGuestDetails();
+        // if (this.props.getStore().reservationId != null){
+        //   this.props.jumpToStep(2);
+        // }
+        if (redirectToReservation == true){
+          this.props.jumpToStep(0);
+        }
       }
     );        
     })
@@ -399,6 +412,35 @@ export class Guests extends Component {
         logError(this.constructor.name + " " + error);
       });
   }
+
+  // loadReservation(searchReservationId){
+  //   if(searchReservationId != null)
+  //   {
+  //     fetch(API_URL, "guests/?rId=" + searchReservationId)
+  //         .then((response) => {
+  //           return checkError(response);
+  //         })
+  //         .then((result) => {
+  //             this.setState({
+  //               isLoaded: true,
+  //               items: result,
+  //             }, function() {
+  //               this.loadGuestDetails();
+  //               this.props.jumpToStep(2);
+  //             }
+  //           );        
+  //           })
+  //           .catch((error) => {
+  //             this.setState({
+  //               isLoaded: false,
+  //               error
+  //             });
+  //             notify.show('Oops! Something went wrong! Please try again!', 'error');
+  //             logError(this.constructor.name + " " + error);
+  //           });
+  //     }
+  // }
+
 
 
   isValidated() {
@@ -659,12 +701,14 @@ export class Guests extends Component {
 
   render() {
       //if searched from Dashboard
-      if(this.props.getStore().searchText != ''){
+      if(this.props.getStore().searchText != null){
         this.searchReservation(this.props.getStore().searchText, null);
-      } else if(this.props.getStore().searchGuestId != null){
-        this.searchReservation('', this.props.getStore().searchGuestId);
+      } else if (this.props.getStore().searchReservationId != null){ // coming from Requests so both searchReservation and searchGuestId != null
+        this.searchReservation(null, this.props.getStore().searchGuestId);
+      } else if(this.props.getStore().searchGuestId != null) { // coming from Check In/ Outs so only searchGuestId != null
+        this.searchReservation(null, this.props.getStore().searchGuestId);
       }
-
+     
       var wizardOl = document.getElementsByClassName("progtrckr");
       if (typeof wizardOl[0] != 'undefined'){
         wizardOl[0].style.pointerEvents = "auto";

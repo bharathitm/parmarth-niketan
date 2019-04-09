@@ -99,6 +99,36 @@ export function searchPhoneNos(req, res) {
     });    
 }
 
+// /**
+//  * Search guest details by reservationId
+//  *
+//  * @param {object} req
+//  * @param {object} res
+//  * @returns {*}
+//  */
+// export function searchByReservationId(req, res) {
+
+//     var call_stored_proc = "CALL sp_GetGuestByReservationId('" + req.query.rId + "')";   
+
+//     pool.getConnection(function(error, connection) {
+//         if (error) {
+//             errorController.LogError(error);
+//             return res.send(error.code);
+//         } 
+
+//         connection.query(call_stored_proc, true, (error, results, fields) => {
+//             res.send(results[0]); 
+//             connection.release();
+
+//             if (error) {
+//                 errorController.LogError(error);
+//                 return res.send(error.code);
+//             }
+
+//         });
+//     });    
+// }
+
 /**
  * Search reservations by email or phone
  *
@@ -138,8 +168,6 @@ export function search(req, res) {
  */
 export function add(req, res) {
 
-   // var email_token = crypto.randomBytes(64).toString('hex').substring(0,200);
-
     var call_stored_proc = "CALL sp_InsertGuestDetails(" 
 
     // If is_a_reference is not set, we pass this as 0
@@ -173,7 +201,8 @@ export function add(req, res) {
     call_stored_proc += ",";
 
     if (req.body.address != ''){
-        call_stored_proc += "'" + req.body.address + "'";
+        var address = req.body.address.replace(/'/g, "''");  
+        call_stored_proc += "'" + address + "'";
     } else {
         call_stored_proc += null;
     }

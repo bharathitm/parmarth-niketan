@@ -53,7 +53,8 @@ export class Dashboard extends React.Component {
       handleKeyUp(event){
         event.preventDefault();
         if (event.keyCode === 13) {
-            document.getElementById("imgSearch").click();
+           // document.getElementById("imgSearch").click();
+           this.handleReservationSearch();
         }
       }
 

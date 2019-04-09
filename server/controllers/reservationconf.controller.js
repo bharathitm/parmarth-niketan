@@ -13,6 +13,8 @@ var arrSplitUpResults = "";
 
 export function SendConfirmationEmail(name, emailId, dates, noOfRooms, totalAmt, reservationId, reservationTypeId, sanskaraId, referenceId, has_WL, email_comments) {
 
+        
+        var subjectText = 'Reservation Confirmation from Parmarth Niketan - ' + name + ' - ' + dates;
         var htmlText = 'Namaste Divine Soul ' + name + ' ji,<br/><br/>Jai Gange!<br/><br/>';
 
         if (reservationTypeId == "2") // retreats
@@ -25,14 +27,14 @@ export function SendConfirmationEmail(name, emailId, dates, noOfRooms, totalAmt,
                                 htmlText += 'This will also include complimentary yoga classes. For any further details, please write to us at ';
                                 htmlText += 'tara@parmarth.com ';
                                 htmlText += 'or inquire at the reception office upon arrival.<br/><br/>';
-                                AddComments(emailId, htmlText, commonEmailText, email_comments);
+                                AddComments(emailId, htmlText, commonEmailText, email_comments, subjectText);
                         });
                 } else {
                         htmlText += ConstructMinDonationChart("", reservationTypeId); //show only the minimum donation chart
                         htmlText += 'For any further details, please write to us at ';
                         htmlText += 'tara@parmarth.com ';
                         htmlText += 'or inquire at the reception office upon arrival.<br/><br/>';
-                        AddComments(emailId, htmlText, commonEmailText, email_comments);
+                        AddComments(emailId, htmlText, commonEmailText, email_comments, subjectText);
                 }
         }
         else if (reservationTypeId == "3") // sanskara
@@ -47,13 +49,13 @@ export function SendConfirmationEmail(name, emailId, dates, noOfRooms, totalAmt,
                                                 htmlText += 'This will also include complimentary yoga classes. For any further details, please write to us at ';
                                                 htmlText += 'tara@parmarth.com ';
                                                 htmlText += 'or inquire at the reception office upon arrival.<br/><br/>';
-                                                AddComments(emailId, htmlText, commonEmailText, email_comments);
+                                                AddComments(emailId, htmlText, commonEmailText, email_comments, subjectText);
                                         });
                                 } else {
                                         htmlText += 'For any further details, please write to us at ';
                                         htmlText += 'tara@parmarth.com ';
                                         htmlText += 'or inquire at the reception office upon arrival.<br/><br/>';
-                                        AddComments(emailId, htmlText, commonEmailText, email_comments);
+                                        AddComments(emailId, htmlText, commonEmailText, email_comments, subjectText);
                                 }
                                 break;   
                         case "2": //Janeo
@@ -65,13 +67,13 @@ export function SendConfirmationEmail(name, emailId, dates, noOfRooms, totalAmt,
                                                 htmlText += 'This will also include complimentary yoga classes. For any further details, please write to us at ';
                                                 htmlText += 'tara@parmarth.com ';
                                                 htmlText += 'or inquire at the reception office upon arrival.<br/><br/>';
-                                                AddComments(emailId, htmlText, commonEmailText, email_comments);
+                                                AddComments(emailId, htmlText, commonEmailText, email_comments, subjectText);
                                         });
                                 } else {
                                         htmlText += 'For any further details, please write to us at ';
                                         htmlText += 'tara@parmarth.com ';
                                         htmlText += 'or inquire at the reception office upon arrival.<br/><br/>';
-                                        AddComments(emailId, htmlText, commonEmailText, email_comments);
+                                        AddComments(emailId, htmlText, commonEmailText, email_comments, subjectText);
                                 }
                                 break; 
                         case "3": // Marriage
@@ -83,13 +85,13 @@ export function SendConfirmationEmail(name, emailId, dates, noOfRooms, totalAmt,
                                                 htmlText += 'This will also include complimentary yoga classes. For any further details, please write to us at ';
                                                 htmlText += 'tara@parmarth.com ';
                                                 htmlText += 'or inquire at the reception office upon arrival.<br/><br/>';
-                                                AddComments(emailId, htmlText, commonEmailText, email_comments);
+                                                AddComments(emailId, htmlText, commonEmailText, email_comments, subjectText);
                                         });
                                 } else {
                                         htmlText += 'For any further details, please write to us at ';
                                         htmlText += 'tara@parmarth.com ';
                                         htmlText += 'or inquire at the reception office upon arrival.<br/><br/>';
-                                        AddComments(emailId, htmlText, commonEmailText, email_comments);
+                                        AddComments(emailId, htmlText, commonEmailText, email_comments, subjectText);
                                 }
                                 break;                                    
                         case "4": //Asthi Visarjan
@@ -97,7 +99,7 @@ export function SendConfirmationEmail(name, emailId, dates, noOfRooms, totalAmt,
                                 htmlText += 'For any further details, please write to us at ';
                                 htmlText += 'tara@parmarth.com ';
                                 htmlText += 'or inquire at the reception office upon arrival.<br/><br/>';
-                                AddComments(emailId, htmlText, commonEmailText, email_comments);
+                                AddComments(emailId, htmlText, commonEmailText, email_comments, subjectText);
                                 break;    
                         case "5": //Special Pooja
                                 htmlText = ConstructPoojaText(htmlText, dates, noOfRooms);
@@ -108,13 +110,13 @@ export function SendConfirmationEmail(name, emailId, dates, noOfRooms, totalAmt,
                                                 htmlText += 'This will also include complimentary yoga classes. For any further details, please write to us at ';
                                                 htmlText += 'tara@parmarth.com ';
                                                 htmlText += 'or inquire at the reception office upon arrival.<br/><br/>';
-                                                AddComments(emailId, htmlText, commonEmailText, email_comments);
+                                                AddComments(emailId, htmlText, commonEmailText, email_comments, subjectText);
                                         });
                                 } else {
                                         htmlText += 'For any further details, please write to us at ';
                                         htmlText += 'tara@parmarth.com ';
                                         htmlText += 'or inquire at the reception office upon arrival.<br/><br/>';
-                                        AddComments(emailId, htmlText, commonEmailText, email_comments);
+                                        AddComments(emailId, htmlText, commonEmailText, email_comments, subjectText);
                                 }
                                 break;                                  
                 }
@@ -147,7 +149,7 @@ export function SendConfirmationEmail(name, emailId, dates, noOfRooms, totalAmt,
                         htmlText += 'For any further details, please write to us at ';
                         htmlText += 'tara@parmarth.com ';
                         htmlText += 'or inquire at the reception office upon arrival.<br/><br/>';
-                        AddComments(emailId, htmlText, commonEmailText, email_comments);
+                        AddComments(emailId, htmlText, commonEmailText, email_comments, subjectText);
                 });
         } else if (reservationTypeId == "6"){ // kathas
                 htmlText += 'We hope everything is wonderful with you and your loved ones.<br/><br/>';
@@ -160,14 +162,14 @@ export function SendConfirmationEmail(name, emailId, dates, noOfRooms, totalAmt,
                                 htmlText += 'This will also include complimentary yoga classes. For any further details, please write to us at ';
                                 htmlText += 'reservations@parmarth.com ';
                                 htmlText += 'or inquire at the reception office upon arrival.<br/><br/>';
-                                AddComments(emailId, htmlText, commonEmailText, email_comments);
+                                AddComments(emailId, htmlText, commonEmailText, email_comments, subjectText);
                         });
                 } else {
                         htmlText += ConstructMinDonationChart("", reservationTypeId); //show only the minimum donation chart
                         htmlText += 'For any further details, please write to us at ';
                         htmlText += 'reservations@parmarth.com ';
                         htmlText += 'or inquire at the reception office upon arrival.<br/><br/>';
-                        AddComments(emailId, htmlText, commonEmailText, email_comments);       
+                        AddComments(emailId, htmlText, commonEmailText, email_comments, subjectText);       
                 }
         }
         else { // every thing else
@@ -179,14 +181,14 @@ export function SendConfirmationEmail(name, emailId, dates, noOfRooms, totalAmt,
                                 htmlText += 'This will also include complimentary yoga classes. For any further details, please write to us at ';
                                 htmlText += 'reservations@parmarth.com ';
                                 htmlText += 'or inquire at the reception office upon arrival.<br/><br/>';
-                                AddComments(emailId, htmlText, commonEmailText, email_comments);
+                                AddComments(emailId, htmlText, commonEmailText, email_comments, subjectText);
                         });
                 } else {
                         htmlText += ConstructMinDonationChart("", reservationTypeId); //show only the minimum donation chart
                         htmlText += 'For any further details, please write to us at ';
                         htmlText += 'reservations@parmarth.com ';
                         htmlText += 'or inquire at the reception office upon arrival.<br/><br/>';
-                        AddComments(emailId, htmlText, commonEmailText, email_comments);
+                        AddComments(emailId, htmlText, commonEmailText, email_comments, subjectText);
                 }
         }  
 }
@@ -407,7 +409,7 @@ function ConstructPoojaText(poojaText, dates, noOfRooms){
         return poojaText;
 }
 
-function AddComments(emailId, emailText, commonEmailText, email_comments){
+function AddComments(emailId, emailText, commonEmailText, email_comments, subjectText){
 
         var htmlText = "";
         htmlText = emailText;
@@ -417,7 +419,6 @@ function AddComments(emailId, emailText, commonEmailText, email_comments){
                 htmlText += "<i>" + email_comments + "</i>";
                 htmlText += "<br/><br/>";
         }
-        SendEmail(emailId, htmlText + commonEmailText);
-
+        SendEmail(emailId, subjectText, htmlText + commonEmailText);
 }
 

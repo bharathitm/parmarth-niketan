@@ -11,6 +11,7 @@ import checkinsRoutes from './checkin.route';
 import checkoutsRoutes from './checkout.route';
 import uroomsRoutes from './uroom.route';
 import roomsRoutes from './room.route';
+import requestsRoutes from './request.route';
 import errorRoutes from './error.route';
 
 const router = express.Router();
@@ -52,6 +53,9 @@ router.use('/urooms', uroomsRoutes);
 
 //All Rooms
 router.use('/rooms', roomsRoutes);
+
+//Requests
+router.use('/requests', requestsRoutes);
 
 //Error logging
 router.use('/error', errorRoutes);

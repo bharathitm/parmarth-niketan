@@ -41,6 +41,7 @@ export class SearchBox extends Component {
       });
       this.refs.arrivalDate.selected = this.props.getSearchStore().arrivalDate;
       this.refs.departureDate.selected = this.props.getSearchStore().departureDate;
+      this.props.handleSearch();
     }   
   }
 

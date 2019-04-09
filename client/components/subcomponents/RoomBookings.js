@@ -53,10 +53,19 @@ export class RoomBookings extends Component {
                     });
 
                     var depDates = [];
+
+                    var totalAmount = 0;
+                    var totalBeds = 0;
+
                     for (var i = 0; i < this.state.items.length; i++)
                     {
                         depDates.push(this.state.items[i].date_of_departure);
+                        totalAmount += parseFloat(this.state.items[i].room_rent);
+                        totalBeds += parseFloat(this.state.items[i].total_beds);
                     }
+
+                    this.refs.totalAmount.innerHTML = totalAmount;
+                    this.refs.totalBeds.innerHTML = totalBeds;
 
                     this.setState({
                           dDAtes: depDates
@@ -209,6 +218,18 @@ export class RoomBookings extends Component {
                         });
                   }
 
+                  var totalAmount = 0;
+                  var totalBeds = 0;
+
+                  for (var i = 0; i < newData.length; i++)
+                  {
+                      totalAmount += parseFloat(newData[i].room_rent);
+                      totalBeds += parseFloat(newData[i].total_beds);
+                  }
+
+                  this.refs.totalAmount.innerHTML = totalAmount;
+                  this.refs.totalBeds.innerHTML = totalBeds;
+
                   this.setState({
                     items: newData
                   });
@@ -334,13 +355,14 @@ export class RoomBookings extends Component {
             </div>
         );
     } else {
+
         return (
             <div id="divRoomBookings" style={{ visibility: this.state.hasRoomBookings? 'visible':'hidden', display: this.state.hasRoomBookings? 'inline':'none' }}>
-                 <table>
+                 <table style={{width: '100%'}}>
                    <tbody>
                    <tr>
-                     <td style={{width: '75%'}}>
-             <div className = "div-table advance-table" style={{width: '110%'}}>
+                     <td style={{width: '80%'}}>
+             <div className = "div-table advance-table">
                     <div className = "div-table-row">
                               <div className ="room-no div-table-col div-table-col-header">
                               Room No.
@@ -393,8 +415,12 @@ export class RoomBookings extends Component {
                     </div>
 
                     </td>
-                     <td style={{width: '15%', fontSize: '10pt'}}>
-                       
+                     <td style={{width: '20%', fontSize: '10pt'}}>
+                       <div> 
+                      <span className="spReservationDetails">Total Amount: &#8377; <span ref="totalAmount"></span></span>
+                      <br/>
+                      <span className="spReservationDetails">Total Beds: <span ref="totalBeds"></span></span>   
+                    </div>
                     <div>
                       <a onClick={() => this.handleDeleteAllRoomBookings()}>Remove all rooms?</a> <br/>
                       <a style={{

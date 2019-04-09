@@ -20,7 +20,7 @@ export const blocks = {
   };
 
   export const reservationTypes = {
-    1: 'Gen',
+    1: 'General',
     2: 'Retreat',
     3: 'Sanskara',
     4: 'Agent',
