@@ -349,11 +349,14 @@ export class RoomBookings extends Component {
     }
 
     if (this.state.items.length == 0){
+      if (!this.state.isLoaded) {
+        return <div>Loading...</div>;}
+      else {
         return  (
             <div id="divRoomBookings">
             No rooms booked yet!
             </div>
-        );
+        );}
     } else {
 
         return (

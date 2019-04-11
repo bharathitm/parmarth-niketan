@@ -180,7 +180,7 @@ export class BookRooms extends Component {
       var dDate = moment(this.props.getStore().departureDate);
 
       if (dDate.diff(aDate, 'days') != 0) {
-        if ((parseInt(room_no) >= 416 && parseInt(room_no) <= 425) || (parseInt(room_no) == 442) || (parseInt(room_no) == 443)){
+        if ((parseInt(room_no) >= 416 && parseInt(room_no) <= 427) || (parseInt(room_no) == 442) || (parseInt(room_no) == 443)){
           blockTotal = (blockTotal * (dDate.diff(aDate, 'days')));
         } else if ((blockName != 'Event Halls') && (blockName != 'Wait List')) {
           blockTotal = (blockTotal * (dDate.diff(aDate, 'days')));
@@ -513,7 +513,7 @@ export class BookRooms extends Component {
         });
       }
     }
-
+    
     if (isLoaded && this.props.getStore().searchResultItems.length == 0) {
       notify.show('No rooms available for given search criteria!', 'error');
     }

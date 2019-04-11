@@ -233,12 +233,10 @@ insertGuestContactDetails(){
               notValidClasses.contactEmailIdCls = 'form-control has-error';
           }
 
-    const { error, isLoaded, items } = this.state;
+    const { isLoaded, items } = this.state;
 
-    if ((!isLoaded) && (error)){
-      return <div><span id="spNoDataorError">{JSON.stringify(error.message)}</span></div>;        
-     } else if (isLoaded == null){
-      return <div>No contacts added yet!</div>;
+      if (isLoaded == null){
+        return <div>No contacts added yet!</div>;
      }
      else if (!isLoaded) {
         return <div>Loading...</div>;

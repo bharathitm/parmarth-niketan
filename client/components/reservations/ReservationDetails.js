@@ -714,7 +714,7 @@ export class ReservationDetails extends Component {
                 <h4>Reservation Details</h4>  
                 <div className="divFloatRight" style={{ visibility: (this.props.getStore().reservationId != null && this.props.getStore().isRequest != 1) ? 'visible':'hidden', display: (this.props.getStore().reservationId != null && this.props.getStore().isRequest != 1)? 'inline':'none' }}> 
                   <a style={{fontWeight: 'bolder', color: '#ED823A'}} onClick={() => this.handleAddAnotherReservation()}>Add Another Reservation?</a>  
-                <button type="button" className="btnBig" style={{ backgroundColor: 'grey', visibility: (this.props.getStore().reservationStatusId == 2) ? 'visible':'hidden', display: (this.props.getStore().reservationStatusId == 2)? 'inline':'none' }} onClick={() => this.handleCancel()}>Cancel</button>
+                <button type="button" className="btnBig" style={{ backgroundColor: 'grey', visibility: ( this.props.getStore().reservationStatusId == 1 || this.props.getStore().reservationStatusId == 2) ? 'visible':'hidden', display: (this.props.getStore().reservationStatusId == 1 || this.props.getStore().reservationStatusId == 2)? 'inline':'none' }} onClick={() => this.handleCancel()}>Cancel</button>
                 <button type="button" className="btnBig" style={{ visibility: (this.props.getStore().reservationStatusId == 3) ? 'visible':'hidden', display: (this.props.getStore().reservationStatusId == 3)? 'inline':'none' }} onClick={() => this.handleEarlyCheckOut()}>Early Check Out</button>   
                 </div>
                       <div className="divDates">
@@ -861,18 +861,18 @@ export class ReservationDetails extends Component {
              </div>
               <div style={{ visibility: this.props.getStore().reservationId != null && this.props.getStore().isRequest != 1? 'visible':'hidden', display: this.props.getStore().reservationId != null && this.props.getStore().isRequest != 1? 'inline':'none' }}>
                <br/>
-               <Collapsible trigger="Room Bookings">
+               <Collapsible trigger="Room Bookings" lazyRender="true">
                <RoomBookings getReservationStore={() => (this.getReservationStore())} updateReservationStore={(u) => {this.updateReservationStore(u)}}>
                </RoomBookings>
                </Collapsible>
                <br/>
-                <Collapsible trigger="Advance Donations" onOpen={() => this.changeADCollapsibleOverflow(true)} 
+                <Collapsible trigger="Advance Donations" lazyRender="true" onOpen={() => this.changeADCollapsibleOverflow(true)} 
                     onClose={() => this.changeADCollapsibleOverflow(false)}>
                <AdvanceDonations getReservationStore={() => (this.getReservationStore())}>
                </AdvanceDonations>
                </Collapsible>
                <br/>
-               <Collapsible trigger="Guest Contacts" onOpen={() => this.changeGCCollapsibleOverflow(true)} 
+               <Collapsible trigger="Guest Contacts" lazyRender="true" onOpen={() => this.changeGCCollapsibleOverflow(true)} 
                     onClose={() => this.changeGCCollapsibleOverflow(false)}>
                <GuestContacts getReservationStore={() => (this.getReservationStore())}>
                </GuestContacts>

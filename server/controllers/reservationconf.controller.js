@@ -138,7 +138,7 @@ export function SendConfirmationEmail(name, emailId, dates, noOfRooms, totalAmt,
                         htmlText += '<li>Mode of Transfer (wire transfer, internet banking or direct deposit):</li>';
                         htmlText += '</ol><br/>';
                         htmlText += '<b>Bank Details</b><ul>';
-                        htmlText += '<li>Account Name: <b>Swami Shukdevanand Trust</b></li>';
+                        htmlText += '<li>Account Name: <b>SWM Sukhadevanand Trust</b></li>';
                         htmlText += '<li>Account Number: <b>10373187320</b></li>';
                         htmlText += '<li>Bank: <b>State Bank of India, Swargashram Branch, Rishikesh, Distt. Pauri Garhwal, Himalayas, Uttarakhand, India</b></li>';
                         htmlText += '<li>MICR Code: <b>249002004</b></li>';
