@@ -712,8 +712,8 @@ export class ReservationDetails extends Component {
         <div className="row">
           <form id="Form" className="form-horizontal">          
                 <h4>Reservation Details</h4>  
-                <div className="divFloatRight" style={{ visibility: (this.props.getStore().reservationId != null && this.props.getStore().isRequest != 1) ? 'visible':'hidden', display: (this.props.getStore().reservationId != null && this.props.getStore().isRequest != 1)? 'inline':'none' }}> 
-                  <a style={{fontWeight: 'bolder', color: '#ED823A'}} onClick={() => this.handleAddAnotherReservation()}>Add Another Reservation?</a>  
+                <div className="divFloatRight"> 
+                  <a style={{fontWeight: 'bolder', color: '#ED823A', visibility: (this.props.getStore().reservationId != null && this.props.getStore().isRequest != 1) ? 'visible':'hidden', display: (this.props.getStore().reservationId != null && this.props.getStore().isRequest != 1)? 'inline':'none'}} onClick={() => this.handleAddAnotherReservation()}>Add Another Reservation?</a>  
                 <button type="button" className="btnBig" style={{ backgroundColor: 'grey', visibility: ( this.props.getStore().reservationStatusId == 1 || this.props.getStore().reservationStatusId == 2) ? 'visible':'hidden', display: (this.props.getStore().reservationStatusId == 1 || this.props.getStore().reservationStatusId == 2)? 'inline':'none' }} onClick={() => this.handleCancel()}>Cancel</button>
                 <button type="button" className="btnBig" style={{ visibility: (this.props.getStore().reservationStatusId == 3) ? 'visible':'hidden', display: (this.props.getStore().reservationStatusId == 3)? 'inline':'none' }} onClick={() => this.handleEarlyCheckOut()}>Early Check Out</button>   
                 </div>
