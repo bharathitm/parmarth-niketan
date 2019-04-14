@@ -859,7 +859,7 @@ export class ReservationDetails extends Component {
               </div>
 
              </div>
-              <div style={{ visibility: this.props.getStore().reservationId != null && this.props.getStore().isRequest != 1? 'visible':'hidden', display: this.props.getStore().reservationId != null && this.props.getStore().isRequest != 1? 'inline':'none' }}>
+              <div style={{ visibility: this.props.getStore().reservationId != null && this.props.getStore().reservationStatusId != 1? 'visible':'hidden', display: this.props.getStore().reservationId != null && this.props.getStore().reservationStatusId != 1? 'inline':'none' }}>
                <br/>
                <Collapsible trigger="Room Bookings" lazyRender="true">
                <RoomBookings getReservationStore={() => (this.getReservationStore())} updateReservationStore={(u) => {this.updateReservationStore(u)}}>

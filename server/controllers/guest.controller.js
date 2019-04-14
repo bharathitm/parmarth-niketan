@@ -20,6 +20,8 @@ export function findById(req, res) {
 
     var call_stored_proc = "CALL sp_GetGuestDetails('" + req.params.id + "')";
 
+    console.log(call_stored_proc);
+
     pool.getConnection(function(error, connection) {
         if (error) {
             errorController.LogError(error);
@@ -28,6 +30,7 @@ export function findById(req, res) {
 
         connection.query(call_stored_proc, true, (error, results, fields) => {
             res.send(results[0]); 
+            console.log(results[0]);
             connection.release();
 
             if (error) {
