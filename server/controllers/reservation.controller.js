@@ -98,6 +98,7 @@ export function add(req, res) {
                 req.body.reservation_type_id, req.body.sanskara_id, req.body.reference_id, req.body.has_WL, 
                 req.body.email_comments, req.body.total_beds);
              }
+            res.send(results[0]); 
             connection.release();
 
             if (error) {
