@@ -301,7 +301,8 @@ export class ReservationDetails extends Component {
       room_ids_str: sessionStorage.getItem('strSelectedRooms').toString(),
       reference_id: this.props.getStore().referenceId,
       has_WL: (sessionStorage.getItem('waitingListCnt').toString().trim() != ''? 1: 0),
-      email_comments: this.state.emailComments
+      email_comments: this.state.emailComments,
+      total_beds: sessionStorage.getItem('spGrandBeds')
     }; 
 
     store(API_URL, "reservations/", JSON.stringify(payload))

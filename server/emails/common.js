@@ -1,4 +1,12 @@
-export var confirmationTextBody = "In order to have a quick check-in and also a hassle-free stay at the Ashram, please read the following instructions carefully - \
+export var confirmationTextBody = "One of the benefits of having your retreat / stay at Parmarth Niketan Ashram is the opportunity \
+to attend the world famous divine Ganga Aarti at sunset on the holy banks of Ma Ganga followed by Satsang / Spiritual Q & A session \
+with Pujya Sadhviji and / or Darshan [be in the presence of a living saint]  with Pujya Swamiji whenever they are in the Ashram. \
+Ganga Aarti and Satsang give you the opportunity to give thanks and integrate the teachings of the day, connect with the divine \
+within and seek clarity to any questions you may have to discover the truth within. \
+<br/><br/> To truly experience all the Ashram \
+has to offer, you may want to include the Ganga Aarti and Satsang into your daily schedule. \
+<br/><br/> \
+In order to have a quick check-in and also a hassle-free stay at the Ashram, please read the following information carefully - \
 <ul>\
 <li> \
 As a general rule, you can check-in anytime between <b>8 am – 9 pm </b>and check-out before <b>10 am</b>. \
@@ -20,14 +28,14 @@ All rooms have at least 2 beds (some have 3 or 4), with fans, coolers and attach
 You will need to bring your personal toiletries.\
 </li> \
 <li> \
-The Ashram also has an independent canteen where you may purchase your meals and enjoy the flexibility of meal timings and food preferences. \
+Our housekeeping office is open from 9 am to 5 pm. If you need any housekeeping supplies [bed linen, towels, toilet paper soap] \
+go to the housekeeping office during the open hours of 9 am - 5 pm. \
 </li> \
 <li> \
 General Hatha yoga classes are usually held twice daily from Monday to Saturday. Please check the bulletin board in the reception office for exact timings and location. \
 </li> \
 <li> \
-Universal prayers are held every morning at 5 am and the world famous divine <b>Ganga Aarti</b> at sunset on the holy banks of Mother Ganga followed by \
-Satsang / Q & A session with <b>Pujya Sadhviji</b> and / or Darshan with <b>Pujya Swamiji</b> whenever They are in the Ashram. \
+Universal prayers are held every morning at 5 am. \
 </li> \
 <li> \
 Ashram guidelines are available at http://www.parmarth.org/ashram/guidelines/. It is expected that all visitors will respect and honor the Ashram guidelines. \

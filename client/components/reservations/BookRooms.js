@@ -197,6 +197,7 @@ export class BookRooms extends Component {
 
       document.getElementById("spGrandTotal").innerHTML = grandTotal.toLocaleString('en-IN');
       document.getElementById("spGrandBeds").innerHTML = grandBeds;
+      sessionStorage.setItem('spGrandBeds', grandBeds);
 
       // var selectedRooms = this.getAllSelectedRooms();
       // var str_rooms = createRoomsString(selectedRooms);
