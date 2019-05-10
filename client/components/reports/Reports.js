@@ -13,7 +13,11 @@ import {API_URL} from '../../config/config';
 import {fetch} from '../../utils/httpUtil';
 import {notify} from 'react-notify-toast';
 
+import ReactExport from "react-data-export";
 
+const ExcelFile = ReactExport.ExcelFile;
+const ExcelSheet = ReactExport.ExcelFile.ExcelSheet;
+const ExcelColumn = ReactExport.ExcelFile.ExcelColumn;
 
 export class Reports extends React.Component {
 
@@ -25,13 +29,18 @@ export class Reports extends React.Component {
             isLoaded: false,
             ReservationItems: [{}],
             CheckInItems: [{}],
-            CheckOutItems: [{}]
+            CheckOutItems: [{}],
+            KathaItems: [{}]
         };
 
         this.reportStore = {
             startDate: moment(),
             endDate: moment()
         };
+
+        this.checkOutSum = 0;
+
+        this.dataSet1 = []
     }
 
     updateReportStore(update) {
@@ -41,11 +50,11 @@ export class Reports extends React.Component {
         }
       }
 
-      handleReservations(){
+    handleReservations(){
         const startDate = (getFormattedDate(this.reportStore.startDate)).toString();
         const endDate = (getFormattedDate(this.reportStore.endDate)).toString();
 
-        fetch(API_URL, "reservations/?adate=" + startDate + "&ddate=" + endDate)
+        fetch(API_URL, "reservations/?type=1&adate=" + startDate + "&ddate=" + endDate)
             .then((response) => {
                 return checkError(response);
             })
@@ -96,7 +105,7 @@ export class Reports extends React.Component {
               });
     }
 
-      handleCheckOuts(){
+    handleCheckOuts(){
 
         const startDate = (getFormattedDate(this.reportStore.startDate)).toString();
         const endDate = (getFormattedDate(this.reportStore.endDate)).toString();
@@ -111,6 +120,48 @@ export class Reports extends React.Component {
                     CheckOutItems: result
                   }, function() {
                     this.showCheckOutReport();
+                  }
+                );
+            })
+            .catch((error) => {
+                this.setState({
+                  isLoaded: false,
+                  error
+                });
+                notify.show('Oops! Something went wrong! Please try again!', 'error');
+                logError(this.constructor.name + " " + error);
+              });
+    }
+
+    handleKathas(){
+        const startDate = (getFormattedDate(this.reportStore.startDate)).toString();
+        const endDate = (getFormattedDate(this.reportStore.endDate)).toString();
+
+        fetch(API_URL, "reservations/?type=2&adate=" + startDate + "&ddate=" + endDate)
+            .then((response) => {
+                return checkError(response);
+            })
+            .then((result) => {
+                this.setState({
+                    isLoaded:true,
+                    KathaItems: result
+                  }, function() {
+
+                    if (this.state.KathaItems.length > 0){
+                        for (var i=0; i < this.state.KathaItems.length; i++){
+                            
+                            this.dataSet1.push({            
+                                arrival: moment(this.state.KathaItems[i].date_of_arrival).format('DD-MM-YYYY'),
+                                departure: moment(this.state.KathaItems[i].date_of_departure).format('DD-MM-YYYY'),
+                                block: this.state.KathaItems[i].block_name,
+                                room_no: this.state.KathaItems[i].room_no,
+                                beds: this.state.KathaItems[i].total_beds,
+                                indian: this.state.KathaItems[i].has_indian_toilet, 
+                                western: this.state.KathaItems[i].has_western_toilet     
+                            })
+                        }
+                    }
+                    this.showKathaReport();
                   }
                 );
             })
@@ -178,15 +229,42 @@ export class Reports extends React.Component {
         } 
     }
 
-    checkLocale(subItem){
+    showKathaReport(){
+
+        if (this.state.KathaItems.length > 0){
+            document.getElementById("divKathaContents").style.visibility="visible";
+        } else {
+            document.getElementById("divKathaContents").style.visibility="hidden";
+            notify.show('No Kathas for given date period!', 'error');
+        } 
+
+        // if (this.state.KathaItems.length > 0){
+        //     var printWindow = window.open('', '', 'height=600,width=800');
+        //     try {
+        //             printWindow.document.write('<html><head>');
+        //             printWindow.document.write('</head><body style="font-family:verdana; font-size:14px;width:100%;">');
+        //             printWindow.document.write(document.getElementById("divKathaContents").innerHTML);
+        //             printWindow.document.write('</body></html>');
+        //             printWindow.document.close();
+        //             printWindow.print();
+        //     } catch (e){
+        //         notify.show('Popup blocked! Please enable popups to see this report.', 'error');
+        //     }
+        // } else {
+        //     notify.show('No Kathas for given date period!', 'error');
+        // } 
+    }
+
+    /*checkLocale(subItem){
         if (subItem == undefined){
             return subItem;
         }
         else {
             return subItem.toLocaleString('en-IN');
         }
-    }
-    getCheckOutRows(){
+    }*/
+
+    /*getCheckOutRows(){
 
         var arrCheckOutItems = [];
         var arrReceipts = [];
@@ -280,10 +358,25 @@ export class Reports extends React.Component {
             </tr>
             ));
                     }
-        }
+        }*/
 
 
     render() {   
+        
+        // To fill the total amount for CheckOuts report
+        if (this.state.CheckOutItems.length > 1){
+            for (var i = 0; i < this.state.CheckOutItems.length; i++) {
+                if (this.state.CheckOutItems[i].amt.indexOf(",") != -1){
+                    var multipleAmts = this.state.CheckOutItems[i].amt.split(",");
+                    for (var cnt = 0; cnt < multipleAmts.length; cnt++){
+                        this.checkOutSum += parseFloat(multipleAmts[cnt]) 
+                    }
+                } else {
+                    this.checkOutSum += parseFloat(this.state.CheckOutItems[i].amt);  
+                }
+            }
+        }
+
           return (
             <div className="divError">
                     <ErrorBoundary>
@@ -291,10 +384,28 @@ export class Reports extends React.Component {
                                 handleReservations={() => (this.handleReservations())}
                                 handleCheckIns={() => (this.handleCheckIns())}
                                 handleCheckOuts={() => (this.handleCheckOuts())}
+                                handleKathas={() => (this.handleKathas())}
                                 updateReportStore={(u) => {this.updateReportStore(u)}}>
                             </DatePeriodPicker>
-                  {/* Reservations */}
 
+            {/* Kathas */}
+             <div id="divKathaContents" style={{visibility:'hidden', margin:'1em'}}>
+
+                {/* <ExcelFile hideElement="true" filename="Katha Details">  + {moment(this.reportStore.startDate).format('dddd, MMMM Do YYYY')} + "to" {moment(this.reportStore.endDate).format('dddd, MMMM Do YYYY')} */}
+                <ExcelFile filename="Katha Details">
+                    <ExcelSheet data={this.dataSet1} name="Katha Details">
+                        <ExcelColumn label="Date of Arrival" value="arrival"/>
+                        <ExcelColumn label="Date of Departure" value="departure"/>
+                        <ExcelColumn label="Block" value="block"/>
+                        <ExcelColumn label="Room No." value="room_no"/>
+                        <ExcelColumn label="No. of Beds" value="beds"/>
+                        <ExcelColumn label="Indian Toilet" value="indian"/>
+                        <ExcelColumn label="Western Toilet" value="western"/>
+                    </ExcelSheet>
+                </ExcelFile>         
+                </div>
+
+            {/* Reservations */}
              <div id="divReservationContents" style={{visibility:'hidden'}}>
                         <h4 style={{margin: 0, textAlign: 'center'}}>SWAMI SHUKDEVANAND TRUST</h4>
                         <h5 style={{margin: 0, textAlign: 'center'}}>PARMARTH NIKETAN, SWARAGASHRAM, RISHIKESH</h5>
@@ -344,8 +455,7 @@ export class Reports extends React.Component {
                         </table>
                 </div>
 
-                {/* Check Ins */}
-
+            {/* Check Ins */}
              <div id="divCheckInContents" style={{visibility:'hidden'}}>
                         <h4 style={{margin: 0, textAlign: 'center'}}>SWAMI SHUKDEVANAND TRUST</h4>
                         <h5 style={{margin: 0, textAlign: 'center'}}>PARMARTH NIKETAN, SWARAGASHRAM, RISHIKESH</h5>
@@ -389,9 +499,8 @@ export class Reports extends React.Component {
                         </table>
                 </div>
 
-                {/* Check Outs */}
-
-                 <div id="divCheckOutContents" style={{visibility:'hidden'}}>
+            {/* Check Outs */}
+                <div id="divCheckOutContents" style={{visibility:'hidden'}}>
                         <h4 style={{margin: 0, textAlign: 'center'}}>SWAMI SHUKDEVANAND TRUST</h4>
                         <h5 style={{margin: 0, textAlign: 'center'}}>PARMARTH NIKETAN, SWARAGASHRAM, RISHIKESH</h5>
                         <h5 style={{margin: 0, textAlign: 'center'}}>PAN NO: AADTS4740C</h5>
@@ -432,13 +541,22 @@ export class Reports extends React.Component {
                                     {item.room_nos}
                                 </td>
                                 <td style={{margin: 0, padding: '1em', borderBottom: '1px dotted black'}}>
-                                    {item.rec_no}
+                                    {item.rec_no} <br/> {item.checkout_comments}
                                 </td>
                                 <td style={{margin: 0, padding: '1em', borderBottom: '1px dotted black'}}>
                                    {item.amt}
                                 </td>
                             </tr>
                             ))}
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td style={{fontSize:'12pt'}}><b>Total:</b></td>
+                                <td style={{fontSize:'12pt'}}><b>{this.checkOutSum}</b></td>
+                            </tr>
                         </tbody>
                         </table>
                 </div>

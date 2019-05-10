@@ -38,7 +38,10 @@ const config = {
             }
         ]
     },
-    devtool: "source-map"
+    devtool: "source-map",
+    node: {
+        fs: 'empty'
+    }
 };
 
 module.exports = config;

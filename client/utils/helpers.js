@@ -1,6 +1,7 @@
 
 import {API_URL} from '../config/config';
 import {notify} from 'react-notify-toast';
+import moment from 'moment';
 
 export function logError(error) {
     const payload = {
@@ -34,11 +35,13 @@ export function checkError(response) {
 }
 
 export function getFormattedDate(dt) {
-    var date = new Date(dt);
-    var month = date.getMonth() + 1;
-    var day = date. getDate();
-    var year = date.getFullYear();
-    return year + "-" + month + "-" + day ;
+    // var date = new Date(dt);
+    // var month = date.getMonth() + 1;
+    // var day = date.getDate();
+    // var year = date.getFullYear();
+    // return year + "-" + month + "-" + day ;
+
+    return moment(dt).format('YYYY' + '-'  + 'MM' + '-' + 'DD');
 }
 
 export function createReservationsString(selectedReservations){

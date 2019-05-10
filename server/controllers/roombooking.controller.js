@@ -80,7 +80,8 @@ export function add(req, res) {
 
     var call_stored_proc = "CALL sp_InsertReservationRoomBookings('" 
     + req.params.id + "','"
-    + req.body.room_ids_str + "')";
+    + req.body.room_ids_str + "', '"
+    + req.body.reason_str + "')";
 
     pool.getConnection(function(error, connection) {
         if (error) {

@@ -38,6 +38,7 @@ export const blocks = {
   };
 
   export const roomTypes = {
+    0: 'No Bed',
     1: 'Single Bed',
     2: 'Double Bed',
     3: 'Triple Bed',

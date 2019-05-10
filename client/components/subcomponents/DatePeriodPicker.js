@@ -64,11 +64,11 @@ export class DatePickerInput extends Component {
         }
     }
 
-    // handleAvailability(){
-    //     if (this.isValidated()){
-    //         this.props.handleAvailability();
-    //     }
-    // }
+    handleKathas(){
+        if (this.isValidated()){
+            this.props.handleKathas();
+        }
+    }
 
     _grabUserInput() {
         return {
@@ -170,7 +170,7 @@ export class DatePickerInput extends Component {
                                     <button type="button" className="btnBig" onClick={() => this.handleReservations()}>Reservations</button>&nbsp;&nbsp;&nbsp;
                                     <button type="button" className="btnBig" onClick={() => this.handleCheckIns()}>Check Ins</button>&nbsp;&nbsp;&nbsp;
                                     <button type="button" className="btnBig" onClick={() => this.handleCheckOuts()}>Check Outs</button>&nbsp;&nbsp;&nbsp;
-                                    {/* <button type="button" className="btnBig" onClick={() => this.handleAvailability()}>Availability</button> */}
+                                    <button type="button" className="btnBig" onClick={() => this.handleKathas()}>Kathas</button>
                             </div>
                         </div>
                     </div>

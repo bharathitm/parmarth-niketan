@@ -92,19 +92,20 @@ export class BookRooms extends Component {
       isReRender: false
     });
 
-    if (typeof this.props.getStore().noOfRooms == 'undefined') {
-      this.props.updateStore({
-        noOfRooms: null
-      });
-    }
+    // if (typeof this.props.getStore().noOfRooms == 'undefined') {
+    //   this.props.updateStore({
+    //     noOfRooms: null
+    //   });
+    // }
 
-    if (typeof this.props.getStore().roomType == 'undefined') {
-      this.props.updateStore({
-        roomType: null
-      });
-    }
+    // if (typeof this.props.getStore().roomType == 'undefined') {
+    //   this.props.updateStore({
+    //     roomType: null
+    //   });
+    // }
 
-    fetch(API_URL, "arooms/4?adate=" + this.props.getStore().arrivalDate + "&ddate=" + this.props.getStore().departureDate + "&nR=" + this.props.getStore().noOfRooms + "&rT=" + this.props.getStore().roomType)
+    //fetch(API_URL, "arooms/4?adate=" + this.props.getStore().arrivalDate + "&ddate=" + this.props.getStore().departureDate + "&nR=" + this.props.getStore().noOfRooms + "&rT=" + this.props.getStore().roomType)
+    fetch(API_URL, "arooms/4?adate=" + this.props.getStore().arrivalDate + "&ddate=" + this.props.getStore().departureDate)
       .then((response) => {
         return checkError(response);
       })
@@ -265,13 +266,14 @@ export class BookRooms extends Component {
         buttons: [
           {
             label: 'Yes',
-            onClick: () => this.addRoomBookings(str_rooms),
+            onClick: () => this.addRoomBookings(str_rooms, document.getElementById("txtReason").value),
           },
           {
             label: 'No',
             onClick: () => false
           }
-        ]
+        ],
+        childrenElement: () => <div><br/>Reason: <br/><textarea id="txtReason" className="form-control"></textarea></div>
       })
     }
     else if (selectedRooms.length > 0) {
@@ -280,9 +282,10 @@ export class BookRooms extends Component {
     }
   }
 
-  addRoomBookings(str_rooms) {
+  addRoomBookings(str_rooms, strReason) {
     const payload = {
-      room_ids_str: str_rooms
+      room_ids_str: str_rooms,
+      reason_str:  (strReason.toString().trim() != '')? strReason: null,
     };
 
     store(API_URL, "roombookings/" + this.props.getStore().reservationId, JSON.stringify(payload))

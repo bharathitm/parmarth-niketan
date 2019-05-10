@@ -239,3 +239,35 @@ export function findByDates(req, res) {
         });
     });     
 }
+
+/**
+ * Find all reservations for given date range
+ *
+ * @param {object} req
+ * @param {object} res
+ * @returns {*}
+ */
+export function findByKathaDates(req, res) {
+
+    var call_stored_proc = "CALL sp_GetReportKathaDetails('" 
+    + req.query.adate + "','"
+    + req.query.ddate + "')";  
+
+    pool.getConnection(function(error, connection) {
+        if (error) {
+            errorController.LogError(error);
+            return res.send(error.code);
+        } 
+
+        connection.query(call_stored_proc, true, (error, results, fields) => {
+            res.send(results[0]); 
+            connection.release();
+
+            if (error) {
+                errorController.LogError(error);
+                return res.send(error.code);
+            }
+
+        });
+    });     
+}
