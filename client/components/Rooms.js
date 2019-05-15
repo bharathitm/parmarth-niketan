@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 import {blocks} from '../constants/roomAttributes';
 
-import {logError, checkError} from '../utils/helpers';
+import {logError, checkError, getFormattedDate} from '../utils/helpers';
 import {API_URL} from '../config/config';
 import {fetch} from '../utils/httpUtil';
 import { confirmAlert } from 'react-confirm-alert'; 
@@ -98,6 +98,79 @@ export class Rooms extends Component {
                     )}
                 })
         }
+
+        handleRoomFutureBookings(roomId, room_no){
+
+            this.roomStore = {
+                roomId: roomId
+            };
+    
+              fetch(API_URL, "rooms/" + roomId + "?type=2")
+                .then((response) => {
+                  return checkError(response);
+                })
+                .then((result) => {
+                  this.loadRoomFutureBookings(room_no, result);
+                })
+                .catch((error) => {
+                  this.setState({
+                    isLoaded: false,
+                    error
+                  });
+                  notify.show('Oops! Something went wrong! Please try again!', 'error');
+                  logError(error);
+                });
+        }
+
+
+        loadRoomFutureBookings(room_no, results){
+    
+            confirmAlert({
+                customUI: ({ onClose }) => {
+                  return (
+                    <div className="row room-details">
+                    <form id="Form" className="form-horizontal">  
+                        <h4>Room Future Bookings - {room_no}</h4>  
+                        <img src="./img/close.png" className="imgClose" onClick={onClose}/>
+                        <div className = "div-table advance-table checkout-table">
+                    <div className = "div-table-row">
+                              <div className ="div-table-col div-table-col-header" style={{width:'15%'}}>
+                             Arrival Date
+                              </div>
+                              <div className ="div-table-col div-table-col-header" style={{width:'15%'}}>
+                             Departure Date
+                              </div>
+                              <div className ="div-table-col div-table-col-header" style={{width:'25%'}}>
+                             Guest Name
+                              </div>
+                              <div className ="div-table-col div-table-col-header" style={{width:'35%'}}>
+                              Guest Email / Phone
+                              </div>
+                      </div>
+
+                      {results.length > 0 ?
+                        results.map(item => (
+                        <div className = "div-table-row" key={item.room_booking_id}>
+                              <div className ="div-table-col col-bordered" style={{width:'15%'}}>
+                                {getFormattedDate(item.date_of_arrival)}
+                              </div>
+                              <div className ="div-table-col col-bordered" style={{width:'15%'}}>
+                                {getFormattedDate(item.date_of_departure)}
+                              </div>
+                              <div className ="div-table-col col-bordered" style={{width:'25%'}}>
+                                {item.guest_name}
+                              </div>
+                              <div className ="div-table-col col-bordered" style={{width:'35%'}}>
+                              {item.email_id != null ? item.email_id: item.phone_no}
+                              </div>
+                        </div>
+                        )) : <div id="divNoFutureBookings">No room bookings yet.</div>}
+                      </div>
+                        </form>                    
+                    </div>
+                        )}
+                    })
+            }
     
     render() {
 
@@ -121,10 +194,10 @@ export class Rooms extends Component {
                     <div id="divRoomBookings" style={{ visibility: this.state.isLoaded? 'visible':'hidden', display: this.state.isLoaded? 'inline':'none' }}>
                     <div className = "div-table advance-table">
                             <div className = "div-table-row">
-                                    <div className ="room-no div-table-col div-table-col-header">
+                                    <div className ="room-no div-table-col div-table-col-header" style = {{width:'20%'}}>
                                     Room No.
                                     </div>
-                                     <div className ="details div-table-col div-table-col-header">
+                                     <div className ="details div-table-col div-table-col-header" style = {{width:'35%'}}>
                                     Notes
                                     </div>
                                     <div className ="actions div-table-col div-table-col-header">
@@ -133,10 +206,12 @@ export class Rooms extends Component {
                             </div>
                             {this.state.items.map(item => (
                                 <div className = "div-table-row">
-                                    <div className ="room-no div-table-col col-bordered" style={{backgroundColor: item.is_available? '': 'lightgrey' }}>
+                                    <div className ="room-no div-table-col col-bordered" style={{backgroundColor: item.is_available? '': 'lightgrey', width:'20%'}}>
+                                    <a onClick={() => this.handleRoomFutureBookings(item.room_id, item.room_no)}>
                                     {item.room_no}
+                                    </a>
                                     </div>
-                                    <div className ="details div-table-col col-bordered" style={{backgroundColor: item.is_available? '': 'lightgrey' }}>
+                                    <div className ="details div-table-col col-bordered" style={{backgroundColor: item.is_available? '': 'lightgrey' , width:'35%'}}>
                                         {item.notes}
                                     </div>
                                     <div className ="actions div-table-col col-bordered">

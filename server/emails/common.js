@@ -9,19 +9,26 @@ has to offer, you may want to include the Ganga Aarti and Satsang into your dail
 In order to have a quick check-in and also a hassle-free stay at the Ashram, please read the following information carefully - \
 <ul>\
 <li> \
-As a general rule, you can check-in anytime between <b>8 am – 9 pm </b>and check-out before <b>10 am</b>. \
+As a general rule, you can check-in anytime between <b>11 am – 8 pm </b>and check-out before <b>10 am</b>. \
 If you would require an early check-in and/or a late check-out, please let us know in advance so that we can make the necessary arrangements. \
 </li> \
 <li>\
-If you are reaching the Ashram after/early hours, kindly remember to send us a reminder with your exact arrival details, \
-the day before of your arrival by <b>5 pm</b> via email and telephone. \
-We will leave room keys with the security guard at the Ashram gate. You may collect from him by giving him your original ID. \
-In the morning, please go to the reception office to fill out the paperwork and pick up your ID. \
-Also, as this might be a temporary room just for the night, please don't unpack too much. You will get the exact room info in the morning at the reception office.\
+Depending upon the operational and logistical needs of the ashram, early check-in and late check-out may be possible. \
+We humbly invite you to discuss your particular needs with the Reception office by \
+email or telephone before your arrival once your reservation is confirmed. \
+If you're arriving early and check-in is not possible, we invite you to enjoy our gardens and facilities and \
+to take advantage of any of the programs that may be taking place, such as drop-in yoga classes, until check-in is available. \
+If you require a late departure, we invite you to check your luggage with Reception office and continue to enjoy the ashram and \
+its facilities and programs until it's time for you to leave. \
 </li>\
 <li> \
 If you need to contact the Ashram while en route, please call us at 0135-2434301, 0135-2434302, 7830060088 or 09411106609. After arrival, \
 please go to the reception office to check-in. \
+</li> \
+<li> \
+Parking is available in the lot behind the ashram. The easiest way to locate the car park is to input \
+Green Hotel Swarg Ashram into your mapping app. Follow the directions to the hotel, then drive past it \
+one block. You will notice the rear gate of the ashram on the left, and the car parks on the right. \
 </li> \
 <li> \
 All rooms have at least 2 beds (some have 3 or 4), with fans, coolers and attached bathrooms. Bed linen and towels are provided. \

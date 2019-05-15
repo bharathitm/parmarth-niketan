@@ -6,6 +6,7 @@ const router = express.Router();
 
 router.route('/')
 
+    // Fetches all rooms for given block Id
     .get( (req, res) => {
         roomsCtrl.findByBlockId(req, res);
     })
@@ -17,17 +18,13 @@ router.route('/')
 
 router.route('/:id')
 
-    // Fetches all rooms for given block Id
+    
     .get( (req, res) => {
-        roomsCtrl.find(req, res); 
+        if (req.query.type == 1) { // Fetches all details for a given room
+            roomsCtrl.find(req, res); 
+        } else { // Fetches future bookings for a given room
+            roomsCtrl.fetchFutureBookings(req, res);
+        }
     });
-
-    // // Removes
-    // .delete((req, res) => {
-    // roomsCtrl.add(req, res);
-    // })
-
-
-
 
 export default router;

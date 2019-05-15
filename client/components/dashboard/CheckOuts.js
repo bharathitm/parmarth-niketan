@@ -211,7 +211,7 @@ export class CheckOuts extends React.Component {
                             Total Sum: &#8377; &nbsp;
                           </label>
                           <div className="col-md-8">
-                            <input id="txtTotalSum" className="form-control small-textbox" defaultValue={sum} type="number" />
+                            <input id="txtTotalSum" className="form-control small-textbox" defaultValue={sum - (results[0].donationAmount != null? results[0].donationAmount: 0)} type="number" />
                             </div>
                       </div>
 

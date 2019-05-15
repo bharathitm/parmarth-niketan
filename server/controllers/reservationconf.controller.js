@@ -135,7 +135,7 @@ export function SendConfirmationEmail(name, emailId, dates, noOfRooms, totalAmt,
                 htmlText += 'We hope everything is wonderful with you and your loved ones.<br/><br/>It is wonderful that your clients have chosen Parmarth Niketan Ashram for their stay in Rishikesh.<br/><br/>';
                 htmlText += 'This is a <b>tentative</b> confirmation for their stay at Parmarth Niketan Ashram from <b>' + dates + '</b>.<br/><br/>';  
                 //htmlText += 'As requested, we have reserved <b>' + noOfRooms + ' room(s) </b> for their visit with us. <br/><br/>';
-                htmlText += 'As requested, we have reserved <b>' + total_beds + ' room(s) </b> for their visit with us. <br/><br/>';
+                htmlText += 'As requested, we have reserved <b>' + total_beds + ' beds(s) </b> for their visit with us. <br/><br/>';
 
                // GetDonationSplitUp(reservationId, function (){                               
                         //htmlText += 'Based on the room(s) reserved for you, the suggested donation amount is <b>&#8377; ' + totalAmt.toLocaleString('en-IN') + '</b>.The split up is as follows: <br/> ';

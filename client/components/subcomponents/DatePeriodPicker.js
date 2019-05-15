@@ -170,7 +170,7 @@ export class DatePickerInput extends Component {
                                     <button type="button" className="btnBig" onClick={() => this.handleReservations()}>Reservations</button>&nbsp;&nbsp;&nbsp;
                                     <button type="button" className="btnBig" onClick={() => this.handleCheckIns()}>Check Ins</button>&nbsp;&nbsp;&nbsp;
                                     <button type="button" className="btnBig" onClick={() => this.handleCheckOuts()}>Check Outs</button>&nbsp;&nbsp;&nbsp;
-                                    <button type="button" className="btnBig" onClick={() => this.handleKathas()}>Kathas</button>
+                                    <button type="button" className="btnBig" onClick={() => this.handleKathas()}>Kathas/Retreats</button>
                             </div>
                         </div>
                     </div>

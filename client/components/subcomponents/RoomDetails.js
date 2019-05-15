@@ -28,7 +28,7 @@ export class RoomDetails extends Component {
 
     fetchRoomDetails(){
         if (this.props.getRoomStore().roomId != null){
-            fetch(API_URL, "rooms/" + this.props.getRoomStore().roomId)
+            fetch(API_URL, "rooms/" + this.props.getRoomStore().roomId + "?type=1")
             .then((response) => {
             return checkError(response);
             })

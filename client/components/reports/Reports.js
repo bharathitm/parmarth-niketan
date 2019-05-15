@@ -6,7 +6,7 @@ import ErrorBoundary from '../ErrorBoundary'
 
 import DatePeriodPicker from '../subcomponents/DatePeriodPicker';
 import moment from 'moment';
-import {reservationStatuses} from '../../constants/roomAttributes';
+import {reservationStatuses, floors} from '../../constants/roomAttributes';
 
 import {logError, checkError, getFormattedDate} from '../../utils/helpers';
 import {API_URL} from '../../config/config';
@@ -150,14 +150,19 @@ export class Reports extends React.Component {
                     if (this.state.KathaItems.length > 0){
                         for (var i=0; i < this.state.KathaItems.length; i++){
                             
-                            this.dataSet1.push({            
+                            this.dataSet1.push({     
+                                guest_name: this.state.KathaItems[i].guest_name,       
                                 arrival: moment(this.state.KathaItems[i].date_of_arrival).format('DD-MM-YYYY'),
                                 departure: moment(this.state.KathaItems[i].date_of_departure).format('DD-MM-YYYY'),
                                 block: this.state.KathaItems[i].block_name,
                                 room_no: this.state.KathaItems[i].room_no,
+                                floor_no: floors[this.state.KathaItems[i].floor_no],
                                 beds: this.state.KathaItems[i].total_beds,
-                                indian: this.state.KathaItems[i].has_indian_toilet, 
-                                western: this.state.KathaItems[i].has_western_toilet     
+                                has_ac: (this.state.KathaItems[i].has_AC ? "Yes": "No"), 
+                                has_cooler: (this.state.KathaItems[i].has_cooler? "Yes": "No"),     
+                                has_indian: (this.state.KathaItems[i].has_indian_toilet? "Yes": "No"),  
+                                has_western: (this.state.KathaItems[i].has_western_toilet? "Yes": "No"), 
+                                has_geyser: (this.state.KathaItems[i].has_solar_geyser? "Yes": "No")     
                             })
                         }
                     }
@@ -392,15 +397,20 @@ export class Reports extends React.Component {
              <div id="divKathaContents" style={{visibility:'hidden', margin:'1em'}}>
 
                 {/* <ExcelFile hideElement="true" filename="Katha Details">  + {moment(this.reportStore.startDate).format('dddd, MMMM Do YYYY')} + "to" {moment(this.reportStore.endDate).format('dddd, MMMM Do YYYY')} */}
-                <ExcelFile filename="Katha Details">
-                    <ExcelSheet data={this.dataSet1} name="Katha Details">
+                <ExcelFile filename="Details">
+                    <ExcelSheet data={this.dataSet1} name="Details">
+                        <ExcelColumn label="Guest Name" value="guest_name"/>
                         <ExcelColumn label="Date of Arrival" value="arrival"/>
                         <ExcelColumn label="Date of Departure" value="departure"/>
                         <ExcelColumn label="Block" value="block"/>
                         <ExcelColumn label="Room No." value="room_no"/>
+                        <ExcelColumn label="Floor" value="floor_no"/>
                         <ExcelColumn label="No. of Beds" value="beds"/>
-                        <ExcelColumn label="Indian Toilet" value="indian"/>
-                        <ExcelColumn label="Western Toilet" value="western"/>
+                        <ExcelColumn label="AC" value="has_ac"/>
+                        <ExcelColumn label="Cooler" value="has_cooler"/>
+                        <ExcelColumn label="Indian Toilet" value="has_indian"/>
+                        <ExcelColumn label="Western Toilet" value="has_western"/>
+                        <ExcelColumn label="Solar Geyser" value="has_geyser"/>
                     </ExcelSheet>
                 </ExcelFile>         
                 </div>

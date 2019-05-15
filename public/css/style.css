@@ -812,7 +812,7 @@ width:100%;
 .divBlocks li{
   border-bottom:solid 1px skyblue;
   margin:1em;
-  width:55%;
+  width:75%;
 }
 
 .sp-block-imgs{
@@ -1026,5 +1026,13 @@ a{
   margin-bottom: 0.3em;
   border-bottom: solid 1px skyblue;
 
+}
+
+#divNoFutureBookings{
+    padding: 0.5em;
+    border: solid 1px silver;
+    border-top: 0;
+    width: 95.6%;
+    text-align: center;
 }
 
