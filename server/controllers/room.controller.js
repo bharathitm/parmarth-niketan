@@ -76,8 +76,15 @@ export function update(req, res) {
 
     var call_stored_proc = "CALL sp_UpdateRoomDetails('" 
 
-    call_stored_proc +=  req.body.room_id + "','"
-    + req.body.room_no + "','"
+    call_stored_proc +=  req.body.room_id + "',"
+    // Since room category id is an optional field, we pass this as null
+    if (req.body.room_category_id == '' || req.body.room_category_id == null){
+        call_stored_proc += null + ",";        
+    }
+    else {
+        call_stored_proc +=  "'" + req.body.room_category_id + "',";
+    }
+    call_stored_proc += "'" + req.body.room_no + "','"
     + req.body.floor_no + "','"
     + req.body.total_beds + "','"
     + req.body.room_rent + "','"

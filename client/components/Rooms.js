@@ -22,6 +22,7 @@ export class Rooms extends Component {
       };
       
       this.roomStore = {
+        roomCategoryId: null,
         roomId: null,
         roomNo: '',
         floorNo: '',

@@ -418,7 +418,7 @@ export class RoomBookings extends Component {
                     </div>
 
                     </td>
-                     <td style={{width: '20%', fontSize: '10pt'}}>
+                     <td style={{width: '20%', fontSize: '10pt', verticalAlign: 'top'}}>
                        <div> 
                       <span className="spReservationDetails">Total Amount: &#8377; <span ref="totalAmount"></span></span>
                       <br/>

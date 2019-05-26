@@ -68,3 +68,11 @@ export const blocks = {
     4: "Ganga Nandini ji",
     5: "Barde Maharaj ji"
   };
+
+  export const roomCategories = {
+    1: "Economy Cooler",
+    2: "Standard Cooler",
+    3: "Standard AC",
+    4: "Deluxe AC"
+  };
+

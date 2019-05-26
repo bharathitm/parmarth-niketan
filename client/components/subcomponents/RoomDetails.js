@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import {floors, roomTypes} from '../../constants/roomAttributes';
+import {floors, roomTypes, roomCategories} from '../../constants/roomAttributes';
 
 import {logError, checkError} from '../../utils/helpers';
 import {API_URL} from '../../config/config';
@@ -54,6 +54,7 @@ export class RoomDetails extends Component {
     loadRoomDetails(){
 
         this.props.updateRoomStore({
+            roomCategoryId: this.state.items[0].room_category_id,
             roomNo: this.state.items[0].room_no,
             floorNo: this.state.items[0].floor_no,
             totalBeds: this.state.items[0].total_beds,
@@ -68,6 +69,7 @@ export class RoomDetails extends Component {
           });
 
         this.setState({
+            roomCategoryId: this.state.items[0].room_category_id,
             roomNo: this.state.items[0].room_no,
             floorNo: this.state.items[0].floor_no,
             totalBeds: this.state.items[0].total_beds,
@@ -81,6 +83,7 @@ export class RoomDetails extends Component {
             notes: this.state.items[0].notes
           });
 
+        this.refs.roomCategory.value = (this.state.items[0].room_category_id == null)? 0 : this.state.items[0].room_category_id,
         this.refs.totalBeds.value = this.state.items[0].total_beds,
         this.refs.floorNo.value = this.state.items[0].floor_no,
         this.refs.notes.value = this.state.items[0].notes
@@ -123,6 +126,15 @@ export class RoomDetails extends Component {
         return items;
     }
 
+    populateRoomCategories() {
+        let items = [];   
+    
+        for (let i = 1; i <= 4; i++) {             
+             items.push(<option key={i} value={i}>{roomCategories[i]}</option>);   
+        }
+        return items;
+    }
+
 
     validationCheck() {
         if (!this._validateOnDemand)
@@ -144,6 +156,7 @@ export class RoomDetails extends Component {
         var rdisAvailable = document.getElementsByName("isAvailable");
 
         return {
+          roomCategoryId: this.refs.roomCategory.value,
           roomNo: this.refs.roomNo.value,
           floorNo: this.refs.floorNo.value,
           roomDonation: this.refs.roomDonation.value,
@@ -161,6 +174,7 @@ export class RoomDetails extends Component {
     
     _validateData(data) {
         return  {
+          roomCategoryVal: true,
           roomNoVal:  (data.roomNo != ''),
           floorNoVal: true,
           roomDonationVal: (data.roomDonation != ''),
@@ -183,6 +197,7 @@ export class RoomDetails extends Component {
         // if full validation passes then save to store and pass as valid
         if (Object.keys(validateNewInput).every((k) => { return validateNewInput[k] === true })) {
             if (
+                this.props.getRoomStore().roomCategoryId != userInput.roomCategoryId || 
                 this.props.getRoomStore().roomNo != userInput.roomNo || 
                 this.props.getRoomStore().floorNo != userInput.floorNo || 
                 this.props.getRoomStore().roomDonation != userInput.roomDonation || 
@@ -208,6 +223,7 @@ export class RoomDetails extends Component {
     updateRoomDetails(){
 
         const payload = {
+            room_category_id: (this.state.roomCategoryId == 0)? null : this.state.roomCategoryId,
             room_id: this.state.roomId,
             room_no: this.state.roomNo,
             floor_no: this.state.floorNo,
@@ -263,6 +279,25 @@ export class RoomDetails extends Component {
 
         return (  
             <div className = "div-table">
+                <div className = "div-table-row">
+                    <div className ="div-table-col">
+                            <div className="form-group col-md-12 content form-block-holder">
+                                <label className="control-label col-md-4">
+                                Room Category:
+                                </label>
+                                <div className="col-md-8">
+                                        <select ref="roomCategory"
+                                            className="form-control"
+                                            onBlur={this.validationCheck}
+                                            defaultValue={this.state.roomCategoryId}>
+                                            <option value="0">Please select</option>
+                                            {this.populateRoomCategories()}                   
+                                </select>    
+                                </div>
+                                </div>
+                        </div>
+                    </div>
+            
             <div className = "div-table-row">
                     <div className ="div-table-col">
                             <div className="form-group col-md-12 content form-block-holder">
