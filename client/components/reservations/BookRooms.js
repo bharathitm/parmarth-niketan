@@ -92,18 +92,6 @@ export class BookRooms extends Component {
       isReRender: false
     });
 
-    // if (typeof this.props.getStore().noOfRooms == 'undefined') {
-    //   this.props.updateStore({
-    //     noOfRooms: null
-    //   });
-    // }
-
-    // if (typeof this.props.getStore().roomType == 'undefined') {
-    //   this.props.updateStore({
-    //     roomType: null
-    //   });
-    // }
-
     //fetch(API_URL, "arooms/4?adate=" + this.props.getStore().arrivalDate + "&ddate=" + this.props.getStore().departureDate + "&nR=" + this.props.getStore().noOfRooms + "&rT=" + this.props.getStore().roomType)
     fetch(API_URL, "arooms/4?adate=" + this.props.getStore().arrivalDate + "&ddate=" + this.props.getStore().departureDate)
       .then((response) => {
@@ -161,32 +149,44 @@ export class BookRooms extends Component {
 
       var checkboxes = document.getElementsByName(blocks[this.props.getStore().uniqueBlocks[cnt]]);
 
-      //if (checkboxes.length > 0){
+      var roomTotal = 0;
       var blockTotal = 0;
       var blockName = '';
       var room_no = 0;
       var blockBeds = 0;
+      
 
-      for (var i = 0; i < checkboxes.length; i++) {
-        if (checkboxes[i].checked) {      
-          blockTotal += parseFloat(checkboxes[i].value);
-          blockName = checkboxes[i].name;
-          room_no = checkboxes[i].id;
-          if ((blockName != 'Event Halls') && (blockName != 'Wait List')) {
-            blockBeds += parseFloat(checkboxes[i].getAttribute("data-beds"));
-          }
-        }
-      }
       var aDate = moment(this.props.getStore().arrivalDate);
       var dDate = moment(this.props.getStore().departureDate);
 
-      if (dDate.diff(aDate, 'days') != 0) {
-        if ((parseInt(room_no) >= 416 && parseInt(room_no) <= 427) || (parseInt(room_no) == 431)|| (parseInt(room_no) == 442) || (parseInt(room_no) == 443)){
-          blockTotal = (blockTotal * (dDate.diff(aDate, 'days')));
-        } else if ((blockName != 'Event Halls') && (blockName != 'Wait List')) {
-          blockTotal = (blockTotal * (dDate.diff(aDate, 'days')));
+      for (var i = 0; i < checkboxes.length; i++) {
+        if (checkboxes[i].checked) {  
+
+          roomTotal += parseFloat(checkboxes[i].value);
+          blockName = checkboxes[i].name;
+          room_no = checkboxes[i].id;
+
+          if ((blockName != 'Event Halls') && (blockName != 'Wait List')) {
+            blockBeds += parseFloat(checkboxes[i].getAttribute("data-beds"));
+          }
+
+          if (dDate.diff(aDate, 'days') != 0) {
+            if ((blockName != 'Event Halls') && (blockName != 'Wait List')) {
+                blockTotal += (roomTotal * (dDate.diff(aDate, 'days')));
+            } else if ((parseInt(room_no) >= 416 && parseInt(room_no) <= 427) || (parseInt(room_no) == 431)|| (parseInt(room_no) == 442)){
+                blockTotal += (roomTotal * (dDate.diff(aDate, 'days')));
+            } else {
+                blockTotal += roomTotal;
+            }
+          } else {
+              blockTotal += roomTotal;
+          }
+          roomTotal = 0;
         }
       }
+      
+
+     
 
       if (document.getElementById(blocks[this.props.getStore().uniqueBlocks[cnt]]) != null) {
         document.getElementById(blocks[this.props.getStore().uniqueBlocks[cnt]]).innerHTML = blockTotal.toLocaleString('en-IN');
@@ -240,6 +240,7 @@ export class BookRooms extends Component {
           sessionStorage.setItem('waitingListCnt', "");
         }
       } else {
+        if (this.refs.txtWaitingListCnt != undefined){
           if (this.refs.txtWaitingListCnt.value != ""){
             sessionStorage.setItem('waitingListCnt', this.refs.txtWaitingListCnt.value);
             for (var i=0; i < this.refs.txtWaitingListCnt.value; i ++){
@@ -248,6 +249,7 @@ export class BookRooms extends Component {
           } else {
             sessionStorage.setItem('waitingListCnt', "");
           }
+        }
 
       }
     }
@@ -543,7 +545,7 @@ export class BookRooms extends Component {
                   <input type="checkbox" name="chkAllBlockRooms" id={"blk_" + item} onClick={() => this.selectBlockRooms()} />
                   <h4>{blocks[item]}</h4>
                   <span id="spEventHallLegend" style={{ visibility: blocks[item] == 'Event Halls' ? 'visible' : 'hidden', display: blocks[item] == 'Event Halls' ? 'block' : 'none' }}>
-                  Yoga Halls, Samadhi Mandir are on a per day basis.
+                  All Yoga Halls, Samadhi Mandir, Saraswati Garden(2-5 days) are on a per day basis.
                   </span>
                   <span className="div-block-totals">Total &#8377;<span id={blocks[item]}>0</span></span>
                   <span className="div-block-beds">Beds <span id={blocks[item] + "_beds"}>0</span></span>

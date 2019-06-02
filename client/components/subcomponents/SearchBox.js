@@ -17,12 +17,6 @@ export class SearchBox extends Component {
     this.handleArrivalDateChange = this.handleArrivalDateChange.bind(this);
     this.handleDepartureDateChange = this.handleDepartureDateChange.bind(this);
 
-    //this.populateNoOfRooms  = this.populateNoOfRooms.bind(this);
-    //this.handleNoOfRoomsChange = this.handleNoOfRoomsChange.bind(this);
-
-    //this.populateRoomTypes = this.populateRoomTypes.bind(this);
-    //this.handleRoomTypeChange = this.handleRoomTypeChange.bind(this);
-
     this.populateBlocks = this.populateBlocks.bind(this);
 
     this._validateOnDemand = true; 
@@ -39,8 +33,8 @@ export class SearchBox extends Component {
         arrivalDate: moment(this.props.getSearchStore().arrivalDate),
         departureDate: moment(this.props.getSearchStore().departureDate)
       });
-      this.refs.arrivalDate.selected = this.props.getSearchStore().arrivalDate;
-      this.refs.departureDate.selected = this.props.getSearchStore().departureDate;
+      this.refs.arrivalDate.selected = moment(this.props.getSearchStore().arrivalDate);
+      this.refs.departureDate.selected = moment(this.props.getSearchStore().departureDate);
       this.props.handleSearch();
     }   
   }
@@ -69,19 +63,6 @@ export class SearchBox extends Component {
     this.refs.departureDate.selected = date;
   }
 
-//   handleNoOfRoomsChange(){
-//     this.props.updateSearchStore({
-//       noOfRooms: this.refs.noOfRooms.value
-//     });
-// }
-
-//   handleRoomTypeChange(){
-//       this.props.updateSearchStore({
-//         roomType: this.refs.roomTypes.value
-//       });
-//   }
-
-
   _grabUserInput() {
     return {
       arrivalDate: this.refs.arrivalDate.selected,
@@ -95,33 +76,6 @@ export class SearchBox extends Component {
       departureDateVal: (data.departureDate == null || data.departureDate == undefined)? false: true
     };
   }
-
-  
-  // populateNoOfRooms() {
-  //   let items = [];
-    
-  //   items.push(<option value="null"> No. Of Rooms</option>); 
-  //   items.push(<option key={1} value={1}>{1} room</option>);   
-
-  //   for (let i = 2; i <= 3; i++) {             
-  //        items.push(<option key={i} value={i}>{i} rooms</option>);   
-  //   }
-
-  //   items.push(<option value="null">Multiple rooms</option>);  
-  //   return items;
-  // } 
-
-
-  // populateRoomTypes() {
-  //   let items = [];   
-
-  //   items.push(<option value="null">Room Type</option>); 
-
-  //   for (let i = 1; i <= 12; i++) {             
-  //        items.push(<option key={i} value={i}>{roomTypes[i]}</option>);   
-  //   }
-  //   return items;
-  // } 
 
   populateBlocks(){
     let items = []; 
