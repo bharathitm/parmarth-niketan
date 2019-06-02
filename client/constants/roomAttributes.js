@@ -70,9 +70,12 @@ export const blocks = {
   };
 
   export const roomCategories = {
-    1: "Economy Cooler",
-    2: "Standard Cooler",
-    3: "Standard AC",
-    4: "Deluxe AC"
+    1: "Basic Economy",
+    2: "Economy Cooler",
+    3: "Standard Cooler",
+    4: "Deluxe Cooler",
+    5: "Economy AC",
+    6: "Standard AC",
+    7: "Deluxe AC"
   };
 

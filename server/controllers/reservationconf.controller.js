@@ -249,9 +249,10 @@ export function SendConfirmationEmail(name, emailId, dates, noOfRooms, totalAmt,
                                 str += arrSplitUpResults[i].room_no + ": "; 
                         }
                          
-                        str += " X " + arrSplitUpResults[i].noOfDays + " day(s) X &#8377; " 
-                                + arrSplitUpResults[i].room_rent.toLocaleString('en-IN') + " = <b>&#8377; " 
-                                + parseFloat(arrSplitUpResults[i].rooms_cnt * arrSplitUpResults[i].noOfDays * arrSplitUpResults[i].room_rent).toLocaleString('en-IN') 
+                        str += " @ &#8377; " + arrSplitUpResults[i].room_rent.toLocaleString('en-IN') 
+                                + ' X ' + arrSplitUpResults[i].noOfDays + " day(s) " 
+                                + parseFloat(arrSplitUpResults[i].rooms_cnt * arrSplitUpResults[i].noOfDays 
+                                        * arrSplitUpResults[i].room_rent).toLocaleString('en-IN') 
                                 + "</b>";
                         
                         str += "</li>";
