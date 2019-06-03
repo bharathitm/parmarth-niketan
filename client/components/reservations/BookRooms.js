@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { blocks, floors } from '../../constants/roomAttributes';
+import { blocks, floors, roomCategories } from '../../constants/roomAttributes';
 
 import { confirmAlert } from 'react-confirm-alert';
 
@@ -544,7 +544,7 @@ export class BookRooms extends Component {
                 <div className="divBlocks">
                   <input type="checkbox" name="chkAllBlockRooms" id={"blk_" + item} onClick={() => this.selectBlockRooms()} />
                   <h4>{blocks[item]}</h4>
-                  <span id="spEventHallLegend" style={{ visibility: blocks[item] == 'Event Halls' ? 'visible' : 'hidden', display: blocks[item] == 'Event Halls' ? 'block' : 'none' }}>
+                  <span class="spEventHallLegend" style={{ visibility: blocks[item] == 'Event Halls' ? 'visible' : 'hidden', display: blocks[item] == 'Event Halls' ? 'block' : 'none' }}>
                   All Yoga Halls, Samadhi Mandir, Saraswati Garden(2-5 days) are on a per day basis.
                   </span>
                   <span className="div-block-totals">Total &#8377;<span id={blocks[item]}>0</span></span>
@@ -558,12 +558,21 @@ export class BookRooms extends Component {
                           id={booking.room_id}
                           data-beds={booking.total_beds}
                           value={booking.room_rent} />
-                        <b>{booking.room_no}</b>{", " +
+                        <b>{booking.room_no}</b>{", " + 
                           floors[booking.floor_no] + ", " +
                           booking.total_beds + " beds"}
-                        <span className="sp-block-total">&#8377;{booking.room_rent.toLocaleString('en-IN')}</span>
+                          {booking.room_category_id != null?
+                          (<span class="spEventHallLegend">{" (" + roomCategories[booking.room_category_id] + ")"} </span>): null}
+                        <span className="sp-block-total">&#8377;{booking.room_rent.toLocaleString('en-IN') + " "}</span>
+                        <span class="spEventHallLegend">  
+                          <img alt="Previous Check Out" src="./img/prev_date.png" style={{ 
+                            visibility: booking.previous_departure_date != null ? 'visible' : 'hidden', 
+                            display: booking.previous_departure_date != null ? 'inline' : 'none',
+                            marginBottom: '-0.5em' }} />
+                          {booking.previous_departure_date != null? moment(booking.previous_departure_date).format("YYYY-MM-DD") : null}
+                        </span>
                         <span className="sp-block-imgs">
-                          <img src="./img/ac1.png" style={{ visibility: booking.has_AC == 1 ? 'visible' : 'hidden', display: booking.has_AC == 1 ? 'inline' : 'none' }} />
+                          <img alt="Has AC" src="./img/ac.png" style={{ visibility: booking.has_AC == 1 ? 'visible' : 'hidden', display: booking.has_AC == 1 ? 'inline' : 'none' }} />
                         </span>
                       </li>
                        <span style={{ visibility: booking.block_id == 11 ? 'visible' : 'hidden', display: booking.block_id == 11 ? 'inline' : 'none' }}>
