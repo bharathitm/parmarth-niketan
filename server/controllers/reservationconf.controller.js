@@ -19,113 +19,124 @@ export function SendConfirmationEmail(name, emailId, dates, noOfRooms, totalAmt,
         if (reservationTypeId == "2") // retreats
         {
                 htmlText = ConstructCommonIntro1(htmlText, dates, noOfRooms, total_beds);
-                if ((referenceId == 0) && (has_WL == 0)){ // if reference don't show donation details -- CHECK IF THESE TWO CLAUSES ARE NEEDED
-                        GetDonationSplitUp(reservationId, function (){                               
-                               htmlText += 'Based on the room(s) reserved for you, the suggested donation amount is <b>&#8377; ' + totalAmt.toLocaleString('en-IN') + '</b>. The split up is as follows: <br/> ';
-                               htmlText += ConstructSplitUpStr(reservationTypeId);
-                               htmlText += 'This will also include complimentary yoga classes.'; 
-                                htmlText += 'For any further details, please write to us at ';
-                                htmlText += 'tara@parmarth.com ';
-                                htmlText += 'or inquire at the reception office upon arrival.<br/><br/>';
-                                AddComments(emailId, htmlText, commonEmailText, email_comments, subjectText);
-                        });
-                } else {
-                        htmlText += ConstructMinDonationChart("", reservationTypeId); //show only the minimum donation chart
-                        htmlText += 'For any further details, please write to us at ';
-                        htmlText += 'tara@parmarth.com ';
-                        htmlText += 'or inquire at the reception office upon arrival.<br/><br/>';
-                        AddComments(emailId, htmlText, commonEmailText, email_comments, subjectText);
-                }
+
+                AddComments(emailId, htmlText, commonEmailText, email_comments, subjectText);
+
+                // if ((referenceId == 0) && (has_WL == 0)){ // if reference don't show donation details -- CHECK IF THESE TWO CLAUSES ARE NEEDED
+                //         GetDonationSplitUp(reservationId, function (){                               
+                //                htmlText += 'Based on the room(s) reserved for you, the suggested donation amount is <b>&#8377; ' + totalAmt.toLocaleString('en-IN') + '</b>. The split up is as follows: <br/> ';
+                //                htmlText += ConstructSplitUpStr(reservationTypeId);
+                //                htmlText += 'This will also include complimentary yoga classes.'; 
+                //                 htmlText += 'For any further details, please write to us at ';
+                //                 htmlText += 'tara@parmarth.com ';
+                //                 htmlText += 'or inquire at the reception office upon arrival.<br/><br/>';
+                //                 AddComments(emailId, htmlText, commonEmailText, email_comments, subjectText);
+                //         });
+                // } else {
+                //         htmlText += ConstructMinDonationChart("", reservationTypeId); //show only the minimum donation chart
+                //         htmlText += 'For any further details, please write to us at ';
+                //         htmlText += 'tara@parmarth.com ';
+                //         htmlText += 'or inquire at the reception office upon arrival.<br/><br/>';
+                //         AddComments(emailId, htmlText, commonEmailText, email_comments, subjectText);
+                // }
         }
         else if (reservationTypeId == "3") // sanskara
         {
                 switch (sanskaraId){
                         case "1": //Mundan
                                 htmlText = ConstructMundanText(htmlText, dates, noOfRooms, total_beds);
-                               if (has_WL == 0){ // if wait list don't show donation details
-                                       GetDonationSplitUp(reservationId, function (){                               
-                                                htmlText += 'Based on the room(s) reserved for you, the suggested donation amount is <b>&#8377; ' + totalAmt.toLocaleString('en-IN') + '</b>. The split up is as follows: <br/> ';
-                                                htmlText += ConstructSplitUpStr(reservationTypeId);
-                                                htmlText += 'This will also include complimentary yoga classes.';
-                                                htmlText += 'For any further details, please write to us at ';
-                                                htmlText += 'tara@parmarth.com ';
-                                                htmlText += 'or inquire at the reception office upon arrival.<br/><br/>';
-                                                AddComments(emailId, htmlText, commonEmailText, email_comments, subjectText);
-                                       });
-                               } else {
-                                        htmlText += ConstructMinDonationChart("", reservationTypeId); //show only the minimum donation chart
-                                        htmlText += 'For any further details, please write to us at ';
-                                        htmlText += 'tara@parmarth.com ';
-                                        htmlText += 'or inquire at the reception office upon arrival.<br/><br/>';
-                                        AddComments(emailId, htmlText, commonEmailText, email_comments, subjectText);
-                               }
+                                AddComments(emailId, htmlText, commonEmailText, email_comments, subjectText);
+
+                        //        if (has_WL == 0){ // if wait list don't show donation details
+                        //                GetDonationSplitUp(reservationId, function (){                               
+                        //                         htmlText += 'Based on the room(s) reserved for you, the suggested donation amount is <b>&#8377; ' + totalAmt.toLocaleString('en-IN') + '</b>. The split up is as follows: <br/> ';
+                        //                         htmlText += ConstructSplitUpStr(reservationTypeId);
+                        //                         htmlText += 'This will also include complimentary yoga classes.';
+                        //                         htmlText += 'For any further details, please write to us at ';
+                        //                         htmlText += 'tara@parmarth.com ';
+                        //                         htmlText += 'or inquire at the reception office upon arrival.<br/><br/>';
+                        //                         AddComments(emailId, htmlText, commonEmailText, email_comments, subjectText);
+                        //                });
+                        //        } else {
+                        //                 htmlText += ConstructMinDonationChart("", reservationTypeId); //show only the minimum donation chart
+                        //                 htmlText += 'For any further details, please write to us at ';
+                        //                 htmlText += 'tara@parmarth.com ';
+                        //                 htmlText += 'or inquire at the reception office upon arrival.<br/><br/>';
+                        //                 AddComments(emailId, htmlText, commonEmailText, email_comments, subjectText);
+                        //        }
                                 break;   
                         case "2": //Janeo
                                 htmlText = ConstructJaneoText(htmlText, dates, noOfRooms, total_beds);
-                                if (has_WL == 0){ // if wait list don't show donation details
-                                        GetDonationSplitUp(reservationId, function (){                               
-                                                htmlText += 'Based on the room(s) reserved for you, the suggested donation amount is <b>&#8377; ' + totalAmt.toLocaleString('en-IN') + '</b>. The split up is as follows: <br/> ';
-                                                htmlText += ConstructSplitUpStr(reservationTypeId);
-                                                htmlText += 'This will also include complimentary yoga classes.';
-                                                htmlText += 'For any further details, please write to us at ';
-                                                htmlText += 'tara@parmarth.com ';
-                                                htmlText += 'or inquire at the reception office upon arrival.<br/><br/>';
-                                                AddComments(emailId, htmlText, commonEmailText, email_comments, subjectText);
-                                       });
-                                } else {
-                                        htmlText += ConstructMinDonationChart("", reservationTypeId); //show only the minimum donation chart
-                                        htmlText += 'For any further details, please write to us at ';
-                                        htmlText += 'tara@parmarth.com ';
-                                        htmlText += 'or inquire at the reception office upon arrival.<br/><br/>';
-                                        AddComments(emailId, htmlText, commonEmailText, email_comments, subjectText);
-                                }
+                                AddComments(emailId, htmlText, commonEmailText, email_comments, subjectText);
+
+                                // if (has_WL == 0){ // if wait list don't show donation details
+                                //         GetDonationSplitUp(reservationId, function (){                               
+                                //                 htmlText += 'Based on the room(s) reserved for you, the suggested donation amount is <b>&#8377; ' + totalAmt.toLocaleString('en-IN') + '</b>. The split up is as follows: <br/> ';
+                                //                 htmlText += ConstructSplitUpStr(reservationTypeId);
+                                //                 htmlText += 'This will also include complimentary yoga classes.';
+                                //                 htmlText += 'For any further details, please write to us at ';
+                                //                 htmlText += 'tara@parmarth.com ';
+                                //                 htmlText += 'or inquire at the reception office upon arrival.<br/><br/>';
+                                //                 AddComments(emailId, htmlText, commonEmailText, email_comments, subjectText);
+                                //        });
+                                // } else {
+                                //         htmlText += ConstructMinDonationChart("", reservationTypeId); //show only the minimum donation chart
+                                //         htmlText += 'For any further details, please write to us at ';
+                                //         htmlText += 'tara@parmarth.com ';
+                                //         htmlText += 'or inquire at the reception office upon arrival.<br/><br/>';
+                                //         AddComments(emailId, htmlText, commonEmailText, email_comments, subjectText);
+                                // }
                                 break; 
                         case "3": // Marriage
                                 htmlText = ConstructCommonIntro1(htmlText, dates, noOfRooms, total_beds);
-                               if (has_WL == 0){ // if wait list don't show donation details
-                                       GetDonationSplitUp(reservationId, function (){                               
-                                                htmlText += 'Based on the room(s) reserved for you, the suggested donation amount is <b>&#8377; ' + totalAmt.toLocaleString('en-IN') + '</b>. The split up is as follows: <br/> ';
-                                                htmlText += ConstructSplitUpStr(reservationTypeId);
-                                                htmlText += 'This will also include complimentary yoga classes.';
-                                                htmlText += 'For any further details, please write to us at ';
-                                                htmlText += 'tara@parmarth.com ';
-                                                htmlText += 'or inquire at the reception office upon arrival.<br/><br/>';
-                                                AddComments(emailId, htmlText, commonEmailText, email_comments, subjectText);
-                                       });
-                               } else {
-                                        htmlText += ConstructMinDonationChart("", reservationTypeId); //show only the minimum donation chart
-                                        htmlText += 'For any further details, please write to us at ';
-                                        htmlText += 'tara@parmarth.com ';
-                                        htmlText += 'or inquire at the reception office upon arrival.<br/><br/>';
-                                        AddComments(emailId, htmlText, commonEmailText, email_comments, subjectText);
-                               }
+                                AddComments(emailId, htmlText, commonEmailText, email_comments, subjectText);
+
+                        //        if (has_WL == 0){ // if wait list don't show donation details
+                        //                GetDonationSplitUp(reservationId, function (){                               
+                        //                         htmlText += 'Based on the room(s) reserved for you, the suggested donation amount is <b>&#8377; ' + totalAmt.toLocaleString('en-IN') + '</b>. The split up is as follows: <br/> ';
+                        //                         htmlText += ConstructSplitUpStr(reservationTypeId);
+                        //                         htmlText += 'This will also include complimentary yoga classes.';
+                        //                         htmlText += 'For any further details, please write to us at ';
+                        //                         htmlText += 'tara@parmarth.com ';
+                        //                         htmlText += 'or inquire at the reception office upon arrival.<br/><br/>';
+                        //                         AddComments(emailId, htmlText, commonEmailText, email_comments, subjectText);
+                        //                });
+                        //        } else {
+                        //                 htmlText += ConstructMinDonationChart("", reservationTypeId); //show only the minimum donation chart
+                        //                 htmlText += 'For any further details, please write to us at ';
+                        //                 htmlText += 'tara@parmarth.com ';
+                        //                 htmlText += 'or inquire at the reception office upon arrival.<br/><br/>';
+                        //                 AddComments(emailId, htmlText, commonEmailText, email_comments, subjectText);
+                        //        }
                                 break;                                    
                         case "4": //Asthi Visarjan
                                 htmlText = ConstructAsthiText(htmlText, dates, noOfRooms, total_beds);
-                                htmlText += 'For any further details, please write to us at ';
-                                htmlText += 'tara@parmarth.com ';
-                                htmlText += 'or inquire at the reception office upon arrival.<br/><br/>';
+                                // htmlText += 'For any further details, please write to us at ';
+                                // htmlText += 'tara@parmarth.com ';
+                                // htmlText += 'or inquire at the reception office upon arrival.<br/><br/>';
                                 AddComments(emailId, htmlText, commonEmailText, email_comments, subjectText);
                                 break;    
                         case "5": //Special Pooja
                                 htmlText = ConstructPoojaText(htmlText, dates, noOfRooms, total_beds);
-                                if (has_WL == 0){ // if wait list don't show donation details
-                                       GetDonationSplitUp(reservationId, function (){                               
-                                                htmlText += 'Based on the room(s) reserved for you, the suggested donation amount is <b>&#8377; ' + totalAmt.toLocaleString('en-IN') + '</b>. The split up is as follows: <br/> ';
-                                                htmlText += ConstructSplitUpStr(reservationTypeId);
-                                                   htmlText += 'This will also include complimentary yoga classes.';
-                                                htmlText += 'For any further details, please write to us at ';
-                                                htmlText += 'tara@parmarth.com ';
-                                                htmlText += 'or inquire at the reception office upon arrival.<br/><br/>';
-                                                AddComments(emailId, htmlText, commonEmailText, email_comments, subjectText);
-                                       });
-                                } else {
-                                        htmlText += ConstructMinDonationChart("", reservationTypeId); //show only the minimum donation chart
-                                        htmlText += 'For any further details, please write to us at ';
-                                        htmlText += 'tara@parmarth.com ';
-                                        htmlText += 'or inquire at the reception office upon arrival.<br/><br/>';
-                                        AddComments(emailId, htmlText, commonEmailText, email_comments, subjectText);
-                               }
+                                AddComments(emailId, htmlText, commonEmailText, email_comments, subjectText);
+
+                        //         if (has_WL == 0){ // if wait list don't show donation details
+                        //                GetDonationSplitUp(reservationId, function (){                               
+                        //                         htmlText += 'Based on the room(s) reserved for you, the suggested donation amount is <b>&#8377; ' + totalAmt.toLocaleString('en-IN') + '</b>. The split up is as follows: <br/> ';
+                        //                         htmlText += ConstructSplitUpStr(reservationTypeId);
+                        //                            htmlText += 'This will also include complimentary yoga classes.';
+                        //                         htmlText += 'For any further details, please write to us at ';
+                        //                         htmlText += 'tara@parmarth.com ';
+                        //                         htmlText += 'or inquire at the reception office upon arrival.<br/><br/>';
+                        //                         AddComments(emailId, htmlText, commonEmailText, email_comments, subjectText);
+                        //                });
+                        //         } else {
+                        //                 htmlText += ConstructMinDonationChart("", reservationTypeId); //show only the minimum donation chart
+                        //                 htmlText += 'For any further details, please write to us at ';
+                        //                 htmlText += 'tara@parmarth.com ';
+                        //                 htmlText += 'or inquire at the reception office upon arrival.<br/><br/>';
+                        //                 AddComments(emailId, htmlText, commonEmailText, email_comments, subjectText);
+                        //        }
                                 break;                                  
                 }
         }
@@ -135,10 +146,10 @@ export function SendConfirmationEmail(name, emailId, dates, noOfRooms, totalAmt,
                 htmlText += 'As requested, we have reserved <b>' + noOfRooms + ' room(s) </b> for their visit with us. <br/><br/>';
                 //htmlText += 'As requested, we have reserved <b>' + total_beds + ' beds(s) </b> for their visit with us. <br/><br/>';
 
-               GetDonationSplitUp(reservationId, function (){                               
-                        htmlText += 'Based on the room(s) reserved for you, the suggested donation amount is <b>&#8377; ' + totalAmt.toLocaleString('en-IN') + '</b>.The split up is as follows: <br/> ';
-                       htmlText += ConstructSplitUpStr(reservationTypeId);
-                       htmlText += 'This will also include complimentary yoga classes. ';
+        //        GetDonationSplitUp(reservationId, function (){                               
+        //                 htmlText += 'Based on the room(s) reserved for you, the suggested donation amount is <b>&#8377; ' + totalAmt.toLocaleString('en-IN') + '</b>.The split up is as follows: <br/> ';
+        //                htmlText += ConstructSplitUpStr(reservationTypeId);
+        //                htmlText += 'This will also include complimentary yoga classes. ';
                         htmlText += 'To confirm this reservation, we would require the <b>non-refundable</b> donation to be sent to the below mentioned bank account and also the following information along with a scanned copy of the bank receipt:<br/>';
                         htmlText += '<ol>';
                         htmlText += '<li>Donation Date:</li>';
@@ -158,171 +169,167 @@ export function SendConfirmationEmail(name, emailId, dates, noOfRooms, totalAmt,
 
                         htmlText += "<br/><br/>";
 
-                        htmlText += ConstructMinDonationChart("", reservationTypeId); //show only the minimum donation chart
+                        // htmlText += ConstructMinDonationChart("", reservationTypeId); //show only the minimum donation chart
 
-                        htmlText += 'For any further details, please write to us at ';
-                        htmlText += 'tara@parmarth.com ';
-                        htmlText += 'or inquire at the reception office upon arrival.<br/><br/>';
+                        // htmlText += 'For any further details, please write to us at ';
+                        // htmlText += 'tara@parmarth.com ';
+                        // htmlText += 'or inquire at the reception office upon arrival.<br/><br/>';
                         AddComments(emailId, htmlText, commonEmailText, email_comments, subjectText);
-               });
+               //});
         } else if (reservationTypeId == "6"){ // kathas
                 htmlText += 'We hope everything is wonderful with you and your loved ones.<br/><br/>';
                 htmlText += 'This is a confirmation for your stay at Parmarth Niketan Ashram from <b>' + dates + '</b>.<br/><br/>';
                 htmlText += 'As requested, we have reserved <b>' + noOfRooms + ' room(s) </b> for your visit with us.<br/><br/>';
                // htmlText += 'As requested, we have reserved <b>' + total_beds + ' room(s) </b> for your visit with us.<br/><br/>';
-               if (has_WL == 0){ // if wait list don't show donation details
-                       GetDonationSplitUp(reservationId, function (){                               
-                               htmlText += 'Based on the room(s) reserved for you, the suggested donation amount is <b>&#8377; ' + totalAmt.toLocaleString('en-IN') + '</b>. The split up is as follows: <br/> ';
-                               htmlText += ConstructSplitUpStr(reservationTypeId);
-                               htmlText += 'This will also include complimentary yoga classes.';
-                                htmlText += 'For any further details, please write to us at ';
-                                htmlText += 'reservations@parmarth.com ';
-                                htmlText += 'or inquire at the reception office upon arrival.<br/><br/>';
-                                AddComments(emailId, htmlText, commonEmailText, email_comments, subjectText);
-                       });
-               } else {
-                        htmlText += ConstructMinDonationChart("", reservationTypeId); //show only the minimum donation chart
-                        htmlText += 'For any further details, please write to us at ';
-                        htmlText += 'reservations@parmarth.com ';
-                        htmlText += 'or inquire at the reception office upon arrival.<br/><br/>';
-                        AddComments(emailId, htmlText, commonEmailText, email_comments, subjectText);       
-               }
+
+               AddComments(emailId, htmlText, commonEmailText, email_comments, subjectText);
+
+        //        if (has_WL == 0){ // if wait list don't show donation details
+        //                GetDonationSplitUp(reservationId, function (){                               
+        //                        htmlText += 'Based on the room(s) reserved for you, the suggested donation amount is <b>&#8377; ' + totalAmt.toLocaleString('en-IN') + '</b>. The split up is as follows: <br/> ';
+        //                        htmlText += ConstructSplitUpStr(reservationTypeId);
+        //                        htmlText += 'This will also include complimentary yoga classes.';
+        //                         htmlText += 'For any further details, please write to us at ';
+        //                         htmlText += 'reservations@parmarth.com ';
+        //                         htmlText += 'or inquire at the reception office upon arrival.<br/><br/>';
+        //                         AddComments(emailId, htmlText, commonEmailText, email_comments, subjectText);
+        //                });
+        //        } else {
+        //                 htmlText += ConstructMinDonationChart("", reservationTypeId); //show only the minimum donation chart
+        //                 htmlText += 'For any further details, please write to us at ';
+        //                 htmlText += 'reservations@parmarth.com ';
+        //                 htmlText += 'or inquire at the reception office upon arrival.<br/><br/>';
+        //                 AddComments(emailId, htmlText, commonEmailText, email_comments, subjectText);       
+        //        }
         }
         else { // every thing else
                 htmlText = ConstructCommonIntro1(htmlText, dates, noOfRooms, total_beds);
+                AddComments(emailId, htmlText, commonEmailText, email_comments, subjectText);
+
                 //if ((referenceId == 0) && (has_WL == 0) && reservationTypeId != "7"){ // if reference don't show donation details
-                if ((referenceId == 0 || has_WL == 0) && reservationTypeId != 7){ // if reference or sevak don't show donation details
-                        GetDonationSplitUp(reservationId, function (){                               
-                               htmlText += 'Based on the room(s) reserved for you, the suggested donation amount is <b>&#8377; ' + totalAmt.toLocaleString('en-IN') + '</b>. The split up is as follows: <br/> ';
-                               htmlText += ConstructSplitUpStr(reservationTypeId);
-                               htmlText += 'This will also include complimentary yoga classes.';
-                                htmlText += 'For any further details, please write to us at ';
-                                htmlText += 'reservations@parmarth.com ';
-                                htmlText += 'or inquire at the reception office upon arrival.<br/><br/>';
-                                AddComments(emailId, htmlText, commonEmailText, email_comments, subjectText);
-                        });
-                } else {
-                        htmlText += ConstructMinDonationChart("", reservationTypeId); //show only the minimum donation chart
-                        htmlText += 'For any further details, please write to us at ';
-                        htmlText += 'reservations@parmarth.com ';
-                        htmlText += 'or inquire at the reception office upon arrival.<br/><br/>';
-                        AddComments(emailId, htmlText, commonEmailText, email_comments, subjectText);
-                }
+                // if ((referenceId == 0 || has_WL == 0) && reservationTypeId != 7){ // if reference or sevak don't show donation details
+                //         GetDonationSplitUp(reservationId, function (){                               
+                //                htmlText += 'Based on the room(s) reserved for you, the suggested donation amount is <b>&#8377; ' + totalAmt.toLocaleString('en-IN') + '</b>. The split up is as follows: <br/> ';
+                //                htmlText += ConstructSplitUpStr(reservationTypeId);
+                //                htmlText += 'This will also include complimentary yoga classes.';
+                //                 htmlText += 'For any further details, please write to us at ';
+                //                 htmlText += 'reservations@parmarth.com ';
+                //                 htmlText += 'or inquire at the reception office upon arrival.<br/><br/>';
+                //                 AddComments(emailId, htmlText, commonEmailText, email_comments, subjectText);
+                //         });
+                // } else {
+                //         htmlText += ConstructMinDonationChart("", reservationTypeId); //show only the minimum donation chart
+                //         htmlText += 'For any further details, please write to us at ';
+                //         htmlText += 'reservations@parmarth.com ';
+                //         htmlText += 'or inquire at the reception office upon arrival.<br/><br/>';
+                //         AddComments(emailId, htmlText, commonEmailText, email_comments, subjectText);
+                // }
         }  
 }
 
-    function GetDonationSplitUp(reservationId, _callback){
-            var call_stored_proc = "CALL sp_GetReservationDonationSplitUp('" + reservationId + "')";
+//     function GetDonationSplitUp(reservationId, _callback){
+//             var call_stored_proc = "CALL sp_GetReservationDonationSplitUp('" + reservationId + "')";
           
-            pool.getConnection(function(error, connection) {
-                if (error) {
-                    errorController.LogError(error);
-                    return res.send(error.code);
-                } 
+//             pool.getConnection(function(error, connection) {
+//                 if (error) {
+//                     errorController.LogError(error);
+//                     return res.send(error.code);
+//                 } 
         
-                connection.query(call_stored_proc, true, (error, results, fields) => {
-                        if (results){
-                                arrSplitUpResults = results[0];
-                                _callback();
-                                }
-                        connection.release();
+//                 connection.query(call_stored_proc, true, (error, results, fields) => {
+//                         if (results){
+//                                 arrSplitUpResults = results[0];
+//                                 _callback();
+//                                 }
+//                         connection.release();
         
-                        if (error) {
-                                errorController.LogError(error);
-                                return res.send(error.code);
-                        }
+//                         if (error) {
+//                                 errorController.LogError(error);
+//                                 return res.send(error.code);
+//                         }
         
-                });
-            });    
-    }
+//                 });
+//             });    
+//     }
 
- function ConstructSplitUpStr(reservationTypeId){
-            var str = "";
-            if (arrSplitUpResults.length > 0){
-                str += "<ul>";
-                for (var i=0; i< arrSplitUpResults.length; i++){
-                        str += "<li>";
-                        if (arrSplitUpResults[i].block_id != "10"){
-                                str += arrSplitUpResults[i].category_name + ": ";
-                                str += arrSplitUpResults[i].rooms_cnt + " room(s) (" + arrSplitUpResults[i].total_beds + " beds)";
-                        } else {
-                                str += arrSplitUpResults[i].room_no + ": "; 
-                        }
+//  function ConstructSplitUpStr(reservationTypeId){
+//             var str = "";
+//             if (arrSplitUpResults.length > 0){
+//                 str += "<ul>";
+//                 for (var i=0; i< arrSplitUpResults.length; i++){
+//                         str += "<li>";
+//                         if (arrSplitUpResults[i].block_id != "10"){
+//                                 str += arrSplitUpResults[i].category_name + ": ";
+//                                 str += arrSplitUpResults[i].rooms_cnt + " room(s) (" + arrSplitUpResults[i].total_beds + " beds)";
+//                         } else {
+//                                 str += arrSplitUpResults[i].room_no + ": "; 
+//                         }
                          
-                        str += " @ &#8377; " + arrSplitUpResults[i].room_rent.toLocaleString('en-IN') 
-                                + ' X ' + arrSplitUpResults[i].noOfDays + " day(s) " 
-                                + parseFloat(arrSplitUpResults[i].rooms_cnt * arrSplitUpResults[i].noOfDays 
-                                        * arrSplitUpResults[i].room_rent).toLocaleString('en-IN') 
-                                + "</b>";
+//                         str += " @ &#8377; " + arrSplitUpResults[i].room_rent.toLocaleString('en-IN') 
+//                                 + ' X ' + arrSplitUpResults[i].noOfDays + " day(s) " 
+//                                 + parseFloat(arrSplitUpResults[i].rooms_cnt * arrSplitUpResults[i].noOfDays 
+//                                         * arrSplitUpResults[i].room_rent).toLocaleString('en-IN') 
+//                                 + "</b>";
                         
-                        str += "</li>";
-                }
-                str += "</ul>";
+//                         str += "</li>";
+//                 }
+//                 str += "</ul>";
 
-          ConstructMinDonationChart(str, reservationTypeId);
+//           ConstructMinDonationChart(str, reservationTypeId);
 
-          return str;
-    }
-}
+//           return str;
+//     }
+// }
 
-function ConstructMinDonationChart(strSplitUp, reservationTypeId){
+// function ConstructMinDonationChart(strSplitUp, reservationTypeId){
 
-        var str = strSplitUp;
+//         var str = strSplitUp;
 
-       // str += "<br/>";
-        str += "The minimum donation chart for <b> accommodation only </b> is as follows:<br/>";
-        str += "<table style='border:solid 1px silver'>";
+//        // str += "<br/>";
+//         str += "The minimum donation chart for <b> accommodation only </b> is as follows:<br/>";
+//         str += "<table style='border:solid 1px silver'>";
 
-        // if (reservationTypeId != "4"){
+//         str += "<tr>";
+//         str += "<th>Room Type</th>";
+//         str += "<th>2-Bed Room</th>";
+//         str += "<th>3-Bed Room</th>";
+//         str += "<th>4-Bed Room</th>";
+//         str += "</tr>";
 
-        //         str += "<tr>";
-        //         str += "<td style='border:solid 1px silver;padding:0.2em;'>Alakananda, Gomti, Ganga (cooler)</td>";
-        //         str += "<td style='border:solid 1px silver;padding:0.2em;'>&#8377; 800/night</td>";              
-        //         str += "<td style='border:solid 1px silver;padding:0.2em;'>&#8377; 900/night</td>";
-        //         str += "</tr>";
-        // }
-
-        str += "<tr>";
-        str += "<th>Room Type</th>";
-        str += "<th>2-Bed Room</th>";
-        str += "<th>3-Bed Room</th>";
-        str += "<th>4-Bed Room</th>";
-        str += "</tr>";
-
-        str += "<tr>";
-        str += "<td style='border:solid 1px silver;padding:0.2em;'>Economy Cooler</td>";
-        str += "<td style='border:solid 1px silver;padding:0.2em;'>&#8377; 800/night</td>";              
-        str += "<td style='border:solid 1px silver;padding:0.2em;'>&#8377; 900/night</td>"; 
-        str += "<td style='border:solid 1px silver;padding:0.2em;'>&#8377; 1200/night</td>"; 
-        str += "</tr>";
+//         str += "<tr>";
+//         str += "<td style='border:solid 1px silver;padding:0.2em;'>Economy Cooler</td>";
+//         str += "<td style='border:solid 1px silver;padding:0.2em;'>&#8377; 800/night</td>";              
+//         str += "<td style='border:solid 1px silver;padding:0.2em;'>&#8377; 900/night</td>"; 
+//         str += "<td style='border:solid 1px silver;padding:0.2em;'>&#8377; 1200/night</td>"; 
+//         str += "</tr>";
 
 
-        str += "<tr>";
-        str += "<td style='border:solid 1px silver;padding:0.2em;'>Standard Cooler</td>";
-        str += "<td style='border:solid 1px silver;padding:0.2em;'>&#8377; 1200/night</td>";              
-        str += "<td style='border:solid 1px silver;padding:0.2em;'>&#8377; 1800/night</td>"; 
-        str += "<td style='border:solid 1px silver;padding:0.2em;'>&#8377; 2000/night</td>"; 
-        str += "</tr>";
+//         str += "<tr>";
+//         str += "<td style='border:solid 1px silver;padding:0.2em;'>Standard Cooler</td>";
+//         str += "<td style='border:solid 1px silver;padding:0.2em;'>&#8377; 1200/night</td>";              
+//         str += "<td style='border:solid 1px silver;padding:0.2em;'>&#8377; 1800/night</td>"; 
+//         str += "<td style='border:solid 1px silver;padding:0.2em;'>&#8377; 2000/night</td>"; 
+//         str += "</tr>";
 
-        str += "<tr>";
-        str += "<td style='border:solid 1px silver;padding:0.2em;'>Standard AC</td>";
-        str += "<td style='border:solid 1px silver;padding:0.2em;'>&#8377; 1600/night</td>";              
-        str += "<td style='border:solid 1px silver;padding:0.2em;'>&#8377; 2100/night</td>"; 
-        str += "<td style='border:solid 1px silver;padding:0.2em;'>&#8377; 2400/night</td>"; 
-        str += "</tr>";
+//         str += "<tr>";
+//         str += "<td style='border:solid 1px silver;padding:0.2em;'>Standard AC</td>";
+//         str += "<td style='border:solid 1px silver;padding:0.2em;'>&#8377; 1600/night</td>";              
+//         str += "<td style='border:solid 1px silver;padding:0.2em;'>&#8377; 2100/night</td>"; 
+//         str += "<td style='border:solid 1px silver;padding:0.2em;'>&#8377; 2400/night</td>"; 
+//         str += "</tr>";
 
-        str += "<tr>";
-        str += "<td style='border:solid 1px silver;padding:0.2em;'>Deluxe AC</td>";
-        str += "<td style='border:solid 1px silver;padding:0.2em;'>&#8377; 2200/night</td>";              
-        str += "<td style='border:solid 1px silver;padding:0.2em;'>&#8377; 2400/night</td>"; 
-        str += "<td style='border:solid 1px silver;padding:0.2em;'> - </td>";
-        str += "</tr>"; 
+//         str += "<tr>";
+//         str += "<td style='border:solid 1px silver;padding:0.2em;'>Deluxe AC</td>";
+//         str += "<td style='border:solid 1px silver;padding:0.2em;'>&#8377; 2200/night</td>";              
+//         str += "<td style='border:solid 1px silver;padding:0.2em;'>&#8377; 2400/night</td>"; 
+//         str += "<td style='border:solid 1px silver;padding:0.2em;'> - </td>";
+//         str += "</tr>"; 
 
-        str += "</table>";
-        str += "<br/>";
+//         str += "</table>";
+//         str += "<br/>";
         
-        return str;
-    }
+//         return str;
+//     }
 
    
 
@@ -333,7 +340,7 @@ function ConstructCommonIntro1(commonText, dates, noOfRooms, total_beds){
         //commonText += 'As requested, we have reserved <b>' + total_beds + ' bed(s) </b> for your visit with us. ';
        // commonText += 'As rooms are subject to availability, we <b>cannot guarantee a specific room in advance. </b>';
         commonText += 'We’ve noted your preference for the rooms (if any) and will intimate you upon arrival if the exact room(s) ';
-        commonText += 'you requested is available. Please inquire at the reception office during check-in.<br/><br/>';
+        commonText += 'you requested is available. Our guest services representatives will be happy to assist you in meeting your requirements.<br/><br/>';
         return commonText;
 }
 
@@ -343,7 +350,7 @@ function ConstructCommonIntro2(commonText, dates, noOfRooms, total_beds){
         //commonText += 'As requested, we have reserved <b>' + total_beds + ' bed(s) </b> for your visit with us. ';
        // commonText += 'As rooms are subject to availability, we <b>cannot guarantee a specific room in advance. </b>';
         commonText += 'We’ve noted your preference for the rooms (if any) and will intimate you upon arrival if the exact room(s) ';
-        commonText += 'you requested is available. Please inquire at the reception office during check-in.<br/><br/>';
+        commonText += 'you requested is available. Our guest services representatives will be happy to assist you in meeting your requirements.<br/><br/>';
         return commonText;
 }
 
