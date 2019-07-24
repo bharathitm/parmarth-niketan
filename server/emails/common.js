@@ -52,9 +52,9 @@ and honor the Ashram guidelines. \
 </li> \
 <li> \
 <b>Dress Code:</b> To honor our spiritual leaders and maintain the sanctity of the Ashram, visitors are expected to be \
-modestly dressed when in public areas, satsang and yoga classes. Men and women should wear clothing that covers shoulders \
+modestly dressed when in public areas, satsang and yoga classes. <label style='color:red;font-weight:bold;'>Men and women should wear clothing that covers shoulders \
 (no sleeveless shirts), midriff, and calves (no capris, shorts, or short dresses). Ladies should be careful to cover \
-their cleavage. For further questions and clarifications \
+their cleavage.</label> For further questions and clarifications \
 please visit: http://www.parmarth.org/ashram/guidelines/ \
 </li> \
 <li> \
@@ -70,11 +70,11 @@ As per the guidelines issued by External Affairs Ministry, Government of India S
 We request foreigners visiting India not to carry satellite phones without appropriate documentation / license issued by Government of India. \
 </li> \
 <li> \
-Consumption of tobacco products, alcohol, drugs and any illegal substances and non-vegetarian food are strictly prohibited \
-in Ashram premises. \
+<label style='color:red;font-weight:bold;'>Consumption of tobacco products, alcohol, drugs and any illegal substances and non-vegetarian food are strictly prohibited \
+in Ashram premises. </label>\
 </li> \
 <li> \
-Use of plastics and Polyethylene products in Ashram premises is also strictly prohibited. \
+<label style='color:red;font-weight:bold;'>Use of plastics and Polyethylene products in Ashram premises is also strictly prohibited. </label>\
 </li> \
 </ul> <br/>\
 Donations may be offered in cash with Rupees, or most major currencies, or by credit or debit cards upon arrival. \
