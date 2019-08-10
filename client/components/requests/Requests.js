@@ -108,7 +108,7 @@ export class Requests extends React.Component {
                            <div className ="div-table-col div-dashboard-col" style={{ width: '97.3%', visibility: session_user_privileges.has_general_view != null ? 'visible':'hidden', display: session_user_privileges.has_general_view != null? 'inline':'none' }}>
                               <General ref={this.General} updateRequestsHomeStore={(r, g) => {this.updateRequestsHomeStore(r, g)}}/>
                           </div>
-                           <div className ="div-table-col div-dashboard-col" style={{ visibility: session_user_privileges.has_retreat_view != null ? 'visible':'hidden', display: session_user_privileges.has_retreat_view != null? 'inline':'none' }}>
+                           {/* <div className ="div-table-col div-dashboard-col" style={{ visibility: session_user_privileges.has_retreat_view != null ? 'visible':'hidden', display: session_user_privileges.has_retreat_view != null? 'inline':'none' }}>
                               <Retreats ref={this.Retreats} updateRequestsHomeStore={(r, g) => {this.updateRequestsHomeStore(r, g)}}/>
                           </div>
                           <div className ="div-table-col div-dashboard-col" style={{ visibility: session_user_privileges.has_sanskara_view != null ? 'visible':'hidden', display: session_user_privileges.has_sanskara_view != null? 'inline':'none' }}>
@@ -116,7 +116,7 @@ export class Requests extends React.Component {
                           </div> 
                           <div className ="div-table-col div-dashboard-col" style={{ visibility: session_user_privileges.has_agent_view != null ? 'visible':'hidden', display: session_user_privileges.has_agent_view != null? 'inline':'none' }}>
                               <Sanskaras ref={this.Sanskaras} updateRequestsHomeStore={(r, g) => {this.updateRequestsHomeStore(r, g)}}/> 
-                          </div> 
+                          </div>  */}
                     </div>
               </div>
             </div>
