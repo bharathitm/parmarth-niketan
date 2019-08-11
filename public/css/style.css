@@ -188,6 +188,12 @@ body{
  padding-left:2em;
 }
 
+.divDashboardWidgets img{
+    height: 25px;
+    margin-left: 0.5em;
+    cursor: pointer;
+}
+
 .div-today-availability-col{
   width:98%;
 }

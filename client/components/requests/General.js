@@ -3,7 +3,10 @@ import React from 'react';
 import {logError, checkError} from '../../utils/helpers';
 import {API_URL} from '../../config/config';
 
-import {fetch} from '../../utils/httpUtil';
+import { confirmAlert } from 'react-confirm-alert';
+
+import {fetch, destroy} from '../../utils/httpUtil';
+import {notify} from 'react-notify-toast';
 import moment from 'moment';
 
 export class General extends React.Component {
@@ -51,9 +54,61 @@ export class General extends React.Component {
       }
 
 
-        refreshGeneralTab(){
-          this.fetchGeneralRequests();
-        }
+      refreshGeneralTab(){
+        this.fetchGeneralRequests();
+      }
+
+      handleRemove(rId){
+        confirmAlert({
+          title: 'Confirm to remove',
+          message: 'Are you sure you want to remove this reservation request?',
+          buttons: [
+            {
+              label: 'Yes',
+              onClick: () => this.removeReqRequest(rId),
+            },
+            {
+              label: 'No',
+              onClick: () => false
+            }
+          ]
+        })
+        
+      }
+      
+      removeReqRequest(rId){
+        destroy(API_URL, "requests/" + rId)
+          .then((response) => {
+            return checkError(response);
+          })
+          .then((result) => {  
+            notify.show('Reservation request removed successfully!', 'success');     
+          })
+          .catch((error) => {
+            this.setState({
+              isLoaded: false,
+              error
+            });
+            notify.show('Oops! Something went wrong! Please try again!', 'error');
+            logError(error);
+          });
+      
+          //create a newData array which is a clone of state.items, remove the just selected entries from this newData 
+            //and re-assign newData to state.items. This causes the component to re-render.
+            var newData = this.state.generalItems;
+      
+            for (var x=0; x< newData.length; x++){
+                if (newData[x].reservation_id == rId){
+                newData.splice(x,1);
+                }
+            }
+      
+            this.setState({
+              generalItems: newData
+            });
+      }
+
+
 
 
     render() {
@@ -79,6 +134,7 @@ export class General extends React.Component {
                                            <b className="bRef">{moment(item.date_of_arrival).format('DD MMM, YYYY')} </b>
                                            {' - '} 
                                            {item.no_of_people} {' ppl'}
+                                           <img src="./img/delete.png" onClick={() => this.handleRemove(item.reservation_id)}/>
                                            <br/> 
                                            <i>{item.user_comments}</i>
                             </li>                              

@@ -67,6 +67,37 @@ export function getGeneralRequests(req, res) {
 }
 
 /**
+ *  Remove reservation request by reservation id
+ *
+ * @param {object} req
+ * @param {object} res
+ * @returns {*}
+ */
+
+export function cancel(req, res) {
+
+    var call_stored_proc = "CALL sp_RemoveReservationRequest(" + req.params.id + ")";
+
+    pool.getConnection(function(error, connection) {
+        if (error) {
+            errorController.LogError(error);
+            return res.send(error.code);
+        } 
+
+        connection.query(call_stored_proc, true, (error, results, fields) => {
+            res.send(results[0]); 
+            connection.release();
+
+            if (error) {
+                errorController.LogError(error);
+                return res.send(error.code);
+            }
+
+        });
+    });    
+}
+
+/**
  *  Get Retreat Reservation Requests
  *
  * @param {object} req

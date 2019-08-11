@@ -27,6 +27,12 @@ router.route('/:id')
                 requestsCtrl.getAgentRequests(req, res);
                 break;
         }
+    })
+
+    //removes reservation request 
+    .delete((req, res) => {
+        console.log("in route file");
+        requestsCtrl.cancel(req, res);
     });
 
 
