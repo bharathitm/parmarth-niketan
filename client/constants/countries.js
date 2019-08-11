@@ -204,7 +204,7 @@ export const countries = {
 203: "Slovenia",
 204: "Solomon Islands",
 205: "Somalia",
-205: "South Africa",
+206: "South Africa",
 207: "South Georgia",
 208: "South Korea",
 209: "South Sudan",
