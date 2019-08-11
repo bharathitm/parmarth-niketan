@@ -214,7 +214,7 @@ export class Guests extends Component {
   populateCountries() {
     let items = [];   
 
-    for (let i = 1; i <= 197; i++) {             
+    for (let i = 1; i <= 249; i++) {             
          items.push(<option key={i} value={i}>{countries[i]}</option>);   
     }
     return items;
