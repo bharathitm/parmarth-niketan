@@ -2,7 +2,7 @@ export var confirmationTextBody = "All rooms have at least 2 beds (some have 3 o
 whilst some are also equipped with ACs. \
 Bed linen and towels are provided. You will need to bring your personal toiletries.\
 <br/><br/> \
-This will also include complimentary yoga classes. For any further details, \
+For any further details, \
 please write to us at reservations@parmarth.com or inquire at the reception office upon arrival. \
 <br/><br/> \
 One of the benefits of having your retreat / stay at Parmarth Niketan Ashram is the opportunity \
@@ -40,8 +40,10 @@ Parking is available in the lot behind the ashram. For directions visit: https:/
 go to the housekeeping office during the open hours of 9 am - 5 pm. </b>\
 </li> \
 <li> \
-General Hatha Yoga classes are usually held twice daily from Monday to Saturday. Please check the bulletin board in the \
-reception office for exact timings and location. \
+<b>General Hatha Yoga classes are offered twice daily from Monday to Saturday on a drop-in / donation basis. \
+Whatever you feel inspired and can comfortably give is greatly appreciated and gratefully accepted. \
+It is only with the generosity of divine souls like yourself that we are able to continue our services to humanity, \
+Ma Ganga and Mother Earth. </b> Please check the bulletin board in the reception office for exact timings and location. \
 </li> \
 <li> \
 Universal prayers are held every morning at 5 am in the Satsang Hall. \

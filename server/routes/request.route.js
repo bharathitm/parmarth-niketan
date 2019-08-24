@@ -31,7 +31,6 @@ router.route('/:id')
 
     //removes reservation request 
     .delete((req, res) => {
-        console.log("in route file");
         requestsCtrl.cancel(req, res);
     });
 
