@@ -1,6 +1,5 @@
-export var confirmationTextBody = "All rooms have at least 2 beds (some have 3 or 4), with fans, coolers and attached bathrooms, \
-whilst some are also equipped with ACs. \
-Bed linen and towels are provided. You will need to bring your personal toiletries.\
+export var confirmationTextBody = "All rooms have at least 2 beds (some have 3 or 4), with fans, coolers and attached bathrooms \
+with Western or Indian style toilets and hot water for bath.\
 <br/><br/> \
 For any further details, \
 please write to us at reservations@parmarth.com or inquire at the reception office upon arrival. \
@@ -11,8 +10,10 @@ with Pujya Sadhviji and / or Darshan [be in the presence of a living saint]  wit
 Ganga Aarti and Satsang give you the opportunity to give thanks and integrate the teachings of the day, connect with the divine \
 within and seek clarity to any questions you may have to discover the truth within. \
 <br/><br/> \
+Karma Yoga at Parmarth Niketan Ashram includes keeping your room clean and protecting the environment. \
+Please put all garbage into the dustbins provided and turn off all lights and taps when not in use. \
 To truly experience all the Ashram has to offer, you may want to include the Ganga Aarti and Satsang \
-into your daily schedule. \
+into your daily schedule and practice your personal karma yoga. \
 <br/><br/> \
 In order to have a quick check-in and also a hassle-free stay at the Ashram, please read the following information carefully - \
 <ul>\

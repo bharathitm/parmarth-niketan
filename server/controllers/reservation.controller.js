@@ -164,8 +164,8 @@ export function update(req, res) {
         connection.query(call_stored_proc, true, (error, results, fields) => {
            if ((req.body.isRequest != 0) && (req.body.email_id != null) && (req.body.email_id != '')){
                 SendConfirmationEmail(req.body.name, req.body.email_id, (moment(req.body.date_of_arrival, "YYYY-MM-D HH:mm").format("MMM Do, YYYY") 
-                + " - " + moment(req.body.date_of_departure, "YYYY-MM-D").format("MMM Do, YYYY")), results[0][0].noOfRooms, results[0][0].totalAmt, req.params.id,
-                 req.body.reservation_type_id, req.body.sanskara_id, req.body.reference_id, req.body.has_WL, req.body.email_comments);
+                + " - " + moment(req.body.date_of_departure, "YYYY-MM-D").format("MMM Do, YYYY")), results[0][0].noOfRooms,
+                                 req.body.reservation_type_id, req.body.sanskara_id, req.body.email_comments);
              }
             connection.release();
 
