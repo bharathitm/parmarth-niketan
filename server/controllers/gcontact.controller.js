@@ -47,10 +47,18 @@ export function add(req, res) {
     var call_stored_proc = "CALL sp_InsertGuestContactDetails('" 
     + req.body.reservation_id + "','"
     + req.body.guest_id + "','"
-    + req.body.c_first_name + "','"    
-    + req.body.c_last_name + "',";
+    + req.body.c_first_name + "',"    
 
-    if (req.body.c_phone_no != ''){
+    if (req.body.c_last_name != '' && req.body.c_last_name != null){
+        call_stored_proc +=  "'" + req.body.c_last_name + "'";   
+    }
+    else {
+        call_stored_proc += null;
+    }
+
+    call_stored_proc += ",";
+
+    if (req.body.c_phone_no != '' && req.body.c_phone_no != null){
         call_stored_proc +=  "'" + req.body.c_phone_no + "'";   
     }
     else {
@@ -59,7 +67,7 @@ export function add(req, res) {
 
     call_stored_proc += ",";
 
-    if (req.body.c_email_id != ''){
+    if (req.body.c_email_id != '' && req.body.c_email_id != null){
         call_stored_proc +=  "'" + req.body.c_email_id + "'";   
     }
     else {

@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
 
-import {logError, checkError, getFormattedDate} from '../../utils/helpers';
+import {logError, checkError} from '../../utils/helpers';
 import {API_URL} from '../../config/config';
 import {fetch, store, destroy} from '../../utils/httpUtil';
 
 import { confirmAlert } from 'react-confirm-alert';
 
-import DatePicker from 'react-datepicker';
 import {notify} from 'react-notify-toast';
 
 export class GuestContacts extends Component {
@@ -134,10 +133,11 @@ _grabUserInput() {
 _validateData(data) {
   return  {
     contactFirstNameVal: (data.contactFirstName != ''),
-    contactLastNameVal: (data.contactLastName != ''),
+    contactLastNameVal: true,
+    contactPhoneNoVal: true,
     contactEmailIdVal: ((data.contactEmailId.toString().trim() != '')? 
     (/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(data.contactEmailId))
-    : true),
+    : true)
   };
 }
 
@@ -162,9 +162,9 @@ insertGuestContactDetails(){
       reservation_id: this.props.getReservationStore().reservationId,
       guest_id: this.props.getReservationStore().guestId,
       c_first_name: this.state.contactFirstName,
-      c_last_name: this.state.contactLastName,
-      c_phone_no: this.state.contactPhoneNo,
-      c_email_id: this.state.contactEmailId
+      c_last_name: (this.state.contactLastName.toString().trim() != ''? this.state.contactLastName: null),
+      c_phone_no: (this.state.contactPhoneNo.toString().trim() != ''? this.state.contactPhoneNo: null),
+      c_email_id: (this.state.contactEmailId.toString().trim() != ''? this.state.contactEmailId: null)
   };
 
   store(API_URL, "gcontacts/", JSON.stringify(payload))
@@ -304,7 +304,6 @@ insertGuestContactDetails(){
                                                 ref="lname"
                                                 autoComplete="off"
                                                 className={notValidClasses.contactLastNameCls}
-                                                required
                                                 onBlur={this.validationCheck} />                      
                                             
                                               </div>
