@@ -100,10 +100,11 @@ export function add(req, res) {
                 //         req.body.email_comments, req.body.total_beds);
 
 
+
                 SendConfirmationEmail(req.body.name, req.body.email_id, 
                     (moment(req.body.date_of_arrival, "YYYY-MM-D HH:mm").format("MMM Do, YYYY") 
                     + " - " + moment(req.body.date_of_departure, "YYYY-MM-D").format("MMM Do, YYYY")), 
-                    req.body.reservation_type_id, req.body.sanskara_id, req.body.email_comments);
+                    results[0][0].noOfRooms, req.body.reservation_type_id, req.body.sanskara_id, req.body.email_comments);
              }
 
             res.send(results[0]); 
