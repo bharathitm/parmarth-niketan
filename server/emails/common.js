@@ -1,6 +1,6 @@
-export var confirmationTextBody = "All rooms have at least 2 beds (some have 3 or 4), with fans, coolers and attached bathrooms \
-with Western or Indian style toilets and hot water for bath. Suggested room donation rates range from &#8377; 400-1500 \
-per room per night. Rates are dependent on room type. Please discuss your preferences with guest services at check-in.\
+export var confirmationTextBody = "All rooms have at least 2 beds (some have 3 or 4), with fans, coolers or AC and attached bathrooms \
+with Western or Indian style toilets and hot water for bath. &#8377;400-500 per bed per night; or &#8377;800-1000 per night \
+per room with 2 beds. Rates are dependent on room type. Please discuss your preferences with guest services at check-in.\
 <br/><br/> \
 For any further details, \
 please write to us at reservations@parmarth.com or inquire at the reception office upon arrival. \
