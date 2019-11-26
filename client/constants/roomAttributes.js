@@ -58,7 +58,10 @@ export const blocks = {
     1: "New",
     2: "Booked",
     3: "Checked In",
-    4: "Checked Out"
+    4: "Checked Out",
+    5: "Cancelled",
+    6: "No Show",
+    7: "Denied"
   };
 
   export const references = {

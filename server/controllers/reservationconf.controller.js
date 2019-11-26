@@ -12,9 +12,9 @@ export function SendConfirmationEmail(name, emailId, dates, noOfRooms,
         var subjectText = 'Welcome to Parmarth Niketan - ' + name + ' - ' + dates;
         var htmlText = 'Namaste Divine Soul ' + name + ' ji,<br/><br/>Jai Gange!<br/><br/>';
 
-        if (reservationTypeId == 3) // sanskara
+        if (parseInt(reservationTypeId) == 3) // sanskara
         {
-                switch (sanskaraId){
+                switch (parseInt(sanskaraId)){
                         case 1: //Mundan
                                 htmlText = ConstructMundanText(htmlText, dates, noOfRooms);
                                 AddComments(emailId, htmlText, commonEmailText, email_comments, subjectText);
@@ -38,7 +38,7 @@ export function SendConfirmationEmail(name, emailId, dates, noOfRooms,
                                 break;                                  
                 }
         }
-        else if (reservationTypeId == 4){ // travel agent
+        else if (parseInt(reservationTypeId) == 4){ // travel agent
                 htmlText += 'We hope everything is wonderful with you and your loved ones.<br/><br/>It is wonderful that your clients have chosen Parmarth Niketan Ashram for their stay in Rishikesh.<br/><br/>';
                 htmlText += 'This is a <b>tentative</b> confirmation for their stay at Parmarth Niketan Ashram from <b>' + dates + '</b>.<br/><br/>';  
                 htmlText += 'As requested, we have reserved <b>' + noOfRooms + ' room(s) </b> for their visit with us. <br/><br/>';
@@ -62,7 +62,7 @@ export function SendConfirmationEmail(name, emailId, dates, noOfRooms,
                         htmlText += "<br/><br/>";
                         AddComments(emailId, htmlText, commonEmailText, email_comments, subjectText);
                //});
-        } else if (reservationTypeId == 6){ // kathas
+        } else if (parseInt(reservationTypeId) == 6){ // kathas
                 htmlText += 'We hope everything is wonderful with you and your loved ones.<br/><br/>';
                 htmlText += 'This is a confirmation for your stay at Parmarth Niketan Ashram from <b>' + dates + '</b>.<br/><br/>';
                 htmlText += 'As requested, we have reserved <b>' + noOfRooms + ' room(s) </b> for your visit with us.<br/><br/>';

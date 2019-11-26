@@ -64,12 +64,15 @@ export class RoomBookings extends Component {
                         totalBeds += parseFloat(this.state.items[i].total_beds);
                     }
 
-                    this.refs.totalAmount.innerHTML = totalAmount;
-                    this.refs.totalBeds.innerHTML = totalBeds;
+                    if (this.refs.totalAmount){
+                      this.refs.totalAmount.innerHTML = totalAmount;
+                      this.refs.totalBeds.innerHTML = totalBeds;
+                    }
 
                     this.setState({
                           dDAtes: depDates
                     });
+                  
                   })
                 .catch((error) => {
                   this.setState({
@@ -352,11 +355,7 @@ export class RoomBookings extends Component {
       if (!this.state.isLoaded) {
         return <div>Loading...</div>;}
       else {
-        return  (
-            <div id="divRoomBookings">
-            No rooms booked yet!
-            </div>
-        );}
+        return <div>No rooms booked yet!</div>;}
     } else {
 
         return (

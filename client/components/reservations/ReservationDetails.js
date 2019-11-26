@@ -163,6 +163,8 @@ export class ReservationDetails extends Component {
 
       if (items[0].reservation_status_id == 2){
         this.refs.reservationStatus.style.color = 'orange';
+      } else if (items[0].reservation_status_id == 7){
+        this.refs.reservationStatus.style.color = 'red';
       } else {
         this.refs.reservationStatus.style.color = 'green';
       }
