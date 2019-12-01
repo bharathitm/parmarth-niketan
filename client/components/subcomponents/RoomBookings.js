@@ -142,7 +142,8 @@ export class RoomBookings extends Component {
 
         const payload = {
             room_booking_id: room_booking_id,
-            date_of_departure: document.getElementById(room_booking_id).value
+            date_of_departure: document.getElementById(room_booking_id).value,
+            reservation_id: this.props.getReservationStore().reservationId
         };
 
         store(API_URL, "roombookings/", JSON.stringify(payload))

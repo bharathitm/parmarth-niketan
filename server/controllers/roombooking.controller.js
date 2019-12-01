@@ -46,7 +46,8 @@ export function update(req, res) {
 
     var call_stored_proc = "CALL sp_UpdateRoomBookings('" 
     + req.body.room_booking_id + "','"
-    + req.body.date_of_departure + "'"
+    + req.body.date_of_departure + "','"
+    + req.body.reservation_id + "'"
   
     call_stored_proc += ")";
 

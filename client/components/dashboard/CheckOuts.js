@@ -361,7 +361,8 @@ export class CheckOuts extends React.Component {
             guest_id: items[0].guest_id,
             reservation_id: items[0].reservation_id, 
             name: items[0].first_name + " " + items[0].last_name, 
-            reservation_type_id: items[0].reservation_type_id
+            reservation_type_id: items[0].reservation_type_id,
+            is_full_reservation: items[0].is_full_reservation
         }
     );
 
@@ -377,7 +378,8 @@ export class CheckOuts extends React.Component {
                     guest_id: items[i].guest_id,
                     reservation_id: items[i].reservation_id, 
                     name: items[i].first_name + " " + items[i].last_name, 
-                    reservation_type_id: items[i].reservation_type_id
+                    reservation_type_id: items[i].reservation_type_id,
+                    is_full_reservation: items[i].is_full_reservation
                 }
             );
         }
@@ -398,17 +400,25 @@ export class CheckOuts extends React.Component {
                     <ol>
                         {checkOutReservations.map(item => (    
 
-                          <li>
-                            <input type="checkbox" name="checkOutReservations"
+                          <li> {item.is_full_reservation == '1'? 
+                            (<input type="checkbox" name="checkOutReservations"
                                 onClick={() => this.reservationsChanged(item.reservation_id)}
-                                value={item.reservation_id} />
-                                      {reservationTypes[item.reservation_type_id]} <b><a onClick={() => this.openReservation(item.guest_id)}>{item.name}</a></b>
+                                value={item.reservation_id} />): null }
+                                      {reservationTypes[item.reservation_type_id]} <b>
+                                        <a onClick={() => this.openReservation(item.guest_id)}>{item.name}</a></b>
                                 <ul>
                                   {checkOutRooms.filter(bk => bk.reservation_id == item.reservation_id).map(booking => (                                    
                                     <li>
 
-                                      {checkOutRooms.filter(bk => bk.reservation_id == item.reservation_id).length > 1?
+                                      {checkOutRooms.filter(bk => bk.reservation_id == item.reservation_id).length > 1? 
                                         (<span><input type="checkbox" name="checkOutRooms"
+                                            className={booking.reservation_id} onClick={() => this.roomsChanged(booking.reservation_id)}
+                                            value={booking.room_booking_id} />
+                                              {booking.room_no} ,  {floors[booking.floor_no]}, {blocks[booking.block_id]}</span>) 
+
+                                              : (item.is_full_reservation == '0')? 
+                                              
+                                              (<span><input type="checkbox" name="checkOutRooms"
                                             className={booking.reservation_id} onClick={() => this.roomsChanged(booking.reservation_id)}
                                             value={booking.room_booking_id} />
                                               {booking.room_no} ,  {floors[booking.floor_no]}, {blocks[booking.block_id]}</span>)
