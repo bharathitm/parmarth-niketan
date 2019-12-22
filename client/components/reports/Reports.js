@@ -371,7 +371,7 @@ export class Reports extends React.Component {
         // To fill the total amount for CheckOuts report
         if (this.state.CheckOutItems.length > 1){
             for (var i = 0; i < this.state.CheckOutItems.length; i++) {
-                if (this.state.CheckOutItems[i].amt.indexOf(",") != -1){
+                if ((this.state.CheckOutItems[i].amt != null) && (this.state.CheckOutItems[i].amt.indexOf(",") != -1)){
                     var multipleAmts = this.state.CheckOutItems[i].amt.split(",");
                     for (var cnt = 0; cnt < multipleAmts.length; cnt++){
                         this.checkOutSum += parseFloat(multipleAmts[cnt]) 
