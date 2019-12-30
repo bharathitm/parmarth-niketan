@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 
 import {blocks, floors, reservationTypes, references} from '../../constants/roomAttributes';
 
@@ -8,6 +9,8 @@ import {API_URL} from '../../config/config';
 import {fetch, store} from '../../utils/httpUtil';
 
 import {notify} from 'react-notify-toast';
+
+import { ReservationForm } from '../subcomponents/ReservationForm';
 
 export class CheckIns extends React.Component {
 
@@ -186,6 +189,21 @@ export class CheckIns extends React.Component {
       }
 
 
+      showReservationForm(gID) {
+
+        const element =  <ReservationForm guestId = {gID} />;
+
+        //need to clear the span's existing content before adding new content 
+        const oldPrint = document.getElementById("spReservationForm");
+        while (oldPrint.firstChild) {
+          oldPrint.removeChild(oldPrint.firstChild);
+        }
+
+        ReactDOM.render(element, document.getElementById("spReservationForm").appendChild(document.createElement('div')));
+
+      }
+
+
     render() {
 
       let { isLoaded, items, checkInReservations, checkInRooms } = this.state;
@@ -245,8 +263,10 @@ export class CheckIns extends React.Component {
                                     onClick={() => this.reservationsChanged()}
                                     value={item.reservation_id} />
                                           {reservationTypes[item.reservation_type_id]} <b><a onClick={() => this.openReservation(item.guest_id)}>{item.name}</a></b> 
-                                          {item.reference_id == null? '':' - '}<b className="bRef">{references[item.reference_id]}</b>   
-
+                                          {item.reference_id == null? '':' - '}<b className="bRef">{references[item.reference_id]}</b>  
+                                           <img src="./img/print.png" onClick={() => this.showReservationForm(item.guest_id)}/> 
+                                           <span id="spReservationForm"></span> 
+                                          
                                       <ul>
                                           {checkInRooms.filter(bk => bk.reservation_id == item.reservation_id).map(booking => (
                                           <li>                                           
