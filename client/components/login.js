@@ -26,9 +26,9 @@ export class Login extends React.Component {
    
 
     checkIfUserExists(response){
-        if(response.w3.U3 != '')
+        if(response.getBasicProfile().getEmail() != '')
         {
-          fetch(BASE_URL, "users/" + response.w3.U3)
+          fetch(BASE_URL, "users/" + response.getBasicProfile().getEmail())
               .then((response) => {
                 return checkError(response);
                 })
@@ -44,9 +44,8 @@ export class Login extends React.Component {
                         };
 
                           sessionStorage.setItem('session_user_privileges', JSON.stringify(session_user_privileges));
-                        
                           sessionStorage.setItem("accessToken", response.accessToken);
-                          sessionStorage.setItem("userName", response.w3.ig);
+                          sessionStorage.setItem("userName", response.getBasicProfile().getName());
                           sessionStorage.setItem("userId", result[0].user_id);
                           sessionStorage.setItem("roleId", result[0].role_id);
 
