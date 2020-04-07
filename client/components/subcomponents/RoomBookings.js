@@ -170,11 +170,11 @@ export class RoomBookings extends Component {
     }
 
 
-    handleDeleteRoomBooking(room_booking_id){
+    handleDeleteRoomBooking(room_booking_id, room_no){
 
         confirmAlert({
             title: 'Confirm to remove',
-            message: 'Are you sure you want to remove this room from the reservation?',
+            message: 'Are you sure you want to remove room - ' + room_no + ' from the reservation?',
             buttons: [
               {
                 label: 'Yes',
@@ -411,7 +411,7 @@ export class RoomBookings extends Component {
                               </div>
                               <div className ="actions div-table-col col-bordered">
                               <img src="./img/edit.png" onClick={() => this.handleUpdateRoomBooking(item.room_booking_id)}/> &nbsp;
-                              <img src="./img/delete.png" onClick={() => this.handleDeleteRoomBooking(item.room_booking_id)}/>
+                              <img src="./img/delete.png" onClick={() => this.handleDeleteRoomBooking(item.room_booking_id, item.room_no)}/>
                               </div>
                         </div>
                         ))}

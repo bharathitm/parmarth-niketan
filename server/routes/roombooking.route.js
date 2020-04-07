@@ -7,8 +7,15 @@ router.route('/:id')
 
 //Fetches room booking details
 .get( (req, res) => {
-    roomBookingCtrl.findById(req, res);
+
+    if ((req.query.prnt) == undefined){
+        roomBookingCtrl.findById(req, res);
+    } else {
+        roomBookingCtrl.printRooms(req, res);
+    }
 })
+
+
 
 //Adds room booking details for existing reservation
 .post( (req, res) => {

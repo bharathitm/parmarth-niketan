@@ -292,6 +292,9 @@ function AddComments(emailId, emailText, commonEmailText, email_comments, subjec
                 htmlText += "<i>" + email_comments + "</i>";
                 htmlText += "<br/><br/>";
         }
-        SendEmail(emailId, subjectText, htmlText + commonEmailText);
+        SendEmail(emailId, subjectText, htmlText + commonEmailText, 1, function (emailResponse){
+                //res.send(emailResponse);
+        });  
+        
 }
 

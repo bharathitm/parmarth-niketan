@@ -544,7 +544,7 @@ export class BookRooms extends Component {
                 <div className="divBlocks">
                   <input type="checkbox" name="chkAllBlockRooms" id={"blk_" + item} onClick={() => this.selectBlockRooms()} />
                   <h4>{blocks[item]}</h4>
-                  <span class="spEventHallLegend" style={{ visibility: blocks[item] == 'Event Halls' ? 'visible' : 'hidden', display: blocks[item] == 'Event Halls' ? 'block' : 'none' }}>
+                  <span className="spEventHallLegend" style={{ visibility: blocks[item] == 'Event Halls' ? 'visible' : 'hidden', display: blocks[item] == 'Event Halls' ? 'block' : 'none' }}>
                   All Yoga Halls, Samadhi Mandir, Saraswati Garden(2-5 days) are on a per day basis.
                   </span>
                   <span className="div-block-totals">Total &#8377;<span id={blocks[item]}>0</span></span>
@@ -562,9 +562,9 @@ export class BookRooms extends Component {
                           floors[booking.floor_no] + ", " +
                           booking.total_beds + " beds"}
                           {booking.room_category_id != null?
-                          (<span class="spEventHallLegend">{" (" + roomCategories[booking.room_category_id] + ")"} </span>): null}
+                          (<span className="spEventHallLegend">{" (" + roomCategories[booking.room_category_id] + ")"} </span>): null}
                         <span className="sp-block-total">&#8377;{booking.room_rent.toLocaleString('en-IN') + " "}</span>
-                        <span class="spEventHallLegend">  
+                        <span className="spEventHallLegend">  
                           <img alt="Previous Check Out" src="./img/prev_date.png" style={{ 
                             visibility: booking.previous_departure_date != null ? 'visible' : 'hidden', 
                             display: booking.previous_departure_date != null ? 'inline' : 'none',

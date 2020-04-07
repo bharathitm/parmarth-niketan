@@ -220,7 +220,8 @@ export class CheckIns extends React.Component {
                     reservation_id: items[0].reservation_id, 
                     name: items[0].first_name + " " + items[0].last_name, 
                     reservation_type_id: items[0].reservation_type_id,
-                    reference_id: items[0].reference_id
+                    reference_id: items[0].reference_id,
+                    country_id: items[0].country_id,
                 }
             );
 
@@ -238,7 +239,8 @@ export class CheckIns extends React.Component {
                     reservation_id: items[i].reservation_id, 
                     name: items[i].first_name + " " + items[i].last_name, 
                     reservation_type_id: items[i].reservation_type_id,
-                    reference_id: items[i].reference_id
+                    reference_id: items[i].reference_id,
+                    country_id: items[i].country_id
                 }
             );
         }
@@ -264,8 +266,9 @@ export class CheckIns extends React.Component {
                                     value={item.reservation_id} />
                                           {reservationTypes[item.reservation_type_id]} <b><a onClick={() => this.openReservation(item.guest_id)}>{item.name}</a></b> 
                                           {item.reference_id == null? '':' - '}<b className="bRef">{references[item.reference_id]}</b>  
-                                           <img src="./img/print.png" onClick={() => this.showReservationForm(item.guest_id)}/> 
-                                           <span id="spReservationForm"></span> 
+                                       {/* 104 - only for Indians, declaration form printout shown */}
+                                          {item.country_id == '104' ? 
+                                          (<span><img src="./img/print.png" onClick={() => this.showReservationForm(item.guest_id)}/> <span id="spReservationForm"></span></span>) : null}
                                           
                                       <ul>
                                           {checkInRooms.filter(bk => bk.reservation_id == item.reservation_id).map(booking => (

@@ -36,6 +36,36 @@ export function findById(req, res) {
 }
 
 /**
+ *  Print room numbers by reservation id
+ *
+ * @param {object} req
+ * @param {object} res
+ * @returns {*}
+ */
+export function printRooms(req, res) {
+
+    var call_stored_proc = "CALL sp_GetPrntReservationRooms('" + req.params.id + "')";
+
+    pool.getConnection(function(error, connection) {
+        if (error) {
+            errorController.LogError(error);
+            return res.send(error.code);
+        } 
+
+        connection.query(call_stored_proc, true, (error, results, fields) => {
+            res.send(results[0]); 
+            connection.release();
+
+            if (error) {
+                errorController.LogError(error);
+                return res.send(error.code);
+            }
+
+        });
+    });     
+}
+
+/**
  * Update room bookings details
  *
  * @param {object} req

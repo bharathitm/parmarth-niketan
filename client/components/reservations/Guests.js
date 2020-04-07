@@ -237,7 +237,7 @@ export class Guests extends Component {
         guestId: this.state.items[0].guest_id,
         firstName: this.state.items[0].first_name,
         lastName: this.state.items[0].last_name,
-        email: (this.state.items[0].email_id != null? this.state.items[0].email_id: ''),
+        email: (this.state.items[0].email_id == null? '': this.state.items[0].email_id),
         phone: (this.state.items[0].phone_no == null)? '' : this.state.items[0].phone_no,
         address: (this.state.items[0].address == null)? '' : this.state.items[0].address,
         city: (this.state.items[0].city == null)? '' : this.state.items[0].city,

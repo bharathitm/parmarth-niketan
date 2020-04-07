@@ -16,7 +16,7 @@ var transporter = nodemailer.createTransport({
 });
 
 
-export function SendEmail(emailId, subjectText, emailText){
+export function SendEmail(emailId, subjectText, emailText, fromRequest, callback){
     try {
 
       var mailOptions = {
@@ -24,7 +24,8 @@ export function SendEmail(emailId, subjectText, emailText){
           to : emailId,
           subject: subjectText,
           html: emailText,
-          attachments: [
+          attachments: (fromRequest == 1) ? 
+          [
                   {
                           filename: 'Welcome.pdf',
                           path: path.join(__dirname, '../emails/Welcome.pdf'),
@@ -38,18 +39,17 @@ export function SendEmail(emailId, subjectText, emailText){
                           filename: 'C Form - Foreign Nationals.docx',
                           path: path.join(__dirname, '../emails/C Form - Foreign Nationals.docx')
                   }
-          ]
+          ] : null
       };
 
-      transporter.sendMail(mailOptions, function(error, info){
-      if (error) {
-              errorController.LogError(error);
-      }
-//       } else
-//       {
-//         console.log('Email sent: ' + info.response);
-//       }
-      });
+        transporter.sendMail(mailOptions, function(error, info){
+                if (error) {
+                        errorController.LogError(error);
+                        callback(false);
+                } else {
+                        callback(true);
+                }     
+        });
       } catch (error){
             errorController.LogError(error);
       }

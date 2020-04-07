@@ -12,27 +12,62 @@ export class ReservationForm extends Component {
       super(props);
 
       this.state = {
-        ReservationDetails:  [{}]
+        ReservationDetails:  [{}],
+        GuestContactDetails: [{}],
+        Rooms: [{}]
       };
     }
 
     componentDidMount(){
+
         fetch(API_URL, "guests/" + this.props.guestId)
         .then((response) => {
             return checkError(response);
         })
         .then((result) => {
+          
             this.setState({
-                isLoaded:true,
                 ReservationDetails: result
+
                 }, function() {
-                this.showReservationForm();
+
+                  fetch(API_URL, "gcontacts/" + this.state.ReservationDetails[0].reservation_id)
+
+                    
+                      .then((response) => {
+                        return checkError(response);
+                      })
+                      .then((guestContacts) => {
+
+                        this.setState({
+                          GuestContactDetails: guestContacts
+
+                            }, function(){
+
+                              fetch(API_URL, "roombookings/" + this.state.ReservationDetails[0].reservation_id + "?prnt=1")
+
+                                    .then((response) => {
+                                      return checkError(response);
+                                    })                                  
+
+                                    .then((roomResults) => {
+
+                                      this.setState({
+                                        Rooms: roomResults
+
+                                    }, function(){
+
+                                      this.showReservationForm();
+
+                                    });                            
+                                  })  
+                            });                            
+                      })                
                 }
             );
         })
         .catch((error) => {
             this.setState({
-                isLoaded: false,
                 error
             });
             notify.show('Oops! Something went wrong! Please try again!', 'error');
@@ -45,7 +80,7 @@ export class ReservationForm extends Component {
             var printWindow = window.open('', '', 'height=600,width=800');
             try {
                     printWindow.document.write('<html><head>');
-                    printWindow.document.write('</head><body style="font-family:verdana; font-size:14px;width:100%;">');
+                    printWindow.document.write('</head><body style="font-family:verdana; font-size:14px;width:100%;position:relative;height:98%;">');
                     printWindow.document.write(document.getElementById("divReservationFormContents").innerHTML);
                     printWindow.document.write('</body></html>');
                     printWindow.document.close();
@@ -62,14 +97,13 @@ export class ReservationForm extends Component {
     render() {
         return(
                 <div id="divReservationFormContents" style={{width:'100%', visibility:'hidden', display:'none'}}>
-                  <div style={{fontFamily: 'Calibri', fontSize:'12pt', width:'100%'}}>
+                    <div style={{fontFamily: 'Calibri', fontSize:'12pt', width:'100%', minHeight:'100vh', overflow:'hidden', display:'block', positive:'relative', paddingBottom: '0'}}>
                               <h4 style={{margin: 0, textAlign: 'center'}}>SWAMI SHUKDEVANAND TRUST</h4>
                               <h4 style={{margin: 0, textAlign: 'center'}}>Parmarth Niketan</h4>
                               <h4 style={{margin: 0, textAlign: 'center'}}>Rishikesh 249304</h4><br/>
-                              {/* <h5 style={{margin: 0, textAlign: 'center'}}>(In The Welfare of All)</h5><br/><br/> */}
                               <h3 style={{margin: 0, textAlign: 'center'}}><u>CHECK IN FORM No. {this.state.ReservationDetails[0].reservation_id}</u></h3>
 
-                              <div id="divReservationForm" style={{marginTop:'1em', padding:'0.5em'}}>
+                      <div id="divReservationForm" style={{marginTop:'1em', padding:'0.5em'}}>
 
                               <table cellPadding="7" style={{width: '99.5%', textAlign:'left', borderCollapse: 'collapse', border: '1px solid black'}}>
                                     <tbody>
@@ -121,14 +155,14 @@ export class ReservationForm extends Component {
                                             {this.state.ReservationDetails[0].e_first_name} {this.state.ReservationDetails[0].e_last_name} <br/>
                                             {this.state.ReservationDetails[0].e_phone_no} <br/>
                                             {this.state.ReservationDetails[0].e_relationship} <br/>
-                                            <b>ID No:</b><br/>
+                                            <b>ID Proof:</b><br/>
                                             <b>Vehicle No:</b>
                                           </td>
                                         </tr>
                                         </tbody>
-                                        </table>
+                              </table>
                               <br/>
-                              <div style={{marginBottom:'24em'}}>
+                              <div>
                                 <table style={{width: '100%'}}>
                                   <tr>
                                     <td>
@@ -139,9 +173,8 @@ export class ReservationForm extends Component {
                                     </td>
                                   </tr>
                                   </table>
-                                  
-                                    <br/>
-                                    <table cellPadding="10" style={{width: '99%', textAlign:'left', borderCollapse: 'collapse', border: '1px solid black'}}>
+                                <br/>
+                                <table cellPadding="6" style={{width: '99%', textAlign:'left', borderCollapse: 'collapse', border: '1px solid black'}}>
                                             <tbody>
                                                 <tr style={{border: '1px solid black'}}>
                                                   <th>Name</th>
@@ -158,20 +191,38 @@ export class ReservationForm extends Component {
                                                   {this.state.ReservationDetails[0].email_id}</td>
                                                   <td></td>                                                  
                                                 </tr>
+
+                                              {this.state.GuestContactDetails.map(contact => (
+                                                    <tr>
+                                                    <td>{contact.c_first_name} {contact.c_last_name}</td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td>{contact.c_phone_no} {(contact.c_email_id != null)? '/' : null} 
+                                                    &nbsp;{contact.c_email_id}</td>
+                                                    <td></td>                                                  
+                                                    </tr>
+                                                    ))}
                                               </tbody>
                                           </table>
-                              </div>
-<b>I hereby declare the above information as accurate and assure you to abide by the regulations of the ashram.</b>
-<br/><br/>
-Signature:
-<br/><br/>
-<hr/>
-<i>For Office Use Only</i><br/>
-Room No: __________ &nbsp; Block: __________ &nbsp; Receipt No: __________<br/>
-Checked In By:
-          </div>
-          </div>
-               </div>
+                            
+
+                 <br/>
+        <div><b>Room No(s):</b> {this.state.Rooms[0].room_nos}</div>
+                        </div>
+                        </div>
+                          
+                      <div id="divFooter" style={{position: 'absolute', bottom: '0', width:'100%'}}>
+                            <b>I hereby declare the above information as accurate and assure you we have gone over the rules and regulations of the ashram mentioned on your website/email and shall abide by the same.</b>
+                            <br/><br/>
+                            Signature:
+                            <br/><br/>
+                            <hr/>
+                            <i>For Office Use Only</i><br/>
+                            Receipt No: __________<br/>
+                            Checked In By:
+                        </div>
+                    </div>     
+                </div> //divReservationFormContents
                );
         }
       }

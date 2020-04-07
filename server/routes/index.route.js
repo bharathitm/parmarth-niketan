@@ -12,6 +12,7 @@ import checkoutsRoutes from './checkout.route';
 import uroomsRoutes from './uroom.route';
 import roomsRoutes from './room.route';
 import requestsRoutes from './request.route';
+import emailRoutes from './email.route';
 import errorRoutes from './error.route';
 
 const router = express.Router();
@@ -56,6 +57,9 @@ router.use('/rooms', roomsRoutes);
 
 //Requests
 router.use('/requests', requestsRoutes);
+
+//Emails
+router.use('/email', emailRoutes);
 
 //Error logging
 router.use('/error', errorRoutes);

@@ -18,6 +18,8 @@ import { GuestContacts } from '../subcomponents/GuestContacts';
 import { AdvanceDonations } from './AdvanceDonations';
 import {notify} from 'react-notify-toast';
 
+import {EmailBox} from '../subcomponents/EmailBox';
+
 export class ReservationDetails extends Component {
   constructor(props) {
     super(props);
@@ -50,6 +52,8 @@ export class ReservationDetails extends Component {
 
     this.changeADCollapsibleOverflow = this.changeADCollapsibleOverflow.bind(this);
     this.changeGCCollapsibleOverflow = this.changeGCCollapsibleOverflow.bind(this);
+
+    this.showEmailBox = this.showEmailBox.bind(this);
   }
 
 
@@ -669,6 +673,24 @@ export class ReservationDetails extends Component {
       });    
   }
 
+  showEmailBox(){
+    confirmAlert({
+      customUI: ({ onClose }) => {
+        return (
+          <div className="row room-details">
+          <form id="Form" className="form-horizontal">  
+              <h4>Compose Guest Email</h4> 
+              <img src="./img/close.png" className="imgClose" onClick={onClose}/>
+             <EmailBox emailId={this.props.getStore().email} 
+                name={this.props.getStore().firstName + " " + this.props.getStore().lastName}
+                forClose ={() => (onClose())}></EmailBox>
+              </form>                    
+          </div>
+              )}
+          })
+
+  }
+
 
   render() { 
       //new guest, new reservation
@@ -719,6 +741,12 @@ export class ReservationDetails extends Component {
                   <a style={{fontWeight: 'bolder', color: '#ED823A', visibility: (this.props.getStore().reservationId != null && this.props.getStore().isRequest != 1) ? 'visible':'hidden', display: (this.props.getStore().reservationId != null && this.props.getStore().isRequest != 1)? 'inline':'none'}} onClick={() => this.handleAddAnotherReservation()}>Add Another Reservation?</a>  
                 <button type="button" className="btnBig" style={{ backgroundColor: 'grey', visibility: ( this.props.getStore().reservationStatusId == 1 || this.props.getStore().reservationStatusId == 2) ? 'visible':'hidden', display: (this.props.getStore().reservationStatusId == 1 || this.props.getStore().reservationStatusId == 2)? 'inline':'none' }} onClick={() => this.handleCancel()}>Cancel</button>
                 <button type="button" className="btnBig" style={{ visibility: (this.props.getStore().reservationStatusId == 3) ? 'visible':'hidden', display: (this.props.getStore().reservationStatusId == 3)? 'inline':'none' }} onClick={() => this.handleEarlyCheckOut()}>Early Check Out</button>   
+                <br/>
+
+                <img src="./img/compose_email.png" alt="Send Email"
+                  style={{ cursor: 'pointer', visibility: (this.props.getStore().email.toString().trim() == '') ? 'hidden':'visible', 
+                  display: (this.props.getStore().email.toString().trim() == '')? 'none':'inline' }} onClick={this.showEmailBox}/>
+            
                 </div>
                       <div className="divDates">
                       {/* Arrival Date */}
@@ -808,7 +836,6 @@ export class ReservationDetails extends Component {
                         Sanskara:
                         </label>
                         <div className="col-md-8">
-
                                   <select id="slSanskaras"
                                     ref="sanskaraId"
                                     autoComplete="off"
