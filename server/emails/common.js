@@ -13,8 +13,8 @@ within and seek clarity to any questions you may have to discover the truth with
 <br/><br/> \
 Karma Yoga at Parmarth Niketan Ashram includes keeping your room clean and protecting the environment. \
 Please put all garbage into the dustbins provided and turn off all lights and taps when not in use. \
-To truly experience all the Ashram has to offer, you may want to include the Ganga Aarti and Satsang \
-into your daily schedule and practice your personal karma yoga. \
+To truly experience all the Ashram has to offer, all guests and retreat leaders are expected to regularly attend the Ganga Aarti at sunset \
+on the holy banks of Mother Ganga; followed by Satsang (when offered) within the Ashram grounds; and practice karma yoga.\
 <br/><br/> \
 In order to have a quick check-in and also a hassle-free stay at the Ashram, please read the following information carefully - \
 <ul>\
