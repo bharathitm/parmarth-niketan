@@ -34,12 +34,70 @@ export function SendConfirmationEmail(name, emailId, dates, noOfRooms,
                         case 5: //Special Pooja
                                 htmlText = ConstructPoojaText(htmlText, dates, noOfRooms);
                                 AddComments(emailId, htmlText, commonEmailText, email_comments, subjectText);
-
                                 break;                                  
                 }
         }
         else if (parseInt(reservationTypeId) == 4){ // travel agent
-                htmlText += 'We hope everything is wonderful with you and your loved ones.<br/><br/>It is wonderful that your clients have chosen Parmarth Niketan Ashram for their stay in Rishikesh.<br/><br/>';
+              
+                htmlText += 'We hope everything is wonderful with you and your loved ones.<br/><br/>' + 
+
+                'As part of our efforts to curb the spread of the Coronavirus - and, in support of the Union and State ' + 
+                'governments’ containment policies and procedures - we have implemented the following guidelines ' +
+                'for all guests visiting Parmarth Niketan. Because we love and respect our beautiful parivar, ' +
+                'and care deeply about their health and well-being, there will be no exceptions to these guidelines; ' +
+                'we will ask anyone that chooses not to honour them to visit us at another time, and their reservation ' +
+                'will be cancelled.  We sincerely thank you for your anticipated cooperation. <br/>' +
+                '<ol>' +
+                '<li> ' +
+                'If you develop symptoms before your arrival, please do not come for your planned visit. ' +
+                'Traveling while ill - whether Covid-19 or a common cold - can be damaging to your health ' +
+                'and to the health of anyone that you come in contact with. So, we humbly request that you ' +
+                'stay home if you’re not well. ' +
+                '</li> ' +
+                '<li> ' +
+                'Please ensure that you bring several masks, as well as hand sanitizer, with you. ' +
+                'You will need both while visiting with us. ' +
+                '</li> ' +
+                '<li> ' +
+                'Only those people named on the reservation will be admitted into the Ashram and given accommodation. ' +
+                'Please do not invite friends, family or acquaintances not named on the reservation to join you inside. ' +
+                '</li> ' +
+                '<li> ' +
+                'Upon arrival, you will be screened for symptoms, both at the gate and in Reception. ' +
+                'If you are found to present with symptoms, your reservation will be cancelled and ' +
+                'we will humbly ask that you join us at a future date. ' +
+                '</li> ' +
+                '<li> ' +
+                'While at the Ashram, social distancing is required.  A minimum of 6 feet (2 meters) of separation is expected. ' +
+                '</li> ' +
+                '<li> ' +
+                'While at the Ashram, the use of properly-worn (fully covering the mouth and nose) face masks is required ' +
+                'anytime that you are out of your room. ' +
+                '</li> ' +
+                '<li> ' +
+                'Please use hand sanitizer and properly wash your hands frequently. ' +
+                '</li> ' +
+                '<li> ' +
+                'Please ensure that you always have your key and proof of ID with you, ' +
+                'as they are necessary for access to the Ashram. ' +
+                '</li> ' +
+                '<li> ' +
+                'The Ashram is the home to many older immuno-compromised Sadhus, Saints and Matajis, ' +
+                'some of whom have made Parmarth Niketan their home for decades.  We anticipate that you will ' +
+                'honour them and their long and beautiful lives - as well as the lives of the entire Ashram family ' +
+                'and community - by exercising the utmost caution when you’re around them, and by making choices that ' +
+                'will ensure their health and well-being - choices such as wearing masks, washing/sanitizing hands, ' +
+                'refraining from risky behaviours, etc.  ' +
+                '</li> ' +
+                '<li> ' +
+                'Any and all objects (food items, souvenir purchases, etc) purchased outside the Ashram will be subject to ' +
+                'inspection and sanitization by our guards upon return.  All bags, including purses and totes, ' +
+                'will be inspected.  Any items withheld, by mistake or intentionally, will be confiscated and the owner ' +
+                'will be asked to reschedule the remainder of their visit. ' +
+                '</li> ' +
+                '</ol> <br/> ';
+                
+                htmlText += 'It is wonderful that your clients have chosen Parmarth Niketan Ashram for their stay in Rishikesh.<br/><br/>';
                 htmlText += 'This is a <b>tentative</b> confirmation for their stay at Parmarth Niketan Ashram from <b>' + dates + '</b>.<br/><br/>';  
                 htmlText += 'As requested, we have reserved <b>' + noOfRooms + ' room(s) </b> for their visit with us. <br/><br/>';
 
@@ -63,7 +121,64 @@ export function SendConfirmationEmail(name, emailId, dates, noOfRooms,
                         AddComments(emailId, htmlText, commonEmailText, email_comments, subjectText);
                //});
         } else if (parseInt(reservationTypeId) == 6){ // kathas
-                htmlText += 'We hope everything is wonderful with you and your loved ones.<br/><br/>';
+                htmlText += 'We hope everything is wonderful with you and your loved ones.<br/><br/>' + 
+
+                'As part of our efforts to curb the spread of the Coronavirus - and, in support of the Union and State ' + 
+                'governments’ containment policies and procedures - we have implemented the following guidelines ' +
+                'for all guests visiting Parmarth Niketan. Because we love and respect our beautiful parivar, ' +
+                'and care deeply about their health and well-being, there will be no exceptions to these guidelines; ' +
+                'we will ask anyone that chooses not to honour them to visit us at another time, and their reservation ' +
+                'will be cancelled.  We sincerely thank you for your anticipated cooperation. <br/> ' +
+                '<ol>' +
+                '<li> ' +
+                'If you develop symptoms before your arrival, please do not come for your planned visit. ' +
+                'Traveling while ill - whether Covid-19 or a common cold - can be damaging to your health ' +
+                'and to the health of anyone that you come in contact with. So, we humbly request that you ' +
+                'stay home if you’re not well. ' +
+                '</li> ' +
+                '<li> ' +
+                'Please ensure that you bring several masks, as well as hand sanitizer, with you. ' +
+                'You will need both while visiting with us. ' +
+                '</li> ' +
+                '<li> ' +
+                'Only those people named on the reservation will be admitted into the Ashram and given accommodation. ' +
+                'Please do not invite friends, family or acquaintances not named on the reservation to join you inside. ' +
+                '</li> ' +
+                '<li> ' +
+                'Upon arrival, you will be screened for symptoms, both at the gate and in Reception. ' +
+                'If you are found to present with symptoms, your reservation will be cancelled and ' +
+                'we will humbly ask that you join us at a future date. ' +
+                '</li> ' +
+                '<li> ' +
+                'While at the Ashram, social distancing is required.  A minimum of 6 feet (2 meters) of separation is expected. ' +
+                '</li> ' +
+                '<li> ' +
+                'While at the Ashram, the use of properly-worn (fully covering the mouth and nose) face masks is required ' +
+                'anytime that you are out of your room. ' +
+                '</li> ' +
+                '<li> ' +
+                'Please use hand sanitizer and properly wash your hands frequently. ' +
+                '</li> ' +
+                '<li> ' +
+                'Please ensure that you always have your key and proof of ID with you, ' +
+                'as they are necessary for access to the Ashram. ' +
+                '</li> ' +
+                '<li> ' +
+                'The Ashram is the home to many older immuno-compromised Sadhus, Saints and Matajis, ' +
+                'some of whom have made Parmarth Niketan their home for decades.  We anticipate that you will ' +
+                'honour them and their long and beautiful lives - as well as the lives of the entire Ashram family ' +
+                'and community - by exercising the utmost caution when you’re around them, and by making choices that ' +
+                'will ensure their health and well-being - choices such as wearing masks, washing/sanitizing hands, ' +
+                'refraining from risky behaviours, etc.  ' +
+                '</li> ' +
+                '<li> ' +
+                'Any and all objects (food items, souvenir purchases, etc) purchased outside the Ashram will be subject to ' +
+                'inspection and sanitization by our guards upon return.  All bags, including purses and totes, ' +
+                'will be inspected.  Any items withheld, by mistake or intentionally, will be confiscated and the owner ' +
+                'will be asked to reschedule the remainder of their visit. ' +
+                '</li> ' +
+                '</ul> <br/>';
+                
                 htmlText += 'This is a confirmation for your stay at Parmarth Niketan Ashram from <b>' + dates + '</b>.<br/><br/>';
                 htmlText += 'As requested, we have reserved <b>' + noOfRooms + ' room(s) </b> for your visit with us.<br/><br/>';
                AddComments(emailId, htmlText, commonEmailText, email_comments, subjectText);
@@ -181,7 +296,65 @@ export function SendConfirmationEmail(name, emailId, dates, noOfRooms,
    
 
 function ConstructCommonIntro1(commonText, dates, noOfRooms){
-        commonText += 'We hope everything is wonderful with you and your loved ones.<br/><br/>';
+       
+        commonText += 'We hope everything is wonderful with you and your loved ones.<br/><br/>' + 
+
+        'As part of our efforts to curb the spread of the Coronavirus - and, in support of the Union and State ' + 
+        'governments’ containment policies and procedures - we have implemented the following guidelines ' +
+        'for all guests visiting Parmarth Niketan. Because we love and respect our beautiful parivar, ' +
+        'and care deeply about their health and well-being, there will be no exceptions to these guidelines; ' +
+        'we will ask anyone that chooses not to honour them to visit us at another time, and their reservation ' +
+        'will be cancelled.  We sincerely thank you for your anticipated cooperation. <br/> ' +
+        '<ol>' +
+        '<li> ' +
+        'If you develop symptoms before your arrival, please do not come for your planned visit. ' +
+        'Traveling while ill - whether Covid-19 or a common cold - can be damaging to your health ' +
+        'and to the health of anyone that you come in contact with. So, we humbly request that you ' +
+        'stay home if you’re not well. ' +
+        '</li> ' +
+        '<li> ' +
+        'Please ensure that you bring several masks, as well as hand sanitizer, with you. ' +
+        'You will need both while visiting with us. ' +
+        '</li> ' +
+        '<li> ' +
+        'Only those people named on the reservation will be admitted into the Ashram and given accommodation. ' +
+        'Please do not invite friends, family or acquaintances not named on the reservation to join you inside. ' +
+        '</li> ' +
+        '<li> ' +
+        'Upon arrival, you will be screened for symptoms, both at the gate and in Reception. ' +
+        'If you are found to present with symptoms, your reservation will be cancelled and ' +
+        'we will humbly ask that you join us at a future date. ' +
+        '</li> ' +
+        '<li> ' +
+        'While at the Ashram, social distancing is required.  A minimum of 6 feet (2 meters) of separation is expected. ' +
+        '</li> ' +
+        '<li> ' +
+        'While at the Ashram, the use of properly-worn (fully covering the mouth and nose) face masks is required ' +
+        'anytime that you are out of your room. ' +
+        '</li> ' +
+        '<li> ' +
+        'Please use hand sanitizer and properly wash your hands frequently. ' +
+        '</li> ' +
+        '<li> ' +
+        'Please ensure that you always have your key and proof of ID with you, ' +
+        'as they are necessary for access to the Ashram. ' +
+        '</li> ' +
+        '<li> ' +
+        'The Ashram is the home to many older immuno-compromised Sadhus, Saints and Matajis, ' +
+        'some of whom have made Parmarth Niketan their home for decades.  We anticipate that you will ' +
+        'honour them and their long and beautiful lives - as well as the lives of the entire Ashram family ' +
+        'and community - by exercising the utmost caution when you’re around them, and by making choices that ' +
+        'will ensure their health and well-being - choices such as wearing masks, washing/sanitizing hands, ' +
+        'refraining from risky behaviours, etc.  ' +
+        '</li> ' +
+        '<li> ' +
+        'Any and all objects (food items, souvenir purchases, etc) purchased outside the Ashram will be subject to ' +
+        'inspection and sanitization by our guards upon return.  All bags, including purses and totes, ' +
+        'will be inspected.  Any items withheld, by mistake or intentionally, will be confiscated and the owner ' +
+        'will be asked to reschedule the remainder of their visit. ' +
+        '</li> ' +
+        '</ol> <br/> ';
+
         commonText += 'This is a confirmation for your stay at Parmarth Niketan Ashram from <b>' + dates + '</b>.<br/><br/>';
         commonText += 'As requested, we have reserved <b>' + noOfRooms + ' room(s) </b> for your visit with us. ';
         commonText += 'We’ve noted your preference for the rooms (if any) and will intimate you upon arrival if the exact room(s) ';
