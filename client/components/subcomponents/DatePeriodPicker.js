@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
-
 import DatePicker from 'react-datepicker';
-import moment from 'moment';
 
 export class DatePickerInput extends Component {
 
@@ -68,6 +66,11 @@ export class DatePickerInput extends Component {
         if (this.isValidated()){
             this.props.handleKathas();
         }
+    }
+
+    handleGridCheckIns(){
+        //date validation not needed as this will just display today's check in summary
+            this.props.handleGridCheckIns();
     }
 
     _grabUserInput() {
@@ -171,6 +174,9 @@ export class DatePickerInput extends Component {
                                     <button type="button" className="btnBig" onClick={() => this.handleCheckIns()}>Check Ins</button>&nbsp;&nbsp;&nbsp;
                                     <button type="button" className="btnBig" onClick={() => this.handleCheckOuts()}>Check Outs</button>&nbsp;&nbsp;&nbsp;
                                     <button type="button" className="btnBig" onClick={() => this.handleKathas()}>Kathas/Retreats</button>
+                                    <br/><div style={{textAlign:'center', width:'100%'}}>
+                                    <button type="button" className="btnBig" onClick={() => this.handleGridCheckIns()}>Today's Check Ins</button>
+                                    </div>
                             </div>
                         </div>
                     </div>
