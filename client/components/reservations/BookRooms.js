@@ -288,6 +288,7 @@ export class BookRooms extends Component {
     const payload = {
       room_ids_str: str_rooms,
       reason_str:  (strReason.toString().trim() != '')? strReason: null,
+      user_id: sessionStorage.getItem('userId')
     };
 
     store(API_URL, "roombookings/" + this.props.getStore().reservationId, JSON.stringify(payload))

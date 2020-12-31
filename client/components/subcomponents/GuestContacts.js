@@ -30,7 +30,6 @@ export class GuestContacts extends Component {
       this.fetchGuestContactsIfExists();
   }
 
-
   fetchGuestContactsIfExists(){
     if(this.props.getReservationStore().reservationId != null)
     {
@@ -59,7 +58,6 @@ export class GuestContacts extends Component {
       });
     }
   }
-
 
 handleDelete(gContactId){
   confirmAlert({
@@ -141,8 +139,6 @@ _validateData(data) {
   };
 }
 
-
-
 handleAdd() {
   const userInput = this._grabUserInput(); // grab user entered vals
   const validateNewInput = this._validateData(userInput); // run the new input against the validator
@@ -164,7 +160,8 @@ insertGuestContactDetails(){
       c_first_name: this.state.contactFirstName,
       c_last_name: (this.state.contactLastName.toString().trim() != ''? this.state.contactLastName: null),
       c_phone_no: (this.state.contactPhoneNo.toString().trim() != ''? this.state.contactPhoneNo: null),
-      c_email_id: (this.state.contactEmailId.toString().trim() != ''? this.state.contactEmailId: null)
+      c_email_id: (this.state.contactEmailId.toString().trim() != ''? this.state.contactEmailId: null),
+      user_id: sessionStorage.getItem('userId')
   };
 
   store(API_URL, "gcontacts/", JSON.stringify(payload))

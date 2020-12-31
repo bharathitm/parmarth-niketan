@@ -1,13 +1,12 @@
 import React from 'react';
 
 import {blocks, floors, reservationTypes} from '../../constants/roomAttributes';
-
 import {logError, checkError, createRoomsString} from '../../utils/helpers';
-import { confirmAlert } from 'react-confirm-alert'; 
 import {API_URL} from '../../config/config';
-import {fetch, store} from '../../utils/httpUtil';
-
+import {fetch} from '../../utils/httpUtil';
 import {notify} from 'react-notify-toast';
+
+import {Suspense, lazy} from 'react';
 
 
 export class CheckOuts extends React.Component {
@@ -24,6 +23,12 @@ export class CheckOuts extends React.Component {
         //loaded reservations & rooms
         checkOutReservations: [],
         checkOutRooms: [],
+
+        str_reservations: null,
+        str_rooms: null,
+        popupLoad: null,
+        selectedRooms: null
+
       };
 
       this.createReservationsString = this.createReservationsString.bind(this);
@@ -32,7 +37,7 @@ export class CheckOuts extends React.Component {
 
     }
 
-    componentDidMount() {
+      componentDidMount() {
     
       fetch(API_URL, "checkouts/")
         .then((response) => {
@@ -80,9 +85,9 @@ export class CheckOuts extends React.Component {
                       } 
                 }
             }
-        } 
+      } 
 
-         //rooms check box click
+      //rooms check box click
       roomsChanged(rID) { 
         //de select child rooms if not same reservation id
         var checkboxes = document.getElementsByName("checkOutRooms");  
@@ -100,7 +105,39 @@ export class CheckOuts extends React.Component {
           {  
             checkboxes[i].checked = false; 
           } 
-        } 
+      } 
+      
+      //Check Out button click
+      handleCheckOut() {
+          
+          var str_reservations = this.createReservationsString();
+          var selectedRooms = this.getAllSelectedRooms();
+          var str_rooms = createRoomsString(selectedRooms);
+
+          if ((str_reservations != '') || (str_rooms != '')){
+
+            this.setState({
+              str_reservations: str_reservations,
+              str_rooms: str_rooms,
+              selectedRooms: selectedRooms,
+              popupLoad: true
+            });
+          } 
+      }
+
+      getAllSelectedRooms(){
+          //rooms
+          var selectedRooms = [];
+          var checkboxes = document.getElementsByName("checkOutRooms");  
+          
+          for(var i = 0; i < checkboxes.length; i++)  
+          {  
+                  if(checkboxes[i].checked) {
+                    selectedRooms.push(checkboxes[i].value);  
+                  }         
+          }
+          return selectedRooms;
+      }
 
       createReservationsString(){
           //loop through selected reservations and create a string to pass to POST
@@ -115,240 +152,70 @@ export class CheckOuts extends React.Component {
           return str_reservations;
       } 
         
-      //Check Out button click
-      handleCheckOut() {
-          var selectedRooms = this.getAllSelectedRooms();
 
-          var str_reservations = this.createReservationsString();
-          var str_rooms = createRoomsString(selectedRooms);
+      updateCheckOutState(){
+          this.props.updateDashboardStore({
+            hasCheckOutsChanged: true
+          });    
+            //create a newData array which is a clone of state.items, remove the just selected entries from this newData 
+            //and re-assign newData to state.items. This causes the component to re-render.
+            var newData = this.state.items;
 
-          if ((str_reservations != '') || (str_rooms != '')){
-            this.fetchCheckOutTotal(str_reservations, str_rooms);
-          } 
-        }
+            for (var i =0; i < this.state.selectedRooms.length; i++){  
+              for (var x=0; x< newData.length; x++){
+                if (newData[x].room_booking_id == this.state.selectedRooms[i]){
+                  newData.splice(x,1);
+                }
+              }
+            }
 
-        fetchCheckOutTotal(str_reservations, str_rooms){
-
-          const payload = {
-            str_reservation_ids: str_reservations,
-            str_room_booking_ids: str_rooms
-          };
-
-          store(API_URL, "checkouts/id=1", JSON.stringify(payload))
-            .then((response) => {
-              return checkError(response);
-            })
-            .then((result) => {
-              this.loadCheckOutTotalDetails(result);
-            })
-            .catch((error) => {
-              this.setState({
-                isLoaded: false,
-                error
-              });
-              notify.show('Oops! Something went wrong! Please try again!', 'error');
-              logError(error);
-            });
-
-        }
-
-        loadCheckOutTotalDetails(results){
-
-          confirmAlert({
-            customUI: ({ onClose }) => {
-
-              var sum = 0;
-              for (var i = 0; i < results.length; i++) {
-                sum += results[i].total;
+              for (var x=0; x< newData.length; x++){
+                if (newData[x].reservation_id == this.state.str_reservations){
+                  newData.splice(x,1);
+                }
               }
 
-              return (
-                <div>
-                  <h4>Check Out Rooms</h4>  
-                  <img src="./img/close.png" className="imgClose" onClick={onClose}/>
-                      
-                    <div className = "div-table advance-table checkout-table">
-                    <div className = "div-table-row">
-                              <div className ="div-table-col div-table-col-header">
-                             Room No
-                              </div>
-                              <div className ="div-table-col div-table-col-header">
-                              No. of Days
-                              </div>
-                              <div className ="div-table-col div-table-col-header">
-                             Room Donation
-                              </div>
-                              <div className ="div-table-col div-table-col-header">
-                              Total Donation
-                              </div>
-                      </div>
-                    {results.map(item => (
-                        <div className = "div-table-row" key={item.donation_id}>
-                              <div className ="div-table-col col-bordered">
-                                {item.room_no}
-                              </div>
-                              <div className ="div-table-col col-bordered">
-                                {item.no_of_days}
-                              </div>
-                              <div className ="div-table-col col-bordered">
-                              &#8377; {item.room_rent.toLocaleString('en-IN')}
-                              </div>
-                              <div className ="div-table-col col-bordered">
-                              &#8377; {item.total.toLocaleString('en-IN')}
-                              </div>
-                        </div>
-                        ))} 
-                      </div>
-                         <div className="form-group col-md-12 content form-block-holder">
-                          <label className="control-label col-md-4">
-                            Donation Received: 
-                            &#8377; {(results[0].donationAmount != null? results[0].donationAmount.toLocaleString('en-IN'): "0")}
-                            </label>
-                        </div>
-
-                         <div className="form-group col-md-12 content form-block-holder">
-                          <label className="control-label col-md-4">
-                            Total Sum: &#8377; &nbsp;
-                          </label>
-                          <div className="col-md-8">
-                            <input id="txtTotalSum" className="form-control small-textbox" defaultValue={sum - (results[0].donationAmount != null? results[0].donationAmount: 0)} type="number" />
-                            </div>
-                      </div>
-
-                       <div className="form-group col-md-12 content form-block-holder">
-                          <label className="control-label col-md-4">
-                            Receipt No: &nbsp;&nbsp;
-                          </label>
-                          <div className="col-md-8">
-                            <input id="txtReceiptNo" className="form-control small-textbox" />
-                            </div>
-                      </div>
-
-                       <div className="form-group col-md-12 content form-block-holder">
-                          <label className="control-label col-md-4">
-                            Comments: &nbsp;&nbsp;
-                          </label>
-                          <div className="col-md-8">
-                          <textarea id="txtCheckOutComments"
-                              className="form-control" />
-                            </div>
-                      </div>
-                  <button type="button" className="btnCheckOut btnBig" onClick={() => 
-                    { this.checkOutRooms(
-                          document.getElementById("txtTotalSum").value, 
-                          document.getElementById("txtReceiptNo").value,
-                          document.getElementById("txtCheckOutComments").value); 
-                      onClose() }}>Check Out</button>
-                  
-                </div>
-              )
-            }
-          })
-
-        }
-
-        checkOutRooms(amount, receipt_no, comments){
-
-          var selectedRooms = this.getAllSelectedRooms();
-
-          var str_reservations = this.createReservationsString();
-          var str_rooms = createRoomsString(selectedRooms);
-
-          const payload = {
-            int_reservation_id: str_reservations,
-            str_room_booking_ids: str_rooms,
-            amount: amount,
-            receipt_no: receipt_no,
-            comments: comments
-          };
-         
-          store(API_URL, "checkouts/", JSON.stringify(payload))
-            .then((response) => {
-              return checkError(response);
-            })
-            .then((result) => {
-              notify.show('Room(s) checked out successfully!', 'success');
-              this.props.updateDashboardStore({
-                hasCheckOutsChanged: true
-              });           
-            })
-            .catch((error) => {
               this.setState({
-                isLoaded: false,
-                error
+                items: newData
               });
-              notify.show('Oops! Something went wrong! Please try again!', 'error');
-              logError(error);
-            });
 
-          this.updateCheckOutState(str_reservations, selectedRooms);
-          
-        }
-
-
-        getAllSelectedRooms(){
-            //rooms
-            var selectedRooms = [];
-            var checkboxes = document.getElementsByName("checkOutRooms");  
-            
+            var checkboxes = document.getElementsByName("checkOutReservations");  
+        
             for(var i = 0; i < checkboxes.length; i++)  
             {  
-                    if(checkboxes[i].checked) {
-                      selectedRooms.push(checkboxes[i].value);  
-                    }         
+              checkboxes[i].checked = false;      
             }
-            return selectedRooms;
-          }
 
-        updateCheckOutState(str_reservations, selectedRooms){
-
-              //create a newData array which is a clone of state.items, remove the just selected entries from this newData 
-              //and re-assign newData to state.items. This causes the component to re-render.
-              var newData = this.state.items;
-
-              for (var i =0; i < selectedRooms.length; i++){  
-                for (var x=0; x< newData.length; x++){
-                  if (newData[x].room_booking_id == selectedRooms[i]){
-                    newData.splice(x,1);
-                  }
-                }
-              }
-
-                for (var x=0; x< newData.length; x++){
-                  if (newData[x].reservation_id == str_reservations){
-                    newData.splice(x,1);
-                  }
-                }
-
-                this.setState({
-                  items: newData
-                });
-
-              var checkboxes = document.getElementsByName("checkOutReservations");  
+            var checkboxes = document.getElementsByName("checkOutRooms");  
           
-              for(var i = 0; i < checkboxes.length; i++)  
-              {  
-                checkboxes[i].checked = false;      
-              }
-
-              var checkboxes = document.getElementsByName("checkOutRooms");  
-            
-              for(var i = 0; i < checkboxes.length; i++)  
-              {  
-                checkboxes[i].checked = false;      
-              }
+            for(var i = 0; i < checkboxes.length; i++)  
+            {  
+              checkboxes[i].checked = false;      
+            }
 
 
-        }
+      }
     
-
-        openReservation(gID){
-          this.props.updateDashboardHomeStore(gID);
-        }
+      openReservation(gID){
+        this.props.updateDashboardHomeStore(gID);
+      }
   
     render() {
 
-      let { error, isLoaded, items, checkOutReservations, checkOutRooms } = this.state;
+      let { isLoaded, items, checkOutReservations, checkOutRooms } = this.state;
+
+      if (this.state.popupLoad == true){
+        const CheckOutRooms = lazy(() => import('../subcomponents/CheckOutRooms'));
+
+        return (<Suspense fallback={<div id="loader" class="loaderCenter"></div> }>
+            <CheckOutRooms callFrom = {2} //1 = Reservations 2 = CheckOuts
+                  setPopupLoadState={i => this.setState({popupLoad: i})}
+                    str_reservations = {this.state.str_reservations}
+                    str_rooms = {this.state.str_rooms} 
+                    updateParentState={() => (this.updateCheckOutState())} />
+                </Suspense>
+        );
+      }
 
       // //clearing these as selecting check box re-renders the component and the check boxes are doubling up every time
       checkOutReservations = [];

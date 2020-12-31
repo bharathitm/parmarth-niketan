@@ -291,6 +291,11 @@ cursor: pointer;
   float:right;
 }
 
+.aClear{
+  cursor: pointer;
+  font-size: 9pt;
+}
+
 .imgHome{
   cursor: pointer;
   padding:0;

@@ -125,25 +125,26 @@ export class RoomBookings extends Component {
 
 
 
-    handleAdd() {
-        const userInput = this._grabUserInput(); // grab user entered vals
-        const validateNewInput = this._validateData(userInput); // run the new input against the validator
+    // handleAdd() {
+    //     const userInput = this._grabUserInput(); // grab user entered vals
+    //     const validateNewInput = this._validateData(userInput); // run the new input against the validator
 
-        // if full validation passes then save to store and pass as valid
-        if (Object.keys(validateNewInput).every((k) => { return validateNewInput[k] === true })) {
-            this.insertAdvanceDonationDetails();
-        }
-        else {
-            this.setState(Object.assign(userInput, validateNewInput));
-        }
-    }
+    //     // if full validation passes then save to store and pass as valid
+    //     if (Object.keys(validateNewInput).every((k) => { return validateNewInput[k] === true })) {
+    //         this.insertAdvanceDonationDetails();
+    //     }
+    //     else {
+    //         this.setState(Object.assign(userInput, validateNewInput));
+    //     }
+    // }
 
     handleUpdateRoomBooking(room_booking_id){
 
         const payload = {
             room_booking_id: room_booking_id,
             date_of_departure: document.getElementById(room_booking_id).value,
-            reservation_id: this.props.getReservationStore().reservationId
+            reservation_id: this.props.getReservationStore().reservationId,
+            user_id: sessionStorage.getItem('userId')
         };
 
         store(API_URL, "roombookings/", JSON.stringify(payload))
@@ -189,7 +190,7 @@ export class RoomBookings extends Component {
         }
 
         deleteRoomBooking(room_booking_id){
-            destroy(API_URL, "roombookings/" + room_booking_id)
+            destroy(API_URL, "roombookings/" + room_booking_id + "&uId=" + sessionStorage.getItem('userId'))
                 .then((response) => {
                   return checkError(response);
                 })
@@ -262,7 +263,7 @@ export class RoomBookings extends Component {
           removeAllRooms(){
             if(this.props.getReservationStore().reservationId != null)
             {
-                destroy(API_URL, "roombookings/1?rId=" + this.props.getReservationStore().reservationId)
+                destroy(API_URL, "roombookings/1?rId=" + this.props.getReservationStore().reservationId + "&uId=" + sessionStorage.getItem('userId'))
 
                 .then((response) => {
                   return checkError(response);
@@ -305,7 +306,7 @@ export class RoomBookings extends Component {
           removeWLRooms(){
             if(this.props.getReservationStore().reservationId != null)
             {
-                destroy(API_URL, "roombookings/2?rId=" + this.props.getReservationStore().reservationId)
+                destroy(API_URL, "roombookings/2?rId=" + this.props.getReservationStore().reservationId + "&uId=" + sessionStorage.getItem('userId'))
 
                 .then((response) => {
                   return checkError(response);

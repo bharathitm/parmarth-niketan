@@ -70,6 +70,9 @@ export function add(req, res) {
     else {
         call_stored_proc +=  "'" + req.body.comments + "'";
     }
+
+    call_stored_proc += ",'" + req.body.user_id + "'";
+
     call_stored_proc += ")";
 
     pool.getConnection(function(error, connection) {
@@ -162,3 +165,4 @@ export function findByDates(req, res) {
         });
     });     
 }
+

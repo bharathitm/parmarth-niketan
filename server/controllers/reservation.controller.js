@@ -79,13 +79,16 @@ export function add(req, res) {
         call_stored_proc +=  "'" + req.body.sanskara_id + "',";
     }
 
-    //room_ids_str does not have the ' after the ,  
-    call_stored_proc +=  "'" + req.body.room_ids_str + "'";
+    
+    call_stored_proc +=  "'" + req.body.room_ids_str + "',";
+
+    //user_id does not have the ' after the ,  
+    call_stored_proc +=  "'" + req.body.user_id + "'";
     
     call_stored_proc += ")";
 
     pool.getConnection(function(error, connection) {
-        if (error) {
+        if (error) {           
             errorController.LogError(error);
             return res.send(error.code);
         } 
@@ -159,8 +162,11 @@ export function update(req, res) {
         call_stored_proc += null;
     }
     else {
-        call_stored_proc +=  "'" + req.body.sanskara_id + "'";
+        call_stored_proc +=  "'" + req.body.sanskara_id + "',";
     }
+
+    //user_id does not have the ' after the ,  
+    call_stored_proc +=  "'" + req.body.user_id + "'";
 
     call_stored_proc += ")";
 
@@ -197,7 +203,7 @@ export function update(req, res) {
 
 export function cancel(req, res) {
 
-    var call_stored_proc = "CALL sp_CancelReservation('" + req.params.id + "')";
+    var call_stored_proc = "CALL sp_CancelReservation('" + req.params.id + "','" + req.params.uId + "')";
 
     pool.getConnection(function(error, connection) {
         if (error) {

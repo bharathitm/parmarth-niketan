@@ -73,7 +73,6 @@ export class Guests extends Component {
       }
     });       
   }
-
   
   handlePhoneChange() {
 
@@ -370,7 +369,6 @@ export class Guests extends Component {
     this.props.jumpToStep(2);
   }
 
-
   searchReservation(searchText, searchGuestId){
 
     var redirectToReservation = false;
@@ -440,8 +438,6 @@ export class Guests extends Component {
   //           });
   //     }
   // }
-
-
 
   isValidated() {
   
@@ -579,7 +575,8 @@ export class Guests extends Component {
       e_first_name: this.state.eFirstName.toString().trim(),
       e_last_name: this.state.eLastName.toString().trim(),
       e_phone_no: this.state.ePhone.toString().trim(),
-      e_relationship: this.state.eRelationship.toString().trim()
+      e_relationship: this.state.eRelationship.toString().trim(),
+      user_id: sessionStorage.getItem('userId')
     };
 
     store(API_URL, "guests/", JSON.stringify(payload))
@@ -625,7 +622,8 @@ export class Guests extends Component {
       e_last_name: this.state.eLastName.toString().trim(),
       e_phone_no: this.state.ePhone.toString().trim(),
       e_relationship: this.state.eRelationship.toString().trim(),
-      has_email_changed: (this.props.getStore().email != this.refs.email.value? 1 : 0)
+      has_email_changed: (this.props.getStore().email != this.refs.email.value? 1 : 0),
+      user_id: sessionStorage.getItem('userId')
     };
 
     store(API_URL, "guests/" + this.props.getStore().guestId, JSON.stringify(payload))
@@ -652,7 +650,8 @@ export class Guests extends Component {
       e_first_name: this.state.eFirstName.toString().trim(),
       e_last_name: this.state.eLastName.toString().trim(),
       e_phone_no: this.state.ePhone.toString().trim(),
-      e_relationship: this.state.eRelationship.toString().trim()
+      e_relationship: this.state.eRelationship.toString().trim(),
+      user_id: sessionStorage.getItem('userId')
     };
 
     store(API_URL, "econtacts/", JSON.stringify(payload))
@@ -679,7 +678,8 @@ export class Guests extends Component {
       e_first_name: this.state.eFirstName.toString().trim(),
       e_last_name: this.state.eLastName.toString().trim(),
       e_phone_no: this.state.ePhone.toString().trim(),
-      e_relationship: this.state.eRelationship.toString().trim()
+      e_relationship: this.state.eRelationship.toString().trim(),
+      user_id: sessionStorage.getItem('userId')
     };
 
     store(API_URL, "econtacts/" + this.state.guestEmergencyContactId, JSON.stringify(payload))

@@ -77,7 +77,8 @@ export function update(req, res) {
     var call_stored_proc = "CALL sp_UpdateRoomBookings('" 
     + req.body.room_booking_id + "','"
     + req.body.date_of_departure + "','"
-    + req.body.reservation_id + "'"
+    + req.body.reservation_id + "','"
+    + req.body.user_id + "'";
   
     call_stored_proc += ")";
 
@@ -99,9 +100,8 @@ export function update(req, res) {
     });      
 }
 
-
 /**
- * Add room bookings to existing reservation
+ * Add room bookings to existing reservation - called from BookRooms.js
  *
  * @param {object} req
  * @param {object} res
@@ -119,6 +119,8 @@ export function add(req, res) {
     else {
         call_stored_proc +=  "'" + req.body.reason_str + "'";
     }
+
+    call_stored_proc +=  ",'" + req.body.user_id + "'";
 
     call_stored_proc += ")";
 
@@ -151,7 +153,7 @@ export function add(req, res) {
 
 export function cancel(req, res) {
 
-    var call_stored_proc = "CALL sp_CancelRoomBookings("+ null + ",'" + req.params.id + "')";
+    var call_stored_proc = "CALL sp_CancelRoomBookings("+ null + ",'" + req.params.id + "','" + req.params.uId + "')";
 
     pool.getConnection(function(error, connection) {
         if (error) {
@@ -181,7 +183,7 @@ export function cancel(req, res) {
 
 export function removeAll(req, res) {
 
-    var call_stored_proc = "CALL sp_CancelRoomBookings('"+ req.query.rId + "'," + null + ")";
+    var call_stored_proc = "CALL sp_CancelRoomBookings('"+ req.query.rId + "'," + null + ",'" + req.params.uId + "')";
 
     pool.getConnection(function(error, connection) {
         if (error) {
@@ -201,7 +203,6 @@ export function removeAll(req, res) {
     });     
 }
 
-
 /**
  *  Removes all Wait List room booking for reservation id
  *
@@ -212,7 +213,7 @@ export function removeAll(req, res) {
 
 export function removeWL(req, res) {
 
-    var call_stored_proc = "CALL sp_CancelWLRoomBookings('"+ req.query.rId + "')";
+    var call_stored_proc = "CALL sp_CancelWLRoomBookings('"+ req.query.rId + "','" + req.params.uId + "')";
 
     pool.getConnection(function(error, connection) {
         if (error) {

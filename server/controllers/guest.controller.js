@@ -263,6 +263,14 @@ export function add(req, res) {
         call_stored_proc += null;
     }
 
+    call_stored_proc += ",";
+
+    if (req.body.user_id != ''){
+        call_stored_proc += "'" + req.body.user_id + "'";
+    } else {
+        call_stored_proc += null;
+    }
+
     call_stored_proc += ")";
  
     pool.getConnection(function(error, connection) {
@@ -356,6 +364,14 @@ export function update(req, res) {
     }
     else {
         call_stored_proc +=  "'" + req.body.reference_id + "'";
+    }
+
+    call_stored_proc += ",";
+
+    if (req.body.user_id != ''){
+        call_stored_proc += "'" + req.body.user_id + "'";
+    } else {
+        call_stored_proc += null;
     }
 
     call_stored_proc += ")";

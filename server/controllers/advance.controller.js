@@ -38,14 +38,13 @@ export function findById(req, res) {
 }
 
 /**
- * Add new advance donation details for Reservation Id
+ * Add new advance donation details for Reservation Id - called from AdvanceDonation.js
  *
  * @param {object} req
  * @param {object} res
  * @returns {*}
  */
 export function add(req, res) {
-
     var call_stored_proc = "CALL sp_UpdateDonationDetails(" 
     + null + ",'" //donation Id is null as this is an insert
     + req.body.reservation_id + "','"
@@ -61,6 +60,7 @@ export function add(req, res) {
     else {
         call_stored_proc +=  "'" + req.body.comments + "'";
     }
+    call_stored_proc += ",'" + req.body.user_id + "'";
     call_stored_proc += ")";
 
     pool.getConnection(function(error, connection) {
@@ -83,7 +83,7 @@ export function add(req, res) {
 }
 
 /**
- * Update advance donation details for Reservation Id
+ * Update advance donation details for Reservation Id - WHEN DOES THIS EVER GET CALLED??? USER_ID NOT ADDED
  *
  * @param {object} req
  * @param {object} res

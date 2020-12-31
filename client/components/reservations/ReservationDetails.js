@@ -17,6 +17,7 @@ import { RoomBookings } from '../subcomponents/RoomBookings';
 import { GuestContacts } from '../subcomponents/GuestContacts';
 import { AdvanceDonations } from './AdvanceDonations';
 import {notify} from 'react-notify-toast';
+import {Suspense, lazy} from 'react';
 
 import {EmailBox} from '../subcomponents/EmailBox';
 
@@ -35,7 +36,10 @@ export class ReservationDetails extends Component {
       noOfPpl: props.getStore().noOfPpl,
       comments: props.getStore().comments,
       emailComments: null,
-      reservationId: props.getStore().reservationId   
+      reservationId: props.getStore().reservationId,
+      str_reservations: props.getStore().reservationId,
+      str_rooms: null,
+      popupLoad: null,   
     };
 
     this.reservationStore = {
@@ -79,12 +83,6 @@ export class ReservationDetails extends Component {
     if (this.props.getStore().guestId != null){
       this.fetchReservationDetailsIfExists();
       document.getElementById("next-button").style.marginTop = "0em";
-    //  if (this.props.getStore().searchReservationId != null){
-    //   this.props.updateStore({
-    //     searchReservationId: null
-    //   });
-    //    this.props.jumpToStep(0);
-    //  }
     }
    
     this.refs.arrivalDate.innerHTML = moment(this.props.getStore().arrivalDate).format('ddd, MMM Do YYYY');
@@ -121,7 +119,6 @@ export class ReservationDetails extends Component {
               });
         }
   }
-
 
   loadReservationDetails(){
 
@@ -308,7 +305,8 @@ export class ReservationDetails extends Component {
       reference_id: this.props.getStore().referenceId,
       has_WL: (sessionStorage.getItem('waitingListCnt').toString().trim() != ''? 1: 0),
       email_comments: this.state.emailComments,
-      total_beds: sessionStorage.getItem('spGrandBeds')
+      total_beds: sessionStorage.getItem('spGrandBeds'),
+      user_id: sessionStorage.getItem('userId')
     }; 
 
     store(API_URL, "reservations/", JSON.stringify(payload))
@@ -336,7 +334,6 @@ export class ReservationDetails extends Component {
     this.refs.arrivalTime.selected = time;
   }
 
-
   updateReservationDetails(){
 
     var dt_arrival =  this.state.arrivalDate + " " + moment(this.state.arrivalTime).format("HH:mm").toString();
@@ -351,7 +348,8 @@ export class ReservationDetails extends Component {
         reservation_comments: this.state.comments,
         reservation_type_id: this.state.reservationTypeId,
         sanskara_id: (this.state.sanskaraId == null)? 0 : this.state.sanskaraId,
-        isRequest: this.props.getStore().isRequest
+        isRequest: this.props.getStore().isRequest,
+        user_id: sessionStorage.getItem('userId')
       };
     } else {
       payload = {
@@ -366,7 +364,8 @@ export class ReservationDetails extends Component {
         name : this.props.getStore().firstName + " " + this.props.getStore().lastName,
         reference_id: this.props.getStore().referenceId,
         has_WL: (sessionStorage.getItem('waitingListCnt').toString().trim() != ''? 1: 0),
-        email_comments: this.state.emailComments
+        email_comments: this.state.emailComments,
+        user_id: sessionStorage.getItem('userId')
       };
     }
 
@@ -449,7 +448,7 @@ export class ReservationDetails extends Component {
 
     if(this.state.reservationId != null)
     {      
-      destroy(API_URL, "reservations/" + this.state.reservationId)
+      destroy(API_URL, "reservations/" + this.state.reservationId + "&uId=" + sessionStorage.getItem('userId'))
 
         .then((response) => {
           return checkError(response);
@@ -519,158 +518,11 @@ export class ReservationDetails extends Component {
     var str_reservations = this.state.reservationId;
 
     if (str_reservations != ''){
-      this.fetchCheckOutTotal(str_reservations);
-    } 
-  }
-
-  fetchCheckOutTotal(str_reservations){
-
-    const payload = {
-      str_reservation_ids: str_reservations,
-      str_room_booking_ids: ''
-    };
-
-    store(API_URL, "checkouts/id=1", JSON.stringify(payload))
-      .then((response) => {
-        return checkError(response);
-      })
-      .then((result) => {
-        this.loadCheckOutTotalDetails(result);
-      })
-      .catch((error) => {
-        this.setState({
-          isLoaded: false,
-          error
-        });
-        notify.show('Oops! Something went wrong! Please try again!', 'error');
-        logError(error);
+     // this.fetchCheckOutTotal(str_reservations);
+      this.setState({
+        popupLoad: true
       });
-
-  }
-
-  loadCheckOutTotalDetails(results){
-
-    confirmAlert({
-      customUI: ({ onClose }) => {
-
-        var sum = 0;
-        for (var i = 0; i < results.length; i++) {
-          sum += results[i].total;
-        }
-
-        return (
-          <div>
-            <h4>Check Out Rooms</h4>  
-            <img src="./img/close.png" className="imgClose" onClick={onClose}/>
-                
-              <div className = "div-table advance-table checkout-table">
-              <div className = "div-table-row">
-                        <div className ="div-table-col div-table-col-header">
-                       Room No
-                        </div>
-                        <div className ="div-table-col div-table-col-header">
-                        No. of Days
-                        </div>
-                        <div className ="div-table-col div-table-col-header">
-                       Room Donation
-                        </div>
-                        <div className ="div-table-col div-table-col-header">
-                        Total Donation
-                        </div>
-                </div>
-              {results.map(item => (
-                  <div className = "div-table-row" key={item.donation_id}>
-                        <div className ="div-table-col col-bordered">
-                          {item.room_no}
-                        </div>
-                        <div className ="div-table-col col-bordered">
-                          {item.no_of_days}
-                        </div>
-                        <div className ="div-table-col col-bordered">
-                        &#8377; {item.room_rent.toLocaleString('en-IN')}
-                        </div>
-                        <div className ="div-table-col col-bordered">
-                        &#8377; {item.total.toLocaleString('en-IN')}
-                        </div>
-                  </div>
-                  ))} 
-                </div>
-                   <div className="form-group col-md-12 content form-block-holder">
-                    <label className="control-label col-md-4">
-                      Donation Received: 
-                      &#8377; {(results[0].donationAmount != null? results[0].donationAmount.toLocaleString('en-IN'): "0")}
-                      </label>
-                  </div>
-
-                   <div className="form-group col-md-12 content form-block-holder">
-                    <label className="control-label col-md-4">
-                      Total Sum: &#8377; &nbsp;
-                    </label>
-                    <div className="col-md-8">
-                      <input id="txtTotalSum" className="form-control small-textbox" defaultValue={sum} type="number" />
-                      </div>
-                </div>
-
-                 <div className="form-group col-md-12 content form-block-holder">
-                    <label className="control-label col-md-4">
-                      Receipt No: &nbsp;&nbsp;
-                    </label>
-                    <div className="col-md-8">
-                      <input id="txtReceiptNo" className="form-control small-textbox" />
-                      </div>
-                </div>
-
-                 <div className="form-group col-md-12 content form-block-holder">
-                    <label className="control-label col-md-4">
-                      Comments: &nbsp;&nbsp;
-                    </label>
-                    <div className="col-md-8">
-                    <textarea id="txtCheckOutComments"
-                        className="form-control" />
-                      </div>
-                </div>
-            <button type="button" className="btnCheckOut btnBig" onClick={() => 
-              { this.checkOutRooms(
-                    document.getElementById("txtTotalSum").value, 
-                    document.getElementById("txtReceiptNo").value,
-                    document.getElementById("txtCheckOutComments").value); 
-                onClose() }}>Check Out</button>
-            
-          </div>
-        )
-      }
-    })
-
-  }
-
-  checkOutRooms(amount, receipt_no, comments){
-
-    var str_reservations = this.state.reservationId;
-
-    const payload = {
-      int_reservation_id: str_reservations,
-      str_room_booking_ids: '',
-      amount: amount,
-      receipt_no: receipt_no,
-      comments: comments
-    };
-   
-    store(API_URL, "checkouts/", JSON.stringify(payload))
-      .then((response) => {
-        return checkError(response);
-      })
-      .then((result) => {
-        this.clearReservationDetails();
-        notify.show('Reservation checked out successfully!', 'success');  
-      })
-      .catch((error) => {
-        this.setState({
-          isLoaded: false,
-          error
-        });
-        notify.show('Oops! Something went wrong! Please try again!', 'error');
-        logError(error);
-      });    
+    } 
   }
 
   showEmailBox(){
@@ -688,7 +540,6 @@ export class ReservationDetails extends Component {
           </div>
               )}
           })
-
   }
 
 
@@ -698,6 +549,18 @@ export class ReservationDetails extends Component {
           this.props.jumpToStep(1);
       } 
 
+      if (this.state.popupLoad == true){
+        const CheckOutRooms = lazy(() => import('../subcomponents/CheckOutRooms'));
+
+        return (<Suspense fallback={<div id="loader" className="loaderCenter"></div> }>
+            <CheckOutRooms callFrom = {1} //1 = Reservations 2 = CheckOuts
+                  setPopupLoadState={i => this.setState({popupLoad: i})}
+                    str_reservations = {this.state.reservationId}
+                    str_rooms = {null} 
+                    updateParentState={() => (this.clearReservationDetails())} />
+                </Suspense>
+        );
+      } 
     let notValidClasses = {};
 
     /* Arrival Time */
@@ -764,8 +627,8 @@ export class ReservationDetails extends Component {
                       </label>
                     </div>
 
-                <div className = "div-table">
-                    <div className = "div-table-row">
+              <div className = "div-table">
+              <div className = "div-table-row">
                           <div className ="div-table-col">
                               {/* Arrival Time */}
                               <div className="form-group col-md-12 content form-block-holder">
@@ -807,7 +670,7 @@ export class ReservationDetails extends Component {
                       </div>
                   </div>
               </div>
-               <div className = "div-table-row">
+              <div className = "div-table-row">
                 <div className ="div-table-col">
                         {/* Reservation Type */}
                         <div className="form-group col-md-12 content form-block-holder">
@@ -850,7 +713,7 @@ export class ReservationDetails extends Component {
                           </div>
                   </div>
               </div>
-               <div className = "div-table-row">
+              <div className = "div-table-row">
                   <div className ="comments-col div-table-col">
                       {/* Comments */}
                       <div className="form-group col-md-12 content form-block-holder long-col">
@@ -868,8 +731,7 @@ export class ReservationDetails extends Component {
                         </div>
                     </div>
               </div>
-
-               <div className = "div-table-row" style={{ visibility: this.props.getStore().reservationId == null || this.props.getStore().isRequest == 1 ? 'visible':'hidden', display: this.props.getStore().reservationId == null || this.props.getStore().isRequest == 1? 'inline':'none' }}>
+              <div className = "div-table-row" style={{ visibility: this.props.getStore().reservationId == null || this.props.getStore().isRequest == 1 ? 'visible':'hidden', display: this.props.getStore().reservationId == null || this.props.getStore().isRequest == 1? 'inline':'none' }}>
                   <div className ="comments-col div-table-col">
                       {/* Email Comments */}
                       <div className="form-group col-md-12 content form-block-holder long-col">
