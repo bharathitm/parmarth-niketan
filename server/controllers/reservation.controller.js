@@ -203,7 +203,7 @@ export function update(req, res) {
 
 export function cancel(req, res) {
 
-    var call_stored_proc = "CALL sp_CancelReservation('" + req.params.id + "','" + req.params.uId + "')";
+    var call_stored_proc = "CALL sp_CancelReservation('" + req.params.id + "','" + req.query.uId + "')";
 
     pool.getConnection(function(error, connection) {
         if (error) {

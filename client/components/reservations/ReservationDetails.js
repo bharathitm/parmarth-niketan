@@ -448,7 +448,7 @@ export class ReservationDetails extends Component {
 
     if(this.state.reservationId != null)
     {      
-      destroy(API_URL, "reservations/" + this.state.reservationId + "&uId=" + sessionStorage.getItem('userId'))
+      destroy(API_URL, "reservations/" + this.state.reservationId + "?uId=" + sessionStorage.getItem('userId'))
 
         .then((response) => {
           return checkError(response);

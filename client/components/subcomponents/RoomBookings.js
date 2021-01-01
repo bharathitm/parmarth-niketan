@@ -190,7 +190,7 @@ export class RoomBookings extends Component {
         }
 
         deleteRoomBooking(room_booking_id){
-            destroy(API_URL, "roombookings/" + room_booking_id + "&uId=" + sessionStorage.getItem('userId'))
+            destroy(API_URL, "roombookings/" + room_booking_id + "?uId=" + sessionStorage.getItem('userId'))
                 .then((response) => {
                   return checkError(response);
                 })
