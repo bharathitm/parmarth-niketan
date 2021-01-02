@@ -159,7 +159,7 @@ export function update(req, res) {
 
     // Since sankara is an optional field, we pass this as null
     if (req.body.sanskara_id == 0){
-        call_stored_proc += null;
+        call_stored_proc += null + ",";
     }
     else {
         call_stored_proc +=  "'" + req.body.sanskara_id + "',";
@@ -169,6 +169,8 @@ export function update(req, res) {
     call_stored_proc +=  "'" + req.body.user_id + "'";
 
     call_stored_proc += ")";
+
+    //console.log(call_stored_proc);
 
     pool.getConnection(function(error, connection) {
         if (error) {
