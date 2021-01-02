@@ -19,6 +19,9 @@ export class URooms extends React.Component {
         items: [
           {}
         ],
+         //loaded blocks & rooms
+         uncleanBlocks: [],
+         uncleanRooms: [],
       };
 
       this.getAllSelectedRooms = this.getAllSelectedRooms.bind(this);
@@ -39,7 +42,8 @@ export class URooms extends React.Component {
             this.setState({
               isLoaded: true,
               items: result,
-              selectedRooms: []
+              uncleanBlocks: [],
+              uncleanRooms: []
             });
           })
         .catch((error) => {
@@ -52,16 +56,42 @@ export class URooms extends React.Component {
         });
     }
 
+      //blocks check box click
+      blocksChanged() {  
+
+      //select or de select child rooms
+      var checkboxes = document.getElementsByName("uncleanBlocks");  
+
+        for(var i = 0; i < checkboxes.length; i++)  
+        {  
+                if(checkboxes[i].checked) {
+
+                  var roomCheckBoxes = checkboxes[i].parentElement.lastChild.getElementsByTagName("input");
+                      for (var x = 0; x < roomCheckBoxes.length; x ++){
+                        roomCheckBoxes[x].checked = true;
+                      }
+                      
+                } else {
+                    var roomCheckBoxes = checkboxes[i].parentElement.lastChild.getElementsByTagName("input");
+                        for (var x = 0; x < roomCheckBoxes.length; x ++){
+                          roomCheckBoxes[x].checked = false;
+                        }
+                        
+                }   
+          }
+      } 
+
      //Done button click
-     handleUncleanRoom() {
+    handleUncleanRoom() {
           var selectedRooms = this.getAllSelectedRooms();
           var str_rooms = createRoomsString(selectedRooms); 
 
-          if (str_rooms != ''){
-            const payload = {
-              str_room_booking_ids: str_rooms
-            };
-        
+            if (str_rooms != ''){
+
+              const payload = {
+                str_room_booking_ids: str_rooms
+              };
+                    
           store(API_URL, "urooms/", JSON.stringify(payload))
             .then((response) => {
               return checkError(response);
@@ -80,12 +110,12 @@ export class URooms extends React.Component {
               notify.show('Oops! Something went wrong! Please try again!', 'error');
               logError(error);
             });
-
+ 
             this.updateUncleanRoomsState(selectedRooms);  
+          }
         }    
-      }
 
-      getAllSelectedRooms(){
+    getAllSelectedRooms(){
         //rooms
         var selectedRooms = [];
         var checkboxes = document.getElementsByName("uncleanRooms");  
@@ -97,10 +127,9 @@ export class URooms extends React.Component {
                 }         
         }
         return selectedRooms;
-      }
+    }
 
-
-      updateUncleanRoomsState(selectedRooms){
+    updateUncleanRoomsState(selectedRooms){
             //create a newData array which is a clone of state.items, remove the just selected entries from this newData 
             //and re-assign newData to state.items. This causes the component to re-render.
             var newData = this.state.items;
@@ -117,19 +146,19 @@ export class URooms extends React.Component {
               items: newData
             });
 
-            //the next row is getting selected after save hence loop through and unselect all
-            var checkboxes = document.getElementsByName("uncleanRooms");
-            if (checkboxes.length > 0){
-              for(var i = 0; i < checkboxes.length; i++)  
-              {      
-                checkboxes[i].checked = false;
-              }
-            }
-        }
+            // //the next row is getting selected after save hence loop through and unselect all
+            // var checkboxes = document.getElementsByName("uncleanRooms");
+            // if (checkboxes.length > 0){
+            //   for(var i = 0; i < checkboxes.length; i++)  
+            //   {      
+            //     checkboxes[i].checked = false;
+            //   }
+            // }
+    }
     
 
     render() {      
-      const { error, isLoaded, items } = this.state;
+      let { isLoaded, items, uncleanBlocks, uncleanRooms } = this.state;
 
       if (this.props.getDashboardStore().hasCheckOutsChanged){
         this.props.updateDashboardStore({
@@ -137,6 +166,42 @@ export class URooms extends React.Component {
         });
         this.fetchUncleanRooms();
       }
+
+       //clearing these as selecting check box re-renders the component and the check boxes are doubling up every time
+       uncleanBlocks = [];
+       uncleanRooms = [];
+ 
+       if (items.length > 0){
+       
+          uncleanBlocks.push(
+                  {
+                      room_booking_id: items[0].room_booking_id,
+                      room_no: items[0].room_no,
+                      block_id: items[0].block_id,
+                      floor_no: items[0].floor_no
+                  }
+              );
+ 
+             uncleanRooms = items;
+         }
+ 
+     //unique block ids need to be captured in a separate array
+       for (var i = 1; i < items.length; i++)
+       {
+         if (items[i].block_id != items[i-1].block_id)
+         {
+          uncleanBlocks.push(
+                 {
+                     room_booking_id: items[i].room_booking_id,
+                     room_no: items[i].room_no,
+                     block_id: items[i].block_id,
+                     floor_no: items[0].floor_no
+                 }
+             );
+         }
+       }
+
+      
 
      if (!isLoaded) {
           return <div><h4>Housekeeping</h4><hr />Loading...</div>;
@@ -149,16 +214,30 @@ export class URooms extends React.Component {
             <div className="divDashboardWidgets"><h4>Housekeeping</h4>
              <hr />
                 <button type="button" className="btnBig" onClick={() => this.handleUncleanRoom()}>Done</button>
-                    <ol>
-                            {items.map(item => (
-                                 <li>
-                                      <input type="checkbox" 
-                                            name="uncleanRooms"
-                                            value={item.room_booking_id}/>                     
-                                                {item.room_no + ", " + floors[item.floor_no] + ", " + blocks[item.block_id]}                        
-                                </li>
-                            ))}    
-                    </ol>
+                    <ul>
+                        {uncleanBlocks.map(item => (    
+                              <li key={Math.random()}>
+                                    <input type="checkbox" name="uncleanBlocks"
+                                        onClick={() => this.blocksChanged()}
+                                        value={item.block_id} />
+                                             <b>{blocks[item.block_id]}</b> 
+                                          <ol>
+                                              {uncleanRooms.filter(bk => bk.block_id == item.block_id).map(booking => (
+                                              <li>  
+
+                {/* {uncleanRooms.filter(bk => bk.block_id == item.block_id).length > 1? */}
+
+                  <span><input type="checkbox" name="uncleanRooms" id={booking.block_id} value={booking.room_booking_id} /> 
+                  
+                  {booking.room_no}, {floors[booking.floor_no]}</span>
+                                                  
+              
+                                              </li>
+                                              ))}
+                                          </ol>                                         
+                                </li>                              
+                              ))}                    
+                    </ul>
               </div>
             );
         }

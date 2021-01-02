@@ -184,7 +184,7 @@ export function cancel(req, res) {
 
 export function removeAll(req, res) {
 
-    var call_stored_proc = "CALL sp_CancelRoomBookings('"+ req.query.rId + "'," + null + ",'" + req.params.uId + "')";
+    var call_stored_proc = "CALL sp_CancelRoomBookings('"+ req.query.rId + "'," + null + ",'" + req.query.uId + "')";
 
     pool.getConnection(function(error, connection) {
         if (error) {
@@ -214,7 +214,7 @@ export function removeAll(req, res) {
 
 export function removeWL(req, res) {
 
-    var call_stored_proc = "CALL sp_CancelWLRoomBookings('"+ req.query.rId + "','" + req.params.uId + "')";
+    var call_stored_proc = "CALL sp_CancelWLRoomBookings('"+ req.query.rId + "','" + req.query.uId + "')";
 
     pool.getConnection(function(error, connection) {
         if (error) {

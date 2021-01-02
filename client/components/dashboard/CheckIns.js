@@ -2,14 +2,10 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 import {blocks, floors, reservationTypes, references} from '../../constants/roomAttributes';
-
 import {logError, checkError, createReservationsString, createRoomsString} from '../../utils/helpers';
 import {API_URL} from '../../config/config';
-
 import {fetch, store} from '../../utils/httpUtil';
-
 import {notify} from 'react-notify-toast';
-
 import { ReservationForm } from '../subcomponents/ReservationForm';
 
 export class CheckIns extends React.Component {

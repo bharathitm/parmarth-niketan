@@ -1,13 +1,13 @@
 import React from 'react';
 
 import {blocks} from '../../constants/roomAttributes';
-
 import {logError, checkError} from '../../utils/helpers';
 import {API_URL} from '../../config/config';
 import {fetch} from '../../utils/httpUtil';
 import {notify} from 'react-notify-toast';
+
+import {Suspense, lazy} from 'react';
 import { confirmAlert } from 'react-confirm-alert';
-import RoomsCalendar from '../subcomponents/Calendar';
 
 
 export class TodayAvailability extends React.Component {
@@ -49,6 +49,8 @@ export class TodayAvailability extends React.Component {
 
     showAvailabilityCalendar(){
 
+      const RoomsCalendar = lazy(() => import('../subcomponents/Calendar'));
+
       confirmAlert({
         customUI: ({ onClose }) => {
           return (
@@ -57,7 +59,9 @@ export class TodayAvailability extends React.Component {
                 <h4>Room Availability</h4>  
                 <b>Note:</b> Yoga Village rooms are not considered in the count below.
                 <img src="./img/close.png" className="imgClose" onClick={onClose}/>
+                <Suspense fallback={<div id="loader" class="loaderCenter"></div> }>
                <RoomsCalendar></RoomsCalendar>
+               </Suspense>
                 </form>                    
             </div>
                 )}

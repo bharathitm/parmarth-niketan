@@ -4,9 +4,7 @@ import ErrorBoundary from '../ErrorBoundary'
 
 import RequestsCount from './RequestsCount';
 import General from './General';
-import Retreats from './Retreats';
-import Agents from './Agents';
-import Sanskaras from './Sanskaras';
+
 
 
 export class Requests extends React.Component {
@@ -108,15 +106,6 @@ export class Requests extends React.Component {
                            <div className ="div-table-col div-dashboard-col" style={{ width: '97.3%', visibility: session_user_privileges.has_general_view != null ? 'visible':'hidden', display: session_user_privileges.has_general_view != null? 'inline':'none' }}>
                               <General ref={this.General} updateRequestsHomeStore={(r, g) => {this.updateRequestsHomeStore(r, g)}}/>
                           </div>
-                           {/* <div className ="div-table-col div-dashboard-col" style={{ visibility: session_user_privileges.has_retreat_view != null ? 'visible':'hidden', display: session_user_privileges.has_retreat_view != null? 'inline':'none' }}>
-                              <Retreats ref={this.Retreats} updateRequestsHomeStore={(r, g) => {this.updateRequestsHomeStore(r, g)}}/>
-                          </div>
-                          <div className ="div-table-col div-dashboard-col" style={{ visibility: session_user_privileges.has_sanskara_view != null ? 'visible':'hidden', display: session_user_privileges.has_sanskara_view != null? 'inline':'none' }}>
-                              <Agents ref={this.Agents} updateRequestsHomeStore={(r, g) => {this.updateRequestsHomeStore(r, g)}}/>
-                          </div> 
-                          <div className ="div-table-col div-dashboard-col" style={{ visibility: session_user_privileges.has_agent_view != null ? 'visible':'hidden', display: session_user_privileges.has_agent_view != null? 'inline':'none' }}>
-                              <Sanskaras ref={this.Sanskaras} updateRequestsHomeStore={(r, g) => {this.updateRequestsHomeStore(r, g)}}/> 
-                          </div>  */}
                     </div>
               </div>
             </div>
