@@ -220,7 +220,7 @@ export class URooms extends React.Component {
                                     <input type="checkbox" name="uncleanBlocks"
                                         onClick={() => this.blocksChanged()}
                                         value={item.block_id} />
-                                             <b>{blocks[item.block_id]}</b> 
+                                             {blocks[item.block_id]} 
                                           <ol>
                                               {uncleanRooms.filter(bk => bk.block_id == item.block_id).map(booking => (
                                               <li>  
