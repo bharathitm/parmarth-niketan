@@ -353,6 +353,7 @@ export class ReservationDetails extends Component {
       };
     } else {
       payload = {
+        guest_id: this.props.getStore().guestId,
         date_of_arrival: dt_arrival,
         date_of_departure: this.state.departureDate,
         no_of_people: this.state.noOfPpl,
@@ -362,9 +363,8 @@ export class ReservationDetails extends Component {
         isRequest: this.props.getStore().isRequest,
         email_id: this.props.getStore().email,
         name : this.props.getStore().firstName + " " + this.props.getStore().lastName,
-        reference_id: this.props.getStore().referenceId,
-        has_WL: (sessionStorage.getItem('waitingListCnt').toString().trim() != ''? 1: 0),
         email_comments: this.state.emailComments,
+        room_ids_str: sessionStorage.getItem('strSelectedRooms').toString(),
         user_id: sessionStorage.getItem('userId')
       };
     }

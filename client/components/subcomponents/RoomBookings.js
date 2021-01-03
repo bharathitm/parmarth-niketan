@@ -86,7 +86,6 @@ export class RoomBookings extends Component {
           }
     }
 
-
     handleDateChange(date, index) {
         var newArray = this.state.dDAtes;
         newArray[index] = date;
@@ -94,8 +93,7 @@ export class RoomBookings extends Component {
           dDates: newArray
         });
         this.refs[index].selected = moment(date);
-      }
-
+    }
 
     validationCheck() {
         if (!this._validateOnDemand)
@@ -122,21 +120,6 @@ export class RoomBookings extends Component {
           advanceReceiptNoVal: (data.advanceReceiptNo != '')
         };
     }
-
-
-
-    // handleAdd() {
-    //     const userInput = this._grabUserInput(); // grab user entered vals
-    //     const validateNewInput = this._validateData(userInput); // run the new input against the validator
-
-    //     // if full validation passes then save to store and pass as valid
-    //     if (Object.keys(validateNewInput).every((k) => { return validateNewInput[k] === true })) {
-    //         this.insertAdvanceDonationDetails();
-    //     }
-    //     else {
-    //         this.setState(Object.assign(userInput, validateNewInput));
-    //     }
-    // }
 
     handleUpdateRoomBooking(room_booking_id){
 
@@ -170,7 +153,6 @@ export class RoomBookings extends Component {
           }
     }
 
-
     handleDeleteRoomBooking(room_booking_id, room_no){
 
         confirmAlert({
@@ -187,145 +169,144 @@ export class RoomBookings extends Component {
               }
             ]
           })
-        }
+    }
 
-        deleteRoomBooking(room_booking_id){
-            destroy(API_URL, "roombookings/" + room_booking_id + "?uId=" + sessionStorage.getItem('userId'))
-                .then((response) => {
-                  return checkError(response);
-                })
-                .catch((error) => {
-                  this.setState({
-                    isLoaded: false,
-                    error
-                  });
-                  notify.show('Oops! Something went wrong! Please try again!', 'error');
-                  logError(error);
-                });
-
-                if (this.state.isLoaded){
-                    notify.show('Room removed from the reservation successfully!', 'success');
-                  }
-
-                //create a newData array which is a clone of state.items, remove the just selected entries from this newData
-                  //and re-assign newData to state.items. This causes the component to re-render.
-                  var newData = this.state.items;
-
-                  for (var x=0; x< newData.length; x++){
-                      if (newData[x].room_booking_id == room_booking_id){
-                      newData.splice(x,1);
-                      }
-                  }
-
-                  if (newData.length == 0){
-                      this.setState({
-                          hasRoomBookings: false
-                        });
-                  }
-
-                  var totalAmount = 0;
-                  var totalBeds = 0;
-
-                  for (var i = 0; i < newData.length; i++)
-                  {
-                      totalAmount += parseFloat(newData[i].room_rent);
-                      totalBeds += parseFloat(newData[i].total_beds);
-                  }
-
-                  this.refs.totalAmount.innerHTML = totalAmount;
-                  this.refs.totalBeds.innerHTML = totalBeds;
-
-                  this.setState({
-                    items: newData
-                  });
-        }
-
-        handleDeleteAllRoomBookings(){
-
-            this._validateOnDemand = false;
-
-            confirmAlert({
-              title: 'Confirm to cancel',
-              message: 'Are you sure you want to remove all ' + this.state.items.length + ' room bookings for this current reservation?',
-              buttons: [
-                {
-                  label: 'Yes',
-                  onClick: () => this.removeAllRooms(),
-                },
-                {
-                  label: 'No',
-                  onClick: () => false
-                }
-              ]
+    deleteRoomBooking(room_booking_id){
+        destroy(API_URL, "roombookings/" + room_booking_id + "?uId=" + sessionStorage.getItem('userId'))
+            .then((response) => {
+              return checkError(response);
             })
-          }
+            .catch((error) => {
+              this.setState({
+                isLoaded: false,
+                error
+              });
+              notify.show('Oops! Something went wrong! Please try again!', 'error');
+              logError(error);
+            });
 
-          removeAllRooms(){
-            if(this.props.getReservationStore().reservationId != null)
-            {
-                destroy(API_URL, "roombookings/1?rId=" + this.props.getReservationStore().reservationId + "&uId=" + sessionStorage.getItem('userId'))
-
-                .then((response) => {
-                  return checkError(response);
-                })
-                .then((result) => {
-                    notify.show('All rooms removed successfully', 'success');
-                  })
-                .catch((error) => {
-                  this.setState({
-                    isLoaded: false,
-                    error
-                  });
-                  notify.show('Oops! Something went wrong! Please try again!', 'error');
-                  logError(error);
-                });
-                this.fetchRoomBookingsIfExists();
+            if (this.state.isLoaded){
+                notify.show('Room removed from the reservation successfully!', 'success');
               }
-          }
 
-          handleDeleteWLRoomBookings(){
+            //create a newData array which is a clone of state.items, remove the just selected entries from this newData
+              //and re-assign newData to state.items. This causes the component to re-render.
+              var newData = this.state.items;
 
-            this._validateOnDemand = false;
+              for (var x=0; x< newData.length; x++){
+                  if (newData[x].room_booking_id == room_booking_id){
+                  newData.splice(x,1);
+                  }
+              }
 
-            confirmAlert({
-              title: 'Confirm to cancel',
-              message: 'Are you sure you want to remove all the Wait List room bookings for this current reservation?',
-              buttons: [
-                {
-                  label: 'Yes',
-                  onClick: () => this.removeWLRooms(),
-                },
-                {
-                  label: 'No',
-                  onClick: () => false
-                }
-              ]
+              if (newData.length == 0){
+                  this.setState({
+                      hasRoomBookings: false
+                    });
+              }
+
+              var totalAmount = 0;
+              var totalBeds = 0;
+
+              for (var i = 0; i < newData.length; i++)
+              {
+                  totalAmount += parseFloat(newData[i].room_rent);
+                  totalBeds += parseFloat(newData[i].total_beds);
+              }
+
+              this.refs.totalAmount.innerHTML = totalAmount;
+              this.refs.totalBeds.innerHTML = totalBeds;
+
+              this.setState({
+                items: newData
+              });
+    }
+
+    handleDeleteAllRoomBookings(){
+
+        this._validateOnDemand = false;
+
+        confirmAlert({
+          title: 'Confirm to cancel',
+          message: 'Are you sure you want to remove all ' + this.state.items.length + ' room bookings for this current reservation?',
+          buttons: [
+            {
+              label: 'Yes',
+              onClick: () => this.removeAllRooms(),
+            },
+            {
+              label: 'No',
+              onClick: () => false
+            }
+          ]
+        })
+    }
+
+    removeAllRooms(){
+      if(this.props.getReservationStore().reservationId != null)
+      {
+          destroy(API_URL, "roombookings/1?rId=" + this.props.getReservationStore().reservationId + "&uId=" + sessionStorage.getItem('userId'))
+
+          .then((response) => {
+            return checkError(response);
+          })
+          .then((result) => {
+              notify.show('All rooms removed successfully', 'success');
             })
+          .catch((error) => {
+            this.setState({
+              isLoaded: false,
+              error
+            });
+            notify.show('Oops! Something went wrong! Please try again!', 'error');
+            logError(error);
+          });
+          this.fetchRoomBookingsIfExists();
+        }
+    }
+
+    handleDeleteWLRoomBookings(){
+
+      this._validateOnDemand = false;
+
+      confirmAlert({
+        title: 'Confirm to cancel',
+        message: 'Are you sure you want to remove all the Wait List room bookings for this current reservation?',
+        buttons: [
+          {
+            label: 'Yes',
+            onClick: () => this.removeWLRooms(),
+          },
+          {
+            label: 'No',
+            onClick: () => false
           }
+        ]
+      })
+    }
 
-          removeWLRooms(){
-            if(this.props.getReservationStore().reservationId != null)
-            {
-                destroy(API_URL, "roombookings/2?rId=" + this.props.getReservationStore().reservationId + "&uId=" + sessionStorage.getItem('userId'))
+    removeWLRooms(){
+      if(this.props.getReservationStore().reservationId != null)
+      {
+          destroy(API_URL, "roombookings/2?rId=" + this.props.getReservationStore().reservationId + "&uId=" + sessionStorage.getItem('userId'))
 
-                .then((response) => {
-                  return checkError(response);
-                })
-                .then((result) => {
-                    notify.show('All Wait List rooms removed successfully', 'success');
-                  })
-                .catch((error) => {
-                  this.setState({
-                    isLoaded: false,
-                    error
-                  });
-                  notify.show('Oops! Something went wrong! Please try again!', 'error');
-                  logError(error);
-                });
-                this.fetchRoomBookingsIfExists();
-              }
-          }
-
+          .then((response) => {
+            return checkError(response);
+          })
+          .then((result) => {
+              notify.show('All Wait List rooms removed successfully', 'success');
+            })
+          .catch((error) => {
+            this.setState({
+              isLoaded: false,
+              error
+            });
+            notify.show('Oops! Something went wrong! Please try again!', 'error');
+            logError(error);
+          });
+          this.fetchRoomBookingsIfExists();
+        }
+    }
 
     render() {
 

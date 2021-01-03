@@ -260,7 +260,7 @@ export class BookRooms extends Component {
     var selectedRooms = this.getAllSelectedRooms();
     var str_rooms = createRoomsString(selectedRooms);
 
-    if ((this.props.getStore().reservationId != null) && (selectedRooms.length > 0)) {
+    if ((this.props.getStore().reservationId != null) && (selectedRooms.length > 0) && (this.props.getStore().isRequest != 1)) {
 
       confirmAlert({
         title: 'Add Room Bookings',
@@ -415,7 +415,6 @@ export class BookRooms extends Component {
       }
     }
   }
-
 
   render() {
     //coming from reservations search in Dashboard, directly load Guest Details page

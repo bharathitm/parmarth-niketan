@@ -130,14 +130,15 @@ export function add(req, res) {
  * @returns {*}
  */
 export function update(req, res) {
-
-    var call_stored_proc = "";
-    
     if (req.body.isRequest == 0){
-        call_stored_proc = "CALL sp_UpdateReservationDetails('";
+        updateReservation(req, res);
     } else {
-        call_stored_proc = "CALL sp_UpdateReservationForRequests('"; 
-    }
+        updateRequestReservation(req, res);
+    }    
+}
+
+function updateReservation(req, res){
+    var call_stored_proc = "CALL sp_UpdateReservationDetails('";  
 
     call_stored_proc += req.params.id + "','" // reservation_id
     + req.body.date_of_arrival + "','"
@@ -170,7 +171,61 @@ export function update(req, res) {
 
     call_stored_proc += ")";
 
-    //console.log(call_stored_proc);
+    pool.getConnection(function(error, connection) {
+        if (error) {
+            errorController.LogError(error);
+            return res.send(error.code);
+        } 
+
+        connection.query(call_stored_proc, true, (error, results, fields) => {
+            connection.release();
+
+            if (error) {
+                errorController.LogError(error);
+                return res.send(error.code);
+            }
+
+        });
+    });     
+
+}
+
+function updateRequestReservation(req, res){
+    var call_stored_proc = "CALL sp_UpdateReservationForRequests('"; 
+    
+    call_stored_proc += req.params.id + "','" // reservation_id
+    + req.body.guest_id + "','"
+    + req.body.date_of_arrival + "','"
+    + req.body.date_of_departure + "','"
+
+    //no_of_people does not have the ' after the ,  
+    + req.body.no_of_people + "',";
+
+    // Since reservation_comments is an optional field, we pass this as null
+    if (req.body.reservation_comments == '' || req.body.reservation_comments == null){
+        call_stored_proc += null;        
+    }
+    else {
+        var reservation_comments = req.body.reservation_comments.replace(/'/g, "''");  
+        call_stored_proc +=  "'" + reservation_comments + "'";
+    }
+ 
+    call_stored_proc +=  ",'" + req.body.reservation_type_id + "',";
+
+    // Since sankara is an optional field, we pass this as null
+    if (req.body.sanskara_id == 0){
+        call_stored_proc += null + ",";
+    }
+    else {
+        call_stored_proc +=  "'" + req.body.sanskara_id + "',";
+    }
+
+    call_stored_proc +=  "'" + req.body.room_ids_str + "',";
+
+    //user_id does not have the ' after the ,  
+    call_stored_proc +=  "'" + req.body.user_id + "'";
+
+    call_stored_proc += ")";
 
     pool.getConnection(function(error, connection) {
         if (error) {
@@ -179,7 +234,7 @@ export function update(req, res) {
         } 
 
         connection.query(call_stored_proc, true, (error, results, fields) => {
-           if ((req.body.isRequest != 0) && (req.body.email_id != null) && (req.body.email_id != '')){
+           if ((req.body.email_id != null) && (req.body.email_id != '')){
                 SendConfirmationEmail(req.body.name, req.body.email_id, (moment(req.body.date_of_arrival, "YYYY-MM-D HH:mm").format("MMM Do, YYYY") 
                 + " - " + moment(req.body.date_of_departure, "YYYY-MM-D").format("MMM Do, YYYY")), results[0][0].noOfRooms,
                                  req.body.reservation_type_id, req.body.sanskara_id, req.body.email_comments);
