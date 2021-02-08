@@ -109,7 +109,7 @@ render() {
     else {
         notValidClasses.emailContentCls = 'form-control has-error';
     }
-
+    
     return (
             
     <div>
@@ -119,6 +119,7 @@ render() {
       <textarea style={{width:'90%', height:'20px'}}
             ref="emailSub"
             autoComplete="off"
+            defaultValue ="Inquiry"
             className={notValidClasses.emailSubCls}
             required
             onBlur={this.validationCheck} />
